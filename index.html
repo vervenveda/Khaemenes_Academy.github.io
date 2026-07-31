@@ -71,7 +71,7 @@ h1{max-width:100%;margin-inline:auto;font-size:clamp(3.35rem,8.4vw,7.35rem);line
 .nav,.brand,.brand span:last-child,.links{min-width:0}
 .brand b,.brand small{overflow-wrap:normal}
 .links{flex-wrap:wrap;justify-content:flex-end}
-.links a,.actions .btn{min-width:0;max-width:99%;text-align:center;white-space:normal}
+.links a,.actions .btn{min-width:0;max-width:100%;text-align:center;white-space:normal}
 .campus-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
 .campus-card,.featured-card,.card,.site{align-items:center;text-align:center;overflow:hidden}
 .campus-card h3,.featured-card h3,.card h3,.site h3{max-width:100%;line-height:1.22;text-wrap:balance}
@@ -104,6 +104,29 @@ h1{max-width:100%;margin-inline:auto;font-size:clamp(3.35rem,8.4vw,7.35rem);line
 @media(max-width:1000px){.campus-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.network{grid-template-columns:repeat(3,minmax(0,1fr))}.nav{justify-content:space-between}}
 @media(max-width:760px){.network{grid-template-columns:repeat(2,minmax(0,1fr))}.hero-in{min-height:650px;padding:64px 0}.utility .shell{flex-direction:column;padding:8px 0}.brand b{font-size:1.06rem}}
 @media(max-width:560px){.campus-grid,.network{grid-template-columns:1fr}h1{font-size:clamp(2.75rem,15vw,4.25rem);line-height:1.02}.heading h2,.final h2{font-size:clamp(2rem,11vw,3rem)}.panel,.card,.daily-card,.standards,.growth article,.site,.campus-card,.featured-card{padding:1.25rem}.drawer{width:100%}.menulink{grid-template-columns:38px minmax(0,1fr) 20px}}
+</style>
+
+
+<style id="khaemenes-search-button-fix">
+/* Search-library card button fix: shorter visible labels with safe internal spacing. */
+#tools .cardactions{
+  width:100%;
+  margin-top:auto;
+  padding-top:12px;
+}
+#tools .openlink{
+  min-width:0;
+  width:100%;
+  min-height:44px;
+  padding:.62rem .75rem;
+  font-size:.72rem;
+  line-height:1.3;
+  text-align:center;
+  white-space:normal;
+  overflow-wrap:break-word;
+  word-break:normal;
+  text-wrap:balance;
+}
 </style>
 
 </head><body id="top"><a class="skip" href="#main">Skip to main content</a>
@@ -259,7 +282,7 @@ h1{max-width:100%;margin-inline:auto;font-size:clamp(3.35rem,8.4vw,7.35rem);line
 function loadShelf(){try{const value=JSON.parse(localStorage.getItem(KEY)||"[]");return new Set(Array.isArray(value)?value.filter(id=>TOOLS.some(t=>t.id===id)):[])}catch{localStorage.removeItem(KEY);return new Set()}}
 let shelf=loadShelf(),shelfOnly=false,lastFocused=null;const $=id=>document.getElementById(id),url=t=>t.url||("./"+encodeURI(t.path)),label=k=>CATS[k]||k;
 function toast(m){$("toast").textContent=m;$("toast").classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>$("toast").classList.remove("show"),1700)}
-function setup(){ $("category").innerHTML=Object.entries(CATS).map(([v,l])=>`<option value="${v}">${l}</option>`).join(""); $("toolGrid").innerHTML=TOOLS.map(t=>`<article class="card" data-id="${t.id}" data-cat="${t.category}" data-search="${(t.title+" "+t.description+" "+t.tags+" "+t.path+" "+label(t.category)).toLowerCase()}"><div class="cardtop"><span class="icon">${t.icon}</span><button class="fav" type="button" data-fav="${t.id}" aria-label="${shelf.has(t.id)?"Remove from":"Add to"} My Shelf: ${t.title}" aria-pressed="${shelf.has(t.id)}">${shelf.has(t.id)?"♥":"♡"}</button></div><span class="badge">${label(t.category)}</span><h3>${t.title}</h3><p>${t.description}</p><div class="cardactions"><a class="openlink" href="${url(t)}">Open ${t.category==="early"?"Kinder Garden":t.category==="youth"?"Elementary":"Higher Learning"} Campus</a></div></article>`).join(""); document.querySelectorAll("[data-fav]").forEach(b=>b.onclick=()=>{shelf.has(b.dataset.fav)?shelf.delete(b.dataset.fav):shelf.add(b.dataset.fav);localStorage.setItem(KEY,JSON.stringify([...shelf]));b.textContent=shelf.has(b.dataset.fav)?"♥":"♡";b.setAttribute("aria-pressed",shelf.has(b.dataset.fav));let tool=TOOLS.find(t=>t.id===b.dataset.fav);if(tool)b.setAttribute("aria-label",`${shelf.has(b.dataset.fav)?"Remove from":"Add to"} My Shelf: ${tool.title}`);update();filter()});document.querySelectorAll("[data-copy]").forEach(b=>b.onclick=async()=>{let t=TOOLS.find(x=>x.id===b.dataset.copy),u=new URL(url(t),location.href).href;try{await navigator.clipboard.writeText(u);toast("Link copied.")}catch{prompt("Copy this link:",u)}});$("networkGrid").innerHTML=SITES.map(s=>`<a class="site" href="${s.url}" target="_blank" rel="noopener"><span class="siteicon">${s.icon}</span><h3>${s.title}</h3><p>${s.description}</p></a>`).join("");$("growthGrid").innerHTML=GROWTH.map((g,i)=>`<article><b>0${i+1} / BUILD PRIORITY</b><h3>${g[0]}</h3><p>${g[1]}</p></article>`).join("");update();filter();daily();menu()}
+function setup(){ $("category").innerHTML=Object.entries(CATS).map(([v,l])=>`<option value="${v}">${l}</option>`).join(""); $("toolGrid").innerHTML=TOOLS.map(t=>`<article class="card" data-id="${t.id}" data-cat="${t.category}" data-search="${(t.title+" "+t.description+" "+t.tags+" "+t.path+" "+label(t.category)).toLowerCase()}"><div class="cardtop"><span class="icon">${t.icon}</span><button class="fav" type="button" data-fav="${t.id}" aria-label="${shelf.has(t.id)?"Remove from":"Add to"} My Shelf: ${t.title}" aria-pressed="${shelf.has(t.id)}">${shelf.has(t.id)?"♥":"♡"}</button></div><span class="badge">${label(t.category)}</span><h3>${t.title}</h3><p>${t.description}</p><div class="cardactions"><a class="openlink" href="${url(t)}" aria-label="Open ${t.title} in the ${t.category==="early"?"Kinder Garden":t.category==="youth"?"Elementary":"Higher Learning"} Campus">${t.category==="early"?"Kinder Garden":t.category==="youth"?"Elementary":"Higher Learning"} Campus</a></div></article>`).join(""); document.querySelectorAll("[data-fav]").forEach(b=>b.onclick=()=>{shelf.has(b.dataset.fav)?shelf.delete(b.dataset.fav):shelf.add(b.dataset.fav);localStorage.setItem(KEY,JSON.stringify([...shelf]));b.textContent=shelf.has(b.dataset.fav)?"♥":"♡";b.setAttribute("aria-pressed",shelf.has(b.dataset.fav));let tool=TOOLS.find(t=>t.id===b.dataset.fav);if(tool)b.setAttribute("aria-label",`${shelf.has(b.dataset.fav)?"Remove from":"Add to"} My Shelf: ${tool.title}`);update();filter()});document.querySelectorAll("[data-copy]").forEach(b=>b.onclick=async()=>{let t=TOOLS.find(x=>x.id===b.dataset.copy),u=new URL(url(t),location.href).href;try{await navigator.clipboard.writeText(u);toast("Link copied.")}catch{prompt("Copy this link:",u)}});$("networkGrid").innerHTML=SITES.map(s=>`<a class="site" href="${s.url}" target="_blank" rel="noopener"><span class="siteicon">${s.icon}</span><h3>${s.title}</h3><p>${s.description}</p></a>`).join("");$("growthGrid").innerHTML=GROWTH.map((g,i)=>`<article><b>0${i+1} / BUILD PRIORITY</b><h3>${g[0]}</h3><p>${g[1]}</p></article>`).join("");update();filter();daily();menu()}
 function update(){$("favCount").textContent=shelf.size;$("favorites").setAttribute("aria-pressed",shelfOnly)}
 function filter(){let q=$("search").value.trim().toLowerCase(),c=$("category").value,n=0;[...$("toolGrid").children].forEach(card=>{let show=(c==="all"||card.dataset.cat===c)&&(!q||card.dataset.search.includes(q))&&(!shelfOnly||shelf.has(card.dataset.id));card.hidden=!show;if(show)n++});$("status").textContent=`${n} of ${TOOLS.length} current learning tools shown${shelfOnly?" · My Shelf only":""}.`;$("empty").classList.toggle("show",!n)}
 function random(cat){let p=TOOLS.filter(t=>!cat||cat==="all"||t.category===cat);if(shelfOnly)p=p.filter(t=>shelf.has(t.id));if(!p.length){toast(shelfOnly?"My Shelf has no matching programs yet.":"No matching program is available.");return}let t=p[Math.floor(Math.random()*p.length)];location.href=url(t)}
