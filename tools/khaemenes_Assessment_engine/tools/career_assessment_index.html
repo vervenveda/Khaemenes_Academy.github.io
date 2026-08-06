@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8"/>
+  <title>Khaemenes Academy — 300 Question Career Assessment</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+
+  <style>
+    :root{
+      --bg-deep:#05070d;
+      --bg-soft:#10141f;
+      --accent:#d9b878;
+      --accent-soft:#f0e9dc;
+      --ink:#f7f5f0;
+      --danger:#f97373;
+      --radius-main:21px;
+      --radius-soft:14px;
+    }
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      min-height:100vh;
+      background:radial-gradient(circle at top,#02050b 0%,#04141f 38%,#02060a 100%);
+      color:var(--ink);
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      display:flex;
+      justify-content:center;
+      padding:24px 12px 40px;
+    }
+    .khae-assess-shell{
+      width:100%;
+      max-width:1080px;
+      border-radius:var(--radius-main);
+      background:linear-gradient(180deg,var(--bg-soft) 0%,var(--bg-deep) 70%);
+      border:1px solid rgba(247,245,240,0.08);
+      box-shadow:0 33px 99px rgba(0,0,0,0.85);
+      padding:21px 21px 24px;
+    }
+    header.khae-assess-header{
+      text-align:center;
+      margin-bottom:18px;
+    }
+    .khae-title{
+      font-family:"Cinzel","Times New Roman",serif;
+      font-size:21px;
+      letter-spacing:0.18em;
+      text-transform:uppercase;
+      margin:0 0 6px;
+    }
+    .khae-tag{
+      font-size:11px;
+      letter-spacing:0.18em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin:0 0 10px;
+    }
+    .khae-sub{
+      max-width:720px;
+      margin:0 auto;
+      font-size:13px;
+      line-height:1.7;
+      color:var(--accent-soft);
+    }
+
+    /* Progress bar & meta */
+    .khae-progress-row{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom:16px;
+      border-radius:var(--radius-soft);
+      border:1px solid rgba(247,245,240,0.12);
+      padding:8px 11px;
+      background:rgba(5,7,13,0.9);
+    }
+    .khae-progress-meta{
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:0.12em;
+      color:var(--accent-soft);
+    }
+    .khae-progress-bar-wrap{
+      flex:1 1 200px;
+      max-width:420px;
+      height:8px;
+      border-radius:999px;
+      background:rgba(247,245,240,0.14);
+      overflow:hidden;
+    }
+    .khae-progress-bar-fill{
+      height:100%;
+      width:0%;
+      border-radius:999px;
+      background:linear-gradient(135deg,#f6e3a6,#d9b878);
+      transition:width .25s ease-out;
+    }
+
+    /* Question list */
+    .khae-section-label{
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:0.13em;
+      color:var(--accent);
+      margin-bottom:6px;
+    }
+    .khae-page-label{
+      font-size:11px;
+      color:#d0c8bc;
+      margin-bottom:12px;
+    }
+    .khae-questions-wrap{
+      border-radius:var(--radius-soft);
+      border:1px solid rgba(247,245,240,0.12);
+      background:rgba(5,7,13,0.9);
+      padding:14px 14px 12px;
+      max-height:none;
+    }
+    .khae-q-card{
+      border-radius:11px;
+      border:1px solid rgba(247,245,240,0.08);
+      background:rgba(10,14,25,0.96);
+      padding:9px 11px;
+      margin-bottom:8px;
+    }
+    .khae-q-text{
+      font-size:13px;
+      margin-bottom:6px;
+    }
+    .khae-q-scale{
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      align-items:center;
+      font-size:11px;
+    }
+    .khae-q-scale label{
+      display:inline-flex;
+      align-items:center;
+      gap:3px;
+      padding:3px 7px;
+      border-radius:999px;
+      border:1px solid rgba(247,245,240,0.18);
+      cursor:pointer;
+      color:var(--accent-soft);
+    }
+    .khae-q-scale input[type="radio"]{
+      accent-color:var(--accent);
+      cursor:pointer;
+    }
+    .khae-scale-hint{
+      font-size:10px;
+      color:#b6afa5;
+      margin-top:4px;
+    }
+
+    /* Nav row */
+    .khae-nav-row{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-top:12px;
+    }
+    .khae-nav-left,
+    .khae-nav-right{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+    }
+    .khae-btn{
+      border-radius:999px;
+      border:1px solid rgba(247,245,240,0.55);
+      padding:7px 14px;
+      font-size:11px;
+      letter-spacing:0.12em;
+      text-transform:uppercase;
+      background:transparent;
+      color:var(--ink);
+      cursor:pointer;
+      transition:background .18s,transform .18s,box-shadow .18s,color .18s;
+    }
+    .khae-btn-primary{
+      background:linear-gradient(135deg,#d9b878,#b89252);
+      color:#05070d;
+      border-color:transparent;
+    }
+    .khae-btn:hover{
+      transform:translateY(-1px);
+      box-shadow:0 8px 18px rgba(0,0,0,0.6);
+      background:rgba(247,245,240,0.06);
+    }
+    .khae-btn-primary:hover{
+      background:linear-gradient(135deg,#f6e3a6,#d9b878);
+    }
+    .khae-btn[disabled]{
+      opacity:0.4;
+      cursor:default;
+      transform:none;
+      box-shadow:none;
+    }
+    .khae-save-note{
+      font-size:10px;
+      color:#a99f93;
+    }
+    .khae-error{
+      font-size:11px;
+      color:var(--danger);
+      margin-top:4px;
+    }
+
+    /* Summary / quantum panels */
+    .khae-summary{
+      margin-top:16px;
+      border-radius:var(--radius-soft);
+      border:1px solid rgba(217,184,120,0.7);
+      background:rgba(12,10,5,0.96);
+      padding:11px 12px;
+      font-size:12px;
+      line-height:1.6;
+    }
+    .khae-summary h2{
+      font-family:"Cinzel","Times New Roman",serif;
+      font-size:14px;
+      letter-spacing:0.13em;
+      text-transform:uppercase;
+      margin:0 0 6px;
+    }
+    .khae-summary ul{
+      margin:6px 0 0;
+      padding-left:18px;
+    }
+    .khae-quantum-log-title{
+      font-size:11px;
+      color:#d0c8bc;
+      margin-top:6px;
+    }
+    .khae-quantum-log-list{
+      margin:4px 0 0;
+      padding-left:18px;
+      font-size:11px;
+    }
+    .khae-quantum-log-list li{
+      margin-bottom:2px;
+    }
+
+    @media (max-width:768px){
+      body{
+        padding:14px 6px 30px;
+      }
+      .khae-assess-shell{
+        padding:16px 12px 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="khae-assess-shell">
+    <header class="khae-assess-header">
+      <h1 class="khae-title">Career Assessment</h1>
+      <p class="khae-tag">Logic · Personality · Skills · 13 Pathways</p>
+      <p class="khae-sub">
+        This 300-question assessment explores how you think, how you work with others,
+        and what kind of careers fit your skills, values, and preferred work conditions.
+        Answer honestly on a 1–5 scale and you’ll receive a 13-pathway Career Star at
+        the end. You can pause anytime — your answers are saved on this device.
+      </p>
+    </header>
+
+    <!-- Progress -->
+    <div class="khae-progress-row">
+      <div class="khae-progress-meta" id="khaeProgressMeta">
+        Section 1 of 3 · Page 1 of 10 · Question 1 of 300
+      </div>
+      <div class="khae-progress-bar-wrap">
+        <div class="khae-progress-bar-fill" id="khaeProgressFill"></div>
+      </div>
+    </div>
+
+    <!-- Section/page label -->
+    <div class="khae-section-label" id="khaeSectionLabel"></div>
+    <div class="khae-page-label" id="khaePageLabel"></div>
+
+    <!-- Questions will render here -->
+    <div class="khae-questions-wrap" id="khaeQuestionsWrap"></div>
+    <div class="khae-error" id="khaeError" style="display:none;"></div>
+
+    <!-- Navigation -->
+    <div class="khae-nav-row">
+      <div class="khae-nav-left">
+        <button type="button" class="khae-btn" id="khaePrevBtn">← Previous</button>
+        <button type="button" class="khae-btn" id="khaeSaveBtn">💾 Save Progress</button>
+        <span class="khae-save-note">Progress is auto-saved as you answer.</span>
+      </div>
+      <div class="khae-nav-right">
+        <button type="button" class="khae-btn khae-btn-primary" id="khaeNextBtn">
+          Next →
+        </button>
+      </div>
+    </div>
+
+    <!-- Summary after completion -->
+    <div id="khaeAssessmentSummary" class="khae-summary" style="display:none;"></div>
+
+    <!-- Quantum Career Lens panel -->
+    <div id="khaeQuantumPanel" class="khae-summary" style="display:none;"></div>
+  </div>
+
+  <script>
+  (function(){
+    const QUESTIONS_PER_SECTION = 100;
+    const QUESTIONS_PER_PAGE = 10;
+    const TOTAL_SECTIONS = 3;
+    const STORAGE_KEY = 'khaeCareerProgress_v1';
+    const BUNDLE_KEY = 'khaeCareerAssessmentBundle_v1';
+    const QUANTUM_LOG_KEY = 'khaeCareerQuantumLog_v1';
+
+    /* -------------------------------------------------------
+       QUESTION BANKS (300 total: 100 per section)
+       All are 1–5 scale: 1=Strongly Disagree … 5=Strongly Agree
+       Each question includes domainWeights for scoring.
+    --------------------------------------------------------*/
+
+    function qw(id, section, text, domains){
+      const dw = {};
+      domains.forEach(d => { dw[d] = (dw[d] || 0) + 1; });
+      return { id, section, text, domainWeights: dw };
+    }
+
+    // SECTION 1 — Logic, Math, Core Knowledge, Analytical Thinking
+    const SECTION1_QUESTIONS = [
+      // Numeracy & logic (1–15)
+      qw('S1_Q001',1,'I can quickly estimate totals in my head when shopping.', ['numeracy']),
+      qw('S1_Q002',1,'I feel confident working with fractions and percentages.', ['numeracy']),
+      qw('S1_Q003',1,'I can interpret charts, graphs, or data tables without much help.', ['science_analysis','numeracy']),
+      qw('S1_Q004',1,'I enjoy puzzles that require logical thinking (like Sudoku or logic grids).', ['science_analysis','numeracy']),
+      qw('S1_Q005',1,'I can check my own work in math or budgets and catch small errors.', ['numeracy','pref_detail_work']),
+      qw('S1_Q006',1,'I like figuring out the pattern behind a sequence of numbers or events.', ['science_analysis','numeracy']),
+      qw('S1_Q007',1,'I can explain math ideas to others in simple language.', ['numeracy','teaching_training']),
+      qw('S1_Q008',1,'I feel comfortable calculating time, distance, or speed in everyday life.', ['numeracy','technical_trades']),
+      qw('S1_Q009',1,'I often think “does this logically follow?” when I hear an argument.', ['science_analysis','ethical_judgment']),
+      qw('S1_Q010',1,'I enjoy solving multi-step word problems.', ['numeracy','science_analysis']),
+      qw('S1_Q011',1,'I keep my notes, lists, or spreadsheets organized.', ['numeracy','business_ops']),
+      qw('S1_Q012',1,'I like tracking numbers over time (grades, sales, training reps, etc.).', ['numeracy','business_ops']),
+      qw('S1_Q013',1,'I tend to double-check facts before making a decision.', ['science_analysis','ethical_judgment']),
+      qw('S1_Q014',1,'I am comfortable balancing a simple budget.', ['numeracy','business_ops']),
+      qw('S1_Q015',1,'When something doesn’t add up, I notice quickly.', ['science_analysis','numeracy']),
+
+      // Reading, writing, communication (16–30)
+      qw('S1_Q016',1,'I can summarize a long article or video in a few clear sentences.', ['writing_communication','communication_clarity']),
+      qw('S1_Q017',1,'I enjoy reading non-fiction books, articles, or reports.', ['writing_communication','science_analysis']),
+      qw('S1_Q018',1,'I can write emails or messages that are clear and polite.', ['writing_communication','communication_clarity']),
+      qw('S1_Q019',1,'I feel comfortable proofreading and editing written work.', ['writing_communication','pref_detail_work']),
+      qw('S1_Q020',1,'I enjoy explaining ideas to others using examples or stories.', ['writing_communication','teaching_training']),
+      qw('S1_Q021',1,'I can follow written instructions without needing extra help.', ['writing_communication']),
+      qw('S1_Q022',1,'People often ask me to help them understand assignments or documents.', ['writing_communication','community_support']),
+      qw('S1_Q023',1,'I feel confident speaking in front of small groups.', ['writing_communication','pref_people_facing']),
+      qw('S1_Q024',1,'I can adjust how I speak depending on who I’m talking to.', ['communication_clarity','pref_people_facing']),
+      qw('S1_Q025',1,'I enjoy creative writing, journaling, or composing posts.', ['writing_communication','creative_arts']),
+      qw('S1_Q026',1,'I’m able to read between the lines and spot implied meanings.', ['writing_communication','science_analysis']),
+      qw('S1_Q027',1,'I pay attention to tone and wording when I write.', ['writing_communication','pref_detail_work']),
+      qw('S1_Q028',1,'I am comfortable writing about my thoughts, feelings, or opinions.', ['writing_communication','empathy']),
+      qw('S1_Q029',1,'I can follow complex instructions that include multiple steps.', ['writing_communication','science_analysis']),
+      qw('S1_Q030',1,'I enjoy helping others improve their writing or communication.', ['writing_communication','teaching_training']),
+
+      // Science & problem-solving (31–45)
+      qw('S1_Q031',1,'I like asking “why” and “how” things work.', ['science_analysis']),
+      qw('S1_Q032',1,'I enjoy hands-on experiments, demonstrations, or tinkering.', ['science_analysis','technical_trades']),
+      qw('S1_Q033',1,'I can separate my personal feelings from the facts when needed.', ['science_analysis','ethical_judgment']),
+      qw('S1_Q034',1,'I like comparing different sources before forming an opinion.', ['science_analysis']),
+      qw('S1_Q035',1,'I enjoy documentaries about technology, science, or history.', ['science_analysis']),
+      qw('S1_Q036',1,'I often try to diagnose problems (devices, systems, schedules).', ['science_analysis','technical_trades']),
+      qw('S1_Q037',1,'I can follow if-then logic (if this happens, then that).', ['science_analysis']),
+      qw('S1_Q038',1,'I enjoy figuring out root causes rather than quick fixes.', ['science_analysis','business_ops']),
+      qw('S1_Q039',1,'I am comfortable using search tools and reading technical info.', ['science_analysis','pref_digital']),
+      qw('S1_Q040',1,'I like analyzing pros and cons before choosing.', ['science_analysis']),
+      qw('S1_Q041',1,'I rarely accept something as true without at least a little checking.', ['science_analysis','ethical_judgment']),
+      qw('S1_Q042',1,'I’m curious about how data is collected and interpreted.', ['science_analysis','numeracy']),
+      qw('S1_Q043',1,'I like designing tests to see if an idea actually works.', ['science_analysis','design_engineering']),
+      qw('S1_Q044',1,'I enjoy taking things apart and putting them back together.', ['technical_trades','science_analysis']),
+      qw('S1_Q045',1,'I am comfortable with trial-and-error when learning something new.', ['science_analysis','patience']),
+
+      // Design, engineering, spatial (46–60)
+      qw('S1_Q046',1,'I can visualize how parts fit together in 3D (furniture, tools, buildings).', ['design_engineering']),
+      qw('S1_Q047',1,'I enjoy sketching or planning out designs.', ['design_engineering','creative_arts']),
+      qw('S1_Q048',1,'I notice flaws in physical layouts (unsafe cords, awkward furniture, etc.).', ['design_engineering','public_service']),
+      qw('S1_Q049',1,'I like learning how machines, engines, or devices work.', ['technical_trades','design_engineering']),
+      qw('S1_Q050',1,'I can read simple diagrams, maps, or floor plans.', ['design_engineering']),
+      qw('S1_Q051',1,'I enjoy thinking about how to improve tools or systems.', ['design_engineering','business_ops']),
+      qw('S1_Q052',1,'I like step-by-step building sets (Lego, models, kits).', ['design_engineering','technical_trades']),
+      qw('S1_Q053',1,'I think about safety and durability when imagining new designs.', ['design_engineering','public_service']),
+      qw('S1_Q054',1,'I enjoy learning basic coding or logic used in software.', ['design_engineering','pref_digital']),
+      qw('S1_Q055',1,'I can imagine how small changes affect the whole structure.', ['design_engineering','science_analysis']),
+      qw('S1_Q056',1,'I like comparing different tools or products to see which works best.', ['design_engineering','business_ops']),
+      qw('S1_Q057',1,'I’m comfortable reading measurement tools (rulers, tape measures).', ['technical_trades','numeracy']),
+      qw('S1_Q058',1,'I enjoy working with blueprints, diagrams, or schematics.', ['design_engineering']),
+      qw('S1_Q059',1,'I tend to notice when something is slightly misaligned or uneven.', ['design_engineering','pref_detail_work']),
+      qw('S1_Q060',1,'I like the idea of designing or improving real-world structures.', ['design_engineering','architecture_engineering']),
+
+      // Business, systems, organization (61–80)
+      qw('S1_Q061',1,'I notice inefficiencies in how organizations or events are run.', ['business_ops']),
+      qw('S1_Q062',1,'I enjoy organizing schedules, calendars, or timelines.', ['business_ops','pref_detail_work']),
+      qw('S1_Q063',1,'I like planning multi-step projects from start to finish.', ['business_ops','pref_leadership']),
+      qw('S1_Q064',1,'I understand how budgets and expenses affect a business.', ['business_ops','numeracy']),
+      qw('S1_Q065',1,'I’m curious about how companies make money and stay profitable.', ['business_ops']),
+      qw('S1_Q066',1,'I enjoy comparing prices, features, or services before deciding.', ['business_ops','science_analysis']),
+      qw('S1_Q067',1,'I can track tasks and deadlines without often forgetting.', ['business_ops','pref_routine']),
+      qw('S1_Q068',1,'I like roles where I can help coordinate people and resources.', ['business_ops','pref_leadership']),
+      qw('S1_Q069',1,'I think about customer experience when using products or services.', ['business_ops','sales_persuasion']),
+      qw('S1_Q070',1,'I enjoy improving systems (sign-up forms, workflows, checklists).', ['business_ops','design_engineering']),
+      qw('S1_Q071',1,'I’m comfortable using spreadsheets or simple databases.', ['business_ops','pref_digital']),
+      qw('S1_Q072',1,'I like seeing measurable results from my work (numbers, reports).', ['business_ops','numeracy']),
+      qw('S1_Q073',1,'I care about policies and procedures being clear and fair.', ['business_ops','fairness']),
+      qw('S1_Q074',1,'I enjoy reading about entrepreneurship or leadership.', ['business_ops','pref_leadership']),
+      qw('S1_Q075',1,'I feel confident tracking details even during busy times.', ['business_ops','stress_tolerance']),
+
+      // Orientation anchors (arts vs STEM, people vs things, indoor vs outdoor, etc.) (81–100)
+      qw('S1_Q076',1,'I generally enjoy math and science more than creative writing or art.', ['arts_vs_stem_anchor','science_analysis']),
+      qw('S1_Q077',1,'I generally enjoy creative writing, music, or visual art more than math.', ['arts_vs_stem_anchor','creative_arts']),
+      qw('S1_Q078',1,'I prefer working with tools, machines, or systems over emotional support tasks.', ['people_vs_things_anchor','technical_trades']),
+      qw('S1_Q079',1,'I prefer helping people directly rather than working with equipment.', ['people_vs_things_anchor','community_support']),
+      qw('S1_Q080',1,'I prefer indoor workspaces over outdoor fieldwork.', ['indoor_vs_outdoor_anchor']),
+      qw('S1_Q081',1,'I would enjoy a job that includes regular outdoor or field work.', ['indoor_vs_outdoor_anchor','outdoors_work']),
+      qw('S1_Q082',1,'I’m comfortable using computers or digital tools most of the day.', ['pref_digital']),
+      qw('S1_Q083',1,'I like keeping up with new technology or apps.', ['pref_digital','science_analysis']),
+      qw('S1_Q084',1,'I enjoy artistic expression (music, dance, design, etc.).', ['creative_arts']),
+      qw('S1_Q085',1,'I can lose track of time when I’m focused on a challenging problem.', ['science_analysis','pref_quiet_focus']),
+      qw('S1_Q086',1,'I enjoy competitions, contests, or performance-based tasks.', ['sales_persuasion','arts_entertainment_anchor']),
+      qw('S1_Q087',1,'I often help classmates or coworkers understand difficult material.', ['teaching_training','communication_clarity']),
+      qw('S1_Q088',1,'I feel a strong need for my work to align with my values.', ['pref_meaning_impact','ethical_judgment']),
+      qw('S1_Q089',1,'I can imagine myself working in a lab, workshop, or technical environment.', ['science_analysis','technical_trades']),
+      qw('S1_Q090',1,'I can imagine myself working in a creative studio or performance space.', ['creative_arts']),
+      qw('S1_Q091',1,'I’m comfortable reading and filling out official forms or applications.', ['writing_communication','public_service']),
+      qw('S1_Q092',1,'I like understanding the rules and systems behind how society works.', ['public_service','law_policy_interest']),
+      qw('S1_Q093',1,'I am usually careful and precise when dealing with details.', ['pref_detail_work']),
+      qw('S1_Q094',1,'I often think about long-term consequences when making choices.', ['ethical_judgment']),
+      qw('S1_Q095',1,'I’m comfortable making decisions based on evidence, not just feelings.', ['science_analysis','ethical_judgment']),
+      qw('S1_Q096',1,'I enjoy comparing different career options or paths logically.', ['science_analysis','business_ops']),
+      qw('S1_Q097',1,'I can usually see multiple possible solutions to a problem.', ['science_analysis']),
+      qw('S1_Q098',1,'I feel comfortable asking questions when something is unclear.', ['communication_clarity']),
+      qw('S1_Q099',1,'I like seeing how different school subjects connect to real jobs.', ['science_analysis','teaching_training']),
+      qw('S1_Q100',1,'I believe my thinking skills are one of my strengths.', ['science_analysis','numeracy'])
+    ];
+
+    // SECTION 2 — Personality, Communication, Morality, Interpersonal
+    const SECTION2_QUESTIONS = [
+      // Empathy, listening, support (1–20)
+      qw('S2_Q001',2,'I notice when people around me are feeling upset or stressed.', ['empathy']),
+      qw('S2_Q002',2,'Friends or coworkers often come to me when they need someone to listen.', ['empathy','community_support']),
+      qw('S2_Q003',2,'I try to understand other people’s perspectives, even when I disagree.', ['empathy','fairness']),
+      qw('S2_Q004',2,'I feel fulfilled when I can help someone feel heard or understood.', ['empathy','community_support']),
+      qw('S2_Q005',2,'I am patient when someone is learning something new.', ['empathy','patience']),
+      qw('S2_Q006',2,'I pay attention to non-verbal cues like facial expressions and tone.', ['empathy','communication_clarity']),
+      qw('S2_Q007',2,'I try to check in on people who seem unusually quiet or withdrawn.', ['empathy','community_support']),
+      qw('S2_Q008',2,'I find it easy to put myself in someone else’s shoes.', ['empathy']),
+      qw('S2_Q009',2,'I try not to judge people too quickly.', ['empathy','fairness']),
+      qw('S2_Q010',2,'When I give feedback, I try to be kind as well as honest.', ['empathy','communication_clarity']),
+      qw('S2_Q011',2,'I feel drawn to roles that involve counseling, mentoring, or caregiving.', ['empathy','community_support','health_care']),
+      qw('S2_Q012',2,'I often remember personal details that matter to people.', ['empathy','pref_people_facing']),
+      qw('S2_Q013',2,'I feel uncomfortable when someone is treated unfairly.', ['empathy','fairness']),
+      qw('S2_Q014',2,'I can stay calm when someone is expressing strong emotions.', ['empathy','stress_tolerance']),
+      qw('S2_Q015',2,'I try to resolve conflicts rather than avoid them.', ['empathy','communication_clarity']),
+      qw('S2_Q016',2,'I am interested in careers that support mental or emotional health.', ['empathy','community_support']),
+      qw('S2_Q017',2,'I enjoy volunteering or acts of service for my community.', ['empathy','public_service']),
+      qw('S2_Q018',2,'I feel a responsibility to care for vulnerable people.', ['empathy','health_care']),
+      qw('S2_Q019',2,'I am willing to listen to both sides before making a judgment.', ['empathy','fairness']),
+      qw('S2_Q020',2,'I can offer support without needing to “fix” everything.', ['empathy','patience']),
+
+      // Communication clarity, social style (21–40)
+      qw('S2_Q021',2,'I communicate my ideas clearly in conversations.', ['communication_clarity']),
+      qw('S2_Q022',2,'I can adapt my communication style for different people or groups.', ['communication_clarity','pref_people_facing']),
+      qw('S2_Q023',2,'I’m comfortable asking clarifying questions if I don’t understand something.', ['communication_clarity']),
+      qw('S2_Q024',2,'I try to listen fully instead of interrupting.', ['communication_clarity','patience']),
+      qw('S2_Q025',2,'I enjoy group discussions and collaborative problem-solving.', ['communication_clarity','pref_people_facing']),
+      qw('S2_Q026',2,'I can express disagreement respectfully.', ['communication_clarity','fairness']),
+      qw('S2_Q027',2,'I am comfortable giving presentations or leading meetings.', ['communication_clarity','pref_leadership']),
+      qw('S2_Q028',2,'I can read the room and adjust my tone or approach.', ['communication_clarity','empathy']),
+      qw('S2_Q029',2,'I prefer open, honest communication over avoiding difficult topics.', ['communication_clarity','ethical_judgment']),
+      qw('S2_Q030',2,'I enjoy roles that involve speaking, writing, or storytelling.', ['communication_clarity','writing_communication']),
+      qw('S2_Q031',2,'I try to avoid gossip and focus on facts.', ['communication_clarity','ethical_judgment']),
+      qw('S2_Q032',2,'I can mediate small conflicts between people effectively.', ['communication_clarity','community_support']),
+      qw('S2_Q033',2,'I am comfortable networking and meeting new people.', ['communication_clarity','sales_persuasion']),
+      qw('S2_Q034',2,'I can simplify complex topics for others.', ['communication_clarity','teaching_training']),
+      qw('S2_Q035',2,'I try to clarify expectations instead of assuming.', ['communication_clarity']),
+      qw('S2_Q036',2,'I’m willing to ask for help when I need it.', ['communication_clarity','empathy']),
+      qw('S2_Q037',2,'I send follow-up messages or summaries after important conversations.', ['communication_clarity','business_ops']),
+      qw('S2_Q038',2,'I am comfortable using digital tools for communication (email, chat, video).', ['communication_clarity','pref_digital']),
+      qw('S2_Q039',2,'I think good communication is essential in nearly every career.', ['communication_clarity']),
+      qw('S2_Q040',2,'I’m open to feedback about my communication style.', ['communication_clarity','empathy']),
+
+      // Values: fairness, ethics, integrity (41–60)
+      qw('S2_Q041',2,'I care deeply about fairness and justice.', ['fairness','ethical_judgment']),
+      qw('S2_Q042',2,'I try to admit when I am wrong.', ['ethical_judgment']),
+      qw('S2_Q043',2,'I feel uncomfortable when I see rules broken in harmful ways.', ['ethical_judgment','public_service']),
+      qw('S2_Q044',2,'I try not to take advantage of other people.', ['ethical_judgment','empathy']),
+      qw('S2_Q045',2,'I am willing to speak up if something seems unethical.', ['ethical_judgment','law_policy_interest']),
+      qw('S2_Q046',2,'I believe transparency and honesty are important at work.', ['ethical_judgment']),
+      qw('S2_Q047',2,'I consider whether my choices might hurt people down the road.', ['ethical_judgment','empathy']),
+      qw('S2_Q048',2,'I can respect rules even when I don’t fully agree with them.', ['ethical_judgment','public_service']),
+      qw('S2_Q049',2,'I’m drawn to work that protects people’s rights or safety.', ['ethical_judgment','public_service']),
+      qw('S2_Q050',2,'I feel responsible for how my work impacts the community.', ['ethical_judgment','public_service']),
+      qw('S2_Q051',2,'I prefer leaders who act with integrity over those who focus only on results.', ['ethical_judgment']),
+      qw('S2_Q052',2,'I believe profits should not come at the expense of people.', ['ethical_judgment','fairness']),
+      qw('S2_Q053',2,'I try to treat everyone with respect, regardless of their role.', ['ethical_judgment','empathy']),
+      qw('S2_Q054',2,'I would feel uneasy working somewhere that encourages dishonest behavior.', ['ethical_judgment']),
+      qw('S2_Q055',2,'I like the idea of careers that uphold laws, rights, or ethics.', ['ethical_judgment','law_policy_interest']),
+      qw('S2_Q056',2,'I reflect on my decisions and whether they aligned with my values.', ['ethical_judgment']),
+      qw('S2_Q057',2,'I am careful not to misuse sensitive or private information.', ['ethical_judgment']),
+      qw('S2_Q058',2,'I value workplaces that treat all employees fairly.', ['ethical_judgment','fairness']),
+      qw('S2_Q059',2,'I want my career to contribute something positive to society.', ['ethical_judgment','pref_meaning_impact']),
+      qw('S2_Q060',2,'I’m willing to say “no” to work that violates my values.', ['ethical_judgment']),
+
+      // Stress tolerance, resilience, pace (61–80)
+      qw('S2_Q061',2,'I can stay mostly calm when things don’t go as planned.', ['stress_tolerance']),
+      qw('S2_Q062',2,'I can handle deadlines without completely shutting down.', ['stress_tolerance']),
+      qw('S2_Q063',2,'I’m able to bounce back after setbacks.', ['stress_tolerance']),
+      qw('S2_Q064',2,'I can ask for support before I reach burnout.', ['stress_tolerance','communication_clarity']),
+      qw('S2_Q065',2,'I can prioritize what matters most when under pressure.', ['stress_tolerance','business_ops']),
+      qw('S2_Q066',2,'I prefer a steady, predictable pace over constant urgency.', ['pref_quiet_focus','pref_routine']),
+      qw('S2_Q067',2,'I enjoy fast-paced environments with frequent changes.', ['pref_fast_paced','pref_variety']),
+      qw('S2_Q068',2,'I can focus on one task for a long period when needed.', ['pref_quiet_focus','patience']),
+      qw('S2_Q069',2,'I like switching between different tasks in a single day.', ['pref_variety']),
+      qw('S2_Q070',2,'I can separate work stress from my personal life reasonably well.', ['stress_tolerance','pref_work_life_balance']),
+      qw('S2_Q071',2,'I prefer roles where expectations are clearly defined.', ['pref_routine','communication_clarity']),
+      qw('S2_Q072',2,'I can adapt when schedules or plans change suddenly.', ['stress_tolerance','pref_variety']),
+      qw('S2_Q073',2,'I do my best work in calmer, low-noise environments.', ['pref_quiet_focus']),
+      qw('S2_Q074',2,'I do my best work when there is some pressure or excitement.', ['pref_fast_paced']),
+      qw('S2_Q075',2,'I’m comfortable asking supervisors to clarify priorities.', ['communication_clarity','stress_tolerance']),
+      qw('S2_Q076',2,'I have strategies (breathing, breaks, planning) to manage stress.', ['stress_tolerance']),
+      qw('S2_Q077',2,'I’m willing to learn new coping skills to handle demanding roles.', ['stress_tolerance','pref_autonomy']),
+      qw('S2_Q078',2,'I can accept constructive criticism without taking it too personally.', ['stress_tolerance','patience']),
+      qw('S2_Q079',2,'I try to maintain balance between work, rest, and relationships.', ['pref_work_life_balance']),
+      qw('S2_Q080',2,'I’m open to roles that can be intense at times if the purpose matters.', ['stress_tolerance','pref_meaning_impact']),
+
+      // Leadership, teamwork, independence (81–100)
+      qw('S2_Q081',2,'I enjoy guiding or organizing groups toward a shared goal.', ['pref_leadership']),
+      qw('S2_Q082',2,'I am comfortable making decisions when others look to me.', ['pref_leadership']),
+      qw('S2_Q083',2,'I prefer to be a specialist or support person rather than the main leader.', ['pref_support_role']),
+      qw('S2_Q084',2,'I like working in teams where everyone contributes.', ['pref_people_facing']),
+      qw('S2_Q085',2,'I enjoy working independently with minimal supervision.', ['pref_autonomy']),
+      qw('S2_Q086',2,'I feel responsible for the well-being of the people I lead.', ['pref_leadership','empathy']),
+      qw('S2_Q087',2,'I’m comfortable giving clear instructions or delegating tasks.', ['pref_leadership','communication_clarity']),
+      qw('S2_Q088',2,'I value team members who communicate openly and respectfully.', ['pref_people_facing','communication_clarity']),
+      qw('S2_Q089',2,'I’m willing to be accountable if a decision I made turns out poorly.', ['pref_leadership','ethical_judgment']),
+      qw('S2_Q090',2,'I enjoy mentoring others and watching them grow.', ['pref_leadership','teaching_training']),
+      qw('S2_Q091',2,'I prefer careers where I can influence big-picture direction.', ['pref_leadership','business_ops']),
+      qw('S2_Q092',2,'I prefer careers where I can focus deeply on my craft or expertise.', ['pref_support_role','pref_quiet_focus']),
+      qw('S2_Q093',2,'I feel comfortable speaking up even when I’m not the official leader.', ['pref_autonomy','communication_clarity']),
+      qw('S2_Q094',2,'I value workplaces where everyone’s voice is heard.', ['pref_people_facing','fairness']),
+      qw('S2_Q095',2,'I’m open to taking on leadership if the mission inspires me.', ['pref_leadership','pref_meaning_impact']),
+      qw('S2_Q096',2,'I prefer clear role definitions in teams.', ['pref_support_role','pref_routine']),
+      qw('S2_Q097',2,'I can collaborate well even with people who think differently than I do.', ['pref_people_facing','empathy']),
+      qw('S2_Q098',2,'I like having some decisions I can make entirely on my own.', ['pref_autonomy']),
+      qw('S2_Q099',2,'I am comfortable receiving direction from others when needed.', ['pref_support_role','patience']),
+      qw('S2_Q100',2,'I believe my personality and values can guide me toward the right career.', ['pref_meaning_impact','ethical_judgment'])
+    ];
+
+    // SECTION 3 — Skills, Talents, Preferences, Work Conditions
+    const SECTION3_QUESTIONS = [
+      // Hands-on vs digital, practical skills (1–25)
+      qw('S3_Q001',3,'I enjoy working with my hands (building, fixing, crafting).', ['pref_hands_on','technical_trades']),
+      qw('S3_Q002',3,'I feel confident using basic tools or equipment.', ['pref_hands_on','technical_trades']),
+      qw('S3_Q003',3,'I enjoy using computers, tablets, or software in my work.', ['pref_digital']),
+      qw('S3_Q004',3,'I pick up new apps or software quickly.', ['pref_digital','science_analysis']),
+      qw('S3_Q005',3,'I like jobs where I can see a physical result at the end of the day.', ['pref_hands_on','outdoors_work']),
+      qw('S3_Q006',3,'I am comfortable learning how to maintain or repair equipment.', ['technical_trades']),
+      qw('S3_Q007',3,'I enjoy data entry, spreadsheets, or organizing digital information.', ['pref_digital','pref_detail_work']),
+      qw('S3_Q008',3,'I can calmly troubleshoot when technology doesn’t work.', ['pref_digital','stress_tolerance']),
+      qw('S3_Q009',3,'I like roles that combine technology with human interaction.', ['pref_digital','pref_people_facing']),
+      qw('S3_Q010',3,'I enjoy creating digital content (graphics, videos, audio, or sites).', ['pref_digital','creative_arts']),
+      qw('S3_Q011',3,'I am comfortable following safety instructions with tools or machines.', ['technical_trades','public_service']),
+      qw('S3_Q012',3,'I like learning step-by-step procedures for complex tasks.', ['technical_trades','pref_detail_work']),
+      qw('S3_Q013',3,'I enjoy organizing physical spaces (rooms, shelves, inventory).', ['pref_hands_on','business_ops']),
+      qw('S3_Q014',3,'I enjoy organizing digital files so others can find them easily.', ['pref_digital','business_ops']),
+      qw('S3_Q015',3,'I like seeing how technology can make work more efficient.', ['pref_digital','business_ops']),
+      qw('S3_Q016',3,'I can follow a repair or setup tutorial and apply it myself.', ['technical_trades','pref_digital']),
+      qw('S3_Q017',3,'I would enjoy a role where I build, install, or maintain things.', ['technical_trades','installation_maintenance_anchor']),
+      qw('S3_Q018',3,'I would enjoy a role where I design or manage digital systems.', ['pref_digital','science_analysis']),
+      qw('S3_Q019',3,'I like combining creative ideas with practical implementation.', ['creative_arts','technical_trades']),
+      qw('S3_Q020',3,'I adapt well when tools or processes change.', ['pref_digital','stress_tolerance']),
+      qw('S3_Q021',3,'I’m comfortable learning technical terminology for tools or software.', ['technical_trades','pref_digital']),
+      qw('S3_Q022',3,'I’d enjoy a job that includes some technical certifications or training.', ['technical_trades','science_analysis']),
+      qw('S3_Q023',3,'I’d enjoy a job where I can become the “go-to” tech helper for others.', ['pref_digital','community_support']),
+      qw('S3_Q024',3,'I like the idea of improving systems or workflows with technology.', ['pref_digital','design_engineering']),
+      qw('S3_Q025',3,'I enjoy learning new practical skills that I can use outside of work too.', ['pref_hands_on','pref_autonomy']),
+
+      // People-facing vs solitary, sales vs service, teaching (26–50)
+      qw('S3_Q026',3,'I prefer jobs where I interact with people most of the day.', ['pref_people_facing']),
+      qw('S3_Q027',3,'I prefer jobs where I work mostly alone or with minimal social interaction.', ['pref_quiet_focus']),
+      qw('S3_Q028',3,'I enjoy helping customers or clients solve their problems.', ['sales_persuasion','community_support']),
+      qw('S3_Q029',3,'I am comfortable explaining products, services, or ideas to others.', ['sales_persuasion','communication_clarity']),
+      qw('S3_Q030',3,'I would enjoy teaching or tutoring.', ['teaching_training','pref_people_facing']),
+      qw('S3_Q031',3,'I like giving demonstrations or workshops.', ['teaching_training','communications_anchor']),
+      qw('S3_Q032',3,'I enjoy brainstorming and collaborating rather than working alone.', ['pref_people_facing']),
+      qw('S3_Q033',3,'I prefer to have time alone to think deeply about my work.', ['pref_quiet_focus']),
+      qw('S3_Q034',3,'I am comfortable with polite small talk when needed.', ['sales_persuasion','communication_clarity']),
+      qw('S3_Q035',3,'I’m interested in roles that involve counseling, coaching, or advising.', ['community_support','teaching_training']),
+      qw('S3_Q036',3,'I enjoy roles where I can encourage or motivate others.', ['teaching_training','sales_persuasion']),
+      qw('S3_Q037',3,'I am comfortable dealing with challenging or upset customers.', ['sales_persuasion','stress_tolerance']),
+      qw('S3_Q038',3,'I would enjoy working on helplines, front desks, or service counters.', ['sales_persuasion','community_support']),
+      qw('S3_Q039',3,'I would rather work behind the scenes than be the main point of contact.', ['pref_quiet_focus','pref_support_role']),
+      qw('S3_Q040',3,'I’d enjoy being known for excellent customer care.', ['sales_persuasion','community_support']),
+      qw('S3_Q041',3,'I like preparing materials, slides, or resources for other presenters.', ['pref_support_role','pref_detail_work']),
+      qw('S3_Q042',3,'I feel satisfied when I see someone grow or succeed because of my help.', ['teaching_training','empathy']),
+      qw('S3_Q043',3,'I would enjoy community outreach or public education roles.', ['teaching_training','public_service']),
+      qw('S3_Q044',3,'I prefer communication-heavy roles to purely technical ones.', ['pref_people_facing','communications_anchor']),
+      qw('S3_Q045',3,'I like mixing both people-facing and solo work in my schedule.', ['pref_people_facing','pref_quiet_focus']),
+      qw('S3_Q046',3,'I enjoy negotiating, persuading, or closing deals.', ['sales_persuasion']),
+      qw('S3_Q047',3,'I would enjoy supporting a professional (doctor, lawyer, CEO) behind the scenes.', ['pref_support_role','law_policy_interest']),
+      qw('S3_Q048',3,'I enjoy sharing information and resources with groups.', ['teaching_training','communications_anchor']),
+      qw('S3_Q049',3,'I have patience for answering the same question many times.', ['teaching_training','patience']),
+      qw('S3_Q050',3,'I like roles where my people skills are central to my success.', ['pref_people_facing','sales_persuasion']),
+
+      // Work environment: indoor/outdoor, travel, pace, structure (51–75)
+      qw('S3_Q051',3,'I would enjoy spending part of my workday outdoors.', ['pref_outdoors_env','outdoors_work']),
+      qw('S3_Q052',3,'I prefer climate-controlled indoor environments.', ['indoor_vs_outdoor_anchor']),
+      qw('S3_Q053',3,'I’m open to jobs that include travel.', ['pref_travel']),
+      qw('S3_Q054',3,'I prefer to stay based in one main location.', ['pref_routine']),
+      qw('S3_Q055',3,'I enjoy variety in scenery and tasks.', ['pref_variety','pref_travel']),
+      qw('S3_Q056',3,'I prefer predictable, stable routines over frequent changes.', ['pref_routine']),
+      qw('S3_Q057',3,'I enjoy high-energy, fast-paced work environments.', ['pref_fast_paced']),
+      qw('S3_Q058',3,'I prefer calm, steady-paced environments.', ['pref_quiet_focus']),
+      qw('S3_Q059',3,'I can tolerate some noise and bustle while working.', ['pref_fast_paced','stress_tolerance']),
+      qw('S3_Q060',3,'I would enjoy fieldwork, site visits, or inspections.', ['outdoors_work','public_service']),
+      qw('S3_Q061',3,'I like having a clear start and end to my workday.', ['pref_work_life_balance','pref_routine']),
+      qw('S3_Q062',3,'I am comfortable with shifts that may include evenings or weekends.', ['pref_fast_paced','stress_tolerance']),
+      qw('S3_Q063',3,'I would enjoy seasonal or project-based roles.', ['pref_variety']),
+      qw('S3_Q064',3,'I prefer long-term, stable positions.', ['pref_routine','pref_income_security']),
+      qw('S3_Q065',3,'I like roles where I can occasionally move around instead of sitting all day.', ['pref_hands_on','outdoors_work']),
+      qw('S3_Q066',3,'I could accept some physical labor if the role is meaningful and safe.', ['pref_hands_on','pref_meaning_impact']),
+      qw('S3_Q067',3,'I’m okay with desk-focused work for most of the day.', ['pref_digital','indoor_vs_outdoor_anchor']),
+      qw('S3_Q068',3,'I’m interested in careers that involve travel or working in different regions.', ['pref_travel']),
+      qw('S3_Q069',3,'I prefer a clear daily schedule instead of constant last-minute changes.', ['pref_routine','stress_tolerance']),
+      qw('S3_Q070',3,'I could work in busy environments (hospitals, airports, city centers).', ['pref_fast_paced','stress_tolerance']),
+      qw('S3_Q071',3,'I could work in quiet environments (labs, libraries, archives).', ['pref_quiet_focus']),
+      qw('S3_Q072',3,'I would enjoy work that sometimes takes me into nature.', ['outdoors_work','pref_outdoors_env']),
+      qw('S3_Q073',3,'I’d like a job that mixes desk work, meetings, and some field visits.', ['pref_variety','pref_people_facing']),
+      qw('S3_Q074',3,'I am open to flexible schedules if they come with freedom and autonomy.', ['pref_autonomy','pref_variety']),
+      qw('S3_Q075',3,'I want a work environment that feels physically safe and emotionally respectful.', ['pref_work_life_balance','empathy']),
+
+      // Motivations: meaning, income, security, growth (76–100)
+      qw('S3_Q076',3,'I want my work to feel meaningful, not just a paycheck.', ['pref_meaning_impact']),
+      qw('S3_Q077',3,'Financial stability is a high priority for me.', ['pref_income_security']),
+      qw('S3_Q078',3,'Work–life balance is very important to me.', ['pref_work_life_balance']),
+      qw('S3_Q079',3,'I am willing to invest extra time for a career I care deeply about.', ['pref_meaning_impact','pref_autonomy']),
+      qw('S3_Q080',3,'I prefer careers with clear growth paths and advancement.', ['pref_income_security','pref_leadership']),
+      qw('S3_Q081',3,'I would accept a modest income for a highly meaningful career.', ['pref_meaning_impact']),
+      qw('S3_Q082',3,'I prefer steady income and benefits over high risk/high reward roles.', ['pref_income_security']),
+      qw('S3_Q083',3,'I am interested in careers where I can continue learning over time.', ['pref_meaning_impact','science_analysis']),
+      qw('S3_Q084',3,'I want a career that allows space for family, health, and rest.', ['pref_work_life_balance']),
+      qw('S3_Q085',3,'I enjoy setting and achieving long-term goals.', ['pref_autonomy','pref_leadership']),
+      qw('S3_Q086',3,'I would like my work to leave a positive impact on people or the planet.', ['pref_meaning_impact','public_service']),
+      qw('S3_Q087',3,'Job security matters a lot when I choose a path.', ['pref_income_security']),
+      qw('S3_Q088',3,'I am open to entrepreneurship or self-employment.', ['pref_autonomy','business_ops']),
+      qw('S3_Q089',3,'I am comfortable with some risk if it could lead to big rewards.', ['pref_autonomy','pref_fast_paced']),
+      qw('S3_Q090',3,'I prefer clear roles and steady routines to constant reinvention.', ['pref_routine','pref_income_security']),
+      qw('S3_Q091',3,'I want my skills to stay in demand for many years.', ['pref_income_security','science_analysis']),
+      qw('S3_Q092',3,'I care about being respected for my expertise.', ['pref_meaning_impact','pref_support_role']),
+      qw('S3_Q093',3,'I like having some control over how I schedule my work.', ['pref_autonomy','pref_work_life_balance']),
+      qw('S3_Q094',3,'I would like a career where I can mentor others eventually.', ['pref_leadership','teaching_training']),
+      qw('S3_Q095',3,'I value recognition and appreciation for my contributions.', ['pref_meaning_impact']),
+      qw('S3_Q096',3,'I’m willing to retrain or re-skill if needed for a better path.', ['pref_autonomy','science_analysis']),
+      qw('S3_Q097',3,'I’d like a career where I do not feel forced to compromise my values.', ['pref_meaning_impact','ethical_judgment']),
+      qw('S3_Q098',3,'I prefer stability but still want new challenges over time.', ['pref_income_security','pref_variety']),
+      qw('S3_Q099',3,'I would like a career where I can eventually specialize deeply.', ['pref_support_role','science_analysis']),
+      qw('S3_Q100',3,'I believe I can grow into a career that fits me well.', ['pref_meaning_impact','pref_autonomy'])
+    ];
+
+    const QUESTION_BANK = {
+      1: SECTION1_QUESTIONS,
+      2: SECTION2_QUESTIONS,
+      3: SECTION3_QUESTIONS
+    };
+
+    // Career pathways: 13 zones
+    const CAREER_PATHWAYS = [
+      {
+        id:1,
+        code:'arts_entertainment',
+        name:'Arts & Entertainment',
+        blurb:'Creative expression, performance, design, media, and storytelling.',
+        weights:{
+          creative_arts:1.4,
+          writing_communication:0.7,
+          pref_people_facing:0.6,
+          pref_variety:0.7,
+          arts_vs_stem_anchor:1.0,
+          pref_fast_paced:0.4
+        }
+      },
+      {
+        id:2,
+        code:'architecture_engineering',
+        name:'Architecture & Engineering',
+        blurb:'Designing and improving physical structures, systems, and technologies.',
+        weights:{
+          design_engineering:1.4,
+          numeracy:0.8,
+          science_analysis:1.0,
+          technical_trades:0.6,
+          indoor_vs_outdoor_anchor:0.3
+        }
+      },
+      {
+        id:3,
+        code:'business_admin',
+        name:'Business Management & Administration',
+        blurb:'Organizing people, systems, finances, and operations.',
+        weights:{
+          business_ops:1.4,
+          pref_leadership:0.8,
+          numeracy:0.6,
+          pref_detail_work:0.6,
+          communication_clarity:0.6
+        }
+      },
+      {
+        id:4,
+        code:'communications',
+        name:'Communications',
+        blurb:'Writing, media, public relations, storytelling, and messaging.',
+        weights:{
+          writing_communication:1.4,
+          communication_clarity:1.0,
+          pref_people_facing:0.7,
+          creative_arts:0.5
+        }
+      },
+      {
+        id:5,
+        code:'community_social',
+        name:'Community & Social Services',
+        blurb:'Support, counseling, social work, and community programs.',
+        weights:{
+          empathy:1.4,
+          community_support:1.2,
+          ethical_judgment:0.7,
+          pref_people_facing:0.7,
+          pref_meaning_impact:0.8
+        }
+      },
+      {
+        id:6,
+        code:'education',
+        name:'Education',
+        blurb:'Teaching, training, tutoring, curriculum support.',
+        weights:{
+          teaching_training:1.4,
+          empathy:0.8,
+          communication_clarity:0.8,
+          patience:0.8,
+          pref_people_facing:0.7
+        }
+      },
+      {
+        id:7,
+        code:'science_tech',
+        name:'Science & Technology',
+        blurb:'Research, analysis, labs, coding, and technical innovation.',
+        weights:{
+          science_analysis:1.4,
+          numeracy:0.8,
+          pref_digital:0.9,
+          arts_vs_stem_anchor:0.7,
+          pref_quiet_focus:0.6
+        }
+      },
+      {
+        id:8,
+        code:'maintenance_repair',
+        name:'Installation, Repair & Maintenance',
+        blurb:'Hands-on technical roles that keep systems running.',
+        weights:{
+          technical_trades:1.4,
+          pref_hands_on:1.1,
+          outdoors_work:0.6,
+          stress_tolerance:0.5
+        }
+      },
+      {
+        id:9,
+        code:'farming_forestry',
+        name:'Farming, Fishing & Forestry',
+        blurb:'Outdoor, land-based, and resource-focused work.',
+        weights:{
+          outdoors_work:1.4,
+          pref_outdoors_env:1.2,
+          pref_hands_on:0.8,
+          pref_variety:0.5
+        }
+      },
+      {
+        id:10,
+        code:'government',
+        name:'Government',
+        blurb:'Public administration, civic programs, and public service roles.',
+        weights:{
+          public_service:1.4,
+          fairness:0.8,
+          ethical_judgment:0.8,
+          communication_clarity:0.5
+        }
+      },
+      {
+        id:11,
+        code:'health_medicine',
+        name:'Health & Medicine',
+        blurb:'Clinical, allied health, and wellness professions.',
+        weights:{
+          health_care:1.4,
+          empathy:1.0,
+          stress_tolerance:0.7,
+          community_support:0.6,
+          science_analysis:0.6
+        }
+      },
+      {
+        id:12,
+        code:'law_policy',
+        name:'Law & Public Policy',
+        blurb:'Legal work, advocacy, policy-making, and justice systems.',
+        weights:{
+          law_policy_interest:1.4,
+          ethical_judgment:1.0,
+          fairness:1.0,
+          communication_clarity:0.6,
+          public_service:0.6
+        }
+      },
+      {
+        id:13,
+        code:'sales_customer',
+        name:'Sales & Customer Service',
+        blurb:'Customer-facing, negotiation, retail, and client care roles.',
+        weights:{
+          sales_persuasion:1.4,
+          pref_people_facing:1.1,
+          communication_clarity:0.7,
+          stress_tolerance:0.6,
+          pref_fast_paced:0.4
+        }
+      }
+    ];
+
+    /* -------------------------------------------------------
+       STATE & STORAGE
+    --------------------------------------------------------*/
+    let state = {
+      version:1,
+      currentSection:1,   // 1-3
+      currentPage:0,      // 0-9 for each section
+      activeSectionIds:{
+        1: [],
+        2: [],
+        3: []
+      },
+      answers:{}          // { questionId: 1-5 }
+    };
+
+    let quantumLog = [];
+    let latestPathwayResults = null;
+
+    function initActiveSectionIds(){
+      for(let s=1;s<=TOTAL_SECTIONS;s++){
+        const bank = QUESTION_BANK[s];
+        const ids = bank.map(q=>q.id);
+        shuffleInPlace(ids);
+        state.activeSectionIds[s] = ids.slice(0, QUESTIONS_PER_SECTION);
+      }
+    }
+
+    function shuffleInPlace(arr){
+      for(let i=arr.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [arr[i],arr[j]] = [arr[j],arr[i]];
+      }
+    }
+
+    function loadProgress(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(!raw){
+          initActiveSectionIds();
+          return;
+        }
+        const parsed = JSON.parse(raw);
+        if(!parsed || parsed.version !== 1){
+          initActiveSectionIds();
+          return;
+        }
+        state = parsed;
+        if(!state.activeSectionIds || !state.activeSectionIds[1]){
+          initActiveSectionIds();
+        }
+      }catch(e){
+        console.warn('Could not load progress', e);
+        initActiveSectionIds();
+      }
+    }
+
+    function saveProgress(){
+      try{
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      }catch(e){
+        console.warn('Could not save progress', e);
+      }
+    }
+
+    function loadQuantumLog(){
+      try{
+        const raw = localStorage.getItem(QUANTUM_LOG_KEY);
+        if(!raw){
+          quantumLog = [];
+          return;
+        }
+        const parsed = JSON.parse(raw);
+        quantumLog = Array.isArray(parsed) ? parsed : [];
+      }catch(e){
+        console.warn('Could not load quantum log', e);
+        quantumLog = [];
+      }
+    }
+
+    function saveQuantumLog(){
+      try{
+        localStorage.setItem(QUANTUM_LOG_KEY, JSON.stringify(quantumLog));
+      }catch(e){
+        console.warn('Could not save quantum log', e);
+      }
+    }
+
+    function getTodayIso(){
+      return new Date().toISOString().slice(0,10);
+    }
+
+    /* -------------------------------------------------------
+       UI RENDERING
+    --------------------------------------------------------*/
+    const elQuestionsWrap = document.getElementById('khaeQuestionsWrap');
+    const elSectionLabel = document.getElementById('khaeSectionLabel');
+    const elPageLabel = document.getElementById('khaePageLabel');
+    const elProgressMeta = document.getElementById('khaeProgressMeta');
+    const elProgressFill = document.getElementById('khaeProgressFill');
+    const elError = document.getElementById('khaeError');
+    const elSummary = document.getElementById('khaeAssessmentSummary');
+    const elQuantumPanel = document.getElementById('khaeQuantumPanel');
+    const btnPrev = document.getElementById('khaePrevBtn');
+    const btnNext = document.getElementById('khaeNextBtn');
+    const btnSave = document.getElementById('khaeSaveBtn');
+
+    const SECTION_TITLES = {
+      1: 'Section 1 · Logic, Core Knowledge & Analysis',
+      2: 'Section 2 · Personality, Communication & Values',
+      3: 'Section 3 · Skills, Talents & Work Conditions'
+    };
+
+  function renderPage(){
+  const s = state.currentSection;
+  const p = state.currentPage;
+  const ids = state.activeSectionIds[s];
+  const bank = QUESTION_BANK[s];
+
+  // Build lookup for this section’s questions
+  const lookup = {};
+  bank.forEach(q => { lookup[q.id] = q; });
+
+  const startIndex = p * QUESTIONS_PER_PAGE;        // 0-based index within this section
+  const endIndex   = startIndex + QUESTIONS_PER_PAGE;
+  const pageIds    = ids.slice(startIndex, endIndex);
+
+  const totalQuestions   = QUESTIONS_PER_SECTION * TOTAL_SECTIONS;  // 300
+  const globalStartIndex = (s - 1) * QUESTIONS_PER_SECTION + startIndex; // 0-based global index
+
+  elQuestionsWrap.innerHTML = '';
+  elError.style.display = 'none';
+  elSummary.style.display = 'none';
+  elQuantumPanel.style.display = 'none';
+
+  // Section title
+  elSectionLabel.textContent = SECTION_TITLES[s] || '';
+
+  // Page label uses global question numbers (1–300)
+  const globalFirst = globalStartIndex + 1;
+  const globalLast  = Math.min(globalStartIndex + pageIds.length, totalQuestions);
+  const totalPagesPerSection = QUESTIONS_PER_SECTION / QUESTIONS_PER_PAGE;
+
+  elPageLabel.textContent = 
+    `Page ${p+1} of ${totalPagesPerSection} · Questions ${globalFirst}–${globalLast} of ${totalQuestions}`;
+
+  // Render questions
+  pageIds.forEach((qid, idx) => {
+    const q = lookup[qid];
+    if(!q) return;
+
+    const card = document.createElement('div');
+    card.className = 'khae-q-card';
+
+    const qText = document.createElement('div');
+    qText.className = 'khae-q-text';
+
+    // Global question number (1–300)
+    const globalNumber = globalStartIndex + idx + 1;
+    qText.textContent = `${globalNumber}. ${q.text}`;
+    card.appendChild(qText);
+
+    const scale = document.createElement('div');
+    scale.className = 'khae-q-scale';
+
+    const existing = state.answers[q.id];
+
+    const labels = [
+      { value:1, short:'1', title:'Strongly Disagree' },
+      { value:2, short:'2', title:'Disagree' },
+      { value:3, short:'3', title:'Neutral' },
+      { value:4, short:'4', title:'Agree' },
+      { value:5, short:'5', title:'Strongly Agree' }
+    ];
+
+    labels.forEach(l => {
+      const lab = document.createElement('label');
+      const inp = document.createElement('input');
+      inp.type = 'radio';
+      inp.name = q.id;
+      inp.value = String(l.value);
+      if(Number(existing) === l.value) inp.checked = true;
+      inp.addEventListener('change', () => {
+        state.answers[q.id] = Number(inp.value);
+        saveProgress();
+      });
+      const span = document.createElement('span');
+      span.textContent = l.short;
+      lab.title = l.title;
+      lab.appendChild(inp);
+      lab.appendChild(span);
+      scale.appendChild(lab);
+    });
+
+    card.appendChild(scale);
+
+    // Only the last question on the page shows the scale hint
+    if(idx === pageIds.length - 1){
+      const hint = document.createElement('div');
+      hint.className = 'khae-scale-hint';
+      hint.textContent = 'Scale: 1 = Strongly Disagree · 5 = Strongly Agree';
+      card.appendChild(hint);
+    }
+
+    elQuestionsWrap.appendChild(card);
+  });
+
+  updateProgressMeta();
+  updateNavButtons();
+}
+
+    function countAnswered(){
+      return Object.keys(state.answers).length;
+    }
+
+    function updateProgressMeta(){
+      const answered = countAnswered();
+      const total = QUESTIONS_PER_SECTION * TOTAL_SECTIONS;
+      const percent = total ? Math.round((answered/total)*100) : 0;
+
+      const globalIndex = (state.currentSection-1)*QUESTIONS_PER_SECTION + (state.currentPage*QUESTIONS_PER_PAGE) + 1;
+      elProgressMeta.textContent =
+        `Section ${state.currentSection} of ${TOTAL_SECTIONS} · Page ${state.currentPage+1} of ${QUESTIONS_PER_SECTION/QUESTIONS_PER_PAGE} · Question ${globalIndex} of ${total}`;
+
+      elProgressFill.style.width = percent + '%';
+    }
+
+    function updateNavButtons(){
+      const isFirstGlobalPage = state.currentSection === 1 && state.currentPage === 0;
+      btnPrev.disabled = isFirstGlobalPage;
+
+      const lastSection = TOTAL_SECTIONS;
+      const lastPageInSection = Math.ceil(QUESTIONS_PER_SECTION/QUESTIONS_PER_PAGE)-1;
+      const onLastPage = (state.currentSection === lastSection && state.currentPage === lastPageInSection);
+
+      btnNext.textContent = onLastPage ? 'Finish & See Summary →' : 'Next →';
+    }
+
+    function pageComplete(){
+      const s = state.currentSection;
+      const p = state.currentPage;
+      const ids = state.activeSectionIds[s];
+      const start = p*QUESTIONS_PER_PAGE;
+      const end = start+QUESTIONS_PER_PAGE;
+      const pageIds = ids.slice(start,end);
+      return pageIds.every(qid => typeof state.answers[qid] === 'number');
+    }
+
+    /* -------------------------------------------------------
+       SCORING
+    --------------------------------------------------------*/
+    function computeDomainScores(){
+      const totals = {};
+      const weightTotals = {};
+      const counts = {};
+
+      for(let s=1;s<=TOTAL_SECTIONS;s++){
+        const bank = QUESTION_BANK[s];
+        const lookup = {};
+        bank.forEach(q => lookup[q.id]=q);
+
+        const ids = state.activeSectionIds[s];
+        ids.forEach(qid => {
+          const ans = state.answers[qid];
+          if(typeof ans !== 'number') return;
+          const q = lookup[qid];
+          if(!q || !q.domainWeights) return;
+          for(const domain in q.domainWeights){
+            const w = q.domainWeights[domain];
+            if(!totals[domain]){ totals[domain]=0; weightTotals[domain]=0; counts[domain]=0; }
+            totals[domain] += ans * w;
+            weightTotals[domain] += Math.abs(w);
+            counts[domain] += 1;
+          }
+        });
+      }
+
+      const result = {};
+      for(const domain in totals){
+        const wt = weightTotals[domain] || 1;
+        const mean = totals[domain] / wt;
+        result[domain] = {
+          mean: Math.max(1, Math.min(5, mean)),
+          count: counts[domain] || 0,
+          weightSum: wt
+        };
+      }
+      return result;
+    }
+
+    function computePathwayResults(domainScores){
+      return CAREER_PATHWAYS.map(p => {
+        let sum = 0;
+        let wsum = 0;
+        for(const domain in p.weights){
+          const w = p.weights[domain];
+          const d = domainScores[domain];
+          if(!d) continue;
+          sum += d.mean * w;
+          wsum += Math.abs(w);
+        }
+        const mean = wsum ? sum/wsum : 0;
+        const scorePercent = Math.round((mean/5)*100);
+        return {
+          id:p.id,
+          code:p.code,
+          name:p.name,
+          blurb:p.blurb,
+          score:mean,
+          scorePercent,
+          weights:p.weights
+        };
+      }).sort((a,b)=> (b.scorePercent||0)-(a.scorePercent||0));
+    }
+
+    /* -------------------------------------------------------
+       QUANTUM CAREER LENS
+       Uses pathway scores as a probability cloud.
+    --------------------------------------------------------*/
+    function countTodayCollapses(){
+      const today = getTodayIso();
+      return quantumLog.filter(e => e.ts && e.ts.slice(0,10) === today).length;
+    }
+
+    function renderQuantumPanel(){
+      if(!latestPathwayResults || !latestPathwayResults.length){
+        elQuantumPanel.style.display = 'none';
+        return;
+      }
+
+      const top = latestPathwayResults[0];
+      const todayCount = countTodayCollapses();
+      const totalCount = quantumLog.length;
+      const recent = quantumLog.slice(-5).reverse();
+
+      elQuantumPanel.innerHTML = `
+        <h2>Quantum Career Lens</h2>
+        <p>
+          Your 13 pathways form a probability cloud. Use the button below to let that
+          cloud <strong>collapse</strong> into a single suggested path for now.
+        </p>
+        <p>
+          Current strongest alignment: <strong>${top.name}</strong>
+          (${top.scorePercent || 0}%). This doesn’t lock you in — it just shows where
+          your answers are leaning.
+        </p>
+        <div style="margin:8px 0 6px;">
+          <button type="button" class="khae-btn khae-btn-primary" id="khaeCollapseBtn">
+            Collapse Career State 🔮
+          </button>
+        </div>
+        <p class="khae-quantum-log-title">
+          Quantum Log: <strong>${todayCount}</strong> collapse event(s) today,
+          <strong>${totalCount}</strong> total on this device.
+        </p>
+        ${
+          recent.length
+            ? `<ul class="khae-quantum-log-list">
+                ${recent.map(e => {
+                  const date = e.ts ? e.ts.replace('T',' · ').slice(0,16) : '';
+                  return `<li>${date} — <strong>${e.name}</strong> (${e.scorePercent || 0}% at collapse)</li>`;
+                }).join('')}
+               </ul>`
+            : '<p class="khae-quantum-log-title">No collapse events yet. Press the button above to record your first one.</p>'
+        }
+      `;
+      elQuantumPanel.style.display = 'block';
+
+      const collapseBtn = document.getElementById('khaeCollapseBtn');
+      if(collapseBtn){
+        collapseBtn.addEventListener('click', quantumCollapse);
+      }
+    }
+
+    function quantumCollapse(){
+      if(!latestPathwayResults || !latestPathwayResults.length) return;
+
+      const positive = latestPathwayResults.filter(p => (p.scorePercent || 0) > 0);
+      if(!positive.length) return;
+
+      const totalWeight = positive.reduce((sum,p)=> sum + (p.scorePercent || 0), 0) || 1;
+      let r = Math.random() * totalWeight;
+      let chosen = positive[0];
+
+      for(const p of positive){
+        r -= (p.scorePercent || 0);
+        if(r <= 0){
+          chosen = p;
+          break;
+        }
+      }
+
+      const entry = {
+        ts: new Date().toISOString(),
+        code: chosen.code,
+        name: chosen.name,
+        scorePercent: chosen.scorePercent || 0
+      };
+      quantumLog.push(entry);
+      saveQuantumLog();
+      renderQuantumPanel();
+
+      elSummary.innerHTML = `
+        <h2>Collapse Event Recorded</h2>
+        <p>
+          In this moment, your career state collapsed to:
+          <strong>${chosen.name}</strong> (${chosen.scorePercent || 0}% alignment).
+        </p>
+        <p style="font-size:11px;color:#d0c8bc;">
+          This doesn’t decide your future — it simply highlights one path that fits your
+          current answers especially well. You can revisit the assessment, explore other
+          paths, and let the cloud collapse again on another day.
+        </p>
+      `;
+      elSummary.style.display = 'block';
+      window.scrollTo({ top:0, behavior:'smooth' });
+    }
+
+    /* -------------------------------------------------------
+       FINALIZE / SUMMARY
+    --------------------------------------------------------*/
+    function finalizeAssessment(){
+      const total = QUESTIONS_PER_SECTION * TOTAL_SECTIONS;
+      const answered = countAnswered();
+      if(answered < total){
+        elError.textContent = `Please answer all questions before finishing. You have ${total-answered} remaining.`;
+        elError.style.display = 'block';
+        return;
+      }
+
+      const domainScores = computeDomainScores();
+      const pathwayResults = computePathwayResults(domainScores);
+      latestPathwayResults = pathwayResults;
+
+      // Save bundle for the separate results page/star chart
+      const bundle = {
+        pathways: pathwayResults,
+        domainScores,
+        responses: state.answers,
+        generatedAt: new Date().toISOString()
+      };
+      try{
+        localStorage.setItem(BUNDLE_KEY, JSON.stringify(bundle));
+      }catch(e){
+        console.warn('Could not save results bundle', e);
+      }
+
+      // Show quick inline summary
+      const top3 = pathwayResults.slice(0,3);
+      elSummary.innerHTML = `
+        <h2>Initial Career Snapshot</h2>
+        <p>Your responses have been saved. You can now open the Career Results page to see your 13-point Career Star.</p>
+        <p>Based on this beta assessment, your current top 3 pathways are:</p>
+        <ul>
+          ${top3.map(p => `<li><strong>${p.name}</strong> — ${p.scorePercent || 0}% alignment</li>`).join('')}
+        </ul>
+        <p style="margin-top:8px;font-size:11px;color:#d0c8bc;">
+          Tip: Take a screenshot or note these results, then visit the dedicated Results page
+          to view your full star chart and detailed breakdown.
+        </p>
+      `;
+      elSummary.style.display = 'block';
+
+      renderQuantumPanel();
+      window.scrollTo({ top:0, behavior:'smooth' });
+    }
+
+    /* -------------------------------------------------------
+       NAVIGATION HANDLERS
+    --------------------------------------------------------*/
+    btnPrev.addEventListener('click', ()=>{
+      const isFirstGlobalPage = state.currentSection === 1 && state.currentPage === 0;
+      if(isFirstGlobalPage) return;
+
+      if(state.currentPage > 0){
+        state.currentPage -= 1;
+      }else if(state.currentSection > 1){
+        state.currentSection -= 1;
+        state.currentPage = Math.ceil(QUESTIONS_PER_SECTION/QUESTIONS_PER_PAGE)-1;
+      }
+      saveProgress();
+      renderPage();
+    });
+
+    btnNext.addEventListener('click', ()=>{
+      elError.style.display = 'none';
+      if(!pageComplete()){
+        elError.textContent = 'Please answer all questions on this page before continuing.';
+        elError.style.display = 'block';
+        return;
+      }
+
+      const lastSection = TOTAL_SECTIONS;
+      const lastPageInSection = Math.ceil(QUESTIONS_PER_SECTION/QUESTIONS_PER_PAGE)-1;
+      const onLastPage = (state.currentSection === lastSection && state.currentPage === lastPageInSection);
+
+      if(onLastPage){
+        finalizeAssessment();
+        saveProgress();
+        return;
+      }
+
+      // Move forward
+      if(state.currentPage < lastPageInSection){
+        state.currentPage += 1;
+      }else{
+        state.currentSection += 1;
+        state.currentPage = 0;
+      }
+      saveProgress();
+      renderPage();
+    });
+
+    btnSave.addEventListener('click', ()=>{
+      saveProgress();
+      elError.style.display = 'none';
+      elSummary.innerHTML = '<h2>Progress Saved</h2><p>You can safely close this tab and return later on this device to continue.</p>';
+      elSummary.style.display = 'block';
+      elQuantumPanel.style.display = 'none';
+    });
+
+    // INIT
+    loadProgress();
+    loadQuantumLog();
+    renderPage();
+  })();
+  </script>
+</body>
+</html>
