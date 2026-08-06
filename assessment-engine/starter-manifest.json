@@ -1,0 +1,40 @@
+{
+  "package": "Khaemenes Academy Universal Assessment Engine",
+  "version": "0.2.0",
+  "generated": "2026-08-06",
+  "mergeTarget": "assessment-engine/",
+  "preserveExisting": [
+    "assessment-engine/apps/"
+  ],
+  "files": [
+    "README.md",
+    "apps/career_assessment_index.html",
+    "apps/career_star_index.html",
+    "apps/mentor_review_index.html",
+    "assets/academy-page.css",
+    "assets/engine.css",
+    "banks/foundation/demo-readiness.json",
+    "docs/ASSESSMENT_FRAMEWORK.md",
+    "docs/ITEM_AUTHORING_GUIDE.md",
+    "docs/PRIVACY_AND_DATA.md",
+    "docs/VALIDATION.md",
+    "engine/adaptive-selector.js",
+    "engine/app.js",
+    "engine/assessment-core.js",
+    "engine/scoring-engine.js",
+    "engine/storage-engine.js",
+    "index.html",
+    "schemas/assessment.schema.json",
+    "schemas/attempt.schema.json",
+    "schemas/item.schema.json",
+    "schemas/learner-profile.schema.json",
+    "starter-manifest.json"
+  ],
+  "design": {
+    "alignment": "centered",
+    "textColor": "#000000",
+    "titleFont": "Cinzel",
+    "bodyFont": "Brandon Grotesque with fallbacks",
+    "breadcrumbs": true
+  }
+}

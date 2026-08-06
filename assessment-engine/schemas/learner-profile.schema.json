@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://khaemenesacademy.org/assessment-engine/schemas/learner-profile.schema.json",
+  "title": "Khaemenes Learner Evidence Profile",
+  "type": "object",
+  "properties": {
+    "profileVersion": {
+      "type": "string"
+    },
+    "learnerId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "mastery": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "mastery",
+          "confidence",
+          "attempts"
+        ],
+        "properties": {
+          "mastery": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "attempts": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "lastEvidenceAt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "activeMisconceptions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "interests": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "temporaryPreferences": {
+      "type": "object"
+    },
+    "targetDifficulty": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "exposureCounts": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    }
+  },
+  "additionalProperties": true
+}

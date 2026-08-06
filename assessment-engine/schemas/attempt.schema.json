@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://khaemenesacademy.org/assessment-engine/schemas/attempt.schema.json",
+  "title": "Khaemenes Assessment Attempt",
+  "type": "object",
+  "required": [
+    "id",
+    "assessmentId",
+    "status",
+    "startedAt",
+    "responses",
+    "evidence"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string"
+    },
+    "assessmentId": {
+      "type": "string"
+    },
+    "assessmentVersion": {
+      "type": "string"
+    },
+    "learnerId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "enum": [
+        "not-started",
+        "in-progress",
+        "submitted",
+        "completed",
+        "void"
+      ]
+    },
+    "mode": {
+      "type": "string"
+    },
+    "startedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completedAt": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "responses": {
+      "type": "object"
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "sequence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "currentItemId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "learnerProfile": {
+      "$ref": "./learner-profile.schema.json"
+    },
+    "summary": {
+      "type": [
+        "object",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}
