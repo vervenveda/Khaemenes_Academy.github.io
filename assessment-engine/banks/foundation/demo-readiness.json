@@ -1,0 +1,400 @@
+{
+  "$schema": "../../schemas/assessment.schema.json",
+  "id": "academy-foundation-readiness-v1",
+  "version": "1.0.0",
+  "title": "Academy Foundation Readiness Check",
+  "description": "A small interdisciplinary demonstration of the universal assessment engine.",
+  "mode": "diagnostic",
+  "subject": "interdisciplinary",
+  "gradeBands": [
+    "6-8",
+    "9-12",
+    "adult"
+  ],
+  "settings": {
+    "delivery": "adaptive",
+    "allowResume": true,
+    "minItems": 8,
+    "maxItems": 8,
+    "masteryThreshold": 0.75,
+    "adaptivePolicy": {
+      "masteryNeed": 0.32,
+      "blueprintNeed": 0.22,
+      "misconceptionNeed": 0.16,
+      "challengeFit": 0.14,
+      "interestFit": 0.08,
+      "exposureControl": 0.08
+    }
+  },
+  "blueprint": {
+    "domains": [
+      {
+        "id": "numeracy",
+        "minItems": 1
+      },
+      {
+        "id": "science-analysis",
+        "minItems": 1
+      },
+      {
+        "id": "reading-evidence",
+        "minItems": 1
+      },
+      {
+        "id": "civic-reasoning",
+        "minItems": 1
+      },
+      {
+        "id": "digital-literacy",
+        "minItems": 1
+      },
+      {
+        "id": "learner-reflection",
+        "minItems": 1
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "FOUND-MATH-001",
+      "order": 1,
+      "type": "single-choice",
+      "prompt": "A course contains 36 weeks divided evenly into 12 units. How many weeks are assigned to each unit?",
+      "options": [
+        {
+          "value": "A",
+          "label": "2 weeks"
+        },
+        {
+          "value": "B",
+          "label": "3 weeks"
+        },
+        {
+          "value": "C",
+          "label": "4 weeks"
+        },
+        {
+          "value": "D",
+          "label": "6 weeks"
+        }
+      ],
+      "correctAnswer": "B",
+      "points": 1,
+      "domains": [
+        {
+          "id": "numeracy",
+          "weight": 1
+        }
+      ],
+      "standards": [
+        "FOUND-NUM-RATIO-01"
+      ],
+      "difficulty": 0.25,
+      "misconceptionTags": [
+        "division-model"
+      ],
+      "feedback": {
+        "correct": "Correct. Dividing 36 by 12 gives 3 weeks per unit.",
+        "incorrect": "Review equal-group division: total weeks divided by total units."
+      },
+      "adaptiveEligible": true,
+      "formalAssessmentEligible": true,
+      "exposureLimit": 2
+    },
+    {
+      "id": "FOUND-MATH-002",
+      "order": 2,
+      "type": "numeric",
+      "prompt": "A student earned 42 points out of 50. Enter the percentage score.",
+      "correctAnswer": 84,
+      "tolerance": 0.01,
+      "points": 1,
+      "domains": [
+        {
+          "id": "numeracy",
+          "weight": 1
+        }
+      ],
+      "standards": [
+        "FOUND-NUM-PERCENT-01"
+      ],
+      "difficulty": 0.4,
+      "prerequisites": [],
+      "misconceptionTags": [
+        "percent-conversion"
+      ],
+      "feedback": {
+        "correct": "Correct. 42 \u00f7 50 = 0.84, or 84%.",
+        "incorrect": "Divide the earned points by possible points, then multiply by 100."
+      },
+      "adaptiveEligible": true,
+      "formalAssessmentEligible": true,
+      "exposureLimit": 2
+    },
+    {
+      "id": "FOUND-SCI-001",
+      "order": 3,
+      "type": "single-choice",
+      "prompt": "Which evidence most directly supports the claim that a substance underwent a chemical change?",
+      "options": [
+        {
+          "value": "A",
+          "label": "It was cut into smaller pieces."
+        },
+        {
+          "value": "B",
+          "label": "It changed from a solid to a liquid."
+        },
+        {
+          "value": "C",
+          "label": "A new gas formed during the reaction."
+        },
+        {
+          "value": "D",
+          "label": "Its container was moved to another table."
+        }
+      ],
+      "correctAnswer": "C",
+      "points": 1,
+      "domains": [
+        {
+          "id": "science-analysis",
+          "weight": 1
+        }
+      ],
+      "standards": [
+        "FOUND-SCI-EVIDENCE-01"
+      ],
+      "difficulty": 0.42,
+      "misconceptionTags": [
+        "physical-vs-chemical-change"
+      ],
+      "feedback": {
+        "correct": "Correct. Formation of a new gas can be evidence that new substances formed.",
+        "incorrect": "Distinguish a physical change in form or state from evidence of new substances."
+      },
+      "adaptiveEligible": true,
+      "formalAssessmentEligible": true,
+      "exposureLimit": 2
+    },
+    {
+      "id": "FOUND-ELA-001",
+      "order": 4,
+      "type": "single-choice",
+      "prompt": "Which statement is the strongest evidence-based conclusion?",
+      "options": [
+        {
+          "value": "A",
+          "label": "The program is perfect because one student liked it."
+        },
+        {
+          "value": "B",
+          "label": "The program may be effective because scores improved across three measured groups."
+        },
+        {
+          "value": "C",
+          "label": "The program must be ineffective because it requires effort."
+        },
+        {
+          "value": "D",
+          "label": "No conclusion is possible whenever people disagree."
+        }
+      ],
+      "correctAnswer": "B",
+      "points": 1,
+      "domains": [
+        {
+          "id": "reading-evidence",
+          "weight": 1
+        },
+        {
+          "id": "science-analysis",
+          "weight": 0.35
+        }
+      ],
+      "standards": [
+        "FOUND-ELA-EVIDENCE-01"
+      ],
+      "difficulty": 0.45,
+      "misconceptionTags": [
+        "overgeneralization",
+        "unsupported-claim"
+      ],
+      "feedback": {
+        "correct": "Correct. The statement is cautious and tied to evidence from multiple measured groups.",
+        "incorrect": "Look for a conclusion that matches the strength and limits of the available evidence."
+      },
+      "adaptiveEligible": true,
+      "formalAssessmentEligible": true,
+      "exposureLimit": 2
+    },
+    {
+      "id": "FOUND-CIV-001",
+      "order": 5,
+      "type": "single-choice",
+      "prompt": "A civic proposal affects several communities differently. What should an evidence-based review do first?",
+      "options": [
+        {
+          "value": "A",
+          "label": "Ignore groups with smaller populations."
+        },
+        {
+          "value": "B",
+          "label": "Measure likely benefits, burdens, rights, and implementation effects."
+        },
+        {
+          "value": "C",
+          "label": "Choose the most emotional argument."
+        },
+        {
+          "value": "D",
+          "label": "Assume every community will experience the same result."
+        }
+      ],
+      "correctAnswer": "B",
+      "points": 1,
+      "domains": [
+        {
+          "id": "civic-reasoning",
+          "weight": 1
+        },
+        {
+          "id": "reading-evidence",
+          "weight": 0.3
+        }
+      ],
+      "standards": [
+        "FOUND-CIV-ANALYSIS-01"
+      ],
+      "difficulty": 0.48,
+      "misconceptionTags": [
+        "single-perspective-analysis"
+      ],
+      "feedback": {
+        "correct": "Correct. Responsible civic analysis examines evidence, rights, tradeoffs, and implementation.",
+        "incorrect": "A public decision should be evaluated across affected groups and measurable consequences."
+      },
+      "adaptiveEligible": true,
+      "formalAssessmentEligible": true,
+      "exposureLimit": 2
+    },
+    {
+      "id": "FOUND-TECH-001",
+      "order": 6,
+      "type": "multi-select",
+      "prompt": "Select every responsible practice when using an online research source.",
+      "options": [
+        {
+          "value": "author",
+          "label": "Check the author or institution."
+        },
+        {
+          "value": "date",
+          "label": "Check the publication or update date."
+        },
+        {
+          "value": "evidence",
+          "label": "Inspect the evidence and cited sources."
+        },
+        {
+          "value": "first",
+          "label": "Trust the first result without comparison."
+        }
+      ],
+      "correctAnswer": [
+        "author",
+        "date",
+        "evidence"
+      ],
+      "partialCredit": true,
+      "points": 2,
+      "domains": [
+        {
+          "id": "digital-literacy",
+          "weight": 1
+        },
+        {
+          "id": "reading-evidence",
+          "weight": 0.5
+        }
+      ],
+      "standards": [
+        "FOUND-DIG-SOURCE-01"
+      ],
+      "difficulty": 0.5,
+      "misconceptionTags": [
+        "search-rank-equals-quality"
+      ],
+      "feedback": {
+        "correct": "Correct. Authorship, date, evidence, and comparison all support responsible source evaluation.",
+        "partial": "Some responsible practices were selected, but the set is incomplete or includes an unsafe shortcut.",
+        "incorrect": "Search ranking alone does not establish credibility."
+      },
+      "adaptiveEligible": true,
+      "formalAssessmentEligible": true,
+      "exposureLimit": 2
+    },
+    {
+      "id": "FOUND-REFLECT-001",
+      "order": 7,
+      "type": "likert",
+      "prompt": "I prefer to see an example before attempting a new kind of problem independently.",
+      "scale": {
+        "min": 1,
+        "max": 5,
+        "labels": {
+          "1": "Strongly disagree",
+          "2": "Disagree",
+          "3": "Unsure",
+          "4": "Agree",
+          "5": "Strongly agree"
+        }
+      },
+      "points": 0,
+      "domains": [
+        {
+          "id": "learner-reflection",
+          "weight": 1
+        }
+      ],
+      "difficulty": 0.1,
+      "interestTags": [
+        "guided-example"
+      ],
+      "feedback": {
+        "exploratory": "This preference is temporary and revisable. It may guide practice format but will not restrict your opportunities."
+      },
+      "adaptiveEligible": true,
+      "formalAssessmentEligible": false,
+      "exposureLimit": 1
+    },
+    {
+      "id": "FOUND-WRITE-001",
+      "order": 8,
+      "type": "short-response",
+      "prompt": "Describe one academic skill you want to strengthen and one kind of evidence that would show improvement.",
+      "points": 4,
+      "domains": [
+        {
+          "id": "learner-reflection",
+          "weight": 1
+        },
+        {
+          "id": "writing-communication",
+          "weight": 0.5
+        }
+      ],
+      "standards": [
+        "FOUND-REFLECT-GOAL-01"
+      ],
+      "difficulty": 0.45,
+      "rubricId": "goal-evidence-rubric-v1",
+      "feedback": {
+        "manual-review": "Your response was saved for teacher or mentor review. It should name a skill and a measurable form of evidence."
+      },
+      "adaptiveEligible": true,
+      "formalAssessmentEligible": true,
+      "exposureLimit": 1
+    }
+  ]
+}
