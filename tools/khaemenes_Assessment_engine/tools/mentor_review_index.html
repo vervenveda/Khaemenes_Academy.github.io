@@ -1,0 +1,520 @@
+<style>
+  .mentor-card{
+    max-width:920px;
+    margin:0 auto;
+    padding:18px 20px;
+    font-family:Georgia,"Times New Roman",serif;
+    color:#111;
+    background:#fff;
+    border:1px solid #ddd;
+    border-radius:10px;
+    box-sizing:border-box;
+  }
+  .mentor-card h2{margin:0 0 8px;font-size:22px;letter-spacing:.3px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .row3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .box{border:1px solid #e5e5e5;border-radius:8px;padding:10px;margin-top:10px}
+  .box h3{margin:0 0 6px;font-size:15px}
+  .mut{font-size:12px;color:#666}
+  .line{display:flex;gap:8px;align-items:flex-start;margin:8px 0}
+  .input{
+    width:100%;
+    border:1px solid #ddd;
+    border-radius:6px;
+    padding:6px 8px;
+    box-sizing:border-box;
+    font:inherit;
+    background:#fff;
+  }
+  textarea.input{
+    min-height:64px;
+    resize:vertical;
+  }
+  label{
+    display:block;
+    font-size:14px;
+  }
+  .toolbar{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin:12px 0 14px;
+  }
+  .btn{
+    appearance:none;
+    border:1px solid #bbb;
+    background:#f7f7f7;
+    color:#111;
+    border-radius:8px;
+    padding:8px 12px;
+    cursor:pointer;
+    font:inherit;
+  }
+  .btn:hover{background:#efefef}
+  .btn:focus-visible,
+  .input:focus-visible{
+    outline:2px solid #333;
+    outline-offset:2px;
+  }
+  .status{
+    margin-left:auto;
+    align-self:center;
+    font-size:12px;
+    color:#666;
+  }
+  .check-label{
+    display:flex;
+    gap:8px;
+    align-items:flex-start;
+    cursor:pointer;
+  }
+  .check-label input{
+    margin-top:2px;
+  }
+
+  @media (max-width:700px){
+    .row,.row3{grid-template-columns:1fr}
+    .status{width:100%;margin-left:0}
+  }
+
+  @media print{
+    body{background:#fff !important}
+    .mentor-card{border:none;max-width:none;padding:0}
+    .toolbar,.status{display:none !important}
+    .input{
+      border:none;
+      padding:0;
+      background:transparent;
+    }
+    textarea.input{
+      min-height:auto;
+      resize:none;
+      overflow:visible;
+    }
+  }
+</style>
+
+<form class="mentor-card" id="mentorChecklist" autocomplete="on">
+  <h2>Khaemenes Mentor Review Checklist</h2>
+
+  <div class="toolbar">
+    <button class="btn" type="button" id="printReportBtn">Print Report</button>
+    <button class="btn" type="button" id="exportTxtBtn">Export TXT</button>
+    <button class="btn" type="button" id="exportHtmlBtn">Export HTML</button>
+    <button class="btn" type="button" id="clearFormBtn">Clear Form</button>
+    <div class="status" id="saveStatus" aria-live="polite">Draft not saved yet</div>
+  </div>
+
+  <div class="row">
+    <div>
+      <label for="studentName">Student
+        <input class="input" id="studentName" name="studentName" placeholder="Name">
+      </label>
+    </div>
+    <div>
+      <label for="reviewDate">Date
+        <input class="input" id="reviewDate" name="reviewDate" placeholder="YYYY-MM-DD">
+      </label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div>
+      <label for="mentorName">Mentor
+        <input class="input" id="mentorName" name="mentorName" placeholder="Mentor name">
+      </label>
+    </div>
+    <div>
+      <label for="contextName">Context
+        <input class="input" id="contextName" name="contextName" placeholder="Course/Program/Group">
+      </label>
+    </div>
+  </div>
+
+  <div class="box">
+    <h3>Section I — Aptitude (MCQ)</h3>
+    <div class="row">
+      <div>
+        <label for="aptitudeScore">Score
+          <input class="input" id="aptitudeScore" name="aptitudeScore" placeholder="e.g., 78%">
+        </label>
+      </div>
+      <div>
+        <label for="domainNotes">Domain notes
+          <input class="input" id="domainNotes" name="domainNotes" placeholder="Alg, Geom, Logic, Prob, Sci, Hist">
+        </label>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="strengths">Strengths
+          <input class="input" id="strengths" name="strengths" placeholder="3 items">
+        </label>
+      </div>
+      <div>
+        <label for="growthTargets">Growth targets
+          <input class="input" id="growthTargets" name="growthTargets" placeholder="1–2 items">
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="box">
+    <h3>Section II — Personality & Interests (Likert)</h3>
+    <div class="row3">
+      <div>
+        <label for="fourLetter">Four-letter
+          <input class="input" id="fourLetter" name="fourLetter" placeholder="e.g., INTP">
+        </label>
+      </div>
+      <div>
+        <label for="coherence">Coherence
+          <input class="input" id="coherence" name="coherence" placeholder="e.g., 4.2/5">
+        </label>
+      </div>
+      <div>
+        <label for="riasecTop">Top RIASEC (2)
+          <input class="input" id="riasecTop" name="riasecTop" placeholder="e.g., I, A">
+        </label>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="softSkillSpikes">Soft-skill spikes
+          <input class="input" id="softSkillSpikes" name="softSkillSpikes" placeholder="creativity, leadership…">
+        </label>
+      </div>
+      <div>
+        <label for="workValuesNotes">Work-values notes
+          <input class="input" id="workValuesNotes" name="workValuesNotes" placeholder="pace, structure, collaboration">
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="box">
+    <h3>Section III — IQ Psychometrics</h3>
+    <div class="row">
+      <div>
+        <label for="iqScore">Score
+          <input class="input" id="iqScore" name="iqScore" placeholder="e.g., 72%">
+        </label>
+      </div>
+      <div>
+        <label for="itemTypeNotes">Item type notes
+          <input class="input" id="itemTypeNotes" name="itemTypeNotes" placeholder="series, matrices, spatial, analogies…">
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="box">
+    <h3>Quality Checks</h3>
+    <div class="line">
+      <label class="check-label" for="qcLowVariance">
+        <input type="checkbox" id="qcLowVariance" name="qcLowVariance">
+        <span>Long-string / low-variance responding?</span>
+      </label>
+    </div>
+    <div class="line">
+      <label class="check-label" for="qcRetake">
+        <input type="checkbox" id="qcRetake" name="qcRetake">
+        <span>Rushed/distraction suspected → consider retake</span>
+      </label>
+    </div>
+    <div class="line">
+      <label class="check-label" for="qcAccessibility">
+        <input type="checkbox" id="qcAccessibility" name="qcAccessibility">
+        <span>Accessibility needs captured</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="box">
+    <h3>Career Mapping (Career Star / RIASEC)</h3>
+    <div class="row3">
+      <div>
+        <label for="careerTop1">Top 1
+          <input class="input" id="careerTop1" name="careerTop1" placeholder="Category">
+        </label>
+      </div>
+      <div>
+        <label for="careerTop2">Top 2
+          <input class="input" id="careerTop2" name="careerTop2" placeholder="Category">
+        </label>
+      </div>
+      <div>
+        <label for="careerTop3">Top 3
+          <input class="input" id="careerTop3" name="careerTop3" placeholder="Category">
+        </label>
+      </div>
+    </div>
+    <label for="careerNotes">Notes
+      <textarea class="input" id="careerNotes" name="careerNotes" placeholder="Why these three? What evidence from Sections I–III supports them?"></textarea>
+    </label>
+  </div>
+
+  <div class="box">
+    <h3>2-Week Micro-Experiments</h3>
+    <label class="mut" for="microExperiments">Outline 1 tiny project or shadow/interview per top category; include success metric.</label>
+    <textarea class="input" id="microExperiments" name="microExperiments" placeholder="- Cat 1: …  Metric: …&#10;- Cat 2: …  Metric: …&#10;- Cat 3: …  Metric: …"></textarea>
+  </div>
+
+  <div class="box">
+    <h3>4–6 Week Plan</h3>
+    <div class="row">
+      <div>
+        <label for="skillGoal">Skill goal
+          <input class="input" id="skillGoal" name="skillGoal" placeholder="What skill to build?">
+        </label>
+      </div>
+      <div>
+        <label for="softSkillGoal">Soft-skill goal
+          <input class="input" id="softSkillGoal" name="softSkillGoal" placeholder="Leadership, empathy, etc.">
+        </label>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="resources">Resources
+          <input class="input" id="resources" name="resources" placeholder="Texts, sites, mentors">
+        </label>
+      </div>
+      <div>
+        <label for="metrics">Metrics
+          <input class="input" id="metrics" name="metrics" placeholder="Exit check / rubric target">
+        </label>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="checkinDates">Check-in dates
+          <input class="input" id="checkinDates" name="checkinDates" placeholder="Week 2, 4">
+        </label>
+      </div>
+      <div>
+        <label for="nextReviewDate">Next review date
+          <input class="input" id="nextReviewDate" name="nextReviewDate" placeholder="YYYY-MM-DD">
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="mut">
+    Educational guidance only — not psychological, clinical, diagnostic, employment, medical, or legal advice.
+  </div>
+</form>
+
+<script>
+(() => {
+  const form = document.getElementById('mentorChecklist');
+  const saveStatus = document.getElementById('saveStatus');
+  const STORAGE_KEY = 'khaemenes_mentor_review_checklist_v2';
+
+  function getFields() {
+    return Array.from(form.querySelectorAll('input, textarea, select'));
+  }
+
+  function serializeForm() {
+    const data = {};
+    for (const field of getFields()) {
+      data[field.name] = field.type === 'checkbox' ? field.checked : field.value;
+    }
+    return data;
+  }
+
+  function restoreForm() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      for (const field of getFields()) {
+        if (!(field.name in data)) continue;
+        if (field.type === 'checkbox') {
+          field.checked = !!data[field.name];
+        } else {
+          field.value = data[field.name] || '';
+        }
+      }
+      saveStatus.textContent = 'Draft restored';
+    } catch (err) {
+      console.warn('Could not restore mentor checklist draft:', err);
+    }
+  }
+
+  function saveForm() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(serializeForm()));
+      saveStatus.textContent = 'Draft saved locally';
+    } catch (err) {
+      console.warn('Could not save mentor checklist draft:', err);
+      saveStatus.textContent = 'Draft save failed';
+    }
+  }
+
+  let saveTimer = null;
+  function queueSave() {
+    clearTimeout(saveTimer);
+    saveStatus.textContent = 'Saving…';
+    saveTimer = setTimeout(saveForm, 200);
+  }
+
+  function labelFor(name) {
+    const field = form.querySelector(`[name="${CSS.escape(name)}"]`);
+    if (!field) return name;
+    const label = field.closest('label');
+    if (!label) return name;
+    const text = label.childNodes[0] && label.childNodes[0].textContent
+      ? label.childNodes[0].textContent.trim()
+      : name;
+    return text || name;
+  }
+
+  function buildTextReport() {
+    const data = serializeForm();
+    const lines = [
+      'Khaemenes Mentor Review Checklist',
+      '=================================',
+      '',
+      `Student: ${data.studentName || ''}`,
+      `Date: ${data.reviewDate || ''}`,
+      `Mentor: ${data.mentorName || ''}`,
+      `Context: ${data.contextName || ''}`,
+      '',
+      'Section I — Aptitude (MCQ)',
+      `Score: ${data.aptitudeScore || ''}`,
+      `Domain notes: ${data.domainNotes || ''}`,
+      `Strengths: ${data.strengths || ''}`,
+      `Growth targets: ${data.growthTargets || ''}`,
+      '',
+      'Section II — Personality & Interests (Likert)',
+      `Four-letter: ${data.fourLetter || ''}`,
+      `Coherence: ${data.coherence || ''}`,
+      `Top RIASEC (2): ${data.riasecTop || ''}`,
+      `Soft-skill spikes: ${data.softSkillSpikes || ''}`,
+      `Work-values notes: ${data.workValuesNotes || ''}`,
+      '',
+      'Section III — IQ Psychometrics',
+      `Score: ${data.iqScore || ''}`,
+      `Item type notes: ${data.itemTypeNotes || ''}`,
+      '',
+      'Quality Checks',
+      `Long-string / low-variance responding?: ${data.qcLowVariance ? 'Yes' : 'No'}`,
+      `Rushed/distraction suspected → consider retake: ${data.qcRetake ? 'Yes' : 'No'}`,
+      `Accessibility needs captured: ${data.qcAccessibility ? 'Yes' : 'No'}`,
+      '',
+      'Career Mapping (Career Star / RIASEC)',
+      `Top 1: ${data.careerTop1 || ''}`,
+      `Top 2: ${data.careerTop2 || ''}`,
+      `Top 3: ${data.careerTop3 || ''}`,
+      `Notes: ${data.careerNotes || ''}`,
+      '',
+      '2-Week Micro-Experiments',
+      `${data.microExperiments || ''}`,
+      '',
+      '4–6 Week Plan',
+      `Skill goal: ${data.skillGoal || ''}`,
+      `Soft-skill goal: ${data.softSkillGoal || ''}`,
+      `Resources: ${data.resources || ''}`,
+      `Metrics: ${data.metrics || ''}`,
+      `Check-in dates: ${data.checkinDates || ''}`,
+      `Next review date: ${data.nextReviewDate || ''}`,
+      '',
+      'Educational guidance only — not psychological, clinical, diagnostic, employment, medical, or legal advice.'
+    ];
+    return lines.join('\n');
+  }
+
+  function safeHtml(text) {
+    return String(text)
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;');
+  }
+
+  function buildHtmlReport() {
+    const data = serializeForm();
+    const reportText = buildTextReport();
+
+    return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Khaemenes Mentor Review Report</title>
+<style>
+  body{font-family:Georgia,"Times New Roman",serif;color:#111;line-height:1.45;margin:24px}
+  .wrap{max-width:900px;margin:0 auto}
+  h1{font-size:26px;margin-bottom:14px}
+  pre{
+    white-space:pre-wrap;
+    word-wrap:break-word;
+    border:1px solid #ddd;
+    border-radius:10px;
+    padding:16px;
+    background:#fafafa;
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Khaemenes Mentor Review Report</h1>
+    <pre>${safeHtml(reportText)}</pre>
+  </div>
+</body>
+</html>`;
+  }
+
+  function downloadFile(filename, content, type) {
+    const blob = new Blob([content], { type });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  function fileStamp() {
+    const data = serializeForm();
+    const student = (data.studentName || 'student').trim().replace(/[^\w\-]+/g, '_');
+    const date = (data.reviewDate || new Date().toISOString().slice(0,10)).trim();
+    return `${student}_${date}`;
+  }
+
+  document.getElementById('printReportBtn').addEventListener('click', () => {
+    window.print();
+  });
+
+  document.getElementById('exportTxtBtn').addEventListener('click', () => {
+    downloadFile(
+      `khaemenes_mentor_review_${fileStamp()}.txt`,
+      buildTextReport(),
+      'text/plain;charset=utf-8'
+    );
+  });
+
+  document.getElementById('exportHtmlBtn').addEventListener('click', () => {
+    downloadFile(
+      `khaemenes_mentor_review_${fileStamp()}.html`,
+      buildHtmlReport(),
+      'text/html;charset=utf-8'
+    );
+  });
+
+  document.getElementById('clearFormBtn').addEventListener('click', () => {
+    const ok = window.confirm('Clear this checklist and remove the saved draft?');
+    if (!ok) return;
+    form.reset();
+    localStorage.removeItem(STORAGE_KEY);
+    saveStatus.textContent = 'Draft cleared';
+  });
+
+  form.addEventListener('input', queueSave);
+  form.addEventListener('change', queueSave);
+
+  restoreForm();
+})();
+</script>
