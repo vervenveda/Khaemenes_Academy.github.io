@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Khaemenes Career Star — Shortlisting Exercise</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root{
+      --bg:#050605;
+      --ink:#f5f3ec;
+      --card:#151515;
+      --gold:#c9a227;
+      --mut:#cfc9bd;
+      --border-soft:#333333;
+    }
+    *{box-sizing:border-box;}
+
+    body{
+      margin:0;
+      min-height:100vh;
+      background:var(--bg);
+      color:var(--ink);
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      display:flex;
+      justify-content:center;
+      padding:24px 12px 40px;
+    }
+
+    .star-ex{
+      width:100%;
+      max-width:880px;
+      padding:22px 18px 20px;
+      border-radius:16px;
+      background:var(--card);
+      border:1px solid var(--border-soft);
+      box-shadow:0 26px 80px rgba(0,0,0,0.85);
+      color:var(--ink);
+    }
+
+    .star-ex h2{
+      margin:0 0 4px;
+      font-size:22px;
+      letter-spacing:0.16em;
+      text-transform:uppercase;
+      text-align:center;
+    }
+    .star-ex p.lead{
+      margin:0 0 12px;
+      font-size:13px;
+      line-height:1.6;
+      color:var(--mut);
+      text-align:center;
+    }
+    .formula{
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:12px;
+      text-align:center;
+      color:var(--mut);
+      margin-bottom:8px;
+    }
+
+    .star-layout{
+      display:flex;
+      flex-wrap:wrap;
+      gap:16px;
+      align-items:center;
+      justify-content:center;
+      margin-bottom:12px;
+    }
+
+    .star-canvas-wrap{
+      flex:0 0 260px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:4px;
+    }
+    #careerStarCanvas{
+      width:260px;
+      height:auto;
+      max-width:260px;
+      border-radius:50%;
+      background:#111111;
+      padding:12px;
+      display:block;
+    }
+    .star-tip{
+      font-size:11px;
+      color:var(--mut);
+      text-align:center;
+      max-width:260px;
+    }
+    .zone-legend{
+      font-size:11px;
+      color:var(--mut);
+      text-align:center;
+      max-width:260px;
+      padding-top:4px;
+      margin-top:4px;
+      border-top:1px dashed #444444;
+    }
+
+    .zone-list-mini{
+      flex:1 1 220px;
+      font-size:11px;
+      color:var(--mut);
+      line-height:1.5;
+    }
+    .zone-list-mini strong{
+      color:var(--ink);
+    }
+
+    .tbl{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:8px;
+      font-size:12px;
+    }
+    .tbl th,
+    .tbl td{
+      border-bottom:1px solid #2a2a2a;
+      padding:6px 5px;
+      text-align:left;
+    }
+    .tbl th{
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:0.12em;
+    }
+    .tbl th:nth-child(1){
+      width:32%;
+    }
+    .tbl input[type="range"]{
+      width:100px;
+    }
+    .cat{
+      font-weight:600;
+    }
+    .mut{
+      color:var(--mut);
+      font-size:11px;
+    }
+
+    .row-focus{
+      background:rgba(201,162,39,0.14);
+      outline:1px solid rgba(201,162,39,0.7);
+    }
+
+    .btn-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:10px;
+    }
+    .btn{
+      background:var(--gold);
+      color:#0a0a0a;
+      border:none;
+      border-radius:999px;
+      padding:8px 14px;
+      font-size:11px;
+      letter-spacing:0.12em;
+      text-transform:uppercase;
+      font-weight:600;
+      cursor:pointer;
+      transition:background .16s,transform .16s,box-shadow .16s;
+    }
+    .btn:hover{
+      background:#ebc948;
+      transform:translateY(-1px);
+      box-shadow:0 6px 14px rgba(0,0,0,0.6);
+    }
+    .btn.ghost{
+      background:transparent;
+      color:var(--ink);
+      border:1px solid var(--mut);
+      box-shadow:none;
+    }
+    .btn.ghost:hover{
+      background:rgba(255,255,255,0.06);
+    }
+
+    .rank{
+      background:#101010;
+      border:1px solid #2a2a2a;
+      border-radius:7px;
+      padding:10px 9px;
+      margin-top:10px;
+      font-size:12px;
+    }
+
+    .notes-label{
+      margin:14px 0 4px;
+      font-size:13px;
+      font-weight:600;
+    }
+    .notes{
+      width:100%;
+      min-height:90px;
+      background:#111;
+      border:1px solid #2a2a2a;
+      color:var(--ink);
+      border-radius:8px;
+      padding:8px;
+      font-size:12px;
+      resize:vertical;
+    }
+
+    .mentor-hint{
+      margin-top:6px;
+      font-size:11px;
+      color:var(--mut);
+    }
+
+    @media (max-width:720px){
+      body{
+        padding:14px 4px 30px;
+      }
+      .star-ex{
+        padding:16px 10px 18px;
+      }
+      #careerStarCanvas{
+        width:220px;
+      }
+    }
+
+    @media print{
+      body{
+        background:#ffffff!important;
+        color:#000000!important;
+        padding:0;
+      }
+      .star-ex{
+        box-shadow:none;
+        border-color:#000;
+        background:#ffffff;
+        width:100%;
+        max-width:none;
+        border-radius:0;
+      }
+      .btn-row,
+      .mentor-hint{
+        display:none!important;
+      }
+      #careerStarCanvas{
+        background:#ffffff;
+        padding:0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="star-ex" id="careerStarApp">
+    <h2>KHAEMENES CAREER STAR — SHORTLISTING EXERCISE</h2>
+    <p class="lead">
+      Score each of the 13 Career Zones on Interest (I), Strength Readiness (S), and Work-Values Fit (V).
+      The tool computes a composite: <strong>0.5·I + 0.3·S + 0.2·V</strong>. Use your Top 3 to design 2-week micro-experiments.
+    </p>
+    <div class="formula">
+      Tap a number on the star to jump to that Career Zone in the table below.
+    </div>
+
+    <div class="star-layout">
+      <div class="star-canvas-wrap">
+        <canvas id="careerStarCanvas" width="280" height="280" aria-label="Career Star"></canvas>
+        <div class="star-tip">Tap a colored prong or number pill. The matching row will highlight and scroll into view.</div>
+        <div id="zoneLegend" class="zone-legend">
+          Tap a prong on the star or click a row to see its Interest (I), Strength (S), Values (V), and composite score.
+        </div>
+      </div>
+      <div class="zone-list-mini">
+        <strong>13 Career Zones</strong><br/>
+        1. Arts &amp; Entertainment<br/>
+        2. Architecture &amp; Engineering<br/>
+        3. Business Management &amp; Administration<br/>
+        4. Communications<br/>
+        5. Community &amp; Social Services<br/>
+        6. Education<br/>
+        7. Science &amp; Technology<br/>
+        8. Installation, Repair &amp; Maintenance<br/>
+        9. Farming, Fishing &amp; Forestry<br/>
+        10. Government<br/>
+        11. Health &amp; Medicine<br/>
+        12. Law &amp; Public Policy<br/>
+        13. Sales &amp; Customer Service
+      </div>
+    </div>
+
+    <table class="tbl" id="starTable" aria-describedby="tableHelp">
+      <thead>
+        <tr>
+          <th>Career Zone</th>
+          <th title="1 = low, 5 = high">I (1–5)</th>
+          <th title="1 = low, 5 = high">S (1–5)</th>
+          <th title="1 = low, 5 = high">V (1–5)</th>
+          <th>Composite</th>
+          <th>Keep?</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div id="tableHelp" class="mut">
+      Tip: Start with rough scores; you can refine later. Sliders and notes autosave in your browser.
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" id="rankBtn">Rank Top Categories</button>
+      <button class="btn ghost" id="mentorBtn">Send to Mentor (1-page)</button>
+      <button class="btn ghost" id="exportBtn">Export JSON</button>
+      <button class="btn ghost" id="printBtn">Print / Save Full Page</button>
+      <button class="btn ghost" id="resetBtn">Reset</button>
+    </div>
+
+    <div class="rank" id="rankOut" aria-live="polite"></div>
+
+    <div class="notes-label">Micro-Experiment Planner (2 weeks)</div>
+    <textarea class="notes" id="planNotes"
+      placeholder="For each top zone, outline one small project, one person to interview or shadow, and one simple metric for success..."></textarea>
+    <div class="mut">
+      Autosaves locally. The “Send to Mentor” button creates a one-page snapshot with your Top 3 and this planner.
+    </div>
+    <div class="mentor-hint">
+      Healthy Use: This tool is a guide, not a label. Paths can change as you learn more. You remain free to explore and revise.
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    "use strict";
+
+    /* -------------------------------------------------------
+       CONFIG & DATA
+    --------------------------------------------------------*/
+    const STORAGE_KEY = "khae_career_star_v2";
+
+    const ZONES = [
+      { id:1,  name:"Arts & Entertainment" },
+      { id:2,  name:"Architecture & Engineering" },
+      { id:3,  name:"Business Management & Administration" },
+      { id:4,  name:"Communications" },
+      { id:5,  name:"Community & Social Services" },
+      { id:6,  name:"Education" },
+      { id:7,  name:"Science & Technology" },
+      { id:8,  name:"Installation, Repair & Maintenance" },
+      { id:9,  name:"Farming, Fishing & Forestry" },
+      { id:10, name:"Government" },
+      { id:11, name:"Health & Medicine" },
+      { id:12, name:"Law & Public Policy" },
+      { id:13, name:"Sales & Customer Service" }
+    ];
+
+    const COLORS = [
+      "#ff6b6b","#ff9f43","#ffe457","#1dd1a1","#54a0ff",
+      "#5f27cd","#ff9ff3","#ff7675","#fdcb6e","#55efc4",
+      "#74b9ff","#a29bfe","#fd79a8"
+    ];
+
+    const tbody      = document.querySelector("#starTable tbody");
+    const out        = document.getElementById("rankOut");
+    const notes      = document.getElementById("planNotes");
+    const rankBtn    = document.getElementById("rankBtn");
+    const mentorBtn  = document.getElementById("mentorBtn");
+    const printBtn   = document.getElementById("printBtn");
+    const resetBtn   = document.getElementById("resetBtn");
+    const exportBtn  = document.getElementById("exportBtn");
+    const zoneLegend = document.getElementById("zoneLegend");
+
+    /* -------------------------------------------------------
+       BUILD TABLE & LOAD SAVED STATE
+    --------------------------------------------------------*/
+    function loadSaved(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(!raw) return {};
+        return JSON.parse(raw) || {};
+      }catch(e){
+        console.warn("Could not load saved state", e);
+        return {};
+      }
+    }
+
+    function saveState(data){
+      try{
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      }catch(e){
+        console.warn("Could not save state", e);
+      }
+    }
+
+    const saved = loadSaved();
+
+    function buildRow(zone, idx){
+      const key = zone.name;
+      const d   = saved[key] || {};
+      const iVal = d.i || 3;
+      const sVal = d.s || 3;
+      const vVal = d.v || 3;
+      const keep = d.keep !== false;
+
+      const tr = document.createElement("tr");
+      tr.dataset.zoneIndex = String(idx);
+
+      tr.innerHTML = `
+        <td class="cat">${zone.id}. ${zone.name}</td>
+        <td><input type="range" min="1" max="5" value="${iVal}" data-k="i"></td>
+        <td><input type="range" min="1" max="5" value="${sVal}" data-k="s"></td>
+        <td><input type="range" min="1" max="5" value="${vVal}" data-k="v"></td>
+        <td class="comp">—</td>
+        <td><label><input type="checkbox" class="keep" ${keep?"checked":""}> Keep</label></td>
+      `;
+      tbody.appendChild(tr);
+    }
+
+    ZONES.forEach((z,idx)=> buildRow(z,idx));
+    if(saved.notes) notes.value = saved.notes;
+
+    /* -------------------------------------------------------
+       COMPUTE + RANK
+    --------------------------------------------------------*/
+    function computeAndSave(){
+      const rows = Array.from(tbody.querySelectorAll("tr"));
+      const data = [];
+      rows.forEach(tr=>{
+        const idx = parseInt(tr.dataset.zoneIndex,10);
+        const zone = ZONES[idx];
+
+        const i = +tr.querySelector('[data-k="i"]').value;
+        const s = +tr.querySelector('[data-k="s"]').value;
+        const v = +tr.querySelector('[data-k="v"]').value;
+        const keep = tr.querySelector(".keep").checked;
+        const comp = +(0.5*i + 0.3*s + 0.2*v).toFixed(2);
+
+        tr.querySelector(".comp").textContent = keep ? comp.toFixed(2) : "—";
+
+        data.push({ idx, id:zone.id, name:zone.name, i, s, v, keep, comp });
+      });
+
+      const store = { notes: notes.value };
+      data.forEach(d=>{
+        store[d.name] = { i:d.i, s:d.s, v:d.v, keep:d.keep };
+      });
+      saveState(store);
+      return data;
+    }
+
+    function rankAndRender(){
+      const data = computeAndSave();
+      const kept = data.filter(d => d.keep).sort((a,b)=> b.comp - a.comp);
+      const top  = kept.slice(0,5);
+
+      if(!top.length){
+        out.innerHTML = `<span class="mut">Nothing selected yet. Toggle “Keep” to include zones in your ranking.</span>`;
+      } else {
+        out.innerHTML = `
+          <strong>Top zones by composite score:</strong><br>
+          ${top.map(d=> `${d.id}. ${d.name} (${d.comp.toFixed(2)})`).join("<br>")}
+          <div class="mut" style="margin-top:6px">
+            Next: design a <em>2-week micro-experiment</em> for your top 1–3. Aim for 2–3 hours total per zone.
+          </div>
+        `;
+      }
+
+      updateLegend(highlightedIndex);
+    }
+
+    function updateLegend(index){
+      if(!zoneLegend) return;
+
+      if(index == null || index < 0 || index >= ZONES.length){
+        zoneLegend.innerHTML =
+          'Tap a prong on the star or click a row to see its Interest (I), Strength (S), Values (V), and composite score.';
+        return;
+      }
+
+      const rows = Array.from(tbody.querySelectorAll("tr"));
+      const row = rows[index];
+      if(!row){
+        zoneLegend.innerHTML =
+          'Tap a prong on the star or click a row to see its Interest (I), Strength (S), Values (V), and composite score.';
+        return;
+      }
+
+      const zone = ZONES[index];
+      const sliders = row.querySelectorAll('input[type="range"]');
+      const i = sliders[0] ? sliders[0].value : "?";
+      const s = sliders[1] ? sliders[1].value : "?";
+      const v = sliders[2] ? sliders[2].value : "?";
+      const compCell = row.querySelector(".comp");
+      const compText = compCell ? compCell.textContent : "—";
+
+      zoneLegend.innerHTML = `
+        <strong>${zone.id}. ${zone.name}</strong><br>
+        I: ${i} · S: ${s} · V: ${v} · Composite: ${compText}
+      `;
+    }
+
+    tbody.addEventListener("input", rankAndRender);
+    notes.addEventListener("input", computeAndSave);
+    rankBtn.addEventListener("click", rankAndRender);
+
+    /* -------------------------------------------------------
+       ROW CLICK ↔ STAR SYNC
+    --------------------------------------------------------*/
+    tbody.addEventListener("click", (evt)=>{
+      const tr = evt.target.closest("tr");
+      if(!tr) return;
+      const idx = parseInt(tr.dataset.zoneIndex,10);
+      if(Number.isNaN(idx)) return;
+      highlightedIndex = idx;
+      drawStar();
+      highlightRow(idx);
+      updateLegend(idx);
+    });
+
+    /* -------------------------------------------------------
+       SEND TO MENTOR (1-PAGE SNAPSHOT)
+    --------------------------------------------------------*/
+    function sendToMentor(){
+      const data = computeAndSave();
+      const kept = data.filter(d => d.keep).sort((a,b)=> b.comp - a.comp);
+      const top  = kept.slice(0,3);
+
+      const plan = (notes.value || "").trim();
+
+      const win = window.open("", "_blank","width=900,height=1100");
+      if(!win) return;
+
+      const today = new Date().toLocaleDateString();
+
+      let rowsHtml = "";
+      if(top.length){
+        rowsHtml = top.map(d=>`
+          <tr>
+            <td>${d.id}. ${d.name}</td>
+            <td>${d.i}</td>
+            <td>${d.s}</td>
+            <td>${d.v}</td>
+            <td>${d.comp.toFixed(2)}</td>
+          </tr>
+        `).join("");
+      }else{
+        rowsHtml = `<tr><td colspan="5">No zones selected. Student may still be exploring options.</td></tr>`;
+      }
+
+      const safePlan = plan
+        ? plan.replace(/&/g,"&amp;")
+              .replace(/</g,"&lt;")
+              .replace(/>/g,"&gt;")
+              .replace(/\n/g,"<br>")
+        : "<em>No micro-experiment notes entered yet.</em>";
+
+      win.document.write(`
+        <!DOCTYPE html>
+        <html><head>
+          <meta charset="UTF-8">
+          <title>Career Star Snapshot</title>
+          <style>
+            body{
+              font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+              margin:24px;
+              color:#111;
+            }
+            h1{
+              font-size:20px;
+              letter-spacing:0.16em;
+              text-transform:uppercase;
+              margin:0 0 4px;
+            }
+            h2{
+              font-size:16px;
+              margin:18px 0 6px;
+            }
+            .mut{font-size:12px;color:#555;}
+            table{
+              width:100%;
+              border-collapse:collapse;
+              font-size:13px;
+            }
+            th,td{
+              border:1px solid #888;
+              padding:5px 6px;
+              text-align:left;
+            }
+            th{
+              background:#f2f2f2;
+              text-transform:uppercase;
+              font-size:11px;
+            }
+            .notes-box{
+              border:1px solid #888;
+              border-radius:4px;
+              padding:8px;
+              min-height:80px;
+              font-size:13px;
+            }
+          </style>
+        </head>
+        <body>
+          <h1>KHAEMENES CAREER STAR</h1>
+          <div class="mut">Mentor Snapshot · ${today}</div>
+
+          <h2>Top Career Zones (Student Self-Scored)</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Zone</th>
+                <th>I</th>
+                <th>S</th>
+                <th>V</th>
+                <th>Composite</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml}
+            </tbody>
+          </table>
+
+          <h2>Micro-Experiment Plan (2 weeks)</h2>
+          <div class="notes-box">${safePlan}</div>
+
+          <h2>Notes for Mentor</h2>
+          <div class="mut">
+            Use this page as a starting point for conversation. Scores are self-reported,
+            exploratory, and non-diagnostic. Encourage the student to compare lived
+            experience with expectations after each micro-experiment.
+          </div>
+        </body></html>
+      `);
+      win.document.close();
+      win.focus();
+      win.print();
+    }
+
+    mentorBtn.addEventListener("click", sendToMentor);
+    printBtn.addEventListener("click", () => window.print());
+
+    resetBtn.addEventListener("click", ()=>{
+      if(!confirm("Reset all scores and notes?")) return;
+      try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+      window.location.reload();
+    });
+
+    /* -------------------------------------------------------
+       EXPORT JSON (FULL SNAPSHOT)
+    --------------------------------------------------------*/
+    function exportJson(){
+      const data = computeAndSave();
+      const payload = {
+        exportedAt: new Date().toISOString(),
+        zones: data.map(d => ({
+          id: d.id,
+          name: d.name,
+          interest: d.i,
+          strength: d.s,
+          values: d.v,
+          composite: d.comp,
+          keep: d.keep
+        })),
+        notes: notes.value || ""
+      };
+
+      try{
+        const blob = new Blob([JSON.stringify(payload,null,2)], {type:"application/json"});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "khaemenes_career_star_export.json";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }catch(e){
+        console.warn("Export failed", e);
+        alert("Sorry — export did not work in this browser.");
+      }
+    }
+
+    exportBtn.addEventListener("click", exportJson);
+
+    /* -------------------------------------------------------
+       STAR CANVAS — 13 PRONGS + NUMBER PILLS
+    --------------------------------------------------------*/
+    const canvas = document.getElementById("careerStarCanvas");
+    const ctx    = canvas.getContext("2d");
+    let highlightedIndex = -1;
+
+    function drawStar(){
+      const dpr = window.devicePixelRatio || 1;
+      const cssSize = canvas.clientWidth || 260;
+      canvas.width  = cssSize * dpr;
+      canvas.height = cssSize * dpr;
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+
+      const W = cssSize;
+      const H = cssSize;
+      const cx = W/2;
+      const cy = H/2;
+
+      ctx.clearRect(0,0,W,H);
+
+      const N = ZONES.length;
+      const slice = (Math.PI*2)/N;
+      const innerR = 32;
+      const outerR = Math.min(W,H)/2 - 10;
+      const labelR = innerR + (outerR - innerR)*0.7; // wider part of prong
+
+      for(let i=0;i<N;i++){
+        const midAngle = -Math.PI/2 + i*slice;
+        const half = slice*0.45;
+
+        const color = COLORS[i % COLORS.length];
+
+        // prong triangle
+        ctx.beginPath();
+        ctx.moveTo(
+          cx + Math.cos(midAngle-half)*innerR,
+          cy + Math.sin(midAngle-half)*innerR
+        );
+        ctx.lineTo(
+          cx + Math.cos(midAngle)*outerR,
+          cy + Math.sin(midAngle)*outerR
+        );
+        ctx.lineTo(
+          cx + Math.cos(midAngle+half)*innerR,
+          cy + Math.sin(midAngle+half)*innerR
+        );
+        ctx.closePath();
+
+        ctx.fillStyle = color;
+        ctx.fill();
+
+        if(i === highlightedIndex){
+          ctx.lineWidth = 2;
+          ctx.strokeStyle = "#ffffff";
+          ctx.stroke();
+        }
+
+        // number pill in the wide shoulder of the prong
+        const lx = cx + Math.cos(midAngle)*labelR;
+        const ly = cy + Math.sin(midAngle)*labelR;
+
+        ctx.beginPath();
+        ctx.arc(lx, ly, 14, 0, Math.PI*2);
+        ctx.fillStyle = (i === highlightedIndex) ? "#111111" : "#f7f7f7";
+        ctx.fill();
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "#111111";
+        ctx.stroke();
+
+        ctx.fillStyle = (i === highlightedIndex) ? "#f4d48a" : "#111111";
+        ctx.font = "bold 14px system-ui, -apple-system, sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(String(ZONES[i].id), lx, ly);
+      }
+
+      // inner circle
+      ctx.beginPath();
+      ctx.arc(cx,cy,innerR-6,0,Math.PI*2);
+      ctx.fillStyle = "#111111";
+      ctx.fill();
+    }
+
+    function canvasToStarCoords(evt){
+      const rect = canvas.getBoundingClientRect();
+
+      // Work entirely in CSS pixels to match drawStar geometry
+      const x = evt.clientX - rect.left;
+      const y = evt.clientY - rect.top;
+
+      const cx = rect.width / 2;
+      const cy = rect.height / 2;
+
+      const dx = x - cx;
+      const dy = y - cy;
+      const r  = Math.sqrt(dx*dx + dy*dy);
+      let angle = Math.atan2(dy, dx);
+
+      return { r, angle };
+    }
+
+    function indexFromAngle(angle){
+      const N = ZONES.length;
+      const slice = (Math.PI*2)/N;
+      // normalize so 0 is at top
+      let a = angle + Math.PI/2;
+      const twoPi = Math.PI*2;
+      a = ((a % twoPi) + twoPi) % twoPi;
+      return Math.floor(a / slice);
+    }
+
+    function highlightRow(index){
+      const rows = Array.from(tbody.querySelectorAll("tr"));
+      rows.forEach(r=>{
+        r.classList.toggle("row-focus",
+          parseInt(r.dataset.zoneIndex,10) === index);
+      });
+      const target = rows[index];
+      if(target){
+        target.scrollIntoView({behavior:"smooth", block:"center"});
+      }
+    }
+
+    function handleCanvasClick(evt){
+      const { r, angle } = canvasToStarCoords(evt);
+
+      const cssSize = canvas.clientWidth || 260;
+      const outerR  = (cssSize/2) - 10;
+
+      // ignore clicks near center or far outside star
+      if(r < 25 || r > outerR*1.1) return;
+
+      const idx = indexFromAngle(angle);
+      highlightedIndex = idx;
+      drawStar();
+      highlightRow(idx);
+      updateLegend(idx);
+    }
+
+    canvas.addEventListener("click", handleCanvasClick);
+    window.addEventListener("resize", drawStar);
+
+    // initial render + initial rank + legend
+    drawStar();
+    rankAndRender();
+  })();
+  </script>
+</body>
+</html>
