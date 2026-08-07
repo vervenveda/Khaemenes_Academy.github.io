@@ -1,0 +1,20 @@
+{
+  "release": "Khaemenes Family Registry v1.0",
+  "createdAt": "2026-08-07T21:37:47.442253+00:00",
+  "valid": true,
+  "testsPassed": true,
+  "architecture": {
+    "oneFamilyProfilePreK12": true,
+    "multipleAdultsPerFamily": true,
+    "multipleLearnersPerFamily": true,
+    "separateLearnerAccounts": true,
+    "perLearnerAdultPermissions": true,
+    "emailInviteSeam": true,
+    "emailInviteStaticMode": "UNAVAILABLE \u2014 honest no-send behavior",
+    "secureCookieServerContract": true,
+    "sharedOrigin": "https://vervenveda.com",
+    "legacyPreschoolMigration": true
+  },
+  "issues": [],
+  "testOutput": "TAP version 13\n# Subtest: family registry supports many adults and many learners\nok 1 - family registry supports many adults and many learners\n  ---\n  duration_ms: 0.696255\n  type: 'test'\n  ...\n# Subtest: each learner gets separate stable learner and account IDs\nok 2 - each learner gets separate stable learner and account IDs\n  ---\n  duration_ms: 0.116583\n  type: 'test'\n  ...\n# Subtest: adult permissions can be scoped to selected learner IDs\nok 3 - adult permissions can be scoped to selected learner IDs\n  ---\n  duration_ms: 0.184284\n  type: 'test'\n  ...\n# Subtest: email invite service is disabled honestly in static mode\nok 4 - email invite service is disabled honestly in static mode\n  ---\n  duration_ms: 0.099518\n  type: 'test'\n  ...\n# Subtest: invite tokens are never written to local storage by invitation client\nok 5 - invite tokens are never written to local storage by invitation client\n  ---\n  duration_ms: 0.10057\n  type: 'test'\n  ...\n# Subtest: server invitation requests use secure cookie credentials\nok 6 - server invitation requests use secure cookie credentials\n  ---\n  duration_ms: 0.096393\n  type: 'test'\n  ...\n# Subtest: family portal supports selected children for email invitation\nok 7 - family portal supports selected children for email invitation\n  ---\n  duration_ms: 0.156142\n  type: 'test'\n  ...\n# Subtest: legacy preschool learner can migrate non-destructively\nok 8 - legacy preschool learner can migrate non-destructively\n  ---\n  duration_ms: 0.085467\n  type: 'test'\n  ...\n1..8\n# tests 8\n# suites 0\n# pass 8\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 48.212322\n"
+}
