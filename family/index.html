@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Khaemenes Academy Family Profile — one shared parent and learner registry across Pre-K through Grade 12.">
+<title>Khaemenes Academy · Family Profile</title>
+<style>
+:root{--navy:#17233d;--navy2:#233656;--gold:#d9b878;--paper:#fffdf7;--ink:#26313a;--muted:#6b7378;--line:rgba(28,45,67,.14);--green:#416b50;--red:#9f4b55;--shadow:0 18px 50px rgba(22,36,55,.12);--serif:Georgia,"Times New Roman",serif;--sans:"Avenir Next","Segoe UI",Arial,sans-serif}
+*{box-sizing:border-box}body{margin:0;color:var(--ink);background:linear-gradient(180deg,#edf3f5,#fffdf7 30rem);font:16px/1.6 var(--sans)}a{color:inherit}button,input,select{font:inherit}button{cursor:pointer}
+.shell{width:min(calc(100% - 2rem),1160px);margin:auto}.top{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff}.nav{min-height:68px;display:flex;align-items:center;justify-content:space-between;gap:1rem}.brand strong{font:400 1.2rem var(--serif);letter-spacing:.04em}.brand small{display:block;color:#cfd8e6;font-size:.7rem}.nav a{text-decoration:none}
+.hero{padding:72px 0 58px;text-align:center}.hero .eyebrow{color:#f1d89e;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase}.hero h1{margin:.5rem 0 0;font:400 clamp(2.8rem,7vw,5.4rem)/1 var(--serif)}.hero p{max-width:800px;margin:1rem auto 0;color:#d8e0ec}
+.actions{display:flex;flex-wrap:wrap;gap:.55rem;justify-content:center;margin-top:1.2rem}.btn{min-height:43px;padding:.65rem .85rem;border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--navy);font-weight:600}.btn.gold{background:#f5e6b9;border-color:#e2c779}.btn.primary{background:var(--green);color:#fff;border-color:var(--green)}.btn.danger{color:#fff;background:var(--red);border-color:var(--red)}
+.section{padding:64px 0}.heading{text-align:center;max-width:780px;margin:0 auto 1.7rem}.heading h2{margin:0;font:400 clamp(2rem,4vw,3rem) var(--serif);color:var(--navy)}.heading p{color:var(--muted)}
+.grid{display:grid;gap:1rem}.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.card{padding:1.25rem;border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:var(--shadow)}.card h3{margin:.1rem 0 .7rem;font:400 1.35rem var(--serif);color:var(--navy)}.card p{color:var(--muted)}
+.field{display:grid;gap:.3rem;margin-top:.7rem}.field label{font-size:.75rem;font-weight:700;color:#495867}.field input,.field select{width:100%;padding:.68rem .75rem;border:1px solid var(--line);border-radius:7px;background:#fff}
+.family-title{display:flex;justify-content:space-between;gap:1rem;align-items:flex-start}.badges{display:flex;flex-wrap:wrap;gap:.35rem}.badge{padding:.22rem .42rem;border-radius:999px;background:#eef2f5;color:#51606e;font-size:.66rem}
+.member{padding:.8rem;border:1px solid var(--line);border-radius:10px;background:#fbfcfd}.member+.member{margin-top:.55rem}.member strong{display:block}.member small{display:block;color:var(--muted)}
+.checks{display:grid;gap:.4rem;margin-top:.55rem}.check{display:flex;gap:.45rem;align-items:flex-start}.check input{width:auto;margin-top:.25rem}
+.invite-state{padding:.8rem;border-radius:9px;background:#fff7df;color:#775b2d;font-size:.78rem}.ok{background:#e9f7ec;color:#2f6940}.warn{background:#fff1d5;color:#7b5e2a}.error{background:#fdebed;color:#8e414b}
+.child-select{display:grid;gap:.4rem;margin:.55rem 0}.child-select label{display:flex;gap:.45rem;align-items:flex-start;padding:.55rem;border:1px solid var(--line);border-radius:8px}.child-select input{width:auto;margin-top:.25rem}
+.empty{padding:1rem;border:1px dashed var(--line);border-radius:10px;color:var(--muted)}
+footer{padding:2rem 0;background:var(--navy);color:#cbd5e2;text-align:center;font-size:.75rem}
+@media(max-width:800px){.cols-2,.cols-3{grid-template-columns:1fr}.nav{flex-direction:column;padding:.7rem 0}.family-title{display:block}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="shell nav">
+    <a class="brand" href="../"><strong>Khaemenes Academy</strong><small>Unified Family & Learner Registry</small></a>
+    <a href="../">← Academy Home</a>
+  </div>
+  <div class="shell hero">
+    <p class="eyebrow">One family profile · Pre-K through Grade 12</p>
+    <h1>Family Profile</h1>
+    <p>Parents, guardians, caregivers, and authorized educators may share one family workspace. Each child keeps a separate learner account, mentor, school stage, and academic record.</p>
+  </div>
+</header>
+
+<main>
+<section class="section">
+  <div class="shell">
+    <div id="originNotice"></div>
+    <div id="familyApp"></div>
+  </div>
+</section>
+</main>
+
+<footer>Jennifer Kay Pearl · Khaemenes Academy · Verve N Veda · local-first family registry</footer>
+
+<script src="../assets/khaemenes-family-registry.js"></script>
+<script src="../assets/khaemenes-family-invite-client.js"></script>
+<script>
+(() => {
+"use strict";
+const R=window.KhaemenesFamilyRegistry;
+const I=window.KhaemenesFamilyInviteClient;
+const $=s=>document.querySelector(s);
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+function originNotice(){
+  const status=R.status();
+  $("#originNotice").innerHTML=status.recommendedSharedOrigin
+    ?'<div class="invite-state ok">Shared-origin mode active: Khaemenes repositories opened through <strong>vervenveda.com</strong> can read this same browser-local family registry.</div>'
+    :'<div class="invite-state warn">For shared browser-local continuity across Khaemenes repositories, open the Academy through <strong>https://vervenveda.com/</strong>. Direct github.io repository origins do not share localStorage with one another.</div>';
+}
+
+function family(){
+  return R.getFamily();
+}
+
+function ensureFamily(){
+  if(family()) return;
+  renderCreateFamily();
+}
+
+function renderCreateFamily(){
+  $("#familyApp").innerHTML=`
+    <div class="heading"><h2>Create the Family Profile once.</h2><p>This becomes the shared local family identity for Preschool, Kinder Garden, Elementary, Middle, and High School.</p></div>
+    <div class="card" style="max-width:720px;margin:auto">
+      <div class="field"><label>Family display name</label><input id="newFamilyName" placeholder="Example: Pearl Family"></div>
+      <div class="field"><label>First adult display name</label><input id="newAdultName" placeholder="Example: Mom, Dad, Jennifer, Grandma"></div>
+      <div class="field"><label>Adult role</label><select id="newAdultRole"><option value="parent">Parent</option><option value="guardian">Guardian</option><option value="caregiver">Caregiver</option><option value="educator">Authorized educator</option><option value="other-authorized-adult">Other authorized adult</option></select></div>
+      <div class="actions"><button class="btn primary" id="createFamily">Create Family Profile</button></div>
+    </div>`;
+  $("#createFamily").addEventListener("click",()=>{
+    R.createFamily({
+      displayName:$("#newFamilyName").value,
+      adultName:$("#newAdultName").value,
+      adultRole:$("#newAdultRole").value
+    });
+    render();
+  });
+}
+
+function render(){
+  originNotice();
+  const f=family();
+  if(!f){ renderCreateFamily(); return; }
+
+  const inviteStatus=I.serverStatus();
+  const accessByLearner={};
+  for(const learner of f.learners){
+    accessByLearner[learner.learnerId]=R.adultAccessForLearner(learner.learnerId);
+  }
+
+  $("#familyApp").innerHTML=`
+    <div class="heading"><h2>${esc(f.displayName)}</h2><p>One family workspace. ${f.adults.length} adult${f.adults.length===1?"":"s"} · ${f.learners.length} learner${f.learners.length===1?"":"s"}.</p></div>
+
+    <div class="grid cols-2">
+      <section class="card">
+        <div class="family-title"><div><h3>Adults in this family</h3><p>Adults may have different relationships and different permissions for each learner.</p></div><span class="badge">${f.adults.length} linked</span></div>
+        <div id="adultList">${f.adults.map(a=>`<div class="member"><strong>${esc(a.displayName)}</strong><small>${esc(a.role)} · ${esc(a.accountState)}</small></div>`).join("") || '<div class="empty">No adults yet.</div>'}</div>
+        <div class="actions"><button class="btn" id="addLocalAdult">Add adult on this device</button></div>
+      </section>
+
+      <section class="card">
+        <div class="family-title"><div><h3>Children / Learner Accounts</h3><p>Each child receives a separate stable learner ID and a separate learner account identity.</p></div><span class="badge">${f.learners.length} learners</span></div>
+        <div>${f.learners.map(l=>`
+          <div class="member">
+            <strong>${esc(l.nickname)}</strong>
+            <small>${esc(l.stage)} · ${esc(l.accountState)} · ${esc(l.accountId)}</small>
+            <div class="badges">${(accessByLearner[l.learnerId]||[]).map(x=>`<span class="badge">${esc(x.adult?.displayName||"Adult")} · ${esc(x.permissionPreset)}</span>`).join("")}</div>
+          </div>`).join("") || '<div class="empty">No learner accounts yet.</div>'}
+        </div>
+        <div class="actions"><button class="btn primary" id="registerLearner">Register a child</button></div>
+      </section>
+    </div>
+
+    <section class="card" style="margin-top:1rem">
+      <h3>Invite / Link Another Parent or Guardian by Email</h3>
+      <p>A distant, divorced, traveling, or separate-household parent can be invited to selected children without sharing a password. Access can be limited or revoked.</p>
+      <div class="invite-state ${inviteStatus.emailInvitesAvailable?"ok":"warn"}">
+        ${inviteStatus.emailInvitesAvailable
+          ?"Secure email invitation service is connected."
+          :"Static GitHub mode: the complete email-invite workflow is installed, but cross-device invitations are not sent until the secure Family Account server is connected. No fake invite will be created."}
+      </div>
+      <div class="grid cols-2">
+        <div class="field"><label>Adult email</label><input id="inviteEmail" type="email" autocomplete="email" placeholder="parent@example.com"></div>
+        <div class="field"><label>Relationship label</label><input id="inviteRelationship" placeholder="Dad, Mom, Grandma, Guardian…"></div>
+        <div class="field"><label>Adult role</label><select id="inviteRole"><option value="parent">Parent</option><option value="guardian">Guardian</option><option value="caregiver">Caregiver</option><option value="educator">Authorized educator</option></select></div>
+        <div class="field"><label>Permission level</label><select id="invitePermission"><option value="co-guardian">Co-parent / guardian</option><option value="progress-viewer">Progress viewer</option><option value="educator">Educator</option></select></div>
+      </div>
+      <div class="field"><label>Which learner accounts may this adult access?</label><div class="child-select" id="inviteLearners">${
+        f.learners.map(l=>`<label><input type="checkbox" value="${esc(l.learnerId)}"> <span><strong>${esc(l.nickname)}</strong><br><small>${esc(l.stage)}</small></span></label>`).join("") || '<div class="empty">Register a learner before sending an invitation.</div>'
+      }</div></div>
+      <label class="check"><input id="inviteAuthority" type="checkbox"> <span>I confirm I am authorized to grant this adult access to the selected learner account(s). Khaemenes does not determine custody or legal authority.</span></label>
+      <div class="actions"><button class="btn gold" id="sendInvite" ${!f.learners.length?"disabled":""}>Send Secure Email Invite</button></div>
+      <div id="inviteResult"></div>
+    </section>
+
+    <section class="card" style="margin-top:1rem">
+      <h3>Family Tools</h3>
+      <div class="actions">
+        <button class="btn" id="exportFamily">Export Local Family Backup</button>
+        <a class="btn" href="../Parent_resources/Homeschool_compass_index.html">Homeschool Compass</a>
+        <a class="btn" href="../Parent_resources/Transcript_generator_index.html">Transcript Generator</a>
+        <a class="btn" href="../Parent_resources/Diploma_generator_index.html">Diploma Generator</a>
+      </div>
+      <p><small>A local export is a backup, not an authenticated invitation and not a substitute for the future server-backed family account.</small></p>
+    </section>
+  `;
+
+  bind();
+}
+
+function bind(){
+  $("#registerLearner")?.addEventListener("click",registerLearner);
+  $("#addLocalAdult")?.addEventListener("click",addLocalAdult);
+  $("#sendInvite")?.addEventListener("click",sendInvite);
+  $("#exportFamily")?.addEventListener("click",exportFamily);
+}
+
+function registerLearner(){
+  const f=family();
+  const nickname=prompt("Child's first name or nickname:");
+  if(!nickname) return;
+  const stage=(prompt("School stage: preschool, kindergarten, elementary, middle, or high","kindergarten")||"").trim().toLowerCase();
+  if(!R.stages.includes(stage)){ alert("Please use preschool, kindergarten, elementary, middle, or high."); return; }
+
+  const learner=R.registerLearner({
+    familyId:f.familyId,
+    nickname,
+    stage
+  });
+
+  const activeAdult=R.getAdult();
+  if(activeAdult){
+    R.grantAdultAccess({
+      familyId:f.familyId,
+      adultId:activeAdult.adultId,
+      learnerId:learner.learnerId,
+      permissionPreset:"co-guardian"
+    });
+  }
+  render();
+}
+
+function addLocalAdult(){
+  const f=family();
+  const name=prompt("Adult display name:");
+  if(!name) return;
+  const role=(prompt("Role: parent, guardian, caregiver, educator","parent")||"parent").trim();
+  const learnerIds=f.learners.map(l=>l.learnerId);
+  R.addAdultLocal({
+    familyId:f.familyId,
+    displayName:name,
+    role,
+    permissionPreset:"co-guardian",
+    learnerIds
+  });
+  render();
+}
+
+async function sendInvite(){
+  const result=$("#inviteResult");
+  const f=family();
+  const email=$("#inviteEmail").value.trim();
+  const learnerIds=[...document.querySelectorAll("#inviteLearners input:checked")].map(x=>x.value);
+
+  if(!$("#inviteAuthority").checked){
+    result.innerHTML='<div class="invite-state error">Please confirm you are authorized to grant access.</div>';
+    return;
+  }
+  if(!learnerIds.length){
+    result.innerHTML='<div class="invite-state error">Choose at least one learner account.</div>';
+    return;
+  }
+
+  try{
+    const response=await I.createEmailInvite({
+      familyId:f.familyId,
+      email,
+      relationshipLabel:$("#inviteRelationship").value,
+      role:$("#inviteRole").value,
+      learnerIds,
+      permissionPreset:$("#invitePermission").value,
+      expiresInHours:48
+    });
+
+    if(response.ok){
+      result.innerHTML='<div class="invite-state ok">Invitation sent. The recipient will receive a one-time, expiring link.</div>';
+    }else if(response.status==="UNAVAILABLE"){
+      result.innerHTML='<div class="invite-state warn">Email invitations are prepared in the architecture but are not available in static mode yet. Nothing was sent and no access was granted.</div>';
+    }else{
+      result.innerHTML='<div class="invite-state error">The invitation service returned an error. No access has been granted.</div>';
+    }
+  }catch(error){
+    result.innerHTML=`<div class="invite-state error">${esc(error.message||error)}</div>`;
+  }
+}
+
+function exportFamily(){
+  const payload=R.exportFamily();
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;a.download="khaemenes-family-local-backup.json";a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+render();
+})();
+</script>
+</body>
+</html>
