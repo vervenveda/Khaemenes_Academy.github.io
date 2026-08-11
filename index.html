@@ -24,7 +24,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Aboreto&family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:wght@400;500;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <style>
     :root{
@@ -54,8 +54,8 @@
       --r-card:21px;
       --ribbon-height:33px;
       --header-height:66px;
-      --display:"Gaspacho","Cormorant Garamond",Baskerville,Georgia,serif;
-      --ceremonial:"Cinzel","Aboreto","Times New Roman",serif;
+      --display:"Cinzel",Georgia,"Times New Roman",serif;
+      --ceremonial:"Cinzel",Georgia,"Times New Roman",serif;
       --sans:"Brandon Grotesque","Montserrat","Avenir Next",Avenir,Arial,sans-serif;
     }
 
@@ -1190,6 +1190,230 @@
       .learning-hall{max-width:100%}
     }
 
+
+    /* =========================================================
+       MATRIX EDITION v4 · LAYERED HEADER + TYPOGRAPHY
+       ========================================================= */
+    :root{
+      --header-main-height:72px;
+      --header-nav-height:48px;
+      --header-height:calc(var(--header-main-height) + var(--header-nav-height));
+    }
+
+    .site-header{
+      height:auto;
+      top:var(--ribbon-height);
+      background:rgba(12,28,47,.975);
+    }
+    .header-main{border-bottom:1px solid rgba(255,255,255,.11)}
+    .header-inner{height:var(--header-main-height)}
+    .header-nav-layer{
+      min-height:var(--header-nav-height);
+      display:flex;
+      align-items:center;
+      background:rgba(7,19,31,.72);
+    }
+    .header-nav{
+      width:min(100%,999px);
+      min-height:var(--header-nav-height);
+      margin:auto;
+      display:grid;
+      grid-template-columns:repeat(7,minmax(0,1fr));
+      align-items:stretch;
+      gap:7px;
+      padding:6px 0;
+    }
+    .header-nav a{
+      min-height:36px;
+      display:flex;align-items:center;justify-content:center;
+      padding:7px 8px;
+      border-radius:7px;
+      color:rgba(255,255,255,.76);
+      font-size:9px;font-weight:500;
+      letter-spacing:.075em;text-transform:uppercase;
+      text-align:center;
+    }
+    .header-nav a:hover{color:#fff;background:rgba(255,255,255,.08)}
+    .breadcrumbs{display:none!important}
+
+    .hero{
+      min-height:calc(100svh - var(--ribbon-height) - var(--header-height));
+    }
+    .hero-inner{padding:clamp(66px,8vh,99px) 0 28px}
+    .hero-stage{gap:33px}
+    h1{
+      font-family:var(--ceremonial);
+      font-size:clamp(3.35rem,6vw,5.9rem);
+      line-height:1;
+      letter-spacing:.025em;
+    }
+    .hero .eyebrow{
+      font-size:clamp(11px,1vw,14px);
+      letter-spacing:.16em;
+    }
+    .tag{
+      margin-top:18px;
+      font-family:var(--sans);
+      font-size:clamp(.82rem,1.15vw,1rem);
+      font-weight:400;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .lead{
+      max-width:777px;
+      font-family:var(--sans);
+      font-size:clamp(.94rem,1.25vw,1.08rem);
+      line-height:1.88;
+      font-weight:400;
+    }
+    .hero-stat-grid{
+      width:min(100%,1111px);
+      grid-template-columns:repeat(4,1fr);
+    }
+    .hero-stat{padding:17px 21px}
+    .hero-stat strong{
+      font-family:var(--ceremonial);
+      font-size:clamp(.92rem,1.25vw,1.08rem);
+      line-height:1.35;
+    }
+    .hero-stat span{font-size:9.5px;line-height:1.6}
+
+    .section{padding-block:clamp(88px,8vw,122px)}
+    .heading{
+      max-width:888px;
+      margin:0 auto 55px;
+    }
+    .heading .kicker{
+      display:block;
+      color:var(--gold);
+      font-family:var(--ceremonial);
+      font-size:clamp(25px,3.35vw,39px);
+      font-weight:500;
+      line-height:1.18;
+      letter-spacing:.055em;
+      text-transform:none;
+    }
+    .heading h2{
+      max-width:760px;
+      margin:17px auto 0;
+      color:var(--ink);
+      font-family:var(--sans);
+      font-size:clamp(16px,1.8vw,21px);
+      font-weight:400;
+      line-height:1.55;
+      letter-spacing:.012em;
+    }
+    .heading p{
+      max-width:666px;
+      margin:15px auto 0;
+      font-family:var(--sans);
+      font-size:13px;
+      line-height:1.85;
+    }
+    .section-dark .heading .kicker{color:var(--gold-pale)}
+    .section-dark .heading h2{color:#fff}
+    .section-dark .heading p{color:rgba(255,255,255,.66)}
+
+    .architecture-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:21px;
+      align-items:stretch;
+    }
+    .architecture-card{
+      --architecture-accent:var(--navy);
+      min-height:333px;
+      display:flex;flex-direction:column;align-items:center;
+      padding:30px 24px;
+      border:1px solid var(--line);
+      border-top:4px solid var(--architecture-accent);
+      border-radius:21px;
+      background:#fff;
+      box-shadow:var(--shadow-small);
+      text-align:center;
+      transition:transform .17s,border-color .17s,box-shadow .17s;
+    }
+    .architecture-card:hover{
+      transform:translateY(-3px);
+      border-color:var(--architecture-accent);
+      box-shadow:var(--shadow);
+    }
+    .architecture-number{
+      color:var(--architecture-accent);
+      font:600 10px/1 var(--ceremonial);
+      letter-spacing:.16em;
+    }
+    .architecture-card h3{
+      margin-top:21px;
+      color:var(--navy);
+      font-family:var(--ceremonial);
+      font-size:clamp(1.45rem,2vw,1.8rem);
+      line-height:1.15;
+    }
+    .architecture-card p{
+      max-width:290px;
+      margin:14px auto 21px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.72;
+    }
+    .architecture-card a{
+      width:100%;min-height:43px;
+      display:flex;align-items:center;justify-content:center;
+      margin-top:auto;padding:9px 11px;
+      border-radius:7px;
+      color:#fff;background:var(--architecture-accent);
+      font-size:9px;font-weight:600;
+      letter-spacing:.07em;text-transform:uppercase;
+    }
+
+    .learning-hall{min-height:355px}
+    .learning-hall-number{font-size:9px}
+    .learning-hall h3{
+      font-family:var(--ceremonial);
+      font-size:clamp(1.35rem,1.85vw,1.7rem);
+      line-height:1.2;
+    }
+
+    .portal-card h3,
+    .campus-card h3,
+    .route-card h3,
+    .featured-card h3,
+    .tool-card h3{
+      font-family:var(--ceremonial);
+      letter-spacing:.015em;
+    }
+
+    @media(max-width:1180px){
+      .header-nav{grid-template-columns:repeat(4,minmax(0,1fr));padding-block:8px}
+      :root{--header-nav-height:92px}
+      .architecture-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .hero-stat-grid{grid-template-columns:repeat(2,1fr)}
+      .hero-stat:nth-child(3){border-left:0;border-top:1px solid rgba(255,255,255,.12)}
+      .hero-stat:nth-child(4){border-top:1px solid rgba(255,255,255,.12)}
+    }
+
+    @media(max-width:760px){
+      :root{--header-nav-height:0px}
+      .header-nav-layer{display:none}
+      .header-inner{grid-template-columns:minmax(0,1fr) auto}
+      .site-id{display:none}
+      .hero-inner{padding:55px 0 24px}
+      .hero-stat-grid{grid-template-columns:1fr}
+      .hero-stat{border-left:0!important;border-top:1px solid rgba(255,255,255,.12)!important}
+      .hero-stat:first-child{border-top:0!important}
+      .architecture-grid{grid-template-columns:1fr}
+      .heading{margin-bottom:44px}
+      .heading .kicker{font-size:clamp(24px,7vw,32px)}
+      .heading h2{font-size:16px;line-height:1.65}
+    }
+
+    @media(max-width:560px){
+      h1{font-size:clamp(2.7rem,14vw,4rem)}
+      .hero .eyebrow{font-size:10px}
+      .architecture-card{min-height:auto}
+    }
+
 </style>
 </head>
 
@@ -1205,40 +1429,48 @@
   </div>
 
   <header class="site-header">
-    <div class="shell header-inner">
-      <a class="brand" href="#top" aria-label="Khaemenes Academy home">
-        <span class="seal" aria-hidden="true">KA</span>
-        <span class="brand-copy">
-          <strong>Khaemenes Academy</strong>
-          <small>A Sanctuary for Lifelong Learners</small>
-        </span>
-      </a>
+    <div class="header-main">
+      <div class="shell header-inner">
+        <a class="brand" href="#top" aria-label="Khaemenes Academy home">
+          <span class="seal" aria-hidden="true">KA</span>
+          <span class="brand-copy">
+            <strong>Khaemenes Academy</strong>
+            <small>A Sanctuary for Lifelong Learners</small>
+          </span>
+        </a>
 
-      <a class="site-id" href="#portals">
-        <strong>International Learning Campus</strong>
-        <small>Student · Family · Educator</small>
-      </a>
+        <a class="site-id" href="#architecture">
+          <strong>International Learning Campus</strong>
+          <small>Learn by stage · subject · experience · guidance</small>
+        </a>
 
-      <nav class="header-actions" aria-label="Primary navigation">
-        <a class="header-link portal-link" href="#student-portal">Student</a>
-        <a class="header-link portal-link" href="#parent-portal">Family</a>
-        <button class="menu-button directory-button" id="menuButton" type="button"
-                aria-label="Open complete Academy directory"
-                aria-expanded="false" aria-controls="drawerBg">
-          <span class="menu-label">Directory</span>
-          <span class="menu-lines" aria-hidden="true"></span>
-        </button>
-      </nav>
+        <nav class="header-actions" aria-label="Portal shortcuts">
+          <a class="header-link portal-link" href="#student-portal">Student</a>
+          <a class="header-link portal-link" href="#parent-portal">Family</a>
+          <button class="menu-button directory-button" id="menuButton" type="button"
+                  aria-label="Open complete Academy directory"
+                  aria-expanded="false" aria-controls="drawerBg">
+            <span class="menu-label">Directory</span>
+            <span class="menu-lines" aria-hidden="true"></span>
+          </button>
+        </nav>
+      </div>
+    </div>
+
+    <div class="header-nav-layer">
+      <div class="shell">
+        <nav class="header-nav" aria-label="Academy section navigation">
+          <a href="#portals">Portals</a>
+          <a href="#architecture">How It Works</a>
+          <a href="#campuses">Campuses</a>
+          <a href="#programs">Flagship Pathways</a>
+          <a href="#standards">Knowledge Matrix</a>
+          <a href="#library">Resource Library</a>
+          <a href="https://vervenveda.com/">Verve N Veda</a>
+        </nav>
+      </div>
     </div>
   </header>
-
-  <nav class="breadcrumbs" aria-label="Breadcrumb">
-    <div class="shell">
-      <a href="https://vervenveda.com/">Verve N Veda</a>
-      <span aria-hidden="true">›</span>
-      <span aria-current="page">Khaemenes Academy</span>
-    </div>
-  </nav>
 
   <div class="drawer-bg" id="drawerBg" aria-hidden="true">
     <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
@@ -1246,10 +1478,10 @@
         <h2 id="drawerTitle">Academy Directory</h2>
         <button class="close" id="closeButton" type="button" aria-label="Close Academy directory">×</button>
       </div>
-      <p>Search student and family entrances, campuses, NAIB, electives, creative halls, connected study spaces, and every current Academy tool.</p>
+      <p>Search student and family entrances, campuses, ARSHIF Halls, Polyglot, Field Lab, NAIB, research, creative systems, practical-life resources, and every current Academy tool.</p>
       <label class="sr-only" for="drawerSearch">Search the complete Academy directory</label>
       <input class="drawer-search" id="drawerSearch" type="search"
-             placeholder="Search campuses, NAIB, art, music, health, finance, careers…"
+             placeholder="Search campuses, ARSHIF, Field Lab, Polyglot, NAIB, art, health, finance, careers…"
              autocomplete="off">
       <div id="drawerContent"></div>
     </aside>
@@ -1268,22 +1500,23 @@
 
           <div class="hero-aside">
             <p class="lead">
-              A scholarly, internationally adaptable educational campus connecting students,
-              parents, educators, complete courses, practical tools, family records, and lifelong
-              learning pathways through one calm and organized home.
+              One coordinating home for an expanding learning matrix: age-and-stage campuses,
+              formal courses, deep subject Halls, language study, experiential Field Lab missions,
+              mentor guidance, family records, research, creativity, and practical tools.
             </p>
 
             <div class="actions">
               <a class="btn btn-primary" href="#student-portal">Enter Student Portal</a>
               <a class="btn btn-parent" href="#parent-portal">Parent &amp; Educator Portal</a>
-              <a class="btn" href="#campuses">Explore the Campuses</a>
+              <a class="btn" href="#architecture">See How the Academy Works</a>
             </div>
           </div>
 
           <div class="hero-stat-grid" aria-label="Academy overview">
-            <div class="hero-stat"><strong>8 Connected Campuses</strong><span>Early childhood through higher learning and languages.</span></div>
-            <div class="hero-stat"><strong>33 Current Tools</strong><span>Learning, wellness, creativity, careers, records, and practical life.</span></div>
-            <div class="hero-stat"><strong>7 Learning Halls</strong><span>Major electives and connected resources organized by purpose.</span></div>
+            <div class="hero-stat"><strong>8 Connected Campuses</strong><span>Early childhood through higher learning, languages, and family support.</span></div>
+            <div class="hero-stat"><strong>33 Local Academy Tools</strong><span>Records, finance, wellness, careers, reasoning, creativity, and practical life.</span></div>
+            <div class="hero-stat"><strong>55 Formal Language Courses</strong><span>Spanish, French, German, Mandarin Chinese, and Japanese through College 202.</span></div>
+            <div class="hero-stat"><strong>One Knowledge Matrix</strong><span>ARSHIF · Polyglot · Field Lab · NAIB · research · creation · life skills.</span></div>
           </div>
         </div>
 
@@ -1296,8 +1529,8 @@
     <section class="section section-alt" id="portals">
       <div class="section-inner">
         <div class="heading">
-          <p class="kicker">The Academy Portal Center</p>
-          <h2>Students and families begin here.</h2>
+          <p class="kicker">Student &amp; Family Portal Center</p>
+          <h2>Two clear entrances keep the Academy easy to navigate.</h2>
           <p>Two clear entrances keep the Academy easy to navigate: one for the learner and one for the people supporting the learner.</p>
         </div>
 
@@ -1310,13 +1543,13 @@
             <div class="portal-form">
               <label class="sr-only" for="studentStage">Choose a student campus</label>
               <select class="field" id="studentStage">
-                <option value="https://vervenveda.github.io/Khaemenes_Preschool.github.io/">Preschool · Early Childhood</option>
-                <option value="https://vervenveda.github.io/Khaemenes_KinderGarden.github.io/">Kinder Garden</option>
-                <option value="https://vervenveda.github.io/Khaemenes_Elementary.github.io/">Elementary · Kinder Garden–Grade 5</option>
-                <option value="https://vervenveda.github.io/Khaemenes_Middle.github.io/">Middle School · Grades 6–8</option>
-                <option value="https://vervenveda.github.io/Khaemenes_High.github.io/">High School · Grades 9–12</option>
-                <option value="https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/">Higher Learning · GED, College, Careers</option>
-                <option value="https://vervenveda.github.io/Khaemenes_Linguistics.github.io/">Linguistics &amp; Languages</option>
+                <option value="https://vervenveda.com/Khaemenes_Preschool.github.io/">Preschool · Early Childhood</option>
+                <option value="https://vervenveda.com/Khaemenes_KinderGarden.github.io/">Kinder Garden</option>
+                <option value="https://vervenveda.com/Khaemenes_Elementary.github.io/">Elementary · Kinder Garden–Grade 5</option>
+                <option value="https://vervenveda.com/Khaemenes_Middle.github.io/">Middle School · Grades 6–8</option>
+                <option value="https://vervenveda.com/Khaemenes_High.github.io/">High School · Grades 9–12</option>
+                <option value="https://vervenveda.com/Khaemenes_Higher_Learning.github.io/">Higher Learning · GED, College, Careers</option>
+                <option value="https://vervenveda.com/Khaemenes_Linguistics.github.io/">Linguistics &amp; Languages</option>
               </select>
               <button class="portal-button" id="openStudentPortal" type="button">Enter Campus</button>
             </div>
@@ -1336,7 +1569,7 @@
             <p>Review grade pathways, support home learning, organize routines and records, locate accommodations, and enter family-facing sections of the Academy.</p>
 
             <a class="portal-primary-door"
-               href="https://vervenveda.github.io/Khaemenes_Academy.github.io/family/">
+               href="https://vervenveda.com/Khaemenes_Academy.github.io/family/">
               Open Family Account Hub
             </a>
 
@@ -1344,9 +1577,9 @@
               <details class="portal-group" open>
                 <summary><span>01</span> Planning &amp; Records</summary>
                 <div class="portal-group-links">
-                  <a href="https://vervenveda.github.io/Khaemenes_Academy.github.io/Parent_resources/Homeschool_compass_index.html">Homeschool Compass</a>
-                  <a href="https://vervenveda.github.io/Khaemenes_Academy.github.io/Parent_resources/Transcript_generator_index.html">Transcript Generator</a>
-                  <a href="https://vervenveda.github.io/Khaemenes_Academy.github.io/Parent_resources/Diploma_generator_index.html">Diploma Generator</a>
+                  <a href="https://vervenveda.com/Khaemenes_Academy.github.io/Parent_resources/Homeschool_compass_index.html">Homeschool Compass</a>
+                  <a href="https://vervenveda.com/Khaemenes_Academy.github.io/Parent_resources/Transcript_generator_index.html">Transcript Generator</a>
+                  <a href="https://vervenveda.com/Khaemenes_Academy.github.io/Parent_resources/Diploma_generator_index.html">Diploma Generator</a>
                 </div>
               </details>
 
@@ -1363,8 +1596,8 @@
                 <summary><span>03</span> Family Learning</summary>
                 <div class="portal-group-links">
                   <a href="#family-center">Academy Family Center</a>
-                  <a href="https://vervenveda.github.io/Khaemenes_Academy.github.io/Parent_resources/Art_studio_index.html">Family Art Studio</a>
-                  <a href="#standards">Seven Learning Halls</a>
+                  <a href="https://vervenveda.com/Khaemenes_Academy.github.io/Parent_resources/Art_studio_index.html">Family Art Studio</a>
+                  <a href="#standards">Academy Knowledge Matrix</a>
                 </div>
               </details>
             </div>
@@ -1375,44 +1608,84 @@
       </div>
     </section>
 
-    <section class="section" id="campuses">
+    <section class="section" id="architecture">
+      <div class="section-inner">
+        <div class="heading">
+          <p class="kicker">How the Academy Works</p>
+          <h2>One home. Four complementary ways to enter learning.</h2>
+          <p>The structure is deliberate: learners can move by developmental stage, by subject, by applied experience, or with mentor and family guidance without flattening everything into one giant course list.</p>
+        </div>
+
+        <div class="architecture-grid">
+          <article class="architecture-card" style="--architecture-accent:#315b7b">
+            <span class="architecture-number">01</span>
+            <h3>Learn by Stage</h3>
+            <p>Preschool, Kinder Garden, Elementary, Middle School, High School, Higher Learning, and specialized language study each keep age-appropriate pacing and identity.</p>
+            <a href="#campuses">Explore Campuses</a>
+          </article>
+
+          <article class="architecture-card" style="--architecture-accent:#8a5f7e">
+            <span class="architecture-number">02</span>
+            <h3>Learn by Subject</h3>
+            <p>ARSHIF Halls and Polyglot organize deep study by discipline—literature, history, philosophy, theatre, foodways, language, culture, research, and more.</p>
+            <a href="#standards">Open Knowledge Matrix</a>
+          </article>
+
+          <article class="architecture-card" style="--architecture-accent:#5b7d68">
+            <span class="architecture-number">03</span>
+            <h3>Learn by Doing</h3>
+            <p>Field Lab converts knowledge into scenarios, constraints, decisions, evidence, revision, and portfolio artifacts instead of treating practice as an afterthought.</p>
+            <a href="https://vervenveda.com/Arshif.github.io/apps/%20field-lab/">Open Field Lab</a>
+          </article>
+
+          <article class="architecture-card" style="--architecture-accent:#8a6a44">
+            <span class="architecture-number">04</span>
+            <h3>Learn with Guidance</h3>
+            <p>NAIB, family accounts, profiles, records, planning tools, and mentor pathways help a learner decide what comes next while keeping private records under family control.</p>
+            <a href="https://artist1970.github.io/noema-ai.github.io/">Open NAIB</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt" id="campuses">
       <div class="section-inner">
         <div class="heading">
           <p class="kicker">Eight Connected Campuses</p>
-          <h2>Choose the learning stage that fits today.</h2>
+          <h2>Choose by age, readiness, grade level, or lifelong-learning goal.</h2>
           <p>Each campus has its own personality and learner tools while remaining part of one organized Academy network.</p>
         </div>
         <div class="campus-grid" id="campusGrid"></div>
       </div>
     </section>
 
-    <section class="section section-alt" id="routes">
+    <section class="section" id="routes">
       <div class="section-inner">
         <div class="heading">
-          <p class="kicker">Organized Academic Routes</p>
-          <h2>Find the right collection without searching everywhere.</h2>
+          <p class="kicker">Find Your Academic Route</p>
+          <h2>Search the Academy by goal instead of hunting across repositories.</h2>
           <p>Each route opens the complete Academy Library with the appropriate learning family already selected.</p>
         </div>
         <div class="route-grid" id="routeGrid"></div>
       </div>
     </section>
 
-    <section class="section" id="programs">
+    <section class="section section-alt" id="programs">
       <div class="section-inner">
         <div class="heading">
-          <p class="kicker">Featured Current Programs</p>
-          <h2>Strong places to begin today.</h2>
+          <p class="kicker">Current Flagship Pathways</p>
+          <h2>Begin with one of the systems now anchoring the wider Academy.</h2>
           <p>These active programs connect directly to current campus tools and learning pathways.</p>
         </div>
         <div class="featured-grid" id="featuredGrid"></div>
       </div>
     </section>
 
-    <section class="section section-alt" id="library">
+    <section class="section" id="library">
       <div class="section-inner">
         <div class="heading">
-          <p class="kicker">Complete Academy Resource Library</p>
-          <h2>Every current learning tool in one searchable place.</h2>
+          <p class="kicker">Academy Resource Library</p>
+          <h2>Thirty-three local tools remain one search away.</h2>
           <p>Search by topic, filter by learning family, save a personal shelf on this device, or discover a starting point.</p>
         </div>
 
@@ -1438,7 +1711,7 @@
       <div class="section-inner">
         <div class="heading">
           <p class="kicker">Family &amp; Educator Center</p>
-          <h2>Support the learner without losing the learner.</h2>
+          <h2>Support the learner while preserving privacy, independence, and continuity.</h2>
           <p>Family tools should strengthen confidence, privacy, independence, communication, and steady progress.</p>
         </div>
 
@@ -1448,7 +1721,7 @@
             <h3>Practical support for real learning lives.</h3>
             <p>Use this center to move between grade expectations, current tools, high-school profiles, adult pathways, and printable learning records while keeping private information on the family’s own device.</p>
             <div class="actions">
-              <a class="btn btn-primary" href="https://vervenveda.github.io/Khaemenes_High.github.io/">Open Student &amp; Family Profiles</a>
+              <a class="btn btn-primary" href="https://vervenveda.com/Khaemenes_Academy.github.io/family/">Open Family Account Hub</a>
               <a class="btn" href="#library">Review Academy Tools</a>
             </div>
           </article>
@@ -1466,8 +1739,8 @@
     <section class="section" id="standards">
       <div class="section-inner">
         <div class="heading">
-          <p class="kicker">Seven Connected Learning Halls</p>
-          <h2>Every major doorway, organized by purpose.</h2>
+          <p class="kicker">Academy Knowledge Matrix</p>
+          <h2>Campuses teach by stage; Halls deepen subjects; Field Lab turns knowledge into action.</h2>
           <p>Core academics remain clear while NAIB, research, creativity, wellbeing, civic learning, careers, and practical resources stay one deliberate doorway away.</p>
         </div>
         <div class="network-grid learning-hall-grid" id="networkGrid"></div>
@@ -1497,7 +1770,7 @@
         <a href="#library">Learning Tools</a>
         <a href="https://vervenveda.com/">Verve N Veda</a>
       </nav>
-      <span class="footer-meta">8 Campuses · 33 Tools · 7 Learning Halls</span>
+      <span class="footer-meta">8 Campuses · 33 Local Tools · 55 Language Courses · Connected Knowledge Matrix</span>
     </div>
   </footer>
 
@@ -1507,18 +1780,74 @@
     (() => {
       "use strict";
 
-      const ACADEMY_BASE = "https://vervenveda.github.io/Khaemenes_Academy.github.io";
+      const ACADEMY_BASE = "https://vervenveda.com/Khaemenes_Academy.github.io";
 
       const CAMPUSES = [
-        {title:"Preschool",range:"Early Childhood",icon:"PS",accent:"#7b8f72",url:"https://vervenveda.github.io/Khaemenes_Preschool.github.io/",description:"Stories, first words, colors, shapes, music, movement, imagination, play, and gentle family-guided discovery."},
-        {title:"Kinder Garden",range:"School Readiness",icon:"KG",accent:"#5f9364",url:"https://vervenveda.github.io/Khaemenes_KinderGarden.github.io/",description:"Kindness, curiosity, literacy, number sense, nature, creativity, movement, and joyful discovery."},
-        {title:"Elementary School",range:"Kinder Garden–Grade 5",icon:"E",accent:"#315b7b",url:"https://vervenveda.github.io/Khaemenes_Elementary.github.io/",description:"Literacy, mathematics, science, geography, creativity, citizenship, practical life skills, and project-based exploration."},
-        {title:"Middle School",range:"Grades 6–8",icon:"M",accent:"#4f7f7a",url:"https://vervenveda.github.io/Khaemenes_Middle.github.io/",description:"Strong foundations, study independence, research, technology, civic learning, arts, wellness, and early career exploration."},
-        {title:"High School",range:"Grades 9–12",icon:"HS",accent:"#233e66",url:"https://vervenveda.github.io/Khaemenes_High.github.io/",description:"Personal profiles, homerooms, complete courses, assessments, portfolios, records, graduation, and career preparation."},
-        {title:"Higher Learning",range:"GED · College · Careers",icon:"HL",accent:"#516174",url:"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/",description:"GED preparation, college access, career mentoring, professional growth, financial education, and lifelong study."},
-        {title:"Linguistics & Languages",range:"Language · Literacy · Communication",icon:"L",accent:"#745f83",url:"https://vervenveda.github.io/Khaemenes_Linguistics.github.io/",description:"Language learning, linguistics, translation, writing systems, communication, and international cultural understanding."},
-        {title:"Family & Educator Center",range:"Parents · Guardians · Teachers · Mentors",icon:"F",accent:"#9a5d4f",url:"#family-center",description:"Planning, progress, records, accommodations, mentoring, family learning, privacy, and homeschool support."}
-      ];
+        {
+                "title": "Preschool",
+                "range": "Early Childhood",
+                "icon": "PS",
+                "accent": "#7b8f72",
+                "url": "https://vervenveda.com/Khaemenes_Preschool.github.io/",
+                "description": "Stories, first words, colors, shapes, music, movement, imagination, play, and gentle family-guided discovery."
+        },
+        {
+                "title": "Kinder Garden",
+                "range": "School Readiness",
+                "icon": "KG",
+                "accent": "#5f9364",
+                "url": "https://vervenveda.com/Khaemenes_KinderGarden.github.io/",
+                "description": "Kindness, curiosity, literacy, number sense, nature, creativity, movement, and joyful discovery."
+        },
+        {
+                "title": "Elementary School",
+                "range": "Kinder Garden–Grade 5",
+                "icon": "E",
+                "accent": "#315b7b",
+                "url": "https://vervenveda.com/Khaemenes_Elementary.github.io/",
+                "description": "Literacy, mathematics, science, geography, creativity, citizenship, practical life skills, and project-based exploration."
+        },
+        {
+                "title": "Middle School",
+                "range": "Grades 6–8",
+                "icon": "M",
+                "accent": "#4f7f7a",
+                "url": "https://vervenveda.com/Khaemenes_Middle.github.io/",
+                "description": "Strong foundations, study independence, research, technology, civic learning, arts, wellness, and early career exploration."
+        },
+        {
+                "title": "High School",
+                "range": "Grades 9–12",
+                "icon": "HS",
+                "accent": "#233e66",
+                "url": "https://vervenveda.com/Khaemenes_High.github.io/",
+                "description": "Personal profiles, homerooms, complete courses, assessments, portfolios, records, graduation, and career preparation."
+        },
+        {
+                "title": "Higher Learning",
+                "range": "GED · College · Careers",
+                "icon": "HL",
+                "accent": "#516174",
+                "url": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/",
+                "description": "GED preparation, college access, career mentoring, professional growth, financial education, and lifelong study."
+        },
+        {
+                "title": "Linguistics & Languages",
+                "range": "Language · Literacy · Communication",
+                "icon": "L",
+                "accent": "#745f83",
+                "url": "https://vervenveda.com/Khaemenes_Linguistics.github.io/",
+                "description": "Polyglot language learning, linguistics, translation, writing systems, a 206-dossier World Language Atlas, and 55 formal Spanish, French, German, Mandarin Chinese, and Japanese courses."
+        },
+        {
+                "title": "Family & Educator Center",
+                "range": "Parents · Guardians · Teachers · Mentors",
+                "icon": "F",
+                "accent": "#9a5d4f",
+                "url": "#family-center",
+                "description": "Family accounts, parent and educator resources, records, planning, accommodations, mentoring, and family-controlled learning continuity."
+        }
+];
 
       const CATEGORIES = {
         all:"All Learning Tools",
@@ -1544,16 +1873,449 @@
         {number:"06",title:"Financial Literacy",category:"finance",description:"Budgeting, credit, taxes, markets, business, international finance, and household planning."}
       ];
 
-      const TOOLS = [{"id":"childrens-classics","title":"Children's Classics Hall","path":"Early_Learning/apps/Childresn_Classics_hall_index.html","category":"early","icon":"📖","description":"A story-rich hall for young readers and families.","tags":"children classics reading stories","url":"https://vervenveda.github.io/Khaemenes_KinderGarden.github.io/","direct":true,"fallbackUrl":"https://vervenveda.github.io/Khaemenes_KinderGarden.github.io/"},{"id":"chore-budget","title":"Chore & Budget Hub","path":"kids_learning/apps/chore_budget_index.html","category":"youth","icon":"🪙","description":"A parent-guided space connecting chores, earned money, saving, and budgeting.","tags":"kids chores allowance budgeting","url":"https://vervenveda.github.io/Khaemenes_Elementary.github.io/","direct":false,"fallbackUrl":"https://vervenveda.github.io/Khaemenes_Elementary.github.io/"},{"id":"career-star","title":"Khaemenes Career Star","path":"higher_learming/apps/Career_star_index.html","category":"career","icon":"⭐","description":"Compare career possibilities and identify promising directions.","tags":"career shortlist planning","url":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/","direct":true,"fallbackUrl":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/"},{"id":"financial-aid","title":"Financial Aid Navigator","path":"higher_learming/apps/Financial_aid_index.html","category":"college","icon":"🎓","description":"Explore financial-aid questions and continuing-education pathways.","tags":"college aid grants scholarships","url":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/","direct":true,"fallbackUrl":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/"},{"id":"ged-survey","title":"GED Beta Readiness Survey","path":"higher_learming/apps/GED_Beta_Test_survey_index.html","category":"ged","icon":"📝","description":"Identify strengths, needs, and next steps before GED preparation.","tags":"ged readiness assessment","url":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/","direct":true,"fallbackUrl":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/"},{"id":"ged-app","title":"GED Prep App","path":"higher_learming/apps/GED_Prep_app_index.html","category":"ged","icon":"📚","description":"An interactive workspace for organized GED study.","tags":"ged prep study","url":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/","direct":true,"fallbackUrl":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/"},{"id":"ged-prep","title":"GED Preparation Center","path":"higher_learming/apps/GED_Prep_index.html","category":"ged","icon":"✍️","description":"Review core GED subjects and plan study sessions.","tags":"ged preparation subjects","url":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/","direct":true,"fallbackUrl":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/"},{"id":"ged-portal","title":"Khaemenes GED Academy","path":"higher_learming/apps/GED_portal_index.html","category":"ged","icon":"🏛️","description":"The central GED portal for preparation and progress pathways.","tags":"ged academy portal","url":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/","direct":true,"fallbackUrl":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/"},{"id":"iq-quantum","title":"IQ Quantum","path":"higher_learming/apps/IQ_Quantum_index.html","category":"discovery","icon":"🧠","description":"A broad reasoning and cognitive-discovery experience.","tags":"iq reasoning cognitive","url":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/","direct":true,"fallbackUrl":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/"},{"id":"iq-mini","title":"Mini IQ","path":"higher_learming/apps/IQ_mini_index.html","category":"discovery","icon":"💡","description":"A short reasoning activity for curiosity and warm-up.","tags":"mini iq puzzle","url":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/","direct":true,"fallbackUrl":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/"},{"id":"mentor-guide","title":"Mentor Guide","path":"higher_learming/apps/Mentor_guide_index.html","category":"career","icon":"🧭","description":"Guidance for learners, families, educators, and mentors.","tags":"mentor guide support","url":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/","direct":true,"fallbackUrl":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/"},{"id":"career-assessment","title":"Career Assessment","path":"higher_learming/apps/career_assessment_index.html","category":"career","icon":"🧩","description":"Examine interests, strengths, values, and working preferences.","tags":"career assessment strengths","url":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/","direct":true,"fallbackUrl":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/"},{"id":"career-mentor","title":"Career Mentor Hub","path":"higher_learming/apps/career_mentor_index.html","category":"career","icon":"🤝","description":"A central workspace for career exploration and planning.","tags":"career mentor hub","url":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/","direct":true,"fallbackUrl":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/"},{"id":"financial-academy","title":"Khaemaegis Financial Academy","path":"higher_learming/apps/financial _academy_index.html","category":"finance","icon":"🏦","description":"A workshop for budgeting, cash flow, and money confidence.","tags":"financial academy budgeting","url":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/","direct":true,"fallbackUrl":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/"},{"id":"budget-tool","title":"Financial Budget Tool","path":"higher_learming/apps/financial_Budget_tool_index.html","category":"finance","icon":"🧰","description":"Build and review a practical working budget.","tags":"budget tool income expenses","url":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/","direct":true,"fallbackUrl":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/"},{"id":"adult-budget","title":"Adult Budget Planner","path":"higher_learming/apps/financial_adult_budget_index.html","category":"finance","icon":"🏠","description":"Plan household expenses, obligations, savings, and goals.","tags":"adult household budget","url":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/","direct":true,"fallbackUrl":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/"},{"id":"budget-calculator","title":"Budget Calculator","path":"higher_learming/apps/financial_budget_calculator_index.html","category":"finance","icon":"🧮","description":"Calculate income, expenses, and remaining funds.","tags":"budget calculator","url":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/","direct":true,"fallbackUrl":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/"},{"id":"budget-foundations","title":"Budget Foundations","path":"higher_learming/apps/financial_budget_index.html","category":"finance","icon":"📊","description":"Learn the building blocks of a balanced budget.","tags":"budget foundations","url":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/","direct":true,"fallbackUrl":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/"},{"id":"crypto","title":"Cryptocurrency Education","path":"higher_learming/apps/financial_crypto_index.html","category":"finance","icon":"◈","description":"Study cryptocurrency concepts, terminology, and risks.","tags":"crypto blockchain risk","url":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/","direct":true,"fallbackUrl":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/"},{"id":"debit-credit","title":"Debit & Credit Center","path":"higher_learming/apps/financial_debit_credit_index.html","category":"finance","icon":"💳","description":"Understand debit, credit, borrowing, interest, and repayment.","tags":"debit credit interest","url":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/","direct":true,"fallbackUrl":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/"},{"id":"international-finance","title":"International Finance","path":"higher_learming/apps/financial_international_index.html","category":"finance","icon":"🌍","description":"Explore currencies, exchange, trade, and global finance.","tags":"international finance currency","url":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/","direct":true,"fallbackUrl":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/"},{"id":"financial-library","title":"Financial Learning Library","path":"higher_learming/apps/financial_library_index.html","category":"finance","icon":"📚","description":"A reference library of financial concepts and lessons.","tags":"financial library reference","url":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/","direct":true,"fallbackUrl":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/"},{"id":"small-business","title":"Small Business Budget","path":"higher_learming/apps/financial_small_business_budget_index.html","category":"finance","icon":"🏪","description":"Organize business income, expenses, reserves, and assumptions.","tags":"small business budget","url":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/","direct":true,"fallbackUrl":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/"},{"id":"stocks","title":"Stocks Learning Center","path":"higher_learming/apps/financial_stocks_index.html","category":"finance","icon":"📈","description":"Learn market language, risk, diversification, and long-term thinking.","tags":"stocks investing risk","url":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/","direct":true,"fallbackUrl":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/"},{"id":"tax","title":"Tax Learning Center","path":"higher_learming/apps/financial_tax_index.html","category":"finance","icon":"🧾","description":"Build basic tax literacy and recordkeeping awareness.","tags":"tax records literacy","url":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/","direct":true,"fallbackUrl":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/"},{"id":"workshop","title":"Financial Workshop","path":"higher_learming/apps/financial_workshop_index.html","category":"finance","icon":"🛠️","description":"Practice financial decisions through realistic scenarios.","tags":"financial workshop scenarios","url":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/","direct":true,"fallbackUrl":"https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/"},{"id":"health-is-wealth","title":"Health Is Wealth","path":"Health_learning/Health_is_wealth_6weeks_index.html","category":"health","icon":"♥","description":"A six-week health-learning experience connecting daily choices, wellbeing, and practical health literacy.","tags":"health wellness six week learning","url":"https://vervenveda.github.io/Khaemenes_Academy.github.io/","direct":true,"fallbackUrl":"https://vervenveda.github.io/Khaemenes_Academy.github.io/"},{"id":"wellness-workshop","title":"Wellness Workshop","path":"Health_learning/wellness_workshop_index.html","category":"health","icon":"☘","description":"A practical workspace for reflection, wellbeing routines, healthy habits, and personal balance.","tags":"wellness habits reflection health","url":"https://vervenveda.github.io/Khaemenes_Academy.github.io/","direct":true,"fallbackUrl":"https://vervenveda.github.io/Khaemenes_Academy.github.io/"},{"id":"workout-builder","title":"Workout Builder","path":"Health_learning/workout_builder_index.html","category":"health","icon":"↟","description":"Build age-appropriate movement and fitness routines with clear goals and structure.","tags":"fitness movement workout physical education","url":"https://vervenveda.github.io/Khaemenes_Academy.github.io/","direct":true,"fallbackUrl":"https://vervenveda.github.io/Khaemenes_Academy.github.io/"},{"id":"keyboard-practice","title":"Keyboard Practice","path":"tools/Keyboard_index.html","category":"technology","icon":"⌨","description":"Practice keyboard familiarity, digital fluency, and confident computer use.","tags":"keyboard typing technology digital skills","url":"https://vervenveda.github.io/Khaemenes_Academy.github.io/","direct":true,"fallbackUrl":"https://vervenveda.github.io/Khaemenes_Academy.github.io/"},{"id":"song-embedder","title":"Song Embedder","path":"tools/song_embedder_index.html","category":"creative","icon":"♫","description":"A creative music tool for organizing and working with song-based learning experiences.","tags":"music song creative audio","url":"https://vervenveda.github.io/Khaemenes_Academy.github.io/","direct":true,"fallbackUrl":"https://vervenveda.github.io/Khaemenes_Academy.github.io/"},{"id":"homeschool-compass","title":"Homeschool Compass","path":"Parent_resources/Homeschool_compass_index.html","category":"family","icon":"⌖","description":"A family planning and homeschool-navigation workspace for pathways, routines, records, and learning decisions.","tags":"family homeschool planning parent educator","url":"https://vervenveda.github.io/Khaemenes_Academy.github.io/","direct":true,"fallbackUrl":"https://vervenveda.github.io/Khaemenes_Academy.github.io/"},{"id":"family-art-studio","title":"Family Art Studio","path":"Parent_resources/Art_studio_index.html","category":"creative","icon":"✦","description":"A family-facing creative studio for visual expression, projects, and art-centered learning.","tags":"art studio family creative elective","url":"https://vervenveda.github.io/Khaemenes_Academy.github.io/","direct":true,"fallbackUrl":"https://vervenveda.github.io/Khaemenes_Academy.github.io/"}];
+      const TOOLS = [
+        {
+                "id": "childrens-classics",
+                "title": "Children's Classics Hall",
+                "path": "Early_Learning/apps/Childresn_Classics_hall_index.html",
+                "category": "early",
+                "icon": "📖",
+                "description": "A story-rich hall for young readers and families.",
+                "tags": "children classics reading stories",
+                "url": "https://vervenveda.com/Khaemenes_KinderGarden.github.io/",
+                "direct": false,
+                "fallbackUrl": "https://vervenveda.com/Khaemenes_KinderGarden.github.io/"
+        },
+        {
+                "id": "chore-budget",
+                "title": "Chore & Budget Hub",
+                "path": "kids_learning/apps/chore_budget_index.html",
+                "category": "youth",
+                "icon": "🪙",
+                "description": "A parent-guided space connecting chores, earned money, saving, and budgeting.",
+                "tags": "kids chores allowance budgeting",
+                "url": "https://vervenveda.com/Khaemenes_Elementary.github.io/",
+                "direct": false,
+                "fallbackUrl": "https://vervenveda.com/Khaemenes_Elementary.github.io/"
+        },
+        {
+                "id": "career-star",
+                "title": "Khaemenes Career Star",
+                "path": "higher_learming/apps/Career_star_index.html",
+                "category": "career",
+                "icon": "⭐",
+                "description": "Compare career possibilities and identify promising directions.",
+                "tags": "career shortlist planning",
+                "url": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/",
+                "direct": true,
+                "fallbackUrl": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/"
+        },
+        {
+                "id": "financial-aid",
+                "title": "Financial Aid Navigator",
+                "path": "higher_learming/apps/Financial_aid_index.html",
+                "category": "college",
+                "icon": "🎓",
+                "description": "Explore financial-aid questions and continuing-education pathways.",
+                "tags": "college aid grants scholarships",
+                "url": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/",
+                "direct": true,
+                "fallbackUrl": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/"
+        },
+        {
+                "id": "ged-survey",
+                "title": "GED Beta Readiness Survey",
+                "path": "higher_learming/apps/GED_Beta_Test_survey_index.html",
+                "category": "ged",
+                "icon": "📝",
+                "description": "Identify strengths, needs, and next steps before GED preparation.",
+                "tags": "ged readiness assessment",
+                "url": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/",
+                "direct": true,
+                "fallbackUrl": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/"
+        },
+        {
+                "id": "ged-app",
+                "title": "GED Prep App",
+                "path": "higher_learming/apps/GED_Prep_app_index.html",
+                "category": "ged",
+                "icon": "📚",
+                "description": "An interactive workspace for organized GED study.",
+                "tags": "ged prep study",
+                "url": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/",
+                "direct": true,
+                "fallbackUrl": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/"
+        },
+        {
+                "id": "ged-prep",
+                "title": "GED Preparation Center",
+                "path": "higher_learming/apps/GED_Prep_index.html",
+                "category": "ged",
+                "icon": "✍️",
+                "description": "Review core GED subjects and plan study sessions.",
+                "tags": "ged preparation subjects",
+                "url": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/",
+                "direct": true,
+                "fallbackUrl": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/"
+        },
+        {
+                "id": "ged-portal",
+                "title": "Khaemenes GED Academy",
+                "path": "higher_learming/apps/GED_portal_index.html",
+                "category": "ged",
+                "icon": "🏛️",
+                "description": "The central GED portal for preparation and progress pathways.",
+                "tags": "ged academy portal",
+                "url": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/",
+                "direct": true,
+                "fallbackUrl": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/"
+        },
+        {
+                "id": "iq-quantum",
+                "title": "IQ Quantum",
+                "path": "higher_learming/apps/IQ_Quantum_index.html",
+                "category": "discovery",
+                "icon": "🧠",
+                "description": "A broad reasoning and cognitive-discovery experience.",
+                "tags": "iq reasoning cognitive",
+                "url": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/",
+                "direct": true,
+                "fallbackUrl": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/"
+        },
+        {
+                "id": "iq-mini",
+                "title": "Mini IQ",
+                "path": "higher_learming/apps/IQ_mini_index.html",
+                "category": "discovery",
+                "icon": "💡",
+                "description": "A short reasoning activity for curiosity and warm-up.",
+                "tags": "mini iq puzzle",
+                "url": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/",
+                "direct": true,
+                "fallbackUrl": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/"
+        },
+        {
+                "id": "mentor-guide",
+                "title": "Mentor Guide",
+                "path": "higher_learming/apps/Mentor_guide_index.html",
+                "category": "career",
+                "icon": "🧭",
+                "description": "Guidance for learners, families, educators, and mentors.",
+                "tags": "mentor guide support",
+                "url": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/",
+                "direct": true,
+                "fallbackUrl": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/"
+        },
+        {
+                "id": "career-assessment",
+                "title": "Career Assessment",
+                "path": "higher_learming/apps/career_assessment_index.html",
+                "category": "career",
+                "icon": "🧩",
+                "description": "Examine interests, strengths, values, and working preferences.",
+                "tags": "career assessment strengths",
+                "url": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/",
+                "direct": true,
+                "fallbackUrl": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/"
+        },
+        {
+                "id": "career-mentor",
+                "title": "Career Mentor Hub",
+                "path": "higher_learming/apps/career_mentor_index.html",
+                "category": "career",
+                "icon": "🤝",
+                "description": "A central workspace for career exploration and planning.",
+                "tags": "career mentor hub",
+                "url": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/",
+                "direct": true,
+                "fallbackUrl": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/"
+        },
+        {
+                "id": "financial-academy",
+                "title": "Khaemaegis Financial Academy",
+                "path": "higher_learming/apps/financial _academy_index.html",
+                "category": "finance",
+                "icon": "🏦",
+                "description": "A workshop for budgeting, cash flow, and money confidence.",
+                "tags": "financial academy budgeting",
+                "url": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/",
+                "direct": true,
+                "fallbackUrl": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/"
+        },
+        {
+                "id": "budget-tool",
+                "title": "Financial Budget Tool",
+                "path": "higher_learming/apps/financial_Budget_tool_index.html",
+                "category": "finance",
+                "icon": "🧰",
+                "description": "Build and review a practical working budget.",
+                "tags": "budget tool income expenses",
+                "url": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/",
+                "direct": true,
+                "fallbackUrl": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/"
+        },
+        {
+                "id": "adult-budget",
+                "title": "Adult Budget Planner",
+                "path": "higher_learming/apps/financial_adult_budget_index.html",
+                "category": "finance",
+                "icon": "🏠",
+                "description": "Plan household expenses, obligations, savings, and goals.",
+                "tags": "adult household budget",
+                "url": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/",
+                "direct": true,
+                "fallbackUrl": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/"
+        },
+        {
+                "id": "budget-calculator",
+                "title": "Budget Calculator",
+                "path": "higher_learming/apps/financial_budget_calculator_index.html",
+                "category": "finance",
+                "icon": "🧮",
+                "description": "Calculate income, expenses, and remaining funds.",
+                "tags": "budget calculator",
+                "url": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/",
+                "direct": true,
+                "fallbackUrl": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/"
+        },
+        {
+                "id": "budget-foundations",
+                "title": "Budget Foundations",
+                "path": "higher_learming/apps/financial_budget_index.html",
+                "category": "finance",
+                "icon": "📊",
+                "description": "Learn the building blocks of a balanced budget.",
+                "tags": "budget foundations",
+                "url": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/",
+                "direct": true,
+                "fallbackUrl": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/"
+        },
+        {
+                "id": "crypto",
+                "title": "Cryptocurrency Education",
+                "path": "higher_learming/apps/financial_crypto_index.html",
+                "category": "finance",
+                "icon": "◈",
+                "description": "Study cryptocurrency concepts, terminology, and risks.",
+                "tags": "crypto blockchain risk",
+                "url": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/",
+                "direct": true,
+                "fallbackUrl": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/"
+        },
+        {
+                "id": "debit-credit",
+                "title": "Debit & Credit Center",
+                "path": "higher_learming/apps/financial_debit_credit_index.html",
+                "category": "finance",
+                "icon": "💳",
+                "description": "Understand debit, credit, borrowing, interest, and repayment.",
+                "tags": "debit credit interest",
+                "url": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/",
+                "direct": true,
+                "fallbackUrl": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/"
+        },
+        {
+                "id": "international-finance",
+                "title": "International Finance",
+                "path": "higher_learming/apps/financial_international_index.html",
+                "category": "finance",
+                "icon": "🌍",
+                "description": "Explore currencies, exchange, trade, and global finance.",
+                "tags": "international finance currency",
+                "url": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/",
+                "direct": true,
+                "fallbackUrl": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/"
+        },
+        {
+                "id": "financial-library",
+                "title": "Financial Learning Library",
+                "path": "higher_learming/apps/financial_library_index.html",
+                "category": "finance",
+                "icon": "📚",
+                "description": "A reference library of financial concepts and lessons.",
+                "tags": "financial library reference",
+                "url": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/",
+                "direct": true,
+                "fallbackUrl": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/"
+        },
+        {
+                "id": "small-business",
+                "title": "Small Business Budget",
+                "path": "higher_learming/apps/financial_small_business_budget_index.html",
+                "category": "finance",
+                "icon": "🏪",
+                "description": "Organize business income, expenses, reserves, and assumptions.",
+                "tags": "small business budget",
+                "url": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/",
+                "direct": true,
+                "fallbackUrl": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/"
+        },
+        {
+                "id": "stocks",
+                "title": "Stocks Learning Center",
+                "path": "higher_learming/apps/financial_stocks_index.html",
+                "category": "finance",
+                "icon": "📈",
+                "description": "Learn market language, risk, diversification, and long-term thinking.",
+                "tags": "stocks investing risk",
+                "url": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/",
+                "direct": true,
+                "fallbackUrl": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/"
+        },
+        {
+                "id": "tax",
+                "title": "Tax Learning Center",
+                "path": "higher_learming/apps/financial_tax_index.html",
+                "category": "finance",
+                "icon": "🧾",
+                "description": "Build basic tax literacy and recordkeeping awareness.",
+                "tags": "tax records literacy",
+                "url": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/",
+                "direct": true,
+                "fallbackUrl": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/"
+        },
+        {
+                "id": "workshop",
+                "title": "Financial Workshop",
+                "path": "higher_learming/apps/financial_workshop_index.html",
+                "category": "finance",
+                "icon": "🛠️",
+                "description": "Practice financial decisions through realistic scenarios.",
+                "tags": "financial workshop scenarios",
+                "url": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/",
+                "direct": true,
+                "fallbackUrl": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/"
+        },
+        {
+                "id": "health-is-wealth",
+                "title": "Health Is Wealth",
+                "path": "Health_learning/Health_is_wealth_6weeks_index.html",
+                "category": "health",
+                "icon": "♥",
+                "description": "A six-week health-learning experience connecting daily choices, wellbeing, and practical health literacy.",
+                "tags": "health wellness six week learning",
+                "url": "https://vervenveda.com/Khaemenes_Academy.github.io/",
+                "direct": true,
+                "fallbackUrl": "https://vervenveda.com/Khaemenes_Academy.github.io/"
+        },
+        {
+                "id": "wellness-workshop",
+                "title": "Wellness Workshop",
+                "path": "Health_learning/wellness_workshop_index.html",
+                "category": "health",
+                "icon": "☘",
+                "description": "A practical workspace for reflection, wellbeing routines, healthy habits, and personal balance.",
+                "tags": "wellness habits reflection health",
+                "url": "https://vervenveda.com/Khaemenes_Academy.github.io/",
+                "direct": true,
+                "fallbackUrl": "https://vervenveda.com/Khaemenes_Academy.github.io/"
+        },
+        {
+                "id": "workout-builder",
+                "title": "Workout Builder",
+                "path": "Health_learning/workout_builder_index.html",
+                "category": "health",
+                "icon": "↟",
+                "description": "Build age-appropriate movement and fitness routines with clear goals and structure.",
+                "tags": "fitness movement workout physical education",
+                "url": "https://vervenveda.com/Khaemenes_Academy.github.io/",
+                "direct": true,
+                "fallbackUrl": "https://vervenveda.com/Khaemenes_Academy.github.io/"
+        },
+        {
+                "id": "keyboard-practice",
+                "title": "Keyboard Practice",
+                "path": "tools/Keyboard_index.html",
+                "category": "technology",
+                "icon": "⌨",
+                "description": "Practice keyboard familiarity, digital fluency, and confident computer use.",
+                "tags": "keyboard typing technology digital skills",
+                "url": "https://vervenveda.com/Khaemenes_Academy.github.io/",
+                "direct": true,
+                "fallbackUrl": "https://vervenveda.com/Khaemenes_Academy.github.io/"
+        },
+        {
+                "id": "song-embedder",
+                "title": "Song Embedder",
+                "path": "tools/song_embedder_index.html",
+                "category": "creative",
+                "icon": "♫",
+                "description": "A creative music tool for organizing and working with song-based learning experiences.",
+                "tags": "music song creative audio",
+                "url": "https://vervenveda.com/Khaemenes_Academy.github.io/",
+                "direct": true,
+                "fallbackUrl": "https://vervenveda.com/Khaemenes_Academy.github.io/"
+        },
+        {
+                "id": "homeschool-compass",
+                "title": "Homeschool Compass",
+                "path": "Parent_resources/Homeschool_compass_index.html",
+                "category": "family",
+                "icon": "⌖",
+                "description": "A family planning and homeschool-navigation workspace for pathways, routines, records, and learning decisions.",
+                "tags": "family homeschool planning parent educator",
+                "url": "https://vervenveda.com/Khaemenes_Academy.github.io/",
+                "direct": true,
+                "fallbackUrl": "https://vervenveda.com/Khaemenes_Academy.github.io/"
+        },
+        {
+                "id": "family-art-studio",
+                "title": "Family Art Studio",
+                "path": "Parent_resources/Art_studio_index.html",
+                "category": "creative",
+                "icon": "✦",
+                "description": "A family-facing creative studio for visual expression, projects, and art-centered learning.",
+                "tags": "art studio family creative elective",
+                "url": "https://vervenveda.com/Khaemenes_Academy.github.io/",
+                "direct": true,
+                "fallbackUrl": "https://vervenveda.com/Khaemenes_Academy.github.io/"
+        }
+];
 
       const FEATURED = [
-        {title:"Grade 9 & Pre-Algebra",icon:"9",description:"Personal high-school profiles, semester planning, a 36-week mathematics bridge, assessments, records, and graduation pathways.",url:"https://vervenveda.github.io/Khaemenes_High.github.io/",label:"Open High School Campus"},
-        {title:"Children’s Classics Hall",icon:"CC",description:"A story-rich early-learning hall supporting reading, imagination, public-domain literature, and family discussion.",path:"Early_Learning/apps/Childresn_Classics_hall_index.html",label:"Open Children’s Classics"},
-        {title:"GED Academy",icon:"GED",description:"Readiness surveys, preparation, study planning, progress support, and organized adult-learning pathways.",path:"higher_learming/apps/GED_portal_index.html",label:"Open GED Academy"},
-        {title:"Career Mentor Hub",icon:"CM",description:"Explore interests, strengths, values, possible careers, mentoring questions, and practical next steps.",path:"higher_learming/apps/career_mentor_index.html",label:"Open Career Mentor"},
-        {title:"Financial Academy",icon:"FA",description:"Budgeting, credit, taxes, investing, household planning, and practical money confidence.",path:"higher_learming/apps/financial _academy_index.html",label:"Open Financial Academy"},
-        {title:"Reasoning & Discovery",icon:"IQ",description:"Activities exploring reasoning, strengths, cognitive approaches, curiosity, and learning preferences.",path:"higher_learming/apps/IQ_Quantum_index.html",label:"Open Reasoning Center"}
-      ];
+        {
+                "title": "High School · Complete Course Campus",
+                "icon": "HS",
+                "description": "Grades 9–12 with student profiles, homerooms, 36-week course systems, assessments, portfolios, records, graduation planning, and college/career preparation.",
+                "url": "https://vervenveda.com/Khaemenes_High.github.io/",
+                "label": "Open High School"
+        },
+        {
+                "title": "Five-Language Academy",
+                "icon": "語",
+                "description": "Spanish, French, German, Mandarin Chinese, and Japanese across 55 formal middle-school, high-school, and lower-division college courses.",
+                "url": "https://vervenveda.com/Khaemenes_Linguistics.github.io/Halls/",
+                "label": "Open Language Academy"
+        },
+        {
+                "title": "ARSHIF Living Archive & Halls",
+                "icon": "A",
+                "description": "Deep subject study through connected Halls spanning literature, philosophy, theatre, world knowledge, foodways, travel, history, oral traditions, and research.",
+                "url": "https://vervenveda.com/Arshif.github.io/halls/",
+                "label": "Open ARSHIF Halls"
+        },
+        {
+                "title": "Field Lab",
+                "icon": "FL",
+                "description": "The experiential layer: scenario-based learning where learners apply Hall knowledge under constraints and produce evidence instead of collecting points.",
+                "url": "https://vervenveda.com/Arshif.github.io/apps/%20field-lab/",
+                "label": "Enter Field Lab"
+        },
+        {
+                "title": "Higher Learning",
+                "icon": "HL",
+                "description": "GED preparation, university-level study, career development, mathematics, professional tools, financial education, and lifelong learning.",
+                "url": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/",
+                "label": "Open Higher Learning"
+        },
+        {
+                "title": "Family Account Hub",
+                "icon": "F",
+                "description": "The central family doorway for profiles, connected learners, planning, records, invitations, continuity, and family-controlled educational information.",
+                "url": "https://vervenveda.com/Khaemenes_Academy.github.io/family/",
+                "label": "Open Family Hub"
+        }
+];
 
       const ECOSYSTEM_DIRECTORY = [
         {
@@ -1567,15 +2329,15 @@
         {
                 "title": "ARSHIF",
                 "icon": "A",
-                "url": "https://vervenveda.github.io/Arshif.github.io/",
+                "url": "https://vervenveda.com/Arshif.github.io/",
                 "group": "Research & Knowledge",
-                "tags": "research history literature archive knowledge",
-                "description": "Literature, history, philosophy, culture, primary sources, and memory."
+                "tags": "research history literature archive knowledge halls 101-603",
+                "description": "Living Archive and formal subject Halls for literature, history, philosophy, theatre, foodways, travel, oral traditions, culture, and research."
         },
         {
                 "title": "The Verifier",
                 "icon": "V",
-                "url": "https://vervenveda.github.io/theverifier.github.io/",
+                "url": "https://vervenveda.com/theverifier.github.io/",
                 "group": "Research & Knowledge",
                 "tags": "research evidence current events media literacy",
                 "description": "Current events, evidence, source comparison, research, and media literacy."
@@ -1583,7 +2345,7 @@
         {
                 "title": "PLERA Search",
                 "icon": "◎",
-                "url": "https://vervenveda.github.io/PLERASearch.github.io/",
+                "url": "https://vervenveda.com/PLERASearch.github.io/",
                 "group": "Research & Knowledge",
                 "tags": "research search discovery resources",
                 "description": "A search gateway into trusted public learning and resource destinations."
@@ -1591,7 +2353,7 @@
         {
                 "title": "Solanar",
                 "icon": "☀",
-                "url": "https://vervenveda.github.io/solanar.github.io/",
+                "url": "https://vervenveda.com/solanar.github.io/",
                 "group": "Research & Knowledge",
                 "tags": "science weather earth climate research",
                 "description": "Weather, Earth systems, climate, moon cycles, and environmental observation."
@@ -1599,7 +2361,7 @@
         {
                 "title": "Bazaar Art",
                 "icon": "✦",
-                "url": "https://vervenveda.github.io/bazaarart.github.io/",
+                "url": "https://vervenveda.com/bazaarart.github.io/",
                 "group": "Arts & Creativity",
                 "tags": "creative art elective gallery",
                 "description": "Art education, artist tools, galleries, creativity, and cultural enterprise."
@@ -1607,7 +2369,7 @@
         {
                 "title": "The Refrain",
                 "icon": "♫",
-                "url": "https://vervenveda.github.io/the_refrain.github.io/",
+                "url": "https://vervenveda.com/the_refrain.github.io/",
                 "group": "Arts & Creativity",
                 "tags": "creative music elective composition",
                 "description": "Music education, composition, recording, performance, and creative exploration."
@@ -1615,7 +2377,7 @@
         {
                 "title": "Arcade",
                 "icon": "◆",
-                "url": "https://vervenveda.github.io/arcade.github.io/",
+                "url": "https://vervenveda.com/arcade.github.io/",
                 "group": "Arts & Creativity",
                 "tags": "creative games puzzles strategy practice",
                 "description": "Original games, strategy, puzzles, trivia, practice, and discovery."
@@ -1623,7 +2385,7 @@
         {
                 "title": "ProResource Hub",
                 "icon": "P",
-                "url": "https://vervenveda.github.io/proresource_hub.github.io/",
+                "url": "https://vervenveda.com/proresource_hub.github.io/",
                 "group": "Career & Professional",
                 "tags": "career professional writing design productivity",
                 "description": "Writing, editing, design, research, productivity, and professional creation tools."
@@ -1631,7 +2393,7 @@
         {
                 "title": "Medicament Hub",
                 "icon": "⚕",
-                "url": "https://vervenveda.github.io/medicament-hub.github.io/",
+                "url": "https://vervenveda.com/medicament-hub.github.io/",
                 "group": "Health & Wellbeing",
                 "tags": "health wellness medicine safety",
                 "description": "Health, family care, safety, wellness, and public medical resources."
@@ -1639,7 +2401,7 @@
         {
                 "title": "Aurora",
                 "icon": "☼",
-                "url": "https://vervenveda.github.io/aurora.github.io/",
+                "url": "https://vervenveda.com/aurora.github.io/",
                 "group": "Health & Wellbeing",
                 "tags": "health wellbeing reflection rest creative renewal",
                 "description": "Reflection, rest, organization, wellbeing, and creative renewal."
@@ -1647,7 +2409,7 @@
         {
                 "title": "One Nation for All",
                 "icon": "☆",
-                "url": "https://vervenveda.github.io/onenationforall.github.io/",
+                "url": "https://vervenveda.com/onenationforall.github.io/",
                 "group": "Civic & Practical Life",
                 "tags": "civic citizenship constitution public life",
                 "description": "Civic learning, constitutional information, participation, service, and public life."
@@ -1655,7 +2417,7 @@
         {
                 "title": "Firmament Law",
                 "icon": "§",
-                "url": "https://vervenveda.github.io/firmament.github.io/",
+                "url": "https://vervenveda.com/firmament.github.io/",
                 "group": "Civic & Practical Life",
                 "tags": "civic law rights evidence practical life",
                 "description": "Legal information, rights, evidence literacy, and practical civic understanding."
@@ -1663,7 +2425,7 @@
         {
                 "title": "River to Road",
                 "icon": "≈",
-                "url": "https://vervenveda.github.io/river_to_road.github.io/",
+                "url": "https://vervenveda.com/river_to_road.github.io/",
                 "group": "Civic & Practical Life",
                 "tags": "civic environmental science service practical life",
                 "description": "Environmental stewardship, clean water, science, service, and community action."
@@ -1671,7 +2433,7 @@
         {
                 "title": "Finance",
                 "icon": "$",
-                "url": "https://vervenveda.github.io/finance.github.io/",
+                "url": "https://vervenveda.com/finance.github.io/",
                 "group": "Civic & Practical Life",
                 "tags": "finance money practical life literacy",
                 "description": "Financial literacy, planning, markets, consumer knowledge, and practical tools."
@@ -1679,10 +2441,34 @@
         {
                 "title": "333 Network",
                 "icon": "333",
-                "url": "https://vervenveda.github.io/333.github.io/",
+                "url": "https://vervenveda.com/333.github.io/",
                 "group": "Career & Professional",
                 "tags": "career communication creation professional network",
                 "description": "Communication, meetings, creation, and connected digital infrastructure."
+        },
+        {
+                "title": "Polyglot Linguistics Campus",
+                "icon": "語",
+                "url": "https://vervenveda.com/Khaemenes_Linguistics.github.io/",
+                "group": "Languages & Communication",
+                "tags": "language linguistics polyglot spanish french german mandarin japanese",
+                "description": "Formal language study, world-language atlas, linguistics, scripts, pronunciation, translation, and language studios."
+        },
+        {
+                "title": "Field Lab",
+                "icon": "FL",
+                "url": "https://vervenveda.com/Arshif.github.io/apps/%20field-lab/",
+                "group": "Experiential Learning",
+                "tags": "field lab experiential scenario evidence applied learning",
+                "description": "Reusable experiential-learning engine that turns Hall and campus knowledge into scenarios, constraints, evidence, and portfolio work."
+        },
+        {
+                "title": "PROSE Editing Suite",
+                "icon": "¶",
+                "url": "https://vervenveda.com/proresource_hub.github.io/Protools/PROSE%E2%84%A2%20editingsuite_index.html",
+                "group": "Arts & Creativity",
+                "tags": "writing editing prose research revision professional",
+                "description": "Shared editorial environment for essays, research, scripts, recipes, reports, portfolios, and professional writing."
         }
 ];
 
@@ -1694,7 +2480,7 @@
                 "title": "Core Campuses",
                 "accent": "#315b7b",
                 "query": "campus",
-                "description": "The complete age-and-stage pathway from preschool through higher learning, languages, and family support.",
+                "description": "The age-and-stage academic spine from preschool through higher learning, languages, and family support.",
                 "doors": [
                         {
                                 "label": "All Campuses",
@@ -1712,10 +2498,73 @@
         },
         {
                 "number": "02",
-                "title": "NAIB & Progress",
+                "title": "ARSHIF · Subject Halls",
+                "accent": "#7d5364",
+                "query": "arshif",
+                "description": "The subject-depth layer: living archives, formal 101–603 Hall ladders, primary sources, culture, literature, philosophy, theatre, foodways, travel, oral traditions, and more.",
+                "doors": [
+                        {
+                                "label": "ARSHIF Home",
+                                "url": "https://vervenveda.com/Arshif.github.io/"
+                        },
+                        {
+                                "label": "The Halls",
+                                "url": "https://vervenveda.com/Arshif.github.io/halls/"
+                        },
+                        {
+                                "label": "Field Lab",
+                                "url": "https://vervenveda.com/Arshif.github.io/apps/%20field-lab/"
+                        }
+                ]
+        },
+        {
+                "number": "03",
+                "title": "Polyglot · Linguistics",
+                "accent": "#745f83",
+                "query": "language linguistics",
+                "description": "Formal world-language pathways, a 206-dossier language atlas, standalone studios, pronunciation, scripts, translation, linguistics, and intercultural learning.",
+                "doors": [
+                        {
+                                "label": "Polyglot Campus",
+                                "url": "https://vervenveda.com/Khaemenes_Linguistics.github.io/"
+                        },
+                        {
+                                "label": "Five-Language Academy",
+                                "url": "https://vervenveda.com/Khaemenes_Linguistics.github.io/Halls/"
+                        },
+                        {
+                                "label": "Language Apps",
+                                "url": "https://vervenveda.com/Khaemenes_Linguistics.github.io/#apps"
+                        }
+                ]
+        },
+        {
+                "number": "04",
+                "title": "Field Lab · Applied Learning",
+                "accent": "#5b7d68",
+                "query": "field lab experiential",
+                "description": "The experiential pressure-test layer where knowledge becomes decisions, constraints, evidence, revision, portfolio artifacts, and real-world practice.",
+                "doors": [
+                        {
+                                "label": "Open Field Lab",
+                                "url": "https://vervenveda.com/Arshif.github.io/apps/%20field-lab/"
+                        },
+                        {
+                                "label": "Living Kitchen Lab",
+                                "url": "https://vervenveda.com/Arshif.github.io/apps/%20field-lab/"
+                        },
+                        {
+                                "label": "ARSHIF Halls",
+                                "url": "https://vervenveda.com/Arshif.github.io/halls/"
+                        }
+                ]
+        },
+        {
+                "number": "05",
+                "title": "NAIB · Mentor & Progress",
                 "accent": "#6b587c",
-                "query": "naib",
-                "description": "Guidance, mentoring, learning context, progress interpretation, reasoning, and evidence-aware educational support.",
+                "query": "naib mentor",
+                "description": "Guidance, learning context, progress interpretation, reasoning, planning, next-step suggestions, and learner-centered educational support.",
                 "doors": [
                         {
                                 "label": "Open NAIB",
@@ -1723,136 +2572,107 @@
                         },
                         {
                                 "label": "Mentor Guide",
-                                "url": "https://vervenveda.github.io/Khaemenes_Academy.github.io/higher_learming/apps/Mentor_guide_index.html"
+                                "url": "https://vervenveda.com/Khaemenes_Academy.github.io/higher_learming/apps/Mentor_guide_index.html"
                         },
                         {
                                 "label": "Reasoning Center",
-                                "url": "https://vervenveda.github.io/Khaemenes_Academy.github.io/higher_learming/apps/IQ_Quantum_index.html"
-                        }
-                ]
-        },
-        {
-                "number": "03",
-                "title": "Research & Knowledge",
-                "accent": "#4f718d",
-                "query": "research",
-                "description": "Primary sources, current events, evidence, search, science, weather, history, and intellectual exploration.",
-                "doors": [
-                        {
-                                "label": "ARSHIF",
-                                "url": "https://vervenveda.github.io/Arshif.github.io/"
-                        },
-                        {
-                                "label": "The Verifier",
-                                "url": "https://vervenveda.github.io/theverifier.github.io/"
-                        },
-                        {
-                                "label": "PLERA Search",
-                                "url": "https://vervenveda.github.io/PLERASearch.github.io/"
-                        },
-                        {
-                                "label": "Solanar",
-                                "url": "https://vervenveda.github.io/solanar.github.io/"
-                        }
-                ]
-        },
-        {
-                "number": "04",
-                "title": "Arts, Music & Creativity",
-                "accent": "#8a5f7e",
-                "query": "creative",
-                "description": "Visual art, music, creative practice, games, expression, composition, design, and elective exploration.",
-                "doors": [
-                        {
-                                "label": "Bazaar Art",
-                                "url": "https://vervenveda.github.io/bazaarart.github.io/"
-                        },
-                        {
-                                "label": "The Refrain",
-                                "url": "https://vervenveda.github.io/the_refrain.github.io/"
-                        },
-                        {
-                                "label": "Arcade",
-                                "url": "https://vervenveda.github.io/arcade.github.io/"
-                        },
-                        {
-                                "label": "Art Studio",
-                                "url": "https://vervenveda.github.io/Khaemenes_Academy.github.io/Parent_resources/Art_studio_index.html"
-                        }
-                ]
-        },
-        {
-                "number": "05",
-                "title": "Health & Wellbeing",
-                "accent": "#5d7e69",
-                "query": "health",
-                "description": "Health literacy, movement, wellbeing, reflection, family care, safety, and balanced learning lives.",
-                "doors": [
-                        {
-                                "label": "Medicament",
-                                "url": "https://vervenveda.github.io/medicament-hub.github.io/"
-                        },
-                        {
-                                "label": "Health Is Wealth",
-                                "url": "https://vervenveda.github.io/Khaemenes_Academy.github.io/Health_learning/Health_is_wealth_6weeks_index.html"
-                        },
-                        {
-                                "label": "Wellness Workshop",
-                                "url": "https://vervenveda.github.io/Khaemenes_Academy.github.io/Health_learning/wellness_workshop_index.html"
-                        },
-                        {
-                                "label": "Aurora",
-                                "url": "https://vervenveda.github.io/aurora.github.io/"
+                                "url": "https://vervenveda.com/Khaemenes_Academy.github.io/higher_learming/apps/IQ_Quantum_index.html"
                         }
                 ]
         },
         {
                 "number": "06",
-                "title": "Civic & Practical Life",
-                "accent": "#8a6a44",
-                "query": "civic",
-                "description": "Citizenship, law, environmental service, financial literacy, practical life, and responsible participation.",
+                "title": "Research & Verification",
+                "accent": "#4f718d",
+                "query": "research evidence",
+                "description": "Search, evidence checking, current events, source comparison, science observation, and research pathways that can feed formal Hall and campus work.",
                 "doors": [
                         {
-                                "label": "One Nation",
-                                "url": "https://vervenveda.github.io/onenationforall.github.io/"
+                                "label": "PLERA Search",
+                                "url": "https://vervenveda.com/PLERASearch.github.io/"
                         },
                         {
-                                "label": "Firmament Law",
-                                "url": "https://vervenveda.github.io/firmament.github.io/"
+                                "label": "The Verifier",
+                                "url": "https://vervenveda.com/theverifier.github.io/"
                         },
                         {
-                                "label": "River to Road",
-                                "url": "https://vervenveda.github.io/river_to_road.github.io/"
-                        },
-                        {
-                                "label": "Finance",
-                                "url": "https://vervenveda.github.io/finance.github.io/"
+                                "label": "Solanar",
+                                "url": "https://vervenveda.com/solanar.github.io/"
                         }
                 ]
         },
         {
                 "number": "07",
+                "title": "Arts & Creative Production",
+                "accent": "#8a5f7e",
+                "query": "creative art music prose",
+                "description": "Visual art, music, writing, editing, design, games, performance, composition, galleries, and creative production.",
+                "doors": [
+                        {
+                                "label": "Bazaar Art",
+                                "url": "https://vervenveda.com/bazaarart.github.io/"
+                        },
+                        {
+                                "label": "The Refrain",
+                                "url": "https://vervenveda.com/the_refrain.github.io/"
+                        },
+                        {
+                                "label": "PROSE",
+                                "url": "https://vervenveda.com/proresource_hub.github.io/Protools/PROSE%E2%84%A2%20editingsuite_index.html"
+                        },
+                        {
+                                "label": "Arcade",
+                                "url": "https://vervenveda.com/arcade.github.io/"
+                        }
+                ]
+        },
+        {
+                "number": "08",
+                "title": "Wellbeing, Civic & Practical Life",
+                "accent": "#7b7650",
+                "query": "health civic finance practical",
+                "description": "Health literacy, reflection, civic understanding, environmental stewardship, law, financial literacy, household planning, and practical life.",
+                "doors": [
+                        {
+                                "label": "Medicament",
+                                "url": "https://vervenveda.com/medicament-hub.github.io/"
+                        },
+                        {
+                                "label": "One Nation",
+                                "url": "https://vervenveda.com/onenationforall.github.io/"
+                        },
+                        {
+                                "label": "Firmament Law",
+                                "url": "https://vervenveda.com/firmament.github.io/"
+                        },
+                        {
+                                "label": "Finance",
+                                "url": "https://vervenveda.com/finance.github.io/"
+                        }
+                ]
+        },
+        {
+                "number": "09",
                 "title": "Careers & Professional Growth",
                 "accent": "#52657a",
-                "query": "career",
-                "description": "Career discovery, higher learning, professional creation, communication, planning, and lifelong development.",
+                "query": "career professional",
+                "description": "Higher learning, career discovery, professional writing and design, communication, financial preparation, productivity, and lifelong development.",
                 "doors": [
                         {
                                 "label": "Higher Learning",
-                                "url": "https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/"
+                                "url": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/"
                         },
                         {
                                 "label": "Career Mentor",
-                                "url": "https://vervenveda.github.io/Khaemenes_Academy.github.io/higher_learming/apps/career_mentor_index.html"
+                                "url": "https://vervenveda.com/Khaemenes_Academy.github.io/higher_learming/apps/career_mentor_index.html"
                         },
                         {
-                                "label": "ProResource",
-                                "url": "https://vervenveda.github.io/proresource_hub.github.io/"
+                                "label": "ProResource Hub",
+                                "url": "https://vervenveda.com/proresource_hub.github.io/"
                         },
                         {
                                 "label": "333 Network",
-                                "url": "https://vervenveda.github.io/333.github.io/"
+                                "url": "https://vervenveda.com/333.github.io/"
                         }
                 ]
         }
@@ -1861,35 +2681,35 @@
       const ACADEMY_TICKER = [
         {
                 "label": "Preschool",
-                "url": "https://vervenveda.github.io/Khaemenes_Preschool.github.io/"
+                "url": "https://vervenveda.com/Khaemenes_Preschool.github.io/"
         },
         {
                 "label": "Kinder Garden",
-                "url": "https://vervenveda.github.io/Khaemenes_KinderGarden.github.io/"
+                "url": "https://vervenveda.com/Khaemenes_KinderGarden.github.io/"
         },
         {
                 "label": "Elementary",
-                "url": "https://vervenveda.github.io/Khaemenes_Elementary.github.io/"
+                "url": "https://vervenveda.com/Khaemenes_Elementary.github.io/"
         },
         {
                 "label": "Middle School",
-                "url": "https://vervenveda.github.io/Khaemenes_Middle.github.io/"
+                "url": "https://vervenveda.com/Khaemenes_Middle.github.io/"
         },
         {
                 "label": "High School",
-                "url": "https://vervenveda.github.io/Khaemenes_High.github.io/"
+                "url": "https://vervenveda.com/Khaemenes_High.github.io/"
         },
         {
                 "label": "Higher Learning",
-                "url": "https://vervenveda.github.io/Khaemenes_Higher_Learning.github.io/"
+                "url": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/"
         },
         {
                 "label": "Linguistics",
-                "url": "https://vervenveda.github.io/Khaemenes_Linguistics.github.io/"
+                "url": "https://vervenveda.com/Khaemenes_Linguistics.github.io/"
         },
         {
                 "label": "Family Hub",
-                "url": "https://vervenveda.github.io/Khaemenes_Academy.github.io/family/"
+                "url": "https://vervenveda.com/Khaemenes_Academy.github.io/family/"
         },
         {
                 "label": "NAIB",
@@ -1897,51 +2717,59 @@
         },
         {
                 "label": "ARSHIF",
-                "url": "https://vervenveda.github.io/Arshif.github.io/"
+                "url": "https://vervenveda.com/Arshif.github.io/"
         },
         {
                 "label": "The Verifier",
-                "url": "https://vervenveda.github.io/theverifier.github.io/"
+                "url": "https://vervenveda.com/theverifier.github.io/"
         },
         {
                 "label": "PLERA Search",
-                "url": "https://vervenveda.github.io/PLERASearch.github.io/"
+                "url": "https://vervenveda.com/PLERASearch.github.io/"
         },
         {
                 "label": "Solanar",
-                "url": "https://vervenveda.github.io/solanar.github.io/"
+                "url": "https://vervenveda.com/solanar.github.io/"
         },
         {
                 "label": "Bazaar Art",
-                "url": "https://vervenveda.github.io/bazaarart.github.io/"
+                "url": "https://vervenveda.com/bazaarart.github.io/"
         },
         {
                 "label": "The Refrain",
-                "url": "https://vervenveda.github.io/the_refrain.github.io/"
+                "url": "https://vervenveda.com/the_refrain.github.io/"
         },
         {
                 "label": "Arcade",
-                "url": "https://vervenveda.github.io/arcade.github.io/"
+                "url": "https://vervenveda.com/arcade.github.io/"
         },
         {
                 "label": "ProResource Hub",
-                "url": "https://vervenveda.github.io/proresource_hub.github.io/"
+                "url": "https://vervenveda.com/proresource_hub.github.io/"
         },
         {
                 "label": "Medicament Hub",
-                "url": "https://vervenveda.github.io/medicament-hub.github.io/"
+                "url": "https://vervenveda.com/medicament-hub.github.io/"
         },
         {
                 "label": "One Nation for All",
-                "url": "https://vervenveda.github.io/onenationforall.github.io/"
+                "url": "https://vervenveda.com/onenationforall.github.io/"
         },
         {
                 "label": "333 Network",
-                "url": "https://vervenveda.github.io/333.github.io/"
+                "url": "https://vervenveda.com/333.github.io/"
         },
         {
                 "label": "River to Road",
-                "url": "https://vervenveda.github.io/river_to_road.github.io/"
+                "url": "https://vervenveda.com/river_to_road.github.io/"
+        },
+        {
+                "label": "Field Lab",
+                "url": "https://vervenveda.com/Arshif.github.io/apps/%20field-lab/"
+        },
+        {
+                "label": "PROSE",
+                "url": "https://vervenveda.com/proresource_hub.github.io/Protools/PROSE%E2%84%A2%20editingsuite_index.html"
         }
 ];
 
@@ -2124,7 +2952,7 @@
       function renderNetwork(){
         $("networkGrid").innerHTML = LEARNING_HALLS.map(hall => `
           <article class="learning-hall" style="--hall-accent:${escapeAttribute(hall.accent)}">
-            <span class="learning-hall-number">${escapeHtml(hall.number)} · Learning Hall</span>
+            <span class="learning-hall-number">${escapeHtml(hall.number)} · Matrix System</span>
             <h3>${escapeHtml(hall.title)}</h3>
             <p>${escapeHtml(hall.description)}</p>
             <div class="hall-links">
@@ -2193,7 +3021,7 @@
               <span aria-hidden="true">→</span>
             </a>
           `) +
-          section("Connected Learning Halls", ecosystem, item => `
+          section("Connected Knowledge Matrix", ecosystem, item => `
             <a class="menu-link" href="${escapeAttribute(item.url)}">
               <i aria-hidden="true">${escapeHtml(item.icon)}</i>
               <span><strong>${escapeHtml(item.title)}</strong><small>${escapeHtml(item.group)}</small></span>
@@ -2321,7 +3149,7 @@
 
         issues.length
           ? console.warn("Khaemenes Academy audit found issues:", issues)
-          : console.info(`Khaemenes Academy audit passed: ${CAMPUSES.length} campuses · ${TOOLS.length} tools · ${LEARNING_HALLS.length} learning halls · ${ACADEMY_TICKER.length} ticker doorways.`);
+          : console.info(`Khaemenes Academy audit passed: ${CAMPUSES.length} campuses · ${TOOLS.length} tools · ${LEARNING_HALLS.length} matrix systems · ${ACADEMY_TICKER.length} ribbon doorways.`);
       }
 
       const academyRibbon = $("academyRibbon");
