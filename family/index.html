@@ -4,7 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="Khaemenes Academy Family Learning Center — one shared family profile, separate learner identities, records, mentors, campuses, electives, and family resources from preschool through Grade 12.">
+<meta name="theme-color" content="#17233d">
 <title>Khaemenes Academy · Family Learning Center</title>
+
 <style>
 :root{
   --navy:#17233d;
@@ -14,6 +16,7 @@
   --gold-pale:#f2dca9;
   --paper:#fffdf7;
   --paper-2:#f8f5ec;
+  --surface:#ffffff;
   --ink:#26313a;
   --muted:#6b7378;
   --line:rgba(28,45,67,.14);
@@ -35,30 +38,42 @@
   --ticker-h:33px;
   --header-h:66px;
 }
+
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
   margin:0;
+  min-width:300px;
   color:var(--ink);
-  background:linear-gradient(180deg,#eef3f5 0,#fffdf7 28rem,#fffdf7 100%);
+  background:
+    radial-gradient(circle at 8% 0,rgba(217,184,120,.08),transparent 27rem),
+    linear-gradient(180deg,#eef3f5 0,var(--paper) 28rem,var(--paper) 100%);
   font:15px/1.68 var(--sans);
 }
+body.menu-open{overflow:hidden}
 a{color:inherit;text-decoration:none}
 button,input,select{font:inherit}
 button{cursor:pointer}
 button:disabled{cursor:not-allowed;opacity:.55}
+[hidden]{display:none!important}
 .shell{width:min(calc(100% - 40px),var(--max));margin:auto}
+.sr-only{
+  position:absolute!important;width:1px!important;height:1px!important;
+  padding:0!important;margin:-1px!important;overflow:hidden!important;
+  clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;
+}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
 .skip{
   position:fixed;left:11px;top:-80px;z-index:10000;
   padding:10px 14px;border-radius:var(--r1);background:#fff;color:var(--navy);
 }
 .skip:focus{top:11px}
 
-/* Family ecosystem ticker */
+/* Family network ticker */
 .family-ticker{
   height:var(--ticker-h);
   position:relative;
-  z-index:80;
+  z-index:90;
   overflow:hidden;
   background:var(--navy-3);
   border-bottom:1px solid rgba(255,255,255,.08);
@@ -92,7 +107,7 @@ button:disabled{cursor:not-allowed;opacity:.55}
 .family-ticker.paused .ticker-track{animation-play-state:paused}
 @keyframes tickerMove{to{transform:translateX(-50%)}}
 
-/* Header and hero */
+/* Header */
 .top{
   color:#fff;
   background:
@@ -100,19 +115,21 @@ button:disabled{cursor:not-allowed;opacity:.55}
     linear-gradient(135deg,var(--navy-3),var(--navy) 48%,var(--navy-2));
 }
 .nav-wrap{
-  position:sticky;top:0;z-index:70;
+  position:sticky;top:0;z-index:80;
   min-height:var(--header-h);
   border-bottom:1px solid var(--line-light);
-  background:rgba(18,31,54,.95);
+  background:rgba(18,31,54,.96);
   backdrop-filter:blur(14px);
 }
 .nav{
   min-height:var(--header-h);
   display:flex;align-items:center;justify-content:space-between;gap:21px;
 }
-.brand{display:flex;align-items:center;gap:11px;min-width:0}
+.brand{
+  display:flex;align-items:center;gap:11px;min-width:0;
+}
 .brand-mark{
-  width:33px;height:33px;flex:none;
+  width:36px;height:36px;flex:none;
   display:grid;place-items:center;
   border:1px solid rgba(217,184,120,.55);border-radius:50%;
   color:var(--gold-pale);font:500 16px/1 var(--serif);
@@ -128,18 +145,87 @@ button:disabled{cursor:not-allowed;opacity:.55}
   font-size:9px;letter-spacing:.07em;text-transform:uppercase;
 }
 .nav-actions{display:flex;align-items:center;gap:7px}
-.nav-link,.directory-button{
-  min-height:38px;display:flex;align-items:center;justify-content:center;
+.nav-link{
+  min-height:40px;display:flex;align-items:center;justify-content:center;
   padding:8px 12px;border:1px solid rgba(255,255,255,.14);
   border-radius:var(--r1);color:#fff;background:transparent;
   font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
-  transition:transform .17s ease,background .17s ease,border-color .17s ease;
 }
-.nav-link:hover,.directory-button:hover{transform:translateY(-1px);background:rgba(255,255,255,.07);border-color:rgba(217,184,120,.5)}
-.hero{
-  min-height:520px;
+.nav-link:hover{background:rgba(255,255,255,.07);border-color:rgba(217,184,120,.5)}
+
+/* Upper-right hamburger dropdown */
+.menu-wrap{position:relative}
+.menu-button{
+  width:42px;height:42px;
+  display:grid;place-items:center;
+  padding:0;border:1px solid rgba(255,255,255,.18);
+  border-radius:var(--r1);color:#fff;background:rgba(255,255,255,.035);
+}
+.menu-button:hover{background:rgba(255,255,255,.10);border-color:rgba(217,184,120,.5)}
+.menu-lines,.menu-lines::before,.menu-lines::after{
+  content:"";display:block;width:16px;height:1.5px;border-radius:7px;
+  background:currentColor;transition:.18s;
+}
+.menu-lines{position:relative}
+.menu-lines::before,.menu-lines::after{position:absolute;left:0}
+.menu-lines::before{top:-6px}.menu-lines::after{top:6px}
+.menu-button[aria-expanded="true"] .menu-lines{background:transparent}
+.menu-button[aria-expanded="true"] .menu-lines::before{transform:translateY(6px) rotate(45deg)}
+.menu-button[aria-expanded="true"] .menu-lines::after{transform:translateY(-6px) rotate(-45deg)}
+
+.menu-panel{
+  position:absolute;right:0;top:calc(100% + 9px);
+  width:min(88vw,360px);
+  max-height:min(72vh,660px);
+  overflow:auto;
+  padding:11px;
+  border:1px solid rgba(217,184,120,.28);
+  border-radius:var(--r2);
+  color:var(--ink);
+  background:rgba(255,253,247,.985);
+  box-shadow:0 21px 55px rgba(4,12,24,.28);
+}
+.menu-head{
+  padding:8px 9px 11px;border-bottom:1px solid var(--line);
+  color:var(--navy);
+}
+.menu-head strong{display:block;font:400 1.1rem var(--serif)}
+.menu-head small{display:block;margin-top:3px;color:var(--muted);font-size:9px}
+.menu-group{padding:10px 0 4px}
+.menu-group-title{
+  padding:0 9px 6px;color:var(--sand);
+  font:600 9px/1 var(--serif);letter-spacing:.13em;text-transform:uppercase;
+}
+.menu-panel a{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  min-height:42px;padding:8px 9px;border-radius:var(--r1);
+  color:var(--navy);font-size:10px;
+}
+.menu-panel a:hover{background:#f0eee6}
+.menu-panel a span:last-child{color:var(--muted)}
+.menu-divider{height:1px;margin:5px 0;background:var(--line)}
+
+/* Breadcrumbs */
+.breadcrumbs{
+  background:#0d1a2e;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  color:#d3dce7;
+}
+.breadcrumbs .shell{
+  min-height:38px;
   display:flex;align-items:center;justify-content:center;
-  padding:77px 0 88px;text-align:center;
+  gap:7px;flex-wrap:wrap;
+  font-size:10px;letter-spacing:.045em;
+}
+.breadcrumbs a{color:#fff}
+.breadcrumbs a:hover{text-decoration:underline;text-underline-offset:3px}
+.crumb-sep{color:var(--gold)}
+
+/* Hero */
+.hero{
+  min-height:500px;
+  display:flex;align-items:center;justify-content:center;
+  padding:72px 0 82px;text-align:center;
 }
 .hero-inner{width:100%;max-width:999px;margin:auto}
 .eyebrow{
@@ -149,8 +235,7 @@ button:disabled{cursor:not-allowed;opacity:.55}
 }
 .hero h1{
   max-width:980px;margin:17px auto 0;
-  color:#fff;font:400 clamp(3.4rem,7vw,6.5rem)/.94 var(--serif);
-  letter-spacing:.005em;
+  color:#fff;font:400 clamp(3.2rem,7vw,6.2rem)/.96 var(--serif);
 }
 .hero-lead{
   max-width:760px;margin:21px auto 0;color:#d5deea;
@@ -162,7 +247,7 @@ button:disabled{cursor:not-allowed;opacity:.55}
   padding:10px 14px;border:1px solid var(--line);
   border-radius:var(--r1);background:#fff;color:var(--navy);
   font-size:10px;font-weight:650;letter-spacing:.055em;text-transform:uppercase;
-  transition:transform .17s ease,background .17s ease,border-color .17s ease,box-shadow .17s ease,color .17s ease;
+  transition:transform .17s ease,background .17s ease,border-color .17s ease,box-shadow .17s ease;
 }
 .btn:hover{transform:translateY(-2px);box-shadow:var(--shadow-small)}
 .btn:active{transform:translateY(1px) scale(.995)}
@@ -171,6 +256,7 @@ button:disabled{cursor:not-allowed;opacity:.55}
 .btn.dark{background:var(--navy);border-color:var(--navy);color:#fff}
 .btn.danger{background:var(--red);border-color:var(--red);color:#fff}
 .hero .btn.secondary{background:transparent;color:#fff;border-color:rgba(255,255,255,.28)}
+
 .hero-facts{
   max-width:888px;margin:33px auto 0;
   display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
@@ -185,7 +271,7 @@ button:disabled{cursor:not-allowed;opacity:.55}
 }
 .hero-fact span{display:block;margin-top:5px;color:#c9d2df;font-size:10px;line-height:1.5}
 
-/* General sections */
+/* General */
 .section{padding:77px 0}
 .section.alt{background:#f2f5f5}
 .section.dark{color:#fff;background:var(--navy)}
@@ -203,7 +289,6 @@ button:disabled{cursor:not-allowed;opacity:.55}
 .dark .heading h2{color:#fff}.dark .heading p{color:#c6d0df}.dark .heading .kicker{color:var(--gold-pale)}
 .grid{display:grid;gap:21px}
 .cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
-.cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}
 .card{
   padding:28px;border:1px solid var(--line);border-radius:var(--r3);
   background:#fff;box-shadow:var(--shadow-small);
@@ -217,11 +302,9 @@ button:disabled{cursor:not-allowed;opacity:.55}
   border:1px solid var(--line);border-radius:var(--r1);
   color:var(--ink);background:#fff;
 }
-.field input:focus,.field select:focus{
-  outline:2px solid rgba(70,110,139,.25);outline-offset:1px;border-color:var(--blue)
-}
+.field input:focus,.field select:focus{outline:2px solid rgba(70,110,139,.25);outline-offset:1px;border-color:var(--blue)}
 
-/* Registry and family workspace */
+/* Workspace */
 .notice-shell{margin-bottom:33px}
 .invite-state{
   padding:13px 17px;border:1px solid transparent;border-radius:var(--r2);
@@ -232,7 +315,7 @@ button:disabled{cursor:not-allowed;opacity:.55}
 .error{background:#fdebed;color:#8e414b;border-color:#efcdd1}
 .registry-status-grid{
   display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:11px;margin-bottom:33px;
+  gap:11px;margin-bottom:13px;
 }
 .registry-status{
   padding:17px;border:1px solid var(--line);border-radius:var(--r2);
@@ -269,19 +352,23 @@ button:disabled{cursor:not-allowed;opacity:.55}
 .member+.member{margin-top:7px}
 .member strong{display:block;color:var(--navy);font-size:12px}
 .member small{display:block;margin-top:2px;color:var(--muted);font-size:9px;overflow-wrap:anywhere}
+
 .learner-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:21px}
 .learner-card{
-  position:relative;overflow:hidden;min-height:290px;
+  position:relative;overflow:hidden;min-height:300px;
   padding:24px;border:1px solid var(--line);border-radius:var(--r3);background:#fff;
   box-shadow:var(--shadow-small);
 }
-.learner-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--stage-color,var(--blue))}
+.learner-card::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:4px;
+  background:var(--stage-color,var(--blue));
+}
 .learner-card.is-active{border-color:var(--stage-color,var(--green));box-shadow:var(--shadow)}
 .learner-stage{
   color:var(--stage-color,var(--blue));font:600 9px/1 var(--serif);
   letter-spacing:.13em;text-transform:uppercase;
 }
-.learner-card h3{margin:11px 0 0;font-size:1.7rem}
+.learner-card h3{margin:11px 0 0;color:var(--navy);font:400 1.7rem/1.1 var(--serif)}
 .learner-meta{margin:7px 0 0;color:var(--muted);font-size:10px;line-height:1.55}
 .learner-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:15px}
 .learner-actions .btn{min-height:38px;padding:8px 10px;font-size:9px}
@@ -297,8 +384,10 @@ button:disabled{cursor:not-allowed;opacity:.55}
 }
 .child-select input{width:auto;margin-top:4px}
 .empty{padding:17px;border:1px dashed var(--line);border-radius:var(--r2);color:var(--muted);font-size:11px;text-align:center}
+
 details.control-panel{
-  margin-top:21px;border:1px solid var(--line);border-radius:var(--r3);background:#fff;box-shadow:var(--shadow-small);overflow:hidden;
+  margin-top:21px;border:1px solid var(--line);border-radius:var(--r3);
+  background:#fff;box-shadow:var(--shadow-small);overflow:hidden;
 }
 .control-panel>summary{
   min-height:66px;display:flex;align-items:center;justify-content:space-between;gap:11px;
@@ -310,17 +399,14 @@ details.control-panel{
 .control-panel[open]>summary{border-bottom:1px solid var(--line)}
 .control-body{padding:21px}
 
-/* Seven family halls */
-.family-halls{
-  display:flex;flex-wrap:wrap;justify-content:center;gap:21px;
-}
+/* Family halls */
+.family-halls{display:flex;flex-wrap:wrap;justify-content:center;gap:21px}
 .family-hall{
   --accent:var(--blue);
   flex:1 1 280px;max-width:380px;min-height:333px;
   display:flex;flex-direction:column;align-items:center;
   padding:28px 23px;border:1px solid var(--line);border-top:4px solid var(--accent);
   border-radius:var(--r3);background:#fff;box-shadow:var(--shadow-small);text-align:center;
-  transition:transform .17s ease,border-color .17s ease,box-shadow .17s ease;
 }
 .family-hall:hover{transform:translateY(-3px);border-color:var(--accent);box-shadow:var(--shadow)}
 .hall-number{color:var(--accent);font:600 10px/1 var(--serif);letter-spacing:.15em;text-transform:uppercase}
@@ -331,11 +417,10 @@ details.control-panel{
   min-height:40px;display:flex;align-items:center;justify-content:center;
   padding:7px 8px;border:1px solid var(--line);border-radius:var(--r1);
   background:#faf8f2;color:var(--navy);font-size:9px;font-weight:650;line-height:1.25;
-  transition:transform .17s ease,border-color .17s ease,background .17s ease;
 }
 .hall-links a:hover{transform:translateY(-1px);border-color:var(--accent);background:#fff}
 
-/* Continuity explainer */
+/* Continuity */
 .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:21px}
 .step{
   padding:28px 24px;border:1px solid rgba(255,255,255,.15);
@@ -343,53 +428,13 @@ details.control-panel{
 }
 .step b{
   width:44px;height:44px;display:grid;place-items:center;margin:0 auto 14px;border-radius:50%;
-  border:1px solid rgba(217,184,120,.5);color:var(--gold-pale);font:500 12px var(--serif)
+  border:1px solid rgba(217,184,120,.5);color:var(--gold-pale);font:500 12px var(--serif);
 }
 .step h3{margin:0;color:#fff;font:400 1.5rem/1.1 var(--serif)}
 .step p{margin:10px auto 0;color:#c4cfdd;font-size:11px;line-height:1.7}
 
-/* Family directory */
-.drawer-bg{
-  position:fixed;inset:0;z-index:200;display:none;
-  background:rgba(8,14,25,.62);backdrop-filter:blur(7px);
-}
-.drawer-bg.open{display:block}
-.drawer{
-  width:min(92vw,520px);height:100%;margin-left:auto;
-  display:flex;flex-direction:column;background:var(--paper);box-shadow:-21px 0 55px rgba(0,0,0,.22);
-}
-.drawer-head{
-  display:flex;align-items:center;justify-content:space-between;gap:11px;
-  padding:21px;border-bottom:1px solid var(--line);
-}
-.drawer-head strong{color:var(--navy);font:400 1.45rem var(--serif)}
-.drawer-close{
-  width:38px;height:38px;border:1px solid var(--line);border-radius:50%;background:#fff;color:var(--navy)
-}
-.drawer-search{padding:14px 21px;border-bottom:1px solid var(--line)}
-.drawer-search input{
-  width:100%;min-height:44px;padding:10px 12px;border:1px solid var(--line);border-radius:var(--r1);background:#fff
-}
-.drawer-body{padding:14px 21px 33px;overflow:auto}
-.drawer-group{margin-top:21px}
-.drawer-group:first-child{margin-top:0}
-.drawer-group h3{
-  margin:0 0 9px;color:var(--gold);font:600 10px var(--serif);letter-spacing:.13em;text-transform:uppercase
-}
-.drawer-link{
-  display:grid;grid-template-columns:33px 1fr auto;gap:10px;align-items:center;
-  min-height:52px;padding:9px 10px;border-top:1px solid var(--line);
-}
-.drawer-link i{
-  width:33px;height:33px;display:grid;place-items:center;border-radius:50%;
-  background:#eef2f5;color:var(--navy);font:500 10px var(--serif);font-style:normal
-}
-.drawer-link strong{display:block;color:var(--navy);font-size:11px}
-.drawer-link small{display:block;color:var(--muted);font-size:9px}
-.drawer-link:hover{background:#faf8f2}
-
 footer{
-  padding:55px 20px;background:var(--navy-3);color:#cbd5e2;text-align:center
+  padding:55px 20px;background:var(--navy-3);color:#cbd5e2;text-align:center;
 }
 footer strong{display:block;color:#fff;font:400 1.25rem var(--serif)}
 footer p{margin:7px auto 0;font-size:10px}
@@ -397,26 +442,26 @@ footer p{margin:7px auto 0;font-size:10px}
 .footer-links a{padding:6px 9px;border:1px solid rgba(255,255,255,.13);border-radius:var(--r1);font-size:9px}
 
 @media(max-width:900px){
-  .cols-2,.cols-3,.steps,.create-layout{grid-template-columns:1fr}
+  .cols-2,.steps,.create-layout{grid-template-columns:1fr}
   .hero-facts{grid-template-columns:1fr}
   .hero-fact+.hero-fact{border-left:0;border-top:1px solid rgba(255,255,255,.11)}
   .registry-status-grid{grid-template-columns:1fr}
-  .family-directory-label{display:none}
+  .nav-link{display:none}
 }
 @media(max-width:620px){
   .shell{width:min(calc(100% - 28px),var(--max))}
   .nav{gap:7px}
   .brand small{display:none}
   .brand strong{font-size:13px}
-  .nav-link{padding:7px 9px}
-  .hero{min-height:auto;padding:66px 0 77px}
-  .hero h1{font-size:clamp(3rem,15vw,4.7rem)}
+  .hero{min-height:auto;padding:62px 0 72px}
+  .hero h1{font-size:clamp(2.8rem,14vw,4.5rem)}
   .section{padding:66px 0}
   .card,.create-card{padding:21px}
   .family-title{display:block}
   .hall-links{grid-template-columns:1fr}
   .family-hall{max-width:100%}
   .stage-control{grid-template-columns:1fr}
+  .breadcrumbs .shell{justify-content:flex-start}
 }
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
@@ -425,6 +470,7 @@ footer p{margin:7px auto 0;font-size:10px}
 }
 </style>
 </head>
+
 <body>
 <a class="skip" href="#workspace">Skip to family workspace</a>
 
@@ -443,15 +489,68 @@ footer p{margin:7px auto 0;font-size:10px}
           <small>Family Learning Center</small>
         </span>
       </a>
+
       <nav class="nav-actions" aria-label="Family navigation">
         <a class="nav-link" href="../">Academy Home</a>
-        <button class="directory-button" id="directoryButton" type="button"
-                aria-expanded="false" aria-controls="familyDrawer">
-          <span class="family-directory-label">Family Directory</span>&nbsp;☰
-        </button>
+
+        <div class="menu-wrap">
+          <button class="menu-button" id="menuButton" type="button"
+                  aria-label="Open family menu"
+                  aria-expanded="false"
+                  aria-controls="menuPanel">
+            <span class="menu-lines" aria-hidden="true"></span>
+          </button>
+
+          <div class="menu-panel" id="menuPanel" hidden>
+            <div class="menu-head">
+              <strong>Family Directory</strong>
+              <small>Khaemenes Academy · quick navigation</small>
+            </div>
+
+            <div class="menu-group">
+              <div class="menu-group-title">Academy</div>
+              <a href="../"><span>Academy Home</span><span>→</span></a>
+              <a href="#workspace"><span>Family Workspace</span><span>→</span></a>
+              <a href="https://vervenveda.com/Khaemenes_Preschool.github.io/"><span>Preschool</span><span>→</span></a>
+              <a href="https://vervenveda.com/Khaemenes_KinderGarden.github.io/"><span>Kinder Garden</span><span>→</span></a>
+              <a href="https://vervenveda.com/Khaemenes_Elementary.github.io/"><span>Elementary</span><span>→</span></a>
+              <a href="https://vervenveda.com/Khaemenes_Middle.github.io/"><span>Middle School</span><span>→</span></a>
+              <a href="https://vervenveda.com/Khaemenes_High.github.io/"><span>High School</span><span>→</span></a>
+              <a href="https://vervenveda.com/Khaemenes_Higher_Learning.github.io/"><span>Higher Learning</span><span>→</span></a>
+            </div>
+
+            <div class="menu-divider"></div>
+
+            <div class="menu-group">
+              <div class="menu-group-title">Family & Records</div>
+              <a href="../Parent_resources/Homeschool_compass_index.html"><span>Homeschool Compass</span><span>→</span></a>
+              <a href="../Parent_resources/Transcript_generator_index.html"><span>Transcript Generator</span><span>→</span></a>
+              <a href="../Parent_resources/Diploma_generator_index.html"><span>Diploma Generator</span><span>→</span></a>
+              <a href="#family-ecosystem"><span>Family Resources</span><span>→</span></a>
+            </div>
+
+            <div class="menu-divider"></div>
+
+            <div class="menu-group">
+              <div class="menu-group-title">Learning Network</div>
+              <a href="https://vervenveda.com/Arshif.github.io/"><span>ARSHIF</span><span>→</span></a>
+              <a href="https://vervenveda.com/theverifier.github.io/"><span>The Verifier</span><span>→</span></a>
+              <a href="https://vervenveda.com/PLERASearch.github.io/"><span>PLERA Search</span><span>→</span></a>
+              <a href="https://vervenveda.com/"><span>Verve N Veda</span><span>→</span></a>
+            </div>
+          </div>
+        </div>
       </nav>
     </div>
   </div>
+
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <div class="shell">
+      <a href="../">Khaemenes Academy</a>
+      <span class="crumb-sep" aria-hidden="true">›</span>
+      <span aria-current="page">Family Learning Center</span>
+    </div>
+  </nav>
 
   <div class="shell hero">
     <div class="hero-inner">
@@ -462,10 +561,12 @@ footer p{margin:7px auto 0;font-size:10px}
         and separate learner identities while keeping campuses, mentors, records,
         electives, wellbeing, and practical learning within reach.
       </p>
+
       <div class="actions">
         <a class="btn primary" href="#workspace">Open Family Workspace</a>
         <a class="btn secondary" href="#family-ecosystem">Explore Family Resources</a>
       </div>
+
       <div class="hero-facts" aria-label="Family system overview">
         <div class="hero-fact"><strong>One Family Profile</strong><span>Adults can share a family workspace with different learner permissions.</span></div>
         <div class="hero-fact"><strong>Separate Learner IDs</strong><span>Each learner keeps an individual account identity, stage, mentor context, and record path.</span></div>
@@ -483,6 +584,7 @@ footer p{margin:7px auto 0;font-size:10px}
         <h2 id="workspaceTitle">Your household learning home.</h2>
         <p>Create or open the family registry, choose the active learner, manage authorized adults, and move each learner into the appropriate Khaemenes campus.</p>
       </div>
+
       <div class="notice-shell" id="originNotice"></div>
       <div id="familyApp"></div>
     </div>
@@ -506,6 +608,7 @@ footer p{margin:7px auto 0;font-size:10px}
         <h2>One profile. Separate learners. Deliberate permissions.</h2>
         <p>The family layer coordinates access without merging children into a single academic identity.</p>
       </div>
+
       <div class="steps">
         <article class="step"><b>01</b><h3>Create the family</h3><p>Establish the household identity and the first authorized adult once on the shared Academy origin.</p></article>
         <article class="step"><b>02</b><h3>Register learners</h3><p>Each child receives a stable learner identity and a separate stage, mentor context, and academic pathway.</p></article>
@@ -514,19 +617,6 @@ footer p{margin:7px auto 0;font-size:10px}
     </div>
   </section>
 </main>
-
-<div class="drawer-bg" id="drawerBg" aria-hidden="true">
-  <aside class="drawer" id="familyDrawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
-    <div class="drawer-head">
-      <strong id="drawerTitle">Family Directory</strong>
-      <button class="drawer-close" id="drawerClose" type="button" aria-label="Close family directory">×</button>
-    </div>
-    <div class="drawer-search">
-      <input id="drawerSearch" type="search" placeholder="Search campuses, records, NAIB, art, health, research…" autocomplete="off">
-    </div>
-    <div class="drawer-body" id="drawerBody"></div>
-  </aside>
-</div>
 
 <footer>
   <strong>Khaemenes Academy</strong>
@@ -541,6 +631,7 @@ footer p{margin:7px auto 0;font-size:10px}
 
 <script src="../assets/khaemenes-family-registry.js"></script>
 <script src="../assets/khaemenes-family-invite-client.js"></script>
+
 <script>
 (() => {
 "use strict";
@@ -552,16 +643,21 @@ const $$=s=>[...document.querySelectorAll(s)];
 const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const attr=esc;
 
+const BASE="https://vervenveda.com";
+const ACADEMY=`${BASE}/Khaemenes_Academy.github.io`;
+
 if(!R || !I){
   $("#familyApp").innerHTML='<div class="invite-state error">The family registry scripts could not be loaded. Please return to the Academy home and reopen the Family Learning Center.</div>';
   return;
 }
 
-const BASE="https://vervenveda.com";
-const ACADEMY=`${BASE}/Khaemenes_Academy.github.io`;
-
 const STAGE_INFO={
-  preschool:{label:"Preschool",color:"#8a6a44",url:`${BASE}/Khaemenes_Preschool.github.io/`},
+  preschool:{
+    label:"Preschool",
+    color:"#8a6a44",
+    url:`${BASE}/Khaemenes_Preschool.github.io/`,
+    mentorUrl:`${BASE}/Khaemenes_Preschool.github.io/mentor/`
+  },
   kindergarten:{label:"Kinder Garden",color:"#648057",url:`${BASE}/Khaemenes_KinderGarden.github.io/`},
   elementary:{label:"Elementary",color:"#466e8b",url:`${BASE}/Khaemenes_Elementary.github.io/`},
   middle:{label:"Middle School",color:"#6b587c",url:`${BASE}/Khaemenes_Middle.github.io/`},
@@ -581,7 +677,6 @@ const DIRECTORY=[
   {group:"Planning & Records",icon:"T",title:"Transcript Generator",url:`${ACADEMY}/Parent_resources/Transcript_generator_index.html`,tags:"transcript records grades"},
   {group:"Planning & Records",icon:"D",title:"Diploma Generator",url:`${ACADEMY}/Parent_resources/Diploma_generator_index.html`,tags:"diploma graduation records"},
 
-  {group:"Mentor & Progress",icon:"N",title:"NAIB",url:"https://artist1970.github.io/noema-ai.github.io/",tags:"naib mentor progress intelligence guidance"},
   {group:"Mentor & Progress",icon:"M",title:"Mentor Guide",url:`${ACADEMY}/higher_learming/apps/Mentor_guide_index.html`,tags:"mentor guide family educator"},
   {group:"Mentor & Progress",icon:"Q",title:"Reasoning & Discovery",url:`${ACADEMY}/higher_learming/apps/IQ_Quantum_index.html`,tags:"iq reasoning discovery assessment"},
   {group:"Mentor & Progress",icon:"C",title:"Career Assessment",url:`${ACADEMY}/higher_learming/apps/career_assessment_index.html`,tags:"career assessment planning future"},
@@ -590,7 +685,6 @@ const DIRECTORY=[
   {group:"Arts & Creativity",icon:"B",title:"Bazaar Art",url:`${BASE}/bazaarart.github.io/`,tags:"art creative gallery artist"},
   {group:"Arts & Creativity",icon:"♫",title:"The Refrain",url:`${BASE}/the_refrain.github.io/`,tags:"music creative composition elective"},
   {group:"Arts & Creativity",icon:"◆",title:"Arcade",url:`${BASE}/arcade.github.io/`,tags:"games puzzles strategy practice"},
-  {group:"Arts & Creativity",icon:"S",title:"Song Embedder",url:`${ACADEMY}/tools/song_embedder_index.html`,tags:"song music creative tool"},
 
   {group:"Health & Wellbeing",icon:"♥",title:"Health Is Wealth",url:`${ACADEMY}/Health_learning/Health_is_wealth_6weeks_index.html`,tags:"health wellness learning"},
   {group:"Health & Wellbeing",icon:"☘",title:"Wellness Workshop",url:`${ACADEMY}/Health_learning/wellness_workshop_index.html`,tags:"wellness reflection habits"},
@@ -612,8 +706,12 @@ const DIRECTORY=[
 
 const HALLS=[
   {number:"01",title:"Core Campuses",accent:"#466e8b",description:"The age-and-stage pathway from preschool through high school, plus higher learning and languages.",links:[
-    ["Preschool",STAGE_INFO.preschool.url],["Kinder Garden",STAGE_INFO.kindergarten.url],["Elementary",STAGE_INFO.elementary.url],
-    ["Middle School",STAGE_INFO.middle.url],["High School",STAGE_INFO.high.url],["Higher Learning",`${BASE}/Khaemenes_Higher_Learning.github.io/`]
+    ["Preschool",STAGE_INFO.preschool.url],
+    ["Kinder Garden",STAGE_INFO.kindergarten.url],
+    ["Elementary",STAGE_INFO.elementary.url],
+    ["Middle School",STAGE_INFO.middle.url],
+    ["High School",STAGE_INFO.high.url],
+    ["Higher Learning",`${BASE}/Khaemenes_Higher_Learning.github.io/`]
   ]},
   {number:"02",title:"Planning & Records",accent:"#8b6c47",description:"Family planning, homeschool navigation, academic records, transcripts, and graduation documents.",links:[
     ["Homeschool Compass",`${ACADEMY}/Parent_resources/Homeschool_compass_index.html`],
@@ -622,7 +720,6 @@ const HALLS=[
     ["Academy Home",`${ACADEMY}/`]
   ]},
   {number:"03",title:"Mentor & Progress",accent:"#6b587c",description:"Guidance, reasoning, learning context, career discovery, and family-facing mentor resources.",links:[
-    ["NAIB","https://artist1970.github.io/noema-ai.github.io/"],
     ["Mentor Guide",`${ACADEMY}/higher_learming/apps/Mentor_guide_index.html`],
     ["Reasoning Center",`${ACADEMY}/higher_learming/apps/IQ_Quantum_index.html`],
     ["Career Assessment",`${ACADEMY}/higher_learming/apps/career_assessment_index.html`]
@@ -656,19 +753,28 @@ const HALLS=[
 ];
 
 const TICKER=[
-  ["Family Workspace","#workspace"],["Preschool",STAGE_INFO.preschool.url],["Kinder Garden",STAGE_INFO.kindergarten.url],
-  ["Elementary",STAGE_INFO.elementary.url],["Middle School",STAGE_INFO.middle.url],["High School",STAGE_INFO.high.url],
-  ["Higher Learning",`${BASE}/Khaemenes_Higher_Learning.github.io/`],["Linguistics",`${BASE}/Khaemenes_Linguistics.github.io/`],
-  ["NAIB","https://artist1970.github.io/noema-ai.github.io/"],["Homeschool Compass",`${ACADEMY}/Parent_resources/Homeschool_compass_index.html`],
-  ["Transcript",`${ACADEMY}/Parent_resources/Transcript_generator_index.html`],["Art Studio",`${ACADEMY}/Parent_resources/Art_studio_index.html`],
-  ["Health Is Wealth",`${ACADEMY}/Health_learning/Health_is_wealth_6weeks_index.html`],["Bazaar Art",`${BASE}/bazaarart.github.io/`],
-  ["The Refrain",`${BASE}/the_refrain.github.io/`],["Arcade",`${BASE}/arcade.github.io/`],
-  ["ARSHIF",`${BASE}/Arshif.github.io/`],["The Verifier",`${BASE}/theverifier.github.io/`],
-  ["PLERA Search",`${BASE}/PLERASearch.github.io/`],["Career Mentor",`${ACADEMY}/higher_learming/apps/career_mentor_index.html`],
+  ["Family Workspace","#workspace"],
+  ["Preschool",STAGE_INFO.preschool.url],
+  ["Kinder Garden",STAGE_INFO.kindergarten.url],
+  ["Elementary",STAGE_INFO.elementary.url],
+  ["Middle School",STAGE_INFO.middle.url],
+  ["High School",STAGE_INFO.high.url],
+  ["Higher Learning",`${BASE}/Khaemenes_Higher_Learning.github.io/`],
+  ["Linguistics",`${BASE}/Khaemenes_Linguistics.github.io/`],
+  ["Homeschool Compass",`${ACADEMY}/Parent_resources/Homeschool_compass_index.html`],
+  ["Transcript",`${ACADEMY}/Parent_resources/Transcript_generator_index.html`],
+  ["Art Studio",`${ACADEMY}/Parent_resources/Art_studio_index.html`],
+  ["Health Is Wealth",`${ACADEMY}/Health_learning/Health_is_wealth_6weeks_index.html`],
+  ["Bazaar Art",`${BASE}/bazaarart.github.io/`],
+  ["The Refrain",`${BASE}/the_refrain.github.io/`],
+  ["Arcade",`${BASE}/arcade.github.io/`],
+  ["ARSHIF",`${BASE}/Arshif.github.io/`],
+  ["The Verifier",`${BASE}/theverifier.github.io/`],
+  ["PLERA Search",`${BASE}/PLERASearch.github.io/`],
+  ["Career Mentor",`${ACADEMY}/higher_learming/apps/career_mentor_index.html`],
   ["Family Resources","#family-ecosystem"]
 ];
 
-let lastFocused=null;
 function family(){return R.getFamily()}
 function stageInfo(stage){return STAGE_INFO[stage]||STAGE_INFO.preschool}
 
@@ -694,21 +800,29 @@ function renderHalls(){
 function originNotice(){
   const status=R.status();
   const inviteStatus=I.serverStatus();
+
   $("#originNotice").innerHTML=`
     <div class="registry-status-grid">
       <div class="registry-status">
         <strong>${status.recommendedSharedOrigin?"Shared Origin":"Direct Repository"}</strong>
-        <span>${status.recommendedSharedOrigin?"Family continuity is active on vervenveda.com.":"Use vervenveda.com for the strongest browser-local continuity between Khaemenes campuses."}</span>
+        <span>${status.recommendedSharedOrigin
+          ?"Family continuity is active on vervenveda.com."
+          :"Use vervenveda.com for the strongest browser-local continuity between Khaemenes campuses."}</span>
       </div>
+
       <div class="registry-status">
         <strong>${status.learners} Learner${status.learners===1?"":"s"}</strong>
         <span>Stored in this browser's local family registry.</span>
       </div>
+
       <div class="registry-status">
         <strong>${inviteStatus.emailInvitesAvailable?"Email Linking Live":"Local-First Mode"}</strong>
-        <span>${inviteStatus.emailInvitesAvailable?"Secure cross-device invitation service is connected.":"Cross-device email invitations remain staged until the secure family server is connected."}</span>
+        <span>${inviteStatus.emailInvitesAvailable
+          ?"Secure cross-device invitation service is connected."
+          :"Cross-device email invitations remain staged until the secure family server is connected."}</span>
       </div>
     </div>
+
     <div class="invite-state ${status.recommendedSharedOrigin?"ok":"warn"}">
       ${status.recommendedSharedOrigin
         ?'Shared-origin mode active: Khaemenes pages opened through <strong>vervenveda.com</strong> can use this same browser-local family registry.'
@@ -721,18 +835,34 @@ function renderCreateFamily(){
     <div class="create-layout">
       <section class="card create-card">
         <h3>Create the Family Profile once.</h3>
-        <p>This establishes the shared local family identity used by the Khaemenes family layer. Each learner will still receive a separate account identity.</p>
-        <div class="field"><label for="newFamilyName">Family display name</label><input id="newFamilyName" placeholder="Example: Pearl Family" autocomplete="organization"></div>
-        <div class="field"><label for="newAdultName">First adult display name</label><input id="newAdultName" placeholder="Example: Mom, Dad, Jennifer, Grandma" autocomplete="name"></div>
-        <div class="field"><label for="newAdultRole">Adult role</label>
+        <p>This establishes the shared local family identity used by the Khaemenes family layer. Each learner still receives a separate account identity.</p>
+
+        <div class="field">
+          <label for="newFamilyName">Family display name</label>
+          <input id="newFamilyName" placeholder="Example: Pearl Family" autocomplete="organization">
+        </div>
+
+        <div class="field">
+          <label for="newAdultName">First adult display name</label>
+          <input id="newAdultName" placeholder="Example: Mom, Dad, Jennifer, Grandma" autocomplete="name">
+        </div>
+
+        <div class="field">
+          <label for="newAdultRole">Adult role</label>
           <select id="newAdultRole">
-            <option value="parent">Parent</option><option value="guardian">Guardian</option>
-            <option value="caregiver">Caregiver</option><option value="educator">Authorized educator</option>
+            <option value="parent">Parent</option>
+            <option value="guardian">Guardian</option>
+            <option value="caregiver">Caregiver</option>
+            <option value="educator">Authorized educator</option>
             <option value="other-authorized-adult">Other authorized adult</option>
           </select>
         </div>
-        <div class="actions"><button class="btn primary" id="createFamily" type="button">Create Family Profile</button></div>
+
+        <div class="actions">
+          <button class="btn primary" id="createFamily" type="button">Create Family Profile</button>
+        </div>
       </section>
+
       <aside class="card">
         <h3>What this family layer preserves</h3>
         <div class="promise-list">
@@ -742,34 +872,60 @@ function renderCreateFamily(){
         </div>
       </aside>
     </div>`;
+
   $("#createFamily").addEventListener("click",()=>{
-    R.createFamily({displayName:$("#newFamilyName").value,adultName:$("#newAdultName").value,adultRole:$("#newAdultRole").value});
+    R.createFamily({
+      displayName:$("#newFamilyName").value,
+      adultName:$("#newAdultName").value,
+      adultRole:$("#newAdultRole").value
+    });
     render();
   });
 }
 
 function learnerCard(learner,activeLearnerId,access){
   const stage=stageInfo(learner.stage);
-  const mentorLabel=learner.mentorIdentity?.name||learner.mentorId||"Mentor connection available through the learner pathway";
+  const isActive=learner.learnerId===activeLearnerId;
+  const mentorLabel=
+    learner.mentorIdentity?.name ||
+    learner.mentorId ||
+    "Mentor connection available through the learner pathway";
+
+  const mentorDoor=
+    isActive && learner.stage==="preschool" && stage.mentorUrl
+      ? `<a class="btn gold" href="${attr(stage.mentorUrl)}">Open My Mentor</a>`
+      : "";
+
   return `
-    <article class="learner-card ${learner.learnerId===activeLearnerId?"is-active":""}" style="--stage-color:${stage.color}">
-      <span class="learner-stage">${esc(stage.label)}${learner.learnerId===activeLearnerId?" · Active Learner":""}</span>
+    <article class="learner-card ${isActive?"is-active":""}" style="--stage-color:${stage.color}">
+      <span class="learner-stage">${esc(stage.label)}${isActive?" · Active Learner":""}</span>
       <h3>${esc(learner.nickname)}</h3>
       <p class="learner-meta">${esc(learner.accountState)} · ${esc(learner.accountId)}</p>
+
       <div class="badges">
-        ${(access||[]).map(x=>`<span class="badge">${esc(x.adult?.displayName||"Adult")} · ${esc(x.permissionPreset)}</span>`).join("")||'<span class="badge">No adult access record shown</span>'}
+        ${(access||[])
+          .map(x=>`<span class="badge">${esc(x.adult?.displayName||"Adult")} · ${esc(x.permissionPreset)}</span>`)
+          .join("") || '<span class="badge">No adult access record shown</span>'}
       </div>
+
       <p class="learner-meta"><strong>Mentor:</strong> ${esc(mentorLabel)}</p>
+
       <div class="learner-actions">
-        ${learner.learnerId===activeLearnerId
+        ${isActive
           ?'<span class="btn primary" aria-label="Current active learner">Active</span>'
           :`<button class="btn" type="button" data-set-active="${attr(learner.learnerId)}">Make Active</button>`}
+
         <a class="btn dark" href="${attr(stage.url)}">Open ${esc(stage.label)}</a>
+        ${mentorDoor}
       </div>
+
       <div class="stage-control">
         <select aria-label="School stage for ${attr(learner.nickname)}" data-stage-select="${attr(learner.learnerId)}">
-          ${R.stages.map(s=>`<option value="${attr(s)}" ${s===learner.stage?"selected":""}>${esc(stageInfo(s).label)}</option>`).join("")}
+          ${R.stages
+            .map(s=>`<option value="${attr(s)}" ${s===learner.stage?"selected":""}>${esc(stageInfo(s).label)}</option>`)
+            .join("")}
         </select>
+
         <button class="btn" type="button" data-save-stage="${attr(learner.learnerId)}">Update Stage</button>
       </div>
     </article>`;
@@ -777,13 +933,20 @@ function learnerCard(learner,activeLearnerId,access){
 
 function render(){
   originNotice();
+
   const f=family();
-  if(!f){renderCreateFamily();return}
+  if(!f){
+    renderCreateFamily();
+    return;
+  }
 
   const ids=R.activeIds();
   const inviteStatus=I.serverStatus();
   const accessByLearner={};
-  for(const learner of f.learners)accessByLearner[learner.learnerId]=R.adultAccessForLearner(learner.learnerId);
+
+  for(const learner of f.learners){
+    accessByLearner[learner.learnerId]=R.adultAccessForLearner(learner.learnerId);
+  }
 
   $("#familyApp").innerHTML=`
     <div class="heading" style="margin-top:44px">
@@ -794,62 +957,128 @@ function render(){
 
     <section aria-labelledby="learnersTitle">
       <div class="family-title" style="margin-bottom:17px">
-        <div><h3 id="learnersTitle" style="margin:0;color:var(--navy);font:400 1.7rem var(--serif)">Learner Accounts</h3><p style="margin:.3rem 0 0;color:var(--muted);font-size:11px">Choose the active learner, open the correct campus, or update a learner's school stage.</p></div>
+        <div>
+          <h3 id="learnersTitle" style="margin:0;color:var(--navy);font:400 1.7rem var(--serif)">Learner Accounts</h3>
+          <p style="margin:.3rem 0 0;color:var(--muted);font-size:11px">
+            Choose the active learner, open the correct campus, or update a learner's school stage.
+          </p>
+        </div>
         <span class="badge active">${f.learners.length} learner${f.learners.length===1?"":"s"}</span>
       </div>
+
       <div class="learner-grid">
-        ${f.learners.map(l=>learnerCard(l,ids.learnerId,accessByLearner[l.learnerId])).join("")||'<div class="empty">No learners are registered yet. Use “Register a Learner” below to begin.</div>'}
+        ${f.learners
+          .map(l=>learnerCard(l,ids.learnerId,accessByLearner[l.learnerId]))
+          .join("") || '<div class="empty">No learners are registered yet. Use “Register a Learner” below to begin.</div>'}
       </div>
-      <div class="actions"><button class="btn primary" id="registerLearner" type="button">Register a Learner</button></div>
+
+      <div class="actions">
+        <button class="btn primary" id="registerLearner" type="button">Register a Learner</button>
+      </div>
     </section>
 
     <div class="grid cols-2" style="margin-top:33px">
       <section class="card">
         <div class="family-title">
-          <div><h3>Adults in this family</h3><p>Adults may have different relationships and different permissions for each learner.</p></div>
+          <div>
+            <h3>Adults in this family</h3>
+            <p>Adults may have different relationships and different permissions for each learner.</p>
+          </div>
           <span class="badge">${f.adults.length} linked</span>
         </div>
-        <div>${f.adults.map(a=>`<div class="member"><strong>${esc(a.displayName)}</strong><small>${esc(a.role)} · ${esc(a.accountState)}${a.adultId===ids.adultId?" · active adult":""}</small></div>`).join("")||'<div class="empty">No adults yet.</div>'}</div>
-        <div class="actions"><button class="btn" id="addLocalAdult" type="button">Add Adult on This Device</button></div>
+
+        <div>
+          ${f.adults
+            .map(a=>`<div class="member"><strong>${esc(a.displayName)}</strong><small>${esc(a.role)} · ${esc(a.accountState)}${a.adultId===ids.adultId?" · active adult":""}</small></div>`)
+            .join("") || '<div class="empty">No adults yet.</div>'}
+        </div>
+
+        <div class="actions">
+          <button class="btn" id="addLocalAdult" type="button">Add Adult on This Device</button>
+        </div>
       </section>
 
       <section class="card">
         <h3>Family Records & Backup</h3>
         <p>Planning and records stay separate from learner identity. Use the tools below for homeschool navigation, transcripts, diploma preparation, and a local backup of this family registry.</p>
+
         <div class="actions">
           <a class="btn" href="${ACADEMY}/Parent_resources/Homeschool_compass_index.html">Homeschool Compass</a>
           <a class="btn" href="${ACADEMY}/Parent_resources/Transcript_generator_index.html">Transcript Generator</a>
           <a class="btn" href="${ACADEMY}/Parent_resources/Diploma_generator_index.html">Diploma Generator</a>
           <button class="btn gold" id="exportFamily" type="button">Export Family Backup</button>
         </div>
+
         <p><small>A local export is a backup. It is not an authenticated invitation and is not a substitute for a future server-backed family account.</small></p>
       </section>
     </div>
 
     <details class="control-panel" id="invitePanel">
-      <summary>Invite / Link Another Parent or Guardian <span>${inviteStatus.emailInvitesAvailable?"Secure Email Available":"Server Not Connected"}</span></summary>
+      <summary>
+        Invite / Link Another Parent or Guardian
+        <span>${inviteStatus.emailInvitesAvailable?"Secure Email Available":"Server Not Connected"}</span>
+      </summary>
+
       <div class="control-body">
         <p>A separate-household parent, guardian, caregiver, or authorized educator can ultimately be linked to selected learners without sharing a password. The static page never pretends an invitation was sent when the server is unavailable.</p>
+
         <div class="invite-state ${inviteStatus.emailInvitesAvailable?"ok":"warn"}">
-          ${inviteStatus.emailInvitesAvailable?"Secure email invitation service is connected.":"The email-invite architecture is installed, but cross-device invitations are not sent until the secure Family Account server is connected."}
+          ${inviteStatus.emailInvitesAvailable
+            ?"Secure email invitation service is connected."
+            :"The email-invite architecture is installed, but cross-device invitations are not sent until the secure Family Account server is connected."}
         </div>
+
         <div class="grid cols-2">
-          <div class="field"><label for="inviteEmail">Adult email</label><input id="inviteEmail" type="email" autocomplete="email" placeholder="parent@example.com"></div>
-          <div class="field"><label for="inviteRelationship">Relationship label</label><input id="inviteRelationship" placeholder="Dad, Mom, Grandma, Guardian…"></div>
-          <div class="field"><label for="inviteRole">Adult role</label><select id="inviteRole"><option value="parent">Parent</option><option value="guardian">Guardian</option><option value="caregiver">Caregiver</option><option value="educator">Authorized educator</option></select></div>
-          <div class="field"><label for="invitePermission">Permission level</label><select id="invitePermission"><option value="co-guardian">Co-parent / guardian</option><option value="progress-viewer">Progress viewer</option><option value="educator">Educator</option></select></div>
-        </div>
-        <div class="field"><label>Which learner accounts may this adult access?</label>
-          <div class="child-select" id="inviteLearners">
-            ${f.learners.map(l=>`<label><input type="checkbox" value="${attr(l.learnerId)}"> <span><strong>${esc(l.nickname)}</strong><br><small>${esc(stageInfo(l.stage).label)}</small></span></label>`).join("")||'<div class="empty">Register a learner before preparing an invitation.</div>'}
+          <div class="field">
+            <label for="inviteEmail">Adult email</label>
+            <input id="inviteEmail" type="email" autocomplete="email" placeholder="parent@example.com">
+          </div>
+
+          <div class="field">
+            <label for="inviteRelationship">Relationship label</label>
+            <input id="inviteRelationship" placeholder="Dad, Mom, Grandma, Guardian…">
+          </div>
+
+          <div class="field">
+            <label for="inviteRole">Adult role</label>
+            <select id="inviteRole">
+              <option value="parent">Parent</option>
+              <option value="guardian">Guardian</option>
+              <option value="caregiver">Caregiver</option>
+              <option value="educator">Authorized educator</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="invitePermission">Permission level</label>
+            <select id="invitePermission">
+              <option value="co-guardian">Co-parent / guardian</option>
+              <option value="progress-viewer">Progress viewer</option>
+              <option value="educator">Educator</option>
+            </select>
           </div>
         </div>
-        <label class="check"><input id="inviteAuthority" type="checkbox"> <span>I confirm I am authorized to grant this adult access to the selected learner account(s). Khaemenes does not determine custody or legal authority.</span></label>
+
+        <div class="field">
+          <label>Which learner accounts may this adult access?</label>
+          <div class="child-select" id="inviteLearners">
+            ${f.learners
+              .map(l=>`<label><input type="checkbox" value="${attr(l.learnerId)}"> <span><strong>${esc(l.nickname)}</strong><br><small>${esc(stageInfo(l.stage).label)}</small></span></label>`)
+              .join("") || '<div class="empty">Register a learner before preparing an invitation.</div>'}
+          </div>
+        </div>
+
+        <label class="check">
+          <input id="inviteAuthority" type="checkbox">
+          <span>I confirm I am authorized to grant this adult access to the selected learner account(s). Khaemenes does not determine custody or legal authority.</span>
+        </label>
+
         <div class="actions">
           <button class="btn gold" id="sendInvite" type="button" ${(!f.learners.length||!inviteStatus.emailInvitesAvailable)?"disabled":""}>
             ${inviteStatus.emailInvitesAvailable?"Send Secure Email Invite":"Email Invite Server Not Connected"}
           </button>
         </div>
+
         <div id="inviteResult"></div>
       </div>
     </details>`;
@@ -882,41 +1111,100 @@ function bindWorkspace(){
 }
 
 function registerLearner(){
-  const f=family();if(!f)return;
-  const nickname=prompt("Child's first name or nickname:");if(!nickname)return;
-  const stage=(prompt("School stage: preschool, kindergarten, elementary, middle, or high","kindergarten")||"").trim().toLowerCase();
-  if(!R.stages.includes(stage)){alert("Please use preschool, kindergarten, elementary, middle, or high.");return}
-  const learner=R.registerLearner({familyId:f.familyId,nickname,stage});
+  const f=family();
+  if(!f)return;
+
+  const nickname=prompt("Child's first name or nickname:");
+  if(!nickname)return;
+
+  const stage=(prompt(
+    "School stage: preschool, kindergarten, elementary, middle, or high",
+    "kindergarten"
+  )||"").trim().toLowerCase();
+
+  if(!R.stages.includes(stage)){
+    alert("Please use preschool, kindergarten, elementary, middle, or high.");
+    return;
+  }
+
+  const learner=R.registerLearner({
+    familyId:f.familyId,
+    nickname,
+    stage
+  });
+
   const activeAdult=R.getAdult();
   if(activeAdult){
-    R.grantAdultAccess({familyId:f.familyId,adultId:activeAdult.adultId,learnerId:learner.learnerId,permissionPreset:"co-guardian"});
+    R.grantAdultAccess({
+      familyId:f.familyId,
+      adultId:activeAdult.adultId,
+      learnerId:learner.learnerId,
+      permissionPreset:"co-guardian"
+    });
   }
+
   render();
 }
 
 function addLocalAdult(){
-  const f=family();if(!f)return;
-  const name=prompt("Adult display name:");if(!name)return;
-  const role=(prompt("Role: parent, guardian, caregiver, educator","parent")||"parent").trim();
-  R.addAdultLocal({familyId:f.familyId,displayName:name,role,permissionPreset:"co-guardian",learnerIds:f.learners.map(l=>l.learnerId)});
+  const f=family();
+  if(!f)return;
+
+  const name=prompt("Adult display name:");
+  if(!name)return;
+
+  const role=(prompt(
+    "Role: parent, guardian, caregiver, educator",
+    "parent"
+  )||"parent").trim();
+
+  R.addAdultLocal({
+    familyId:f.familyId,
+    displayName:name,
+    role,
+    permissionPreset:"co-guardian",
+    learnerIds:f.learners.map(l=>l.learnerId)
+  });
+
   render();
 }
 
 async function sendInvite(){
-  const result=$("#inviteResult"),f=family();
+  const result=$("#inviteResult");
+  const f=family();
   if(!result||!f)return;
+
   const email=$("#inviteEmail").value.trim();
   const learnerIds=$$("#inviteLearners input:checked").map(x=>x.value);
-  if(!$("#inviteAuthority").checked){result.innerHTML='<div class="invite-state error">Please confirm you are authorized to grant access.</div>';return}
-  if(!learnerIds.length){result.innerHTML='<div class="invite-state error">Choose at least one learner account.</div>';return}
+
+  if(!$("#inviteAuthority").checked){
+    result.innerHTML='<div class="invite-state error">Please confirm you are authorized to grant access.</div>';
+    return;
+  }
+
+  if(!learnerIds.length){
+    result.innerHTML='<div class="invite-state error">Choose at least one learner account.</div>';
+    return;
+  }
+
   try{
     const response=await I.createEmailInvite({
-      familyId:f.familyId,email,relationshipLabel:$("#inviteRelationship").value,
-      role:$("#inviteRole").value,learnerIds,permissionPreset:$("#invitePermission").value,expiresInHours:48
+      familyId:f.familyId,
+      email,
+      relationshipLabel:$("#inviteRelationship").value,
+      role:$("#inviteRole").value,
+      learnerIds,
+      permissionPreset:$("#invitePermission").value,
+      expiresInHours:48
     });
-    if(response.ok)result.innerHTML='<div class="invite-state ok">Invitation sent. The recipient will receive a one-time, expiring link.</div>';
-    else if(response.status==="UNAVAILABLE")result.innerHTML='<div class="invite-state warn">Email invitations are not available in static mode. Nothing was sent and no access was granted.</div>';
-    else result.innerHTML='<div class="invite-state error">The invitation service returned an error. No access has been granted.</div>';
+
+    if(response.ok){
+      result.innerHTML='<div class="invite-state ok">Invitation sent. The recipient will receive a one-time, expiring link.</div>';
+    }else if(response.status==="UNAVAILABLE"){
+      result.innerHTML='<div class="invite-state warn">Email invitations are not available in static mode. Nothing was sent and no access was granted.</div>';
+    }else{
+      result.innerHTML='<div class="invite-state error">The invitation service returned an error. No access has been granted.</div>';
+    }
   }catch(error){
     result.innerHTML=`<div class="invite-state error">${esc(error.message||error)}</div>`;
   }
@@ -928,83 +1216,109 @@ function exportFamily(){
     const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
     const url=URL.createObjectURL(blob);
     const a=document.createElement("a");
-    a.href=url;a.download="khaemenes-family-local-backup.json";a.click();
+
+    a.href=url;
+    a.download="khaemenes-family-local-backup.json";
+    a.click();
+
     setTimeout(()=>URL.revokeObjectURL(url),1000);
-  }catch(error){alert(error.message||error)}
+  }catch(error){
+    alert(error.message||error);
+  }
 }
 
-function buildDrawer(query=""){
-  const q=String(query||"").trim().toLowerCase();
-  const items=DIRECTORY.filter(item=>!q||`${item.title} ${item.group} ${item.tags}`.toLowerCase().includes(q));
-  const groups=[...new Set(DIRECTORY.map(x=>x.group))];
-  $("#drawerBody").innerHTML=groups.map(group=>{
-    const found=items.filter(x=>x.group===group);
-    if(!found.length)return "";
-    return `<section class="drawer-group"><h3>${esc(group)}</h3>${
-      found.map(item=>`<a class="drawer-link" href="${attr(item.url)}"><i aria-hidden="true">${esc(item.icon)}</i><span><strong>${esc(item.title)}</strong><small>${esc(item.group)}</small></span><span aria-hidden="true">→</span></a>`).join("")
-    }</section>`;
-  }).join("")||'<div class="empty">No family resources match that search.</div>';
-}
+function initMenu(){
+  const button=$("#menuButton");
+  const panel=$("#menuPanel");
 
-function openDrawer(){
-  lastFocused=document.activeElement;
-  $("#drawerBg").classList.add("open");
-  $("#drawerBg").setAttribute("aria-hidden","false");
-  $("#directoryButton").setAttribute("aria-expanded","true");
-  $("#drawerSearch").value="";
-  buildDrawer("");
-  setTimeout(()=>$("#drawerSearch").focus(),60);
-}
-function closeDrawer(){
-  $("#drawerBg").classList.remove("open");
-  $("#drawerBg").setAttribute("aria-hidden","true");
-  $("#directoryButton").setAttribute("aria-expanded","false");
-  lastFocused?.focus?.();
-}
-function initDrawer(){
-  $("#directoryButton").addEventListener("click",openDrawer);
-  $("#drawerClose").addEventListener("click",closeDrawer);
-  $("#drawerBg").addEventListener("click",e=>{if(e.target===$("#drawerBg"))closeDrawer()});
-  $("#drawerSearch").addEventListener("input",e=>buildDrawer(e.target.value));
-  document.addEventListener("keydown",e=>{
-    if(e.key==="Escape"&&$("#drawerBg").classList.contains("open"))closeDrawer();
-    if(e.key==="/"&&!["INPUT","SELECT","TEXTAREA"].includes(document.activeElement?.tagName)){e.preventDefault();openDrawer()}
+  function close(){
+    panel.hidden=true;
+    button.setAttribute("aria-expanded","false");
+    button.setAttribute("aria-label","Open family menu");
+  }
+
+  function open(){
+    panel.hidden=false;
+    button.setAttribute("aria-expanded","true");
+    button.setAttribute("aria-label","Close family menu");
+  }
+
+  button.addEventListener("click",event=>{
+    event.stopPropagation();
+    panel.hidden?open():close();
+  });
+
+  panel.addEventListener("click",event=>event.stopPropagation());
+
+  document.addEventListener("click",close);
+  document.addEventListener("keydown",event=>{
+    if(event.key==="Escape"){
+      close();
+      button.focus();
+    }
+  });
+
+  panel.querySelectorAll("a").forEach(link=>{
+    link.addEventListener("click",close);
   });
 }
+
 function initTicker(){
-  const ticker=$("#familyTicker"),control=$("#tickerControl");
+  const ticker=$("#familyTicker");
+  const control=$("#tickerControl");
+
   control.addEventListener("click",()=>{
     const paused=ticker.classList.toggle("paused");
     control.textContent=paused?"▶":"Ⅱ";
-    control.setAttribute("aria-label",paused?"Resume family learning ticker":"Pause family learning ticker");
+    control.setAttribute(
+      "aria-label",
+      paused?"Resume family learning ticker":"Pause family learning ticker"
+    );
   });
 }
+
 function safeRel(){
   $$("a[href^='http']").forEach(a=>{
     const url=new URL(a.href,location.href);
     if(url.origin!==location.origin)a.rel="noopener noreferrer";
   });
 }
+
 function audit(){
   const issues=[];
-  if(R.stages.join(",")!=="preschool,kindergarten,elementary,middle,high")issues.push("Unexpected family registry stage list.");
+
+  if(R.stages.join(",")!=="preschool,kindergarten,elementary,middle,high"){
+    issues.push("Unexpected family registry stage list.");
+  }
+
   for(const item of DIRECTORY){
     try{
       const u=new URL(item.url,location.href);
-      if(!["https:","http:"].includes(u.protocol)&&!item.url.startsWith("#"))issues.push(`Unsupported URL: ${item.title}`);
-    }catch{issues.push(`Invalid URL: ${item.title}`)}
+      if(!["https:","http:"].includes(u.protocol)&&!item.url.startsWith("#")){
+        issues.push(`Unsupported URL: ${item.title}`);
+      }
+    }catch{
+      issues.push(`Invalid URL: ${item.title}`);
+    }
   }
-  if(issues.length)console.warn("Khaemenes Family Center audit:",issues);
-  else console.info(`Khaemenes Family Center audit passed: ${DIRECTORY.length} family doorways · ${HALLS.length} family halls · ${TICKER.length} ticker links.`);
+
+  if(issues.length){
+    console.warn("Khaemenes Family Center audit:",issues);
+  }else{
+    console.info(
+      `Khaemenes Family Center audit passed: ${DIRECTORY.length} family doorways · ${HALLS.length} family halls · ${TICKER.length} ticker links.`
+    );
+  }
 }
 
 renderTicker();
 renderHalls();
-initDrawer();
+initMenu();
 initTicker();
 render();
 safeRel();
 audit();
+
 })();
 </script>
 </body>
