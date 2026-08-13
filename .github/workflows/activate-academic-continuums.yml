@@ -1,0 +1,50 @@
+name: Activate Academic Continuums
+
+on:
+  push:
+    branches:
+      - agent/activate-academic-continuums
+
+permissions:
+  contents: write
+
+jobs:
+  activate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/activate-academic-continuums
+
+      - name: Mark live continuums active and validate JSON
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          paths = [
+              Path('shared-integration/academics/khaemenes-academic-continuum.json'),
+              Path('shared-integration/mathematics/khaemenes-mathematics-continuum.json'),
+          ]
+          for path in paths:
+              text = path.read_text(encoding='utf-8')
+              old = '"status": "candidate"'
+              new = '"status": "active"'
+              if text.count(old) != 1:
+                  raise SystemExit(f'{path}: expected exactly one candidate status')
+              text = text.replace(old, new, 1)
+              path.write_text(text, encoding='utf-8')
+              data = json.loads(text)
+              assert data['status'] == 'active'
+              assert data['effectiveDate'] == '2026-08-13'
+          print('Academic and Mathematics Continuums marked active and JSON-valid.')
+          PY
+
+      - name: Commit activation
+        run: |
+          git config user.name "Khaemenes Continuum Validator"
+          git config user.email "actions@users.noreply.github.com"
+          git add shared-integration/academics/khaemenes-academic-continuum.json shared-integration/mathematics/khaemenes-mathematics-continuum.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Mark live academic continuums active"
+          git push origin HEAD:agent/activate-academic-continuums
