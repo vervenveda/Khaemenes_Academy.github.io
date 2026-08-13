@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "1.0.0",
+  "templateId": "khaemenes.subject.continuum.template",
+  "subjectId": "replace-with-subject-id",
+  "title": "Replace With Subject Title",
+  "status": "template",
+  "stages": ["pre-k", "kindergarten", "elementary", "middle", "high", "higher", "research"],
+  "disciplinePractices": [],
+  "evidencePrinciples": [],
+  "strands": [],
+  "publicTools": [],
+  "miniClouds": [
+    {
+      "id": "subject-context-cloud",
+      "purpose": "Expose lesson-aware subject context without replacing course authority."
+    },
+    {
+      "id": "subject-resource-cloud",
+      "purpose": "Match approved public subject resources to lesson needs."
+    },
+    {
+      "id": "subject-evidence-cloud",
+      "purpose": "Keep discipline-appropriate evidence types distinct."
+    },
+    {
+      "id": "subject-continuity-cloud",
+      "purpose": "Support learner continuity across stages while preserving source-owned records."
+    }
+  ],
+  "prerequisiteModel": {
+    "rule": "Prerequisites are advisory metadata unless a course explicitly declares them required.",
+    "crossStage": true,
+    "crossSubject": true
+  },
+  "researchPractice": {
+    "enabledFromStage": "high",
+    "principles": [
+      "distinguish source from interpretation",
+      "record provenance when research evidence is required",
+      "state uncertainty and limitations",
+      "preserve learner authorship"
+    ]
+  },
+  "courseContract": {
+    "requiredFields": ["courseId", "subjectId", "stage", "title"],
+    "permanentId": true,
+    "gracefulFallback": true,
+    "courseOwnsCurriculum": true
+  },
+  "archive": {
+    "series": "ARSHIF-KHAE-SUBJECT",
+    "archiveIsRuntimeDependency": false
+  }
+}
