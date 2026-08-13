@@ -1,0 +1,232 @@
+{
+  "schemaVersion": "1.0.0",
+  "canonicalId": "khaemenes.mathematics.continuum",
+  "title": "Khaemenes Mathematics Continuum",
+  "description": "Shared public mathematics information contract spanning early learning through research-level mathematics. Courses own curriculum; this file supplies common progression, evidence, tool, and bounded Mini-Cloud definitions.",
+  "status": "candidate",
+  "effectiveDate": "2026-08-13",
+  "authority": {
+    "liveOwner": "Khaemenes Academy shared integration",
+    "courseOwnershipRule": "Each course remains authoritative for its own lessons, assessments, sequence, and local learning records.",
+    "dependencyRule": "Courses may read this continuum for shared mathematics metadata but must fail gracefully if the file is unavailable.",
+    "archiveRule": "Historical snapshots are preserved in ARSHIF and are never used as the live runtime dependency."
+  },
+  "stages": [
+    {
+      "id": "pre-k",
+      "label": "Pre-K / Creche",
+      "order": 1,
+      "mentorExpression": "Wise Owl",
+      "evidenceStandard": ["recognize", "sort", "match", "count", "describe", "build", "compare"],
+      "proofStandard": "No formal proof. Learners explain observations with words, objects, movement, drawings, or patterns."
+    },
+    {
+      "id": "kindergarten",
+      "label": "Kinder Garden",
+      "order": 2,
+      "mentorExpression": "Wise Owl",
+      "evidenceStandard": ["represent", "count", "compose", "decompose", "compare", "measure informally", "describe patterns"],
+      "proofStandard": "Reasoning is concrete and visual; explanations matter more than symbolic formality."
+    },
+    {
+      "id": "elementary",
+      "label": "Elementary Mathematics",
+      "order": 3,
+      "mentorExpression": "Academy Mentor",
+      "evidenceStandard": ["model", "calculate", "estimate", "explain strategy", "check reasonableness", "use multiple representations"],
+      "proofStandard": "Students justify strategies and properties with examples, diagrams, equations, and counterexamples appropriate to grade level."
+    },
+    {
+      "id": "middle",
+      "label": "Middle School Mathematics",
+      "order": 4,
+      "mentorExpression": "Academy Mentor",
+      "evidenceStandard": ["generalize", "represent algebraically", "analyze data", "construct arguments", "critique reasoning", "verify"],
+      "proofStandard": "Students move from examples toward generalized arguments and distinguish a convincing pattern from a justified conclusion."
+    },
+    {
+      "id": "high",
+      "label": "High School Mathematics",
+      "order": 5,
+      "mentorExpression": "Academy Mentor",
+      "evidenceStandard": ["derive", "model", "prove", "verify", "analyze error", "connect representations", "use technology responsibly"],
+      "proofStandard": "Formal and semi-formal proof are required where appropriate. Computation, graphing, simulation, and measurement support reasoning but do not automatically constitute proof."
+    },
+    {
+      "id": "higher",
+      "label": "Higher Learning Mathematics",
+      "order": 6,
+      "mentorExpression": "Scholar",
+      "evidenceStandard": ["state hypotheses", "prove or cite", "derive", "compute reproducibly", "document sources", "defend reasoning"],
+      "proofStandard": "Theorem use, proof, computation, visualization, experiment, and citation must be labeled distinctly. Objective scores cannot substitute for required written mathematical evidence."
+    },
+    {
+      "id": "research",
+      "label": "Advanced / Research Mathematics",
+      "order": 7,
+      "mentorExpression": "Scholar",
+      "evidenceStandard": ["map theorem dependencies", "construct proofs", "test conjectures", "build counterexamples", "reproduce computations", "document provenance", "defend limitations"],
+      "proofStandard": "Claims must carry explicit mathematical status. Computational or visual evidence may motivate, test, or falsify claims but does not certify a theorem without a valid proof or cited theorem."
+    }
+  ],
+  "strands": [
+    {"id": "number-quantity", "label": "Number & Quantity", "starts": "pre-k", "continuesThrough": "higher"},
+    {"id": "operations-algebraic-thinking", "label": "Operations & Algebraic Thinking", "starts": "pre-k", "continuesThrough": "higher"},
+    {"id": "geometry-spatial", "label": "Geometry & Spatial Reasoning", "starts": "pre-k", "continuesThrough": "research"},
+    {"id": "measurement-data", "label": "Measurement & Data", "starts": "pre-k", "continuesThrough": "higher"},
+    {"id": "ratios-proportional", "label": "Ratios, Rates & Proportional Reasoning", "starts": "elementary", "continuesThrough": "high"},
+    {"id": "probability-statistics", "label": "Probability & Statistics", "starts": "elementary", "continuesThrough": "research"},
+    {"id": "functions-modeling", "label": "Functions & Mathematical Modeling", "starts": "middle", "continuesThrough": "research"},
+    {"id": "trigonometry", "label": "Trigonometry", "starts": "middle", "continuesThrough": "higher"},
+    {"id": "calculus-analysis", "label": "Calculus & Analysis", "starts": "high", "continuesThrough": "research"},
+    {"id": "logic-proof", "label": "Logic, Proof & Foundations", "starts": "elementary", "continuesThrough": "research"},
+    {"id": "linear-algebra", "label": "Linear Algebra", "starts": "high", "continuesThrough": "research"},
+    {"id": "discrete-mathematics", "label": "Discrete Mathematics", "starts": "middle", "continuesThrough": "research"},
+    {"id": "differential-equations", "label": "Differential Equations & Dynamical Systems", "starts": "higher", "continuesThrough": "research"},
+    {"id": "abstract-algebra", "label": "Abstract Algebra", "starts": "higher", "continuesThrough": "research"},
+    {"id": "topology-global-geometry", "label": "Topology, Differential & Global Geometry", "starts": "higher", "continuesThrough": "research"},
+    {"id": "numerical-computational", "label": "Numerical & Computational Mathematics", "starts": "elementary", "continuesThrough": "research"},
+    {"id": "mathematical-physics", "label": "Mathematical Physics", "starts": "higher", "continuesThrough": "research"},
+    {"id": "research-practice", "label": "Mathematical Research Practice", "starts": "high", "continuesThrough": "research"}
+  ],
+  "mathematicalStatusVocabulary": [
+    "Definition",
+    "Proved",
+    "Cited Theorem",
+    "Derived Here",
+    "Computationally Observed",
+    "Experimentally Observed",
+    "Conjectural",
+    "Counterexample Found",
+    "Unresolved",
+    "Not Applicable"
+  ],
+  "evidencePrinciples": [
+    "A numerical score measures only what the scored instrument actually assessed.",
+    "Proof evidence remains distinct from objective-question performance.",
+    "A visualization can reveal structure or suggest a claim without proving it.",
+    "A computation can support, test, reproduce, or refute a claim without automatically proving the general case.",
+    "A cited theorem requires a recorded source when citation evidence is part of the task.",
+    "Learner reasoning should remain visible; mentor support must not erase the learner's mathematical voice.",
+    "Tools should expose uncertainty, assumptions, units, domains, and limitations where relevant."
+  ],
+  "publicTools": [
+    {
+      "id": "khaemenes-scientific-calculator",
+      "title": "Khaemenes Scientific Calculator",
+      "home": "https://vervenveda.com/proresource_hub.github.io/Protools/Khaemenes_Scientific_Calculator/",
+      "stages": ["middle", "high", "higher", "research"],
+      "capabilities": ["scientific calculation", "function evaluation", "trigonometric work", "numerical checking"],
+      "evidenceRole": "computation",
+      "neverClaims": ["formal proof", "source verification"]
+    },
+    {
+      "id": "ohmic-cad-studio",
+      "title": "Ohmic CAD Studio",
+      "home": "https://vervenveda.com/proresource_hub.github.io/Protools/Ohmic_CAD_index.html",
+      "studio": "https://vervenveda.com/proresource_hub.github.io/Protools/Ohmic_CAD_Studio.html",
+      "stages": ["middle", "high", "higher", "research"],
+      "capabilities": ["geometric construction", "measurement", "coordinate design", "visual modeling"],
+      "evidenceRole": "construction-and-visualization",
+      "neverClaims": ["formal proof solely from a drawing", "topological equivalence solely from appearance"]
+    },
+    {
+      "id": "evidence-citation-studio",
+      "title": "Evidence & Citation Studio",
+      "home": "https://vervenveda.com/proresource_hub.github.io/Protools/Evidence_Citation_Studio/",
+      "stages": ["high", "higher", "research"],
+      "capabilities": ["source records", "claim tracking", "provenance", "mathematical status labeling"],
+      "evidenceRole": "research-provenance",
+      "neverClaims": ["source truth merely because a claim is stored", "proof merely because a source states a result"]
+    },
+    {
+      "id": "lab-resource-cloud",
+      "title": "Lab Resource Cloud",
+      "home": "https://vervenveda.com/proresource_hub.github.io/Protools/Evidence_Citation_Studio/lab-resource-cloud.html",
+      "stages": ["high", "higher", "research"],
+      "capabilities": ["lab packaging", "review inbox", "approved resource directory", "reproducibility records"],
+      "evidenceRole": "lab-and-resource-record",
+      "neverClaims": ["approval equals proof", "pending submission equals reviewed resource"]
+    },
+    {
+      "id": "geometry-sanctuary-v2",
+      "title": "Geometry Sanctuary V2.0",
+      "home": "https://vervenveda.com/arcade.github.io/Geometry/Sanctuary%20V2.0",
+      "stages": ["elementary", "middle", "high"],
+      "capabilities": ["geometry exploration", "pattern recognition", "spatial reasoning"],
+      "evidenceRole": "practice-and-exploration",
+      "neverClaims": ["formal proof", "assessment certification unless a course explicitly supplies it"]
+    }
+  ],
+  "miniClouds": [
+    {
+      "id": "math-context-cloud",
+      "label": "Mathematics Context Cloud",
+      "purpose": "Expose the learner's current mathematical stage, course, lesson, objectives, prerequisite concepts, pathway, and evidence requirements in a compact public-safe context object.",
+      "stages": ["pre-k", "kindergarten", "elementary", "middle", "high", "higher", "research"],
+      "may": ["read course-owned public lesson context", "suggest prerequisite review", "identify current strand"],
+      "mustNot": ["override course curriculum", "invent mastery", "expose private runtime architecture"]
+    },
+    {
+      "id": "math-tool-cloud",
+      "label": "Mathematics Tool Cloud",
+      "purpose": "Match approved public mathematics tools to lesson needs by stage, strand, evidence mode, and accessibility.",
+      "stages": ["pre-k", "kindergarten", "elementary", "middle", "high", "higher", "research"],
+      "may": ["recommend calculator, CAD, geometry, or other approved public resources", "explain why a tool fits"],
+      "mustNot": ["treat tool output as proof by default", "route to unapproved private implementation"]
+    },
+    {
+      "id": "math-evidence-cloud",
+      "label": "Mathematics Evidence Cloud",
+      "purpose": "Keep score, reasoning, proof, computation, citation, and reflection statuses distinct.",
+      "stages": ["elementary", "middle", "high", "higher", "research"],
+      "may": ["label evidence type", "identify missing evidence", "prepare exportable records"],
+      "mustNot": ["auto-certify a proof", "merge objective scores with proof status"]
+    },
+    {
+      "id": "math-lab-cloud",
+      "label": "Mathematics Lab Cloud",
+      "purpose": "Package constructions, measurements, simulations, computations, annotations, and reproducibility notes for review.",
+      "stages": ["middle", "high", "higher", "research"],
+      "may": ["create lab records", "attach tool metadata", "route student investigations to review"],
+      "mustNot": ["auto-approve submissions", "equate visual agreement with mathematical proof"]
+    },
+    {
+      "id": "math-research-cloud",
+      "label": "Mathematics Research Cloud",
+      "purpose": "Support source-aware theorem use, provenance, conjecture testing, counterexample search, and reproducible scholarly work.",
+      "stages": ["high", "higher", "research"],
+      "may": ["prepare source records", "separate cited results from derived work", "track unresolved questions"],
+      "mustNot": ["treat AI output as a source", "hide uncertainty", "claim theorem status without evidence"]
+    },
+    {
+      "id": "math-continuity-cloud",
+      "label": "Mathematics Continuity Cloud",
+      "purpose": "Carry public-safe learner progress references across grade bands without changing the authority of school-specific records.",
+      "stages": ["pre-k", "kindergarten", "elementary", "middle", "high", "higher", "research"],
+      "may": ["recognize completed concepts", "recommend next prerequisite layer", "support export/import handoff"],
+      "mustNot": ["create a competing identity authority", "silently rewrite prior records"]
+    }
+  ],
+  "courseContract": {
+    "requiredFields": ["courseId", "stage", "title", "strands", "currentLessonContext"],
+    "recommendedFields": ["prerequisites", "toolNeeds", "evidenceRequirements", "labNeeds", "researchNeeds"],
+    "canonicalCourseIdRule": "A course has one permanent courseId across lessons, assessments, exports, labs, evidence records, and resource routing.",
+    "gracefulFallback": "If this continuum cannot be loaded, the course must continue with its local curriculum and local-safe defaults."
+  },
+  "advancedReference": {
+    "courseId": "KH-HL-AGTGMP",
+    "title": "Advanced Geometric Topology, Global Geometry & Mathematical Physics",
+    "stage": "higher",
+    "strands": ["geometry-spatial", "logic-proof", "topology-global-geometry", "calculus-analysis", "linear-algebra", "differential-equations", "numerical-computational", "mathematical-physics", "research-practice"],
+    "purpose": "Reference implementation for deep end-to-end mathematics architecture."
+  },
+  "archive": {
+    "snapshotSeries": "ARSHIF-KHAE-MATH",
+    "snapshotNumber": 1,
+    "snapshotDate": "2026-08-13",
+    "archiveRepository": "vervenveda/Arshif.github.io",
+    "archivePath": "docs/archives/khaemenes-mathematics-continuum/2026-08-13/v1.0.0/",
+    "archiveIsRuntimeDependency": false
+  }
+}
