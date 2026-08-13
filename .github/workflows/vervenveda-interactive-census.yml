@@ -1,0 +1,161 @@
+name: Verve N Veda Interactive Census
+
+on:
+  push:
+    branches:
+      - agent/mathematics-resource-directory-v1
+    paths:
+      - .github/workflows/vervenveda-interactive-census.yml
+
+permissions:
+  contents: read
+
+jobs:
+  census:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Build public repository census
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/vnv-census/repos" "$RUNNER_TEMP/vnv-census/out"
+          python3 - <<'PY'
+          import json, os, re, subprocess, urllib.request, urllib.parse, csv, html
+          from pathlib import Path
+
+          owner='vervenveda'
+          root=Path(os.environ['RUNNER_TEMP'])/'vnv-census'
+          repos_dir=root/'repos'
+          out=root/'out'
+          token=os.environ.get('GH_TOKEN','')
+
+          def api(url):
+              req=urllib.request.Request(url, headers={
+                  'Accept':'application/vnd.github+json',
+                  'Authorization':f'Bearer {token}',
+                  'X-GitHub-Api-Version':'2022-11-28',
+                  'User-Agent':'khaemenes-interactive-census'
+              })
+              with urllib.request.urlopen(req) as r:
+                  return json.load(r)
+
+          repos=[]
+          page=1
+          while True:
+              batch=api(f'https://api.github.com/users/{owner}/repos?per_page=100&page={page}&type=owner&sort=full_name')
+              if not batch: break
+              repos.extend(batch)
+              if len(batch)<100: break
+              page+=1
+          repos=[r for r in repos if not r.get('fork') and not r.get('archived')]
+
+          kw_game=re.compile(r'(game|trivia|sudoku|chess|checkers|connect.?four|tic.?tac|puzzle|arcade|maze|escape|quest|pirate|bubble.?pop)',re.I)
+          kw_tool=re.compile(r'(tool|calculator|editor|builder|generator|converter|studio|workbench|simulator|visuali[sz]er|analy[sz]er|verifier|finder|search|cad|tracker|planner|workspace|sandbox|console|dashboard)',re.I)
+          kw_lab=re.compile(r'(lab|laboratory|studio|workbench|experiment|investigation)',re.I)
+          kw_assess=re.compile(r'(quiz|test|assessment|exam|practice|diagnostic|mastery|question)',re.I)
+          kw_app=re.compile(r'(^|/)(apps?|applications?)(/|$)|\bapp\b',re.I)
+          kw_portal=re.compile(r'(portal|hub|gateway|directory|center|centre)',re.I)
+          kw_math=re.compile(r'(math|mathemat|algebra|geometry|geometric|topolog|calculus|trig|statistic|probab|number|count|fraction|decimal|equation|function|graph|coordinate|measurement|shape|pattern|sudoku|logic|iq|cad|curvature|geodesic|manifold|homology|proof|ratio|proportion)',re.I)
+
+          rows=[]
+          repo_errors=[]
+          for idx,r in enumerate(repos,1):
+              name=r['name']; branch=r.get('default_branch') or 'main'; full=r['full_name']
+              dest=repos_dir/name
+              try:
+                  subprocess.run(['git','clone','--depth','1','--single-branch','--branch',branch,f'https://github.com/{full}.git',str(dest)],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.PIPE,text=True,timeout=180)
+              except Exception as e:
+                  repo_errors.append({'repository':full,'error':str(e)})
+                  continue
+              for p in dest.rglob('*'):
+                  if not p.is_file() or p.suffix.lower() not in ('.html','.htm'): continue
+                  rel=p.relative_to(dest).as_posix()
+                  try:
+                      raw=p.read_text(encoding='utf-8',errors='replace')
+                  except Exception:
+                      raw=''
+                  low=raw.lower(); label=f'{rel} {raw[:4000]}'
+                  m=re.search(r'<title[^>]*>(.*?)</title>',raw,re.I|re.S)
+                  title=re.sub(r'\s+',' ',html.unescape(re.sub(r'<[^>]+>',' ',m.group(1)))).strip() if m else ''
+                  controls=sum(low.count(x) for x in ('<button','<input','<select','<textarea','<form','contenteditable'))
+                  scripts=low.count('<script')
+                  events=len(re.findall(r'\bon(?:click|change|input|submit|keydown|keyup|pointer|mouse|touch|drag|drop)\s*=',low)) + low.count('addeventlistener')
+                  canvas=low.count('<canvas')
+                  storage=sum(low.count(x) for x in ('localstorage','sessionstorage','indexeddb'))
+                  network=sum(low.count(x) for x in ('fetch(','xmlhttprequest','websocket'))
+                  media=sum(low.count(x) for x in ('<audio','<video','speechsynthesis'))
+                  iframe=low.count('<iframe')
+                  dialog=low.count('<dialog')
+                  service_worker=1 if 'serviceworker' in low else 0
+                  dynamic=1 if any(x in low for x in ('requestanimationframe','setinterval(','settimeout(','canvas.getcontext','webgl')) else 0
+                  known=bool(kw_game.search(rel+' '+title) or kw_tool.search(rel+' '+title) or kw_lab.search(rel+' '+title) or kw_assess.search(rel+' '+title) or kw_app.search(rel) or kw_portal.search(rel+' '+title))
+                  interactive=known or ((scripts>0 or events>0) and (controls>0 or canvas>0 or storage>0 or network>0 or dynamic>0 or dialog>0))
+                  kinds=[]
+                  text=rel+' '+title
+                  if kw_game.search(text): kinds.append('game')
+                  if kw_lab.search(text): kinds.append('lab/studio')
+                  if kw_tool.search(text): kinds.append('tool')
+                  if kw_assess.search(text): kinds.append('assessment/practice')
+                  if kw_app.search(rel): kinds.append('app')
+                  if kw_portal.search(text): kinds.append('portal/hub')
+                  if interactive and not kinds: kinds.append('interactive-html')
+                  if not interactive: kinds.append('static/uncertain')
+                  math=bool(kw_math.search(text+' '+raw[:12000]))
+                  if 'Khaemenes_Preschool' in name: stage='pre-k'
+                  elif 'KinderGarden' in name: stage='kindergarten'
+                  elif 'Elementary' in name: stage='elementary'
+                  elif 'Middle' in name: stage='middle'
+                  elif 'High.' in name or name=='Khaemenes_High.github.io': stage='high'
+                  elif 'Higher_Learning' in name: stage='higher'
+                  else: stage='cross-ecosystem'
+                  rows.append({
+                    'repository':full,'visibility':'public','path':rel,'title':title,'url':f'https://github.com/{full}/blob/{branch}/{urllib.parse.quote(rel)}',
+                    'site_url':f'https://vervenveda.com/{name}/{urllib.parse.quote(rel)}','stage':stage,
+                    'interactive':interactive,'types':' | '.join(dict.fromkeys(kinds)),'math_relevant':math,
+                    'scripts':scripts,'controls':controls,'events':events,'canvas':canvas,'storage':storage,'network':network,'media':media,'iframe':iframe,'dialog':dialog,'service_worker':service_worker,'dynamic':dynamic,'bytes':p.stat().st_size
+                  })
+
+          rows.sort(key=lambda x:(x['repository'].lower(),x['path'].lower()))
+          interact=[x for x in rows if x['interactive']]
+          mathrows=[x for x in interact if x['math_relevant']]
+
+          fields=list(rows[0].keys()) if rows else ['repository','path']
+          for filename,data in [('all-html.csv',rows),('interactive-resources.csv',interact),('mathematics-interactive-resources.csv',mathrows)]:
+              with (out/filename).open('w',newline='',encoding='utf-8') as f:
+                  w=csv.DictWriter(f,fieldnames=fields); w.writeheader(); w.writerows(data)
+          (out/'all-html.json').write_text(json.dumps(rows,indent=2,ensure_ascii=False),encoding='utf-8')
+          (out/'interactive-resources.json').write_text(json.dumps(interact,indent=2,ensure_ascii=False),encoding='utf-8')
+          (out/'mathematics-interactive-resources.json').write_text(json.dumps(mathrows,indent=2,ensure_ascii=False),encoding='utf-8')
+
+          from collections import Counter,defaultdict
+          by_repo=defaultdict(lambda:Counter())
+          type_counts=Counter()
+          for x in rows:
+              by_repo[x['repository']]['html']+=1
+              if x['interactive']: by_repo[x['repository']]['interactive']+=1
+              if x['math_relevant'] and x['interactive']: by_repo[x['repository']]['math']+=1
+          for x in interact:
+              for k in x['types'].split(' | '): type_counts[k]+=1
+          lines=['# Verve N Veda Public Interactive Census','',f'- Public repositories scanned: **{len(repos)}**',f'- HTML/HTM files found: **{len(rows)}**',f'- Interactive candidates: **{len(interact)}**',f'- Mathematics-relevant interactive candidates: **{len(mathrows)}**',f'- Repository scan failures: **{len(repo_errors)}**','','## By repository','','| Repository | HTML | Interactive | Math-relevant interactive |','|---|---:|---:|---:|']
+          for repo,c in sorted(by_repo.items()): lines.append(f"| {repo} | {c['html']} | {c['interactive']} | {c['math']} |")
+          lines += ['','## Interactive classifications','']
+          for k,v in type_counts.most_common(): lines.append(f'- {k}: **{v}**')
+          lines += ['','## Scan failures','']
+          if repo_errors:
+              for e in repo_errors: lines.append(f"- {e['repository']}: {e['error']}")
+          else: lines.append('- None')
+          lines += ['','## Notes','','This is a discovery census, not a quality or safety certification. `interactive` is deliberately inclusive so uncertain HTML is not lost. Public URLs remain in their current repositories; this census does not move files.']
+          (out/'SUMMARY.md').write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          (out/'scan-metadata.json').write_text(json.dumps({'owner':owner,'publicRepositoriesScanned':len(repos),'htmlFiles':len(rows),'interactiveCandidates':len(interact),'mathInteractiveCandidates':len(mathrows),'failures':repo_errors},indent=2),encoding='utf-8')
+          print('\n'.join(lines[:20]))
+          PY
+
+      - name: Upload census artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vervenveda-interactive-census
+          path: ${{ runner.temp }}/vnv-census/out/
+          if-no-files-found: error
+          retention-days: 7
