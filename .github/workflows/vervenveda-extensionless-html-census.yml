@@ -1,0 +1,78 @@
+name: Verve N Veda Extensionless HTML Census
+
+on:
+  push:
+    branches:
+      - agent/mathematics-resource-directory-v1
+    paths:
+      - .github/workflows/vervenveda-extensionless-html-census.yml
+
+permissions:
+  contents: read
+
+jobs:
+  census:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Find extensionless HTML resources
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/vnv-ext/repos" "$RUNNER_TEMP/vnv-ext/out"
+          python3 - <<'PY'
+          import json, os, re, subprocess, urllib.request, urllib.parse, csv, html
+          from pathlib import Path
+          owner='vervenveda'
+          root=Path(os.environ['RUNNER_TEMP'])/'vnv-ext'; repos_dir=root/'repos'; out=root/'out'
+          token=os.environ.get('GH_TOKEN','')
+          def api(url):
+              req=urllib.request.Request(url,headers={'Accept':'application/vnd.github+json','Authorization':f'Bearer {token}','X-GitHub-Api-Version':'2022-11-28','User-Agent':'khaemenes-extensionless-census'})
+              with urllib.request.urlopen(req) as r:return json.load(r)
+          repos=[]; page=1
+          while True:
+              batch=api(f'https://api.github.com/users/{owner}/repos?per_page=100&page={page}&type=owner&sort=full_name')
+              if not batch:break
+              repos.extend(batch)
+              if len(batch)<100:break
+              page+=1
+          repos=[r for r in repos if not r.get('fork') and not r.get('archived')]
+          rows=[]; failures=[]
+          for r in repos:
+              name=r['name']; branch=r.get('default_branch') or 'main'; full=r['full_name']; dest=repos_dir/name
+              try:subprocess.run(['git','clone','--depth','1','--single-branch','--branch',branch,f'https://github.com/{full}.git',str(dest)],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.PIPE,text=True,timeout=180)
+              except Exception as e: failures.append({'repository':full,'error':str(e)}); continue
+              for p in dest.rglob('*'):
+                  if not p.is_file() or '.git' in p.parts:continue
+                  if p.suffix:continue
+                  try:
+                      if p.stat().st_size>3_000_000:continue
+                      raw=p.read_text(encoding='utf-8',errors='replace')
+                  except Exception:continue
+                  head=raw[:3000].lower()
+                  if '<!doctype html' not in head and '<html' not in head:continue
+                  rel=p.relative_to(dest).as_posix(); low=raw.lower()
+                  m=re.search(r'<title[^>]*>(.*?)</title>',raw,re.I|re.S)
+                  title=re.sub(r'\s+',' ',html.unescape(re.sub(r'<[^>]+>',' ',m.group(1)))).strip() if m else ''
+                  controls=sum(low.count(x) for x in ('<button','<input','<select','<textarea','<form','contenteditable'))
+                  scripts=low.count('<script'); events=len(re.findall(r'\bon(?:click|change|input|submit|keydown|keyup|pointer|mouse|touch|drag|drop)\s*=',low))+low.count('addeventlistener')
+                  canvas=low.count('<canvas'); storage=sum(low.count(x) for x in ('localstorage','sessionstorage','indexeddb')); network=sum(low.count(x) for x in ('fetch(','xmlhttprequest','websocket')); dynamic=1 if any(x in low for x in ('requestanimationframe','setinterval(','settimeout(','canvas.getcontext','webgl')) else 0
+                  interactive=((scripts>0 or events>0) and (controls>0 or canvas>0 or storage>0 or network>0 or dynamic>0))
+                  rows.append({'repository':full,'path':rel,'title':title,'interactive':interactive,'scripts':scripts,'controls':controls,'events':events,'canvas':canvas,'storage':storage,'network':network,'dynamic':dynamic,'bytes':p.stat().st_size,'site_url':f'https://vervenveda.com/{name}/{urllib.parse.quote(rel)}'})
+          rows.sort(key=lambda x:(x['repository'].lower(),x['path'].lower()))
+          fields=list(rows[0].keys()) if rows else ['repository','path']
+          with (out/'extensionless-html.csv').open('w',newline='',encoding='utf-8') as f:
+              w=csv.DictWriter(f,fieldnames=fields);w.writeheader();w.writerows(rows)
+          (out/'extensionless-html.json').write_text(json.dumps(rows,indent=2,ensure_ascii=False),encoding='utf-8')
+          summary={'publicRepositoriesScanned':len(repos),'extensionlessHtmlFiles':len(rows),'interactiveExtensionlessHtml':sum(1 for x in rows if x['interactive']),'failures':failures}
+          (out/'SUMMARY.json').write_text(json.dumps(summary,indent=2),encoding='utf-8')
+          print(json.dumps(summary,indent=2))
+          PY
+      - name: Upload census artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vervenveda-extensionless-html-census
+          path: ${{ runner.temp }}/vnv-ext/out/
+          if-no-files-found: error
+          retention-days: 7
