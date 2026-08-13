@@ -1,0 +1,107 @@
+{
+  "schemaVersion": "1.0.0",
+  "canonicalId": "khaemenes.academic.continuum",
+  "title": "Khaemenes Academic Continuum",
+  "description": "Shared public academic information contract for a free-to-learn Khaemenes educational continuum from early learning through advanced and research-level study.",
+  "status": "candidate",
+  "effectiveDate": "2026-08-13",
+  "access": {
+    "learningAccess": "free-to-learn",
+    "publicCourseAccessGoal": true,
+    "courseMaterialsGoal": "open public access wherever rights, privacy, safety, and technical requirements permit",
+    "credentialHonesty": "Internal course records, assessments, portfolios, certificates, and completion records must not be described as externally accredited credentials unless that status has been independently established."
+  },
+  "authority": {
+    "liveOwner": "Khaemenes Academy shared integration",
+    "subjectOwnershipRule": "Each academic subject owns its discipline-specific continuum and standards.",
+    "courseOwnershipRule": "Each course owns its lessons, sequence, assessments, local records, and course-specific mastery decisions.",
+    "sharedRule": "The Academic Continuum coordinates public metadata, learning-stage vocabulary, subject discovery, evidence principles, accessibility expectations, and cross-disciplinary interoperability.",
+    "archiveRule": "ARSHIF preserves dated historical snapshots and is not a live runtime dependency."
+  },
+  "learningStages": [
+    {"id": "pre-k", "label": "Pre-K / Creche", "order": 1},
+    {"id": "kindergarten", "label": "Kinder Garden", "order": 2},
+    {"id": "elementary", "label": "Elementary", "order": 3},
+    {"id": "middle", "label": "Middle School", "order": 4},
+    {"id": "high", "label": "High School", "order": 5},
+    {"id": "higher", "label": "Higher Learning", "order": 6},
+    {"id": "research", "label": "Advanced / Research", "order": 7}
+  ],
+  "institutionalPrinciples": [
+    "Learning should remain accessible without lowering academic standards.",
+    "A course must clearly distinguish instruction, practice, assessment, evidence, interpretation, and certification.",
+    "AI assistance must not erase learner authorship or falsely certify mastery.",
+    "Sources, computation, observation, experiment, argument, and proof should retain their distinct evidentiary roles.",
+    "Accessibility, privacy, local-first resilience, and exportable learner records are preferred design properties.",
+    "Shared infrastructure must not become a single point of failure for course access.",
+    "Public educational interfaces should not expose private implementation architecture."
+  ],
+  "subjects": [
+    {
+      "subjectId": "mathematics",
+      "title": "Mathematics",
+      "status": "candidate-live",
+      "continuumId": "khaemenes.mathematics.continuum",
+      "continuumPath": "/Khaemenes_Academy.github.io/shared-integration/mathematics/khaemenes-mathematics-continuum.json",
+      "spans": ["pre-k", "kindergarten", "elementary", "middle", "high", "higher", "research"],
+      "referenceConsumer": "KH-HL-AGTGMP"
+    },
+    {"subjectId": "science", "title": "Science", "status": "planned"},
+    {"subjectId": "language-arts", "title": "Language Arts & Literature", "status": "planned"},
+    {"subjectId": "social-studies", "title": "Social Studies, History & Civics", "status": "planned"},
+    {"subjectId": "computer-science", "title": "Computer Science & Computing", "status": "planned"},
+    {"subjectId": "engineering", "title": "Engineering & Design", "status": "planned"},
+    {"subjectId": "health-medicine", "title": "Health, Medicine & Human Sciences", "status": "planned"},
+    {"subjectId": "law-governance", "title": "Law, Governance & Public Institutions", "status": "planned"},
+    {"subjectId": "linguistics-languages", "title": "Linguistics & Languages", "status": "planned"},
+    {"subjectId": "visual-arts", "title": "Visual Arts & Design", "status": "planned"},
+    {"subjectId": "music", "title": "Music & Sound Studies", "status": "planned"},
+    {"subjectId": "philosophy", "title": "Philosophy, Logic & Ethics", "status": "planned"},
+    {"subjectId": "economics-finance", "title": "Economics, Finance & Enterprise", "status": "planned"},
+    {"subjectId": "education", "title": "Education & Learning Sciences", "status": "planned"},
+    {"subjectId": "interdisciplinary", "title": "Interdisciplinary & Independent Study", "status": "planned"}
+  ],
+  "sharedAcademicClouds": [
+    {
+      "id": "academic-context-cloud",
+      "purpose": "Expose public-safe current learning context across subjects and stages.",
+      "mustNot": ["override course curriculum", "invent completion", "expose private implementation"]
+    },
+    {
+      "id": "academic-resource-cloud",
+      "purpose": "Match approved public learning resources to subject, stage, lesson, evidence mode, and accessibility needs.",
+      "mustNot": ["treat resource availability as academic endorsement without course context", "route learners into private implementation"]
+    },
+    {
+      "id": "academic-evidence-cloud",
+      "purpose": "Preserve distinctions among scores, learner work, sources, observations, calculations, experiments, arguments, proofs, and reflections.",
+      "mustNot": ["auto-certify complex mastery", "merge unlike evidence types into a misleading status"]
+    },
+    {
+      "id": "academic-continuity-cloud",
+      "purpose": "Support learner progression and portable records across schools and subjects without replacing the central identity authority.",
+      "mustNot": ["silently rewrite historical records", "create a competing learner identity"]
+    }
+  ],
+  "subjectContract": {
+    "requiredFields": ["subjectId", "continuumId", "stages", "disciplinePractices", "evidencePrinciples", "courseContract"],
+    "recommendedFields": ["strands", "publicTools", "miniClouds", "prerequisiteModel", "researchPractice"],
+    "gracefulFallback": "Courses remain usable when shared subject or academic metadata is unavailable."
+  },
+  "courseContract": {
+    "requiredFields": ["courseId", "subjectId", "stage", "title"],
+    "permanentIdRule": "A course uses one permanent courseId across lessons, assessments, exports, labs, evidence records, and resource discovery.",
+    "masteryHonesty": "A course may only certify the forms of mastery its evidence actually supports.",
+    "learnerVoice": "Learner-created reasoning and work should remain distinguishable from mentor, tool, or source contributions."
+  },
+  "referenceImplementation": {
+    "subjectId": "mathematics",
+    "courseId": "KH-HL-AGTGMP",
+    "title": "Advanced Geometric Topology, Global Geometry & Mathematical Physics",
+    "purpose": "First end-to-end reference course used to validate shared academic architecture at the furthest current mathematics level."
+  },
+  "archive": {
+    "archiveRepository": "vervenveda/Arshif.github.io",
+    "archiveIsRuntimeDependency": false
+  }
+}
