@@ -202,3 +202,15 @@
   try{const existing=load();if(!Object.keys(existing.families).length&&readJSON(KEYS.legacyPreschool,null))migrateLegacyPreschool();else if(existing.version!==VERSION)save(existing)}catch{}
   global.dispatchEvent(new CustomEvent("khaemenes-family-ready",{detail:status()}));
 })(window);
+
+/* Attach the public Beta Program doorway to every Academy surface that loads the canonical registry. */
+(() => {
+  "use strict";
+  if(document.getElementById("vnvBetaProgramScript"))return;
+  const script=document.createElement("script");
+  script.id="vnvBetaProgramScript";
+  script.src="https://vervenveda.com/assets/vnv-beta-link.js";
+  script.defer=true;
+  script.referrerPolicy="no-referrer";
+  document.head.append(script);
+})();
