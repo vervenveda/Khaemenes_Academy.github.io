@@ -38,9 +38,9 @@ require("assets/khaemenes-front-door-router.js",
         'routeForLearner',
         'continueLearner')
 require("assets/khaemenes-family-school-bridge.js",
-        'const VERSION="2.0.0"',
+        'const VERSION="2.0.1"',
         'Different campus context',
-        'hardRedirect',
+        'hardRedirect:false',
         'khaemenes-school-bridge-ready')
 require("family/enroll/index.html",
         'Exact grade placement',
