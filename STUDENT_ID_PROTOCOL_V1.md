@@ -1,4 +1,4 @@
-# Khaemenes Academy Student & Scholar ID Protocol v1
+# Khaemenes Academy Student & Scholar ID Protocol v1.1
 
 ## Purpose
 
@@ -13,25 +13,27 @@ The institutional ID does not contain a learner's name, last name, grade, birth 
 
 ### K–12 Student ID
 
-Format:
+Current provisional format:
 
-`KA-YYYY-XXXXXXXXXX`
-
-Example:
-
-`KA-2026-A12B34C56D`
+`KA-YYYY-XXXXXXXXXXXXXXXXXXXX`
 
 ### Higher Learning Scholar ID
 
-Format:
+Current provisional format:
 
-`KS-YYYY-XXXXXXXXXX`
+`KS-YYYY-XXXXXXXXXXXXXXXXXXXX`
 
-Example:
+The year is the learner-record creation year. New provisional identifiers use an 80-bit cryptographically secure random token when issued from a secure browser context.
 
-`KS-2026-F09E87D65C`
+Earlier v1 provisional identifiers containing a 10-hex-character token remain valid and must not be silently regenerated simply because the format was strengthened.
 
-The year is the learner-record creation year. The random token does not encode grade, school, name, age, or family relationship.
+## Secure issuance requirement
+
+The public provisional-ID layer must not fall back to `Math.random()` or another non-cryptographic generator.
+
+If `crypto.getRandomValues()` is unavailable or the page is not running in a secure context, provisional issuance is deferred rather than generating a weaker identifier.
+
+This improves local collision resistance but does **not** make the public browser the global authority for Student/Scholar IDs.
 
 ## Immutability
 
@@ -47,7 +49,7 @@ The public Academy currently runs a browser-local Family Registry. Therefore ide
 
 They are stable inside the local Academy registry and are backfilled non-destructively for existing learners, but a public static page cannot guarantee global uniqueness across every browser or device.
 
-The protected Account Service will become the authority for globally reserved institutional identifiers.
+The protected Account Service will become the authority for globally reserved institutional identifiers and must enforce uniqueness in protected persistent storage.
 
 ## Security boundary
 
@@ -61,7 +63,9 @@ The following must never be stored in learner JSON, localStorage learner records
 - email verification tokens;
 - SMS verification codes;
 - authentication session secrets;
-- private anti-abuse signals.
+- access or refresh tokens;
+- private anti-abuse signals;
+- private signing/encryption keys.
 
 Authentication belongs to the protected Account Service.
 
@@ -78,13 +82,26 @@ Once confirmed by the protected service, Student/Scholar IDs may appear on:
 - Higher Learning records;
 - account recovery references where appropriate.
 
-The ID must never be used as evidence of mastery, placement, custody, age, identity verification, or accreditation.
+The ID must never be used as evidence of mastery, placement, custody, age, identity verification, authentication, authorization, or accreditation.
+
+## Server confirmation
+
+When the protected Account Service becomes available, global confirmation must be transactional and auditable:
+
+1. authenticate/verify the authorized adult or adult scholar;
+2. locate the canonical internal learnerId;
+3. reserve/confirm a globally unique Institutional ID under a uniqueness constraint;
+4. record whether an existing provisional ID was confirmed or migrated;
+5. preserve prior provisional ID history when migration occurs;
+6. return only display-safe confirmed ID state to the public client.
+
+No public client may self-declare an Institutional ID as globally confirmed.
 
 ## Authority boundary
 
-- Family Registry owns learner identity and formal placement records.
+- Family Registry owns local learner identity and formal placement records until protected account migration.
 - Institutional ID identifies the learner record.
+- Protected Account Service owns global ID reservation and authentication.
 - NAIB routes but does not issue grades or placement.
 - Archaemenes mentors but does not change identity or placement.
 - Courses own course-specific mastery evidence.
-- Protected Account Service owns authentication and globally reserved account credentials.
