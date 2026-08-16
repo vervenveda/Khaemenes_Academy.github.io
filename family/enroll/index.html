@@ -38,4 +38,5 @@ function renderExisting(){const family=R.getFamily(),target=document.getElementB
 function editPlacement(id){const learner=R.getLearner(id);if(!learner||learner.selfDirectedAdult)return;const current=learner.grade||"01";const choice=prompt(`Enter grade for ${learner.nickname}: pre-k, k, or 01 through 12`,current);if(choice===null)return;const g=R.normalizeGrade(choice);if(!g){alert("Please enter pre-k, k, or a grade from 01 through 12.");return}R.updateLearnerGrade(id,g);R.setActive({familyId:learner.familyId,learnerId:id});render()}
 render();})();
 </script>
+<script src="/assets/vnv-beta-link.js" defer></script>
 </body></html>

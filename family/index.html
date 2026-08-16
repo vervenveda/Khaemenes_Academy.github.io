@@ -32,4 +32,5 @@ function renderInvite(f){const box=$("#inviteBox");if(!box)return;const s=I?.ser
 function render(){origin();if(!R)return;const f=family();if(!f){$("#familyApp").innerHTML='<section class="card" style="max-width:760px;margin:auto;text-align:center"><h3>Create your Family Profile once</h3><p>This establishes the shared local household container. Each learner and each adult scholar still receives a separate Academy identity.</p><div class="actions"><button class="btn primary" id="createFamily" type="button">Create Family Profile</button><a class="btn" href="../adult/enroll/">I Am an Adult Learning for Myself</a></div></section>';$("#createFamily").onclick=createFamily;return}renderFamily(f)}
 window.addEventListener("khaemenes-family-changed",render);window.addEventListener("khaemenes-learner-placement-changed",render);render()})();
 </script>
+<script src="/assets/vnv-beta-link.js" defer></script>
 </body></html>
