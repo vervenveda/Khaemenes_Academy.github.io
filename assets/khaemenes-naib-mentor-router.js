@@ -1,6 +1,6 @@
 (function attachKhaemenesNAIB(global){
   "use strict";
-  const VERSION="1.1.0-transition";
+  const VERSION="1.2.0-transition";
   const ARCHAEMENES=Object.freeze({
     id:"archaemenes",name:"Archaemenes",title:"Scholar and Educational Mentor of Khaemenes Academy",avatar:"🦉",
     specialistDomain:"learning-mentor",
@@ -19,9 +19,24 @@
   function normalizeStage(value){
     const stage=clean(value,40).toLowerCase().replace(/[_\s]+/g,"-");
     if(["pre-k","prek","creche","crèche"].includes(stage))return"preschool";
-    if(["kinder","kinder-garden"].includes(stage))return"kindergarten";
+    if(["k","kinder","kinder-garden"].includes(stage))return"kindergarten";
     if(stage.startsWith("elementary"))return"elementary";
+    if(stage.startsWith("middle"))return"middle";
+    if(stage.startsWith("high"))return"high";
+    if(stage==="academy-wide")return"academy-wide";
     return stage||"unknown";
+  }
+  function normalizeGrade(value){
+    if(global.KhaemenesFamilyRegistry?.normalizeGrade)return global.KhaemenesFamilyRegistry.normalizeGrade(value);
+    const raw=clean(value,30).toLowerCase();
+    if(["pre-k","prek","pk","preschool"].includes(raw))return"pre-k";
+    if(["k","kg","kindergarten"].includes(raw))return"k";
+    const n=Number(raw.replace(/[^0-9]/g,""));
+    return Number.isInteger(n)&&n>=1&&n<=12?String(n).padStart(2,"0"):null;
+  }
+  function stageForGrade(grade){
+    const g=normalizeGrade(grade);if(!g)return null;if(g==="pre-k")return"preschool";if(g==="k")return"kindergarten";
+    const n=Number(g);if(n<=5)return"elementary";if(n<=8)return"middle";return"high";
   }
   function presentationFor({stage,ageBand,role,surface}={}){
     const r=clean(role,40).toLowerCase(),s=clean(surface,100).toLowerCase();
@@ -39,41 +54,39 @@
   }
   function buildArchaemenesAssignment(context){
     const presentation=presentationFor(context)||PRESENTATIONS.storybook;
-    return Object.freeze({
-      status:"assigned",contractVersion:VERSION,
+    return Object.freeze({status:"assigned",contractVersion:VERSION,
       assignmentId:`naib:${clean(context.personId||context.learnerId||"local",80)}:${normalizeStage(context.stage)}`,
       assignedBy:"NAIB",assignmentAuthority:"naib-mentor-router",assignmentMode:"local-transition-policy",
-      mentorId:ARCHAEMENES.id,specialist:ARCHAEMENES.name,stage:normalizeStage(context.stage),ageBand:clean(context.ageBand,30),
+      mentorId:ARCHAEMENES.id,specialist:ARCHAEMENES.name,stage:normalizeStage(context.stage),grade:normalizeGrade(context.grade),ageBand:clean(context.ageBand,30),
       surface:clean(context.surface||"unknown",100),intent:clean(context.intent||"mentor-guidance",80),interests:list(context.interests,30),
-      mentor:mentorEnvelope(context,presentation,"local-transition-policy")
-    });
+      mentor:mentorEnvelope(context,presentation,"local-transition-policy")});
   }
   function routeEducator(context={}){
     const presentation=PRESENTATIONS.faculty;
-    return Object.freeze({
-      status:"assigned",contractVersion:VERSION,
-      assignmentId:`naib:educator:${clean(context.personId||"local",80)}:teacher-admin`,
-      assignedBy:"NAIB",assignmentAuthority:"naib-mentor-router",assignmentMode:"teacher-advisory-routing",
-      destination:"Khaemenes Academy Teacher Administration",
-      destinationPath:"/Khaemenes_Academy.github.io/teacher-admin/",
-      role:"educator",stage:normalizeStage(context.stage||"academy-wide"),surface:clean(context.surface||"teacher-admin",100),
-      intent:clean(context.intent||"teacher-advisory",80),
-      mentorId:ARCHAEMENES.id,specialist:ARCHAEMENES.name,
-      mentor:mentorEnvelope(context,presentation,"teacher-advisory-routing"),
-      authority:Object.freeze({awardsMastery:false,changesPlacement:false,silentlyChangesGrade:false,changesLearnerIdentity:false})
-    });
+    return Object.freeze({status:"assigned",contractVersion:VERSION,
+      assignmentId:`naib:educator:${clean(context.personId||"local",80)}:teacher-admin`,assignedBy:"NAIB",assignmentAuthority:"naib-mentor-router",assignmentMode:"teacher-advisory-routing",
+      destination:"Khaemenes Academy Teacher Administration",destinationPath:"/Khaemenes_Academy.github.io/teacher-admin/",role:"educator",stage:normalizeStage(context.stage||"academy-wide"),surface:clean(context.surface||"teacher-admin",100),intent:clean(context.intent||"teacher-advisory",80),mentorId:ARCHAEMENES.id,specialist:ARCHAEMENES.name,mentor:mentorEnvelope(context,presentation,"teacher-advisory-routing"),
+      authority:Object.freeze({awardsMastery:false,changesPlacement:false,silentlyChangesGrade:false,changesLearnerIdentity:false})});
+  }
+  function routeLearnerEntry(context={}){
+    const registry=global.KhaemenesFamilyRegistry;
+    const grade=normalizeGrade(context.grade),derived=grade?stageForGrade(grade):null,stage=derived||normalizeStage(context.stage);
+    const destination=registry?.destinationFor?registry.destinationFor({stage,grade}):null;
+    const base="https://vervenveda.com";
+    const fallback={preschool:`${base}/Khaemenes_Preschool.github.io/`,kindergarten:`${base}/Khaemenes_KinderGarden.github.io/`,elementary:`${base}/Khaemenes_Elementary.github.io/`,middle:`${base}/Khaemenes_Middle.github.io/`,high:`${base}/Khaemenes_High.github.io/`};
+    const url=destination?.url||fallback[stage]||`${base}/Khaemenes_Academy.github.io/student/`;
+    return Object.freeze({status:"routed",contractVersion:VERSION,assignedBy:"NAIB",assignmentAuthority:"naib-mentor-router",assignmentMode:"learner-entry-routing",learnerId:clean(context.learnerId||context.personId||"",100),stage,grade,destination:url,destinationLabel:destination?.label||grade||stage,requiresManualStageChoice:!stage||stage==="unknown",authority:Object.freeze({changesPlacement:false,changesLearnerIdentity:false,awardsMastery:false})});
   }
   function assignMentor(context={}){
     const role=clean(context.role,40).toLowerCase(),surface=clean(context.surface,100).toLowerCase();
     if(role==="educator"||role==="teacher"||surface.includes("teacher-admin"))return routeEducator(context);
     const stage=normalizeStage(context.stage);
     if(YOUNG_LEARNER_STAGES.has(stage))return buildArchaemenesAssignment({...context,stage});
-    return Object.freeze({status:"unassigned",contractVersion:VERSION,assignedBy:"NAIB",assignmentAuthority:"naib-mentor-router",
-      assignmentMode:"local-transition-policy",stage,reason:"No transitional learner mentor assignment policy is published for this stage yet.",mentor:null});
+    return Object.freeze({status:"unassigned",contractVersion:VERSION,assignedBy:"NAIB",assignmentAuthority:"naib-mentor-router",assignmentMode:"local-transition-policy",stage,reason:"No transitional learner mentor assignment policy is published for this stage yet.",mentor:null});
   }
   async function requestMentor(context={}){return assignMentor(context)}
-  const API=Object.freeze({version:VERSION,role:"mentor-assignment-router",mode:"local-transition",assignMentor,requestMentor,presentationFor,routeEducator,
-    currentPolicy:Object.freeze({preschool:"archaemenes",kindergarten:"archaemenes",elementary:"archaemenes",educator:"teacher-admin→archaemenes"})});
+  const API=Object.freeze({version:VERSION,role:"mentor-assignment-router",mode:"local-transition",assignMentor,requestMentor,presentationFor,routeEducator,routeLearnerEntry,
+    currentPolicy:Object.freeze({preschool:"archaemenes",kindergarten:"archaemenes",elementary:"archaemenes",middle:"school-entry",high:"school-entry",educator:"teacher-admin→archaemenes"})});
   Object.defineProperty(global,"KhaemenesNAIB",{value:API,enumerable:false,configurable:true,writable:false});
   global.dispatchEvent(new CustomEvent("khaemenes-naib-ready",{detail:{version:VERSION,role:API.role,mode:API.mode}}));
 })(window);
