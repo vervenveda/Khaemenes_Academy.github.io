@@ -1,7 +1,7 @@
 (function attachKhaemenesFamilySchoolBridge(global){
   "use strict";
 
-  const VERSION="2.0.0";
+  const VERSION="2.0.1";
   const script=document.currentScript;
   const surfaceStage=(script?.dataset?.khaemenesStage||"").trim();
   const surfaceGrades=(script?.dataset?.khaemenesGrades||"").split(",").map(x=>x.trim()).filter(Boolean);
@@ -21,14 +21,14 @@
   function waitForRegistry(attempt=0){const registry=global.KhaemenesFamilyRegistry;if(registry){render(registry);return}if(attempt<80)setTimeout(()=>waitForRegistry(attempt+1),50)}
 
   function placementState(registry,learner){
-    if(!learner)return {stageMismatch:false,gradeMismatch:false};
+    if(!learner)return {stageMismatch:false,gradeMismatch:false,mismatch:false,previewAllowed:true,hardRedirect:false};
     const learnerStage=registry.normalizeStage?registry.normalizeStage(learner.stage):learner.stage;
     const pageStage=registry.normalizeStage?registry.normalizeStage(surfaceStage):surfaceStage;
     const stageMismatch=Boolean(pageStage&&learnerStage&&pageStage!==learnerStage);
     const learnerGrade=normalizeGrade(registry,learner.grade);
     const allowedGrades=surfaceGrades.map(g=>normalizeGrade(registry,g)).filter(Boolean);
     const gradeMismatch=Boolean(!stageMismatch&&learnerGrade&&allowedGrades.length&&!allowedGrades.includes(learnerGrade));
-    return {stageMismatch,gradeMismatch,learnerStage,pageStage,learnerGrade,allowedGrades};
+    return {stageMismatch,gradeMismatch,mismatch:stageMismatch||gradeMismatch,learnerStage,pageStage,learnerGrade,allowedGrades,previewAllowed:true,hardRedirect:false};
   }
 
   function render(registry){
@@ -42,14 +42,15 @@
     }else{
       const gradeMeta=learner.grade&&registry.gradeMeta?.[learner.grade]?registry.gradeMeta[learner.grade]:null;
       const placementLabel=gradeMeta?.label||learner.stage||"Learner";
-      const mismatch=placement.stageMismatch||placement.gradeMismatch;
+      const mismatch=placement.mismatch;
       const mismatchHTML=mismatch?`<div style="margin-top:8px;padding:8px;border-radius:7px;background:#fff4d8;color:#6d5325"><strong>Different campus context.</strong><br>${escapeHTML(learner.nickname)} is registered for ${escapeHTML(placementLabel)}. This page remains available for parent/teacher preview, but learner work should normally continue from the registered path.${destination?.url?`<br><a href="${escapeHTML(destination.url)}" style="display:inline-block;margin-top:5px;color:#6d5325;font-weight:700">Go to registered path →</a>`:""}</div>`:"";
       box.innerHTML=`<strong>${escapeHTML(learner.nickname)}</strong><br><span>${escapeHTML(family?.displayName||"Khaemenes Family")} · ${escapeHTML(placementLabel)}</span>${mismatchHTML}<div style="margin-top:7px"><a href="${studentPortal}" style="color:#2f7140;font-weight:700">Student Portal →</a> · <a href="${familyPortal}" style="color:#2f7140;font-weight:700">Family Profile →</a></div>`;
     }
     document.body.appendChild(box);
-    global.dispatchEvent(new CustomEvent("khaemenes-school-bridge-ready",{detail:{version:VERSION,stage:surfaceStage,learnerId:learner?.learnerId||null,mismatch:Boolean(placement.stageMismatch||placement.gradeMismatch)}}));
+    global.dispatchEvent(new CustomEvent("khaemenes-school-bridge-ready",{detail:{version:VERSION,stage:surfaceStage,learnerId:learner?.learnerId||null,mismatch:placement.mismatch,previewAllowed:true,hardRedirect:false}}));
   }
 
+  global.KhaemenesFamilySchoolBridge=Object.freeze({version:VERSION,placementState,policy:Object.freeze({previewAllowed:true,hardRedirect:false})});
   global.addEventListener("khaemenes-family-changed",()=>global.KhaemenesFamilyRegistry&&render(global.KhaemenesFamilyRegistry));
   global.addEventListener("khaemenes-learner-placement-changed",()=>global.KhaemenesFamilyRegistry&&render(global.KhaemenesFamilyRegistry));
   injectSharedRegistry();
