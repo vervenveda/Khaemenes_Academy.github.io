@@ -1,10 +1,11 @@
 (function attachKhaemenesInstitutionalId(global){
   "use strict";
 
-  const VERSION="1.0.0";
-  const FORMAT="khaemenes-institutional-id-v1";
+  const VERSION="1.1.0";
+  const FORMAT="khaemenes-institutional-id-v1.1";
   const STUDENT_PREFIX="KA";
   const SCHOLAR_PREFIX="KS";
+  const TOKEN_BYTES=10; // 80 bits of CSPRNG output for new provisional IDs.
 
   function registry(){return global.KhaemenesFamilyRegistry||null}
   function now(){return new Date().toISOString()}
@@ -14,28 +15,26 @@
     const y=Number(source.slice(0,4));
     return Number.isInteger(y)&&y>=2000&&y<=9999?y:new Date().getFullYear();
   }
+  function cryptoReady(){return Boolean(global.isSecureContext&&global.crypto&&typeof global.crypto.getRandomValues==="function")}
   function randomToken(){
-    try{
-      const bytes=new Uint8Array(5);
-      global.crypto.getRandomValues(bytes);
-      return Array.from(bytes,b=>b.toString(16).padStart(2,"0")).join("").toUpperCase();
-    }catch{
-      return `${Date.now().toString(16)}${Math.random().toString(16).slice(2,7)}`.slice(-10).toUpperCase();
-    }
+    if(!cryptoReady())throw new Error("secure-random-unavailable");
+    const bytes=new Uint8Array(TOKEN_BYTES);
+    global.crypto.getRandomValues(bytes);
+    return Array.from(bytes,b=>b.toString(16).padStart(2,"0")).join("").toUpperCase();
   }
-  function validId(value){return /^(KA|KS)-\d{4}-[A-F0-9]{10}$/.test(clean(value,40).toUpperCase())}
+  // Accept original 40-bit provisional IDs and new 80-bit IDs so existing records remain stable.
+  function validId(value){return /^(KA|KS)-\d{4}-(?:[A-F0-9]{10}|[A-F0-9]{20})$/.test(clean(value,48).toUpperCase())}
   function kindFor(learner){return learner?.selfDirectedAdult===true||learner?.stage==="higher"?"scholar":"student"}
   function prefixFor(kind){return kind==="scholar"?SCHOLAR_PREFIX:STUDENT_PREFIX}
-  function usedIds(state){return new Set(Object.values(state?.learners||{}).map(l=>clean(l?.institutionalId,40).toUpperCase()).filter(Boolean))}
+  function usedIds(state){return new Set(Object.values(state?.learners||{}).map(l=>clean(l?.institutionalId,48).toUpperCase()).filter(Boolean))}
   function issueUnique(state,learner){
+    if(!cryptoReady())throw new Error("institutional-id-issuance-requires-secure-context");
     const kind=kindFor(learner),prefix=prefixFor(kind),year=yearFromLearner(learner),used=usedIds(state);
-    let value="";
-    for(let i=0;i<12;i++){
-      value=`${prefix}-${year}-${randomToken()}`;
-      if(!used.has(value))break;
+    for(let i=0;i<16;i++){
+      const value=`${prefix}-${year}-${randomToken()}`;
+      if(!used.has(value))return {value,kind,year};
     }
-    if(used.has(value))throw new Error("institutional-id-collision");
-    return {value,kind,year};
+    throw new Error("institutional-id-collision");
   }
 
   function ensureLearner(learnerId){
@@ -76,18 +75,20 @@
 
   function ensureAll(){
     const R=registry();
-    if(!R)return Object.freeze({version:VERSION,updated:0,total:0});
+    if(!R)return Object.freeze({version:VERSION,updated:0,total:0,deferred:0});
     const before=R.load();
     const ids=Object.keys(before.learners||{});
-    let updated=0;
+    let updated=0,deferred=0;
     for(const learnerId of ids){
       const prior=before.learners[learnerId];
       if(!validId(prior?.institutionalId)){
-        ensureLearner(learnerId);
-        updated++;
+        try{ensureLearner(learnerId);updated++}catch(error){
+          if(String(error?.message||error).includes("secure"))deferred++;
+          else throw error;
+        }
       }
     }
-    return Object.freeze({version:VERSION,updated,total:ids.length});
+    return Object.freeze({version:VERSION,updated,total:ids.length,deferred});
   }
 
   function get(learnerOrId=null){
@@ -95,7 +96,9 @@
     if(!R)return null;
     const learner=typeof learnerOrId==="string"?R.getLearner(learnerOrId):(learnerOrId||R.getLearner());
     if(!learner)return null;
-    if(!validId(learner.institutionalId))return ensureLearner(learner.learnerId);
+    if(!validId(learner.institutionalId)){
+      try{return ensureLearner(learner.learnerId)}catch{return null}
+    }
     return Object.freeze({
       learnerId:learner.learnerId,
       institutionalId:learner.institutionalId,
@@ -107,12 +110,14 @@
 
   function label(learnerOrId=null){
     const info=get(learnerOrId);
-    if(!info)return "Institutional ID unavailable";
+    if(!info)return "Institutional ID pending secure issuance";
     return `${info.identifierType==="scholar"?"Scholar ID":"Student ID"}: ${info.institutionalId}`;
   }
 
-  global.KhaemenesInstitutionalId=Object.freeze({version:VERSION,format:FORMAT,ensureLearner,ensureAll,get,label,validId});
+  function status(){return Object.freeze({version:VERSION,format:FORMAT,secureContext:Boolean(global.isSecureContext),secureRandom:cryptoReady(),tokenBits:TOKEN_BYTES*8})}
+
+  global.KhaemenesInstitutionalId=Object.freeze({version:VERSION,format:FORMAT,ensureLearner,ensureAll,get,label,validId,status});
 
   try{ensureAll()}catch(error){console.warn("Khaemenes institutional ID backfill deferred:",error)}
-  global.dispatchEvent(new CustomEvent("khaemenes-institutional-id-ready",{detail:{version:VERSION,format:FORMAT}}));
+  global.dispatchEvent(new CustomEvent("khaemenes-institutional-id-ready",{detail:status()}));
 })(window);
