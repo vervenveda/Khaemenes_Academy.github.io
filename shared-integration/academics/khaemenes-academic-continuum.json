@@ -1,10 +1,10 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "1.1.0",
   "canonicalId": "khaemenes.academic.continuum",
   "title": "Khaemenes Academic Continuum",
-  "description": "Shared public academic information contract for a free-to-learn Khaemenes educational continuum from early learning through advanced and research-level study.",
+  "description": "Shared public academic information contract for a free-to-learn Khaemenes educational continuum from early learning through advanced and research-level study, including direct adult entry into Higher Learning.",
   "status": "active",
-  "effectiveDate": "2026-08-13",
+  "effectiveDate": "2026-08-16",
   "access": {
     "learningAccess": "free-to-learn",
     "publicCourseAccessGoal": true,
@@ -27,6 +27,27 @@
     {"id": "higher", "label": "Higher Learning", "order": 6},
     {"id": "research", "label": "Advanced / Research", "order": 7}
   ],
+  "entryModes": [
+    {
+      "id": "k12-progression",
+      "label": "K–12 progression",
+      "entryStage": "pre-k",
+      "nextStageAfterGrade12": "higher",
+      "rule": "Completion of Grade 12 may transition the learner into Higher Learning without inventing Grade 13 or rewriting prior placement history."
+    },
+    {
+      "id": "adult-direct-entry",
+      "label": "Adult direct entry",
+      "entryStage": "higher",
+      "rule": "An adult may begin a self-directed Academy learner identity directly at Higher Learning with no K–12 grade assignment. Adult account authority and learner identity remain linked but distinct."
+    },
+    {
+      "id": "returning-learner",
+      "label": "Returning learner",
+      "entryStage": "higher",
+      "rule": "A returning learner may enter foundational, GED, career, collegiate, or advanced study according to current preparation rather than chronological age."
+    }
+  ],
   "institutionalPrinciples": [
     "Learning should remain accessible without lowering academic standards.",
     "A course must clearly distinguish instruction, practice, assessment, evidence, interpretation, and certification.",
@@ -34,7 +55,8 @@
     "Sources, computation, observation, experiment, argument, and proof should retain their distinct evidentiary roles.",
     "Accessibility, privacy, local-first resilience, and exportable learner records are preferred design properties.",
     "Shared infrastructure must not become a single point of failure for course access.",
-    "Public educational interfaces should not expose private implementation architecture."
+    "Public educational interfaces should not expose private implementation architecture.",
+    "Adult learners are scholars in their own right and are not assigned artificial K–12 grade labels solely because they begin later in life."
   ],
   "subjects": [
     {
@@ -93,6 +115,15 @@
     "permanentIdRule": "A course uses one permanent courseId across lessons, assessments, exports, labs, evidence records, and resource discovery.",
     "masteryHonesty": "A course may only certify the forms of mastery its evidence actually supports.",
     "learnerVoice": "Learner-created reasoning and work should remain distinguishable from mentor, tool, or source contributions."
+  },
+  "higherLearningBridge": {
+    "stage": "higher",
+    "academyRegistryVersion": "1.2.0",
+    "adultSelfDirectedSupported": true,
+    "grade12ProgressionSupported": true,
+    "publicEntry": "https://vervenveda.com/Khaemenes_Higher_Learning.github.io/start/",
+    "adultEnrollment": "https://vervenveda.com/Khaemenes_Academy.github.io/adult/enroll/",
+    "identityRule": "Higher Learning reuses the canonical Academy learner identity and must not create a competing learner identity merely because the learner is an adult or has completed Grade 12."
   },
   "referenceImplementation": {
     "subjectId": "mathematics",
