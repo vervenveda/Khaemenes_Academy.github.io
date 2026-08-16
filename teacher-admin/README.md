@@ -15,6 +15,26 @@ The portal links the teacher to:
 - Family and learner continuity tools
 - Academy-wide evidence and answer-key review holds
 - Cross-Academy teacher resources
+- Archaemenes, the Scholar and Educational Mentor of Khaemenes Academy
+
+## Archaemenes teacher advisory bridge
+
+The portal directly loads:
+
+`../assets/khaemenes-archaemenes-advisor.js`
+
+This is a public-safe Academy advisory bridge. It gives educators access to Archaemenes for Academy briefs, evidence review guidance, curriculum audit guidance, mastery guidance, and learner-support guidance.
+
+The public bridge does not import or expose protected ArchaemenesCore internals, private prompts, protected routes, credentials, or backend topology.
+
+Archaemenes may advise, scaffold, identify review needs, and support instructional decisions. Archaemenes does not independently:
+
+- award formal mastery;
+- change learner placement;
+- silently change a grade or answer key;
+- change learner identity.
+
+A future authorized service may respond to the same public-safe advisor events behind the protected infrastructure boundary without changing the teacher portal contract.
 
 ## Evidence review
 
@@ -54,4 +74,4 @@ The Academy shared continuum coordinates stages and public-safe interoperability
 
 ## Design principle
 
-One teacher administration point; distributed academic ownership.
+One teacher administration point; distributed academic ownership; one canonical institutional educational mentor.
