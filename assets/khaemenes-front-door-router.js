@@ -1,28 +1,38 @@
 (function attachKhaemenesFrontDoorRouter(global){
   "use strict";
-  const VERSION="1.0.0";
+  const VERSION="1.1.0";
 
   function registry(){return global.KhaemenesFamilyRegistry||null}
   function naib(){return global.KhaemenesNAIB||null}
+  function context(){return global.KhaemenesLearnerContext||null}
   function activeLearner(){return registry()?.getLearner?.()||null}
 
   function routeForLearner(learner=activeLearner()){
-    if(!learner)return Object.freeze({status:"no-active-learner",version:VERSION,destination:"https://vervenveda.com/Khaemenes_Academy.github.io/family/enroll/",requiresEnrollment:true});
+    if(!learner)return Object.freeze({status:"no-active-learner",version:VERSION,destination:"https://vervenveda.com/Khaemenes_Academy.github.io/family/enroll/",requiresEnrollment:true,requiresPlacement:true});
     const r=registry();
+    const placement=context()?.placementFor?.(learner)||null;
     const local=r?.learnerDestination?.(learner)||r?.destinationFor?.(learner)||null;
-    const n=naib()?.routeLearnerEntry?.({learnerId:learner.learnerId,stage:learner.stage,grade:learner.grade,surface:"academy-front-door",intent:"continue-learning"})||null;
-    const destination=n?.destination||local?.url||"https://vervenveda.com/Khaemenes_Academy.github.io/student/";
+    const n=naib()?.routeLearnerEntry?.({learnerId:learner.learnerId,stage:placement?.stage||learner.stage,grade:placement?.grade||learner.grade,surface:"academy-front-door",intent:"continue-learning"})||null;
+    const grade=placement?.grade||learner.grade||null;
+    const requiresPlacement=!grade;
+    const destination=requiresPlacement
+      ? "https://vervenveda.com/Khaemenes_Academy.github.io/family/enroll/"
+      : (n?.destination||local?.url||"https://vervenveda.com/Khaemenes_Academy.github.io/student/");
     return Object.freeze({
-      status:"ready",
+      status:requiresPlacement?"placement-required":"ready",
       version:VERSION,
       learnerId:learner.learnerId,
       nickname:learner.nickname,
-      stage:learner.stage,
-      grade:learner.grade||null,
-      gradeLabel:learner.grade&&r?.gradeMeta?.[learner.grade]?r.gradeMeta[learner.grade].label:null,
+      stage:placement?.stage||learner.stage,
+      grade,
+      gradeLabel:placement?.gradeLabel||(grade&&r?.gradeMeta?.[grade]?r.gradeMeta[grade].label:null),
+      school:placement?.school||null,
       destination,
+      requiresEnrollment:false,
+      requiresPlacement,
       routedBy:n?.assignedBy||"Academy local fallback",
       naibEnvelope:n,
+      placement,
       authority:Object.freeze({changesPlacement:false,changesLearnerIdentity:false,awardsMastery:false})
     });
   }
@@ -45,7 +55,7 @@
 
   function familySnapshot(){
     const r=registry(),family=r?.getFamily?.()||null,learner=r?.getLearner?.()||null;
-    return Object.freeze({version:VERSION,hasRegistry:Boolean(r),family,learner,route:routeForLearner(learner)});
+    return Object.freeze({version:VERSION,hasRegistry:Boolean(r),family,learner,learnerContext:context()?.snapshot?.()||null,route:routeForLearner(learner)});
   }
 
   global.KhaemenesFrontDoorRouter=Object.freeze({version:VERSION,activeLearner,routeForLearner,continueLearner,switchLearner,familySnapshot});
