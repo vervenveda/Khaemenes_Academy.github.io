@@ -17,15 +17,42 @@ The portal links the teacher to:
 - Cross-Academy teacher resources
 - Archaemenes, the Scholar and Educational Mentor of Khaemenes Academy
 
+## Institutional advisory sequence
+
+The public-safe Academy coordination sequence is:
+
+`Noema → NAIB → Teacher Administration → Archaemenes → Teacher / Course / Academy decision`
+
+The responsibilities are deliberately separated:
+
+- **Noema** supplies evidence-oriented findings or review envelopes. The public Academy surface does not expose protected Noema reasoning internals.
+- **NAIB** receives, interprets, delegates, and connects. For educator-facing academic review, it routes the public-safe envelope into Teacher Administration.
+- **Teacher Administration** is the human-facing institutional review point. It preserves the teacher's role in interpreting evidence and documenting decisions.
+- **Archaemenes** provides academic mentoring, curriculum guidance, mastery guidance, evidence-review guidance, and learner-support recommendations.
+- **Course or Academy authority** remains responsible for any formal grade correction, mastery determination, placement action, or official record change.
+
+The browser-local workflow contract is stored under:
+
+`khaemenes.teacher-advisory-workflow.v1`
+
+This is a public-safe coordination record only. It is not a claim that a live protected Noema or NAIB backend service is connected.
+
 ## Archaemenes teacher advisory bridge
 
 The portal directly loads:
 
 `../assets/khaemenes-archaemenes-advisor.js`
 
-This is a public-safe Academy advisory bridge. It gives educators access to Archaemenes for Academy briefs, evidence review guidance, curriculum audit guidance, mastery guidance, and learner-support guidance.
+The bridge now supports both direct teacher guidance and the Academy workflow contract above. It can:
 
-The public bridge does not import or expose protected ArchaemenesCore internals, private prompts, protected routes, credentials, or backend topology.
+- normalize a public-safe Noema evidence envelope;
+- represent NAIB routing into Teacher Administration;
+- create a teacher-review workflow record;
+- request Archaemenes guidance for that record;
+- document a teacher review decision;
+- expose status without claiming protected services are live.
+
+The public bridge does not import or expose protected ArchaemenesCore internals, private prompts, protected routes, credentials, source-weighting logic, or backend topology.
 
 Archaemenes may advise, scaffold, identify review needs, and support instructional decisions. Archaemenes does not independently:
 
@@ -34,7 +61,7 @@ Archaemenes may advise, scaffold, identify review needs, and support instruction
 - silently change a grade or answer key;
 - change learner identity.
 
-A future authorized service may respond to the same public-safe advisor events behind the protected infrastructure boundary without changing the teacher portal contract.
+A future authorized service may respond to the same public-safe events behind the protected infrastructure boundary without changing the teacher portal contract.
 
 ## Evidence review
 
@@ -74,4 +101,4 @@ The Academy shared continuum coordinates stages and public-safe interoperability
 
 ## Design principle
 
-One teacher administration point; distributed academic ownership; one canonical institutional educational mentor.
+One teacher administration point; distributed academic ownership; one canonical institutional educational mentor; evidence routed through explicit human review before formal academic decisions.
