@@ -4,7 +4,11 @@
   "name": "Khaemenes Academy",
   "classification": "educational",
   "mentorSearchable": true,
-  "canonicalEducationalMentor": {
+  "audiences": ["preschool","kindergarten","elementary","middle","high","higher-learning","adult","parent"],
+  "roles": ["student","parent","educator"],
+  "homepage": "https://vervenveda.com/Khaemenes_Academy.github.io/",
+  "repository": "vervenveda/Khaemenes_Academy.github.io",
+  "institutionalMentor": {
     "id": "archaemenes",
     "name": "Archaemenes",
     "title": "Scholar and Educational Mentor of Khaemenes Academy",
@@ -16,24 +20,6 @@
       "changesLearnerIdentity": false
     }
   },
-  "audiences": [
-    "preschool",
-    "kindergarten",
-    "elementary",
-    "middle",
-    "high",
-    "higher-learning",
-    "adult",
-    "parent",
-    "educator"
-  ],
-  "roles": [
-    "student",
-    "parent",
-    "educator"
-  ],
-  "homepage": "https://vervenveda.com/Khaemenes_Academy.github.io/",
-  "repository": "vervenveda/Khaemenes_Academy.github.io",
   "resources": [
     {
       "id": "academy-home",
@@ -49,18 +35,43 @@
       "featured": true
     },
     {
-      "id": "teacher-administration",
-      "title": "Khaemenes Academy Teacher Administration",
-      "description": "Academy-wide faculty operations hub with direct public-safe Archaemenes educational advisory support, evidence review, records navigation, and cross-grade administration.",
-      "url": "https://vervenveda.com/Khaemenes_Academy.github.io/teacher-admin/",
-      "audiences": ["adult","educator"],
-      "roles": ["educator"],
-      "domains": ["education","teacher-administration","evidence-integrity","academic-governance"],
-      "skills": ["curriculum-review","evidence-review","mastery-guidance","learner-support"],
-      "tags": ["teacher","admin","archaemenes","evidence-review"],
+      "id": "student-front-door",
+      "title": "Khaemenes Student Portal",
+      "description": "Learner-aware front door that reads the active Academy learner and recommends the registered school and grade destination through the public-safe NAIB routing contract.",
+      "url": "https://vervenveda.com/Khaemenes_Academy.github.io/student/",
+      "audiences": ["preschool","kindergarten","elementary","middle","high"],
+      "roles": ["student","parent","educator"],
+      "domains": ["education","navigation","learner-continuity"],
+      "skills": ["learner-routing"],
+      "tags": ["student","front-door","grade-placement","naib"],
       "mentorEligible": true,
-      "featured": true,
-      "mentor": "archaemenes"
+      "featured": true
+    },
+    {
+      "id": "family-enrollment",
+      "title": "Khaemenes Family Enrollment",
+      "description": "Canonical local enrollment surface for creating a family identity, registering separate learner identities, and assigning exact grade placement.",
+      "url": "https://vervenveda.com/Khaemenes_Academy.github.io/family/enroll/",
+      "audiences": ["adult","parent"],
+      "roles": ["parent","educator"],
+      "domains": ["family-learning","enrollment","learner-continuity"],
+      "skills": ["family-setup","learner-placement"],
+      "tags": ["family","enrollment","grade-placement"],
+      "mentorEligible": false,
+      "featured": true
+    },
+    {
+      "id": "teacher-admin",
+      "title": "Khaemenes Academy Teacher Administration",
+      "description": "Academy-wide teacher-facing coordination surface for grade-level navigation, evidence review, learner continuity, and Archaemenes academic advisory support.",
+      "url": "https://vervenveda.com/Khaemenes_Academy.github.io/teacher-admin/",
+      "audiences": ["adult"],
+      "roles": ["educator"],
+      "domains": ["education","teacher-administration","evidence-integrity"],
+      "skills": ["teacher-review","curriculum-review","learner-support"],
+      "tags": ["teacher","administration","archaemenes","evidence-review"],
+      "mentorEligible": true,
+      "featured": true
     },
     {
       "id": "homeschool-compass",
@@ -99,5 +110,5 @@
       "mentorEligible": true
     }
   ],
-  "mentorNotes": "Archaemenes is the canonical institutional educational mentor. Child-facing routing should respect the learner's current stage and course context. Teacher Administration exposes the public-safe educator advisory bridge. Formal mastery remains course-owned and formal placement remains Academy-governed."
+  "mentorNotes": "Central Academy gateway. Use the canonical Student Portal for active-learner routing. Child-facing mentors should prefer the learner's current school repository before routing to the Academy-wide administrative surfaces."
 }
