@@ -3,7 +3,6 @@ import json
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-
 checks = []
 
 def require(path, *markers):
@@ -21,18 +20,27 @@ require("assets/khaemenes-family-registry.js",
         'updateLearnerPlacement',
         'learnerDestination',
         'grade-controls-stage')
+require("assets/khaemenes-learner-context.js",
+        'const VERSION="1.0.0"',
+        'KhaemenesLearnerContext',
+        'courseScope',
+        'storageKey',
+        'hardRedirect:false')
 require("assets/khaemenes-naib-mentor-router.js",
         'const VERSION="1.2.0-transition"',
         'routeLearnerEntry',
         'changesPlacement:false',
         'awardsMastery:false')
 require("assets/khaemenes-front-door-router.js",
+        'const VERSION="1.1.0"',
         'KhaemenesFrontDoorRouter',
+        'requiresPlacement',
         'routeForLearner',
         'continueLearner')
 require("assets/khaemenes-family-school-bridge.js",
         'const VERSION="2.0.0"',
         'Different campus context',
+        'hardRedirect',
         'khaemenes-school-bridge-ready')
 require("family/enroll/index.html",
         'Exact grade placement',
@@ -40,11 +48,16 @@ require("family/enroll/index.html",
         'khaemenes-family-registry.js')
 require("student/index.html",
         'Student Front Door',
-        'KhaemenesFrontDoorRouter',
+        'khaemenes-learner-context.js',
+        'Placement ready.',
         'Continue Learning')
 require("FRONT_DOOR_PROTOCOL_V2.md",
         'Family → learner identity → exact grade',
         'No evidence engine or mentor may silently modify a grade.')
+require("SCHOOL_INTEGRATION_PROTOCOL_V1.md",
+        'must not create a second learner identity',
+        'learner-scoped',
+        'Legacy school profiles')
 
 manifest = ROOT / "mentor-manifest.json"
 try:
