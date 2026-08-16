@@ -1,8 +1,8 @@
 (function attachKhaemenesNAIB(global){
   "use strict";
-  const VERSION="1.0.0-transition";
+  const VERSION="1.0.1-transition";
   const ARCHAEMENES=Object.freeze({
-    id:"archaemenes",name:"Archaemenes",title:"Scholar Owl",avatar:"🦉",
+    id:"archaemenes",name:"Archaemenes",title:"Scholar and Educational Mentor of Khaemenes Academy",avatar:"🦉",
     specialistDomain:"learning-mentor",
     principles:Object.freeze(["clue-first","age-adaptive","encourage-effort","do-not-award-mastery","bounded-young-learner-interaction"])
   });
