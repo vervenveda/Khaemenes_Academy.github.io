@@ -1,6 +1,6 @@
 (function attachKhaemenesFrontDoorRouter(global){
   "use strict";
-  const VERSION="1.1.0";
+  const VERSION="1.1.1";
 
   function registry(){return global.KhaemenesFamilyRegistry||null}
   function naib(){return global.KhaemenesNAIB||null}
@@ -58,6 +58,19 @@
     return Object.freeze({version:VERSION,hasRegistry:Boolean(r),family,learner,learnerContext:context()?.snapshot?.()||null,route:routeForLearner(learner)});
   }
 
+  function attachVerificationDoorway(){
+    const cards=[...document.querySelectorAll(".service")];
+    const records=cards.find(card=>card.querySelector("h3")?.textContent.trim()==="Records & Reports");
+    if(!records||records.querySelector('[data-academy-verify]'))return;
+    const link=document.createElement("a");
+    link.href="./verify/";
+    link.dataset.academyVerify="true";
+    link.textContent="Verify Signed Record →";
+    records.appendChild(link);
+  }
+
   global.KhaemenesFrontDoorRouter=Object.freeze({version:VERSION,activeLearner,routeForLearner,continueLearner,switchLearner,familySnapshot});
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",attachVerificationDoorway,{once:true});
+  else attachVerificationDoorway();
   global.dispatchEvent(new CustomEvent("khaemenes-front-door-router-ready",{detail:{version:VERSION}}));
 })(window);
