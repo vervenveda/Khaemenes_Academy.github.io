@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#102b43">
+<meta name="color-scheme" content="light dark">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()">
+<meta name="description" content="Khaemenes Academy academic record verification service for digitally signed course records.">
+<title>Khaemenes Academy | Academic Record Verification</title>
+<style>
+:root{--paper:#f4f0e7;--paper2:#fffdf8;--ink:#17211d;--soft:#4e5b55;--muted:#748078;--navy:#102b43;--night:#071521;--forest:#233e34;--gold:#b48b45;--gold2:#ead9b8;--line:rgba(20,31,26,.14);--line2:rgba(20,31,26,.25);--good:#1f6b42;--bad:#9b3d3d;--warn:#8a651e;--display:"Iowan Old Style","Palatino Linotype",Palatino,Baskerville,Georgia,serif;--ceremonial:Cinzel,Aboreto,"Iowan Old Style",Georgia,serif;--sans:"Brandon Grotesque","Avenir Next",Avenir,Montserrat,"Segoe UI",Arial,sans-serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-width:320px;min-height:100vh;color:var(--ink);background:var(--paper);font:400 16px/1.65 var(--sans);text-align:center;-webkit-font-smoothing:antialiased}a{color:inherit;text-decoration:none}button,input,textarea{font:inherit}:focus-visible{outline:3px solid var(--gold);outline-offset:3px}.shell{width:min(calc(100% - 32px),1050px);margin:auto}
+header{border-bottom:1px solid var(--line);background:rgba(244,240,231,.96)}.header-inner{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{display:flex;align-items:center;gap:12px;text-align:left}.seal{width:46px;height:46px;display:grid;place-items:center;border-radius:9px;color:#f9f6ef;background:linear-gradient(145deg,#173326,#071a13);font:500 12px var(--ceremonial);letter-spacing:.06em}.brand strong{display:block;font:500 15px/1.1 var(--ceremonial);letter-spacing:.055em;text-transform:uppercase}.brand small{display:block;margin-top:4px;color:var(--muted);font-size:8px;letter-spacing:.11em;text-transform:uppercase}.close{width:40px;height:40px;display:grid;place-items:center;border:1px solid var(--line2);border-radius:8px;background:transparent;font-size:20px}
+.hero{padding:74px 0 52px;color:#fff;background:radial-gradient(circle at 50% -10%,rgba(234,217,184,.21),transparent 28rem),linear-gradient(145deg,#1d405d,#102b43 55%,#071521)}.eyebrow{margin:0;color:var(--gold2);font:500 10px/1.5 var(--ceremonial);letter-spacing:.18em;text-transform:uppercase}.hero h1{max-width:900px;margin:12px auto 0;font:500 clamp(2.8rem,6vw,5rem)/1 var(--display);text-wrap:balance}.hero p{max-width:730px;margin:18px auto 0;color:rgba(255,255,255,.76);font:400 18px/1.7 var(--display)}
+main{padding:42px 0 80px}.card{margin:0 auto 18px;padding:24px;border:1px solid var(--line);border-radius:16px;background:var(--paper2);box-shadow:0 18px 42px rgba(19,31,25,.07);text-align:left}.card h2{margin:0 0 8px;font:500 28px var(--display)}.card p{color:var(--muted);font-size:12px}.upload{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;margin-top:18px;padding:14px;border:1px dashed var(--line2);border-radius:10px;background:#fff}.upload input{width:100%}.btn{min-height:43px;border:1px solid var(--line2);border-radius:8px;background:transparent;color:var(--ink);padding:9px 14px;font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;cursor:pointer}.btn.primary{color:#fff;background:var(--navy);border-color:var(--navy)}textarea{width:100%;min-height:220px;margin-top:12px;padding:12px;border:1px solid var(--line2);border-radius:9px;background:#fff;color:var(--ink);font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;resize:vertical}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.status{margin:18px 0 0;padding:18px;border:1px solid var(--line);border-radius:12px;background:#fff;text-align:center}.status strong{display:block;font:500 25px var(--display)}.status p{margin:.4rem auto 0}.status.good{border-color:rgba(31,107,66,.35);background:#f1f8f3}.status.good strong{color:var(--good)}.status.bad{border-color:rgba(155,61,61,.35);background:#fff5f3}.status.bad strong{color:var(--bad)}.status.warn{border-color:rgba(138,101,30,.35);background:#fff9ed}.status.warn strong{color:var(--warn)}
+.record{display:none;margin-top:18px}.record.show{display:block}.record-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--line)}.field{padding:14px;background:#fff}.field span{display:block;color:var(--muted);font-size:8px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.field strong{display:block;margin-top:4px;font:500 18px var(--display);word-break:break-word}.privacy{margin-top:16px;color:var(--muted);font-size:10px;text-align:center}
+footer{padding:30px 0;color:rgba(255,255,255,.67);background:var(--night);font-size:9px}.footer-links{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:8px}@media(max-width:680px){.upload{grid-template-columns:1fr}.record-grid{grid-template-columns:1fr}.hero{padding-top:56px}.header-inner{min-height:64px}}
+@media print{header,.hero,.input-card,.actions,.privacy,footer{display:none!important}body{background:#fff}.record{display:block!important}.card{box-shadow:none;border-color:#bbb}}
+</style>
+</head>
+<body>
+<header><div class="shell header-inner"><a class="brand" href="../"><span class="seal">KA</span><span><strong>Khaemenes Academy</strong><small>Academic Records & Verification</small></span></a><a class="close" href="../" aria-label="Return to Academy front desk">×</a></div></header>
+<section class="hero"><div class="shell"><p class="eyebrow">Academic Records</p><h1>Verify an Academy Record</h1><p>Check whether a digitally signed Khaemenes Academy course record is authentic and unchanged.</p></div></section>
+<main class="shell">
+<section class="card input-card">
+<h2>Record verification</h2>
+<p>Select a signed record file or paste its JSON below. Verification happens locally in this browser; the record is not uploaded by this page.</p>
+<div class="upload"><input id="recordFile" type="file" accept="application/json,.json"><button class="btn primary" id="verifyFile" type="button">Verify Selected Record</button></div>
+<textarea id="recordText" spellcheck="false" placeholder="Paste a signed Academy record here…"></textarea>
+<div class="actions"><button class="btn primary" id="verifyText" type="button">Verify Pasted Record</button><button class="btn" id="clear" type="button">Clear</button></div>
+<div id="keyState" class="privacy">Loading Academy verification key…</div>
+<div id="status" class="status warn"><strong>Ready</strong><p>Select or paste a signed record to begin.</p></div>
+</section>
+<section id="recordCard" class="card record" aria-live="polite">
+<h2>Record details</h2>
+<div class="record-grid">
+<div class="field"><span>Student</span><strong id="fName">—</strong></div>
+<div class="field"><span>Learner ID</span><strong id="fLearner">—</strong></div>
+<div class="field"><span>Course</span><strong id="fCourse">—</strong></div>
+<div class="field"><span>Course Code</span><strong id="fCode">—</strong></div>
+<div class="field"><span>Academic Year</span><strong id="fYear">—</strong></div>
+<div class="field"><span>Completion Date</span><strong id="fDate">—</strong></div>
+<div class="field"><span>Final Grade</span><strong id="fGrade">—</strong></div>
+<div class="field"><span>Credit</span><strong id="fCredit">—</strong></div>
+<div class="field"><span>Record ID</span><strong id="fRecord">—</strong></div>
+<div class="field"><span>Issued By</span><strong id="fIssuer">—</strong></div>
+</div>
+<div class="actions"><button class="btn" type="button" onclick="window.print()">Print Verification</button></div>
+</section>
+<p class="privacy">A successful signature confirms that the signed record matches an Academy verification key. It does not independently validate documents that were never digitally signed.</p>
+</main>
+<footer><div class="shell"><strong>Khaemenes Academy</strong><div class="footer-links"><a href="../">Academy Front Desk</a><a href="../student/">Student Portal</a><a href="../family/">Family Portal</a></div></div></footer>
+<script>
+(()=>{
+'use strict';
+const $=id=>document.getElementById(id),enc=new TextEncoder(); let keys=[];
+const canonical=v=>{if(v===null||typeof v!=='object')return JSON.stringify(v);if(Array.isArray(v))return '['+v.map(canonical).join(',')+']';return '{'+Object.keys(v).sort().map(k=>JSON.stringify(k)+':'+canonical(v[k])).join(',')+'}'};
+const fromB64u=s=>{s=String(s).replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';const raw=atob(s),out=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)out[i]=raw.charCodeAt(i);return out};
+const setStatus=(title,msg,kind)=>{$('status').className='status '+kind;$('status').innerHTML='';const s=document.createElement('strong');s.textContent=title;const p=document.createElement('p');p.textContent=msg;$('status').append(s,p)};
+async function loadKeys(){try{const r=await fetch('./verification-key.json',{cache:'no-store'});if(!r.ok)throw new Error('not configured');const cfg=await r.json();const raw=Array.isArray(cfg.keys)?cfg.keys:[cfg];keys=raw.filter(k=>k&&k.keyId&&k.publicKeyJwk&&k.algorithm==='ECDSA-P256-SHA256');if(!keys.length)throw new Error('no usable keys');$('keyState').textContent='Academy verification key is available.'}catch(e){keys=[];$('keyState').textContent='The verification service is being provisioned. No Academy verification key is installed yet.';setStatus('Not yet available','The public verification key has not been commissioned on this service.','warn')}}
+function showRecord(r){$('fName').textContent=r.learnerName||'Not published';$('fLearner').textContent=r.learnerId||'—';$('fCourse').textContent=r.courseTitle||'—';$('fCode').textContent=r.courseCode||'—';$('fYear').textContent=r.academicYear||'—';$('fDate').textContent=r.completionDate||'—';const grade=r.letterGrade?`${Number(r.finalPercent).toFixed(2)}% · ${r.letterGrade}`:`${Number(r.finalPercent).toFixed(2)}%`;$('fGrade').textContent=grade;$('fCredit').textContent=r.credit===null||r.credit===undefined?'Not stated':String(r.credit);$('fRecord').textContent=r.recordId||'—';$('fIssuer').textContent=r.issuer||'Khaemenes Academy';$('recordCard').classList.add('show')}
+function validateShape(doc){if(!doc||doc.schemaVersion!=='1.0'||!doc.record||!doc.signature)throw new Error('This file is not a recognized signed Academy record.');if(doc.signature.algorithm!=='ECDSA-P256-SHA256'||doc.signature.encoding!=='base64url')throw new Error('Unsupported signature format.');const req=['recordId','learnerId','courseCode','courseTitle','academicYear','completionDate','finalPercent','assessmentVersion','issuedAt'];for(const k of req)if(doc.record[k]===undefined||doc.record[k]===null||doc.record[k]==='')throw new Error('Record is missing required signed field: '+k);const p=Number(doc.record.finalPercent);if(!Number.isFinite(p)||p<0||p>100)throw new Error('Record grade is outside the valid range.')}
+async function verify(doc){$('recordCard').classList.remove('show');try{if(!keys.length)throw new Error('Academy verification key is not installed yet.');validateShape(doc);const entry=keys.find(k=>k.keyId===doc.signature.keyId);if(!entry){setStatus('Not recognized','The record was signed with a key ID that is not recognized by this Academy verifier.','bad');showRecord(doc.record);return}const publicKey=await crypto.subtle.importKey('jwk',entry.publicKeyJwk,{name:'ECDSA',namedCurve:'P-256'},false,['verify']);const ok=await crypto.subtle.verify({name:'ECDSA',hash:'SHA-256'},publicKey,fromB64u(doc.signature.value),enc.encode(canonical(doc.record)));showRecord(doc.record);if(ok)setStatus('Authentic','The digital signature is valid and the signed record has not been altered.','good');else setStatus('Altered or invalid','The digital signature does not match this record. Do not rely on it as an authentic Academy record.','bad')}catch(e){setStatus('Unable to verify',e.message,'bad')}}
+$('verifyFile').addEventListener('click',async()=>{const f=$('recordFile').files?.[0];if(!f)return setStatus('No file selected','Choose a signed record file first.','warn');try{await verify(JSON.parse(await f.text()))}catch(e){setStatus('Unable to read file',e.message,'bad')}});
+$('verifyText').addEventListener('click',async()=>{try{await verify(JSON.parse($('recordText').value))}catch(e){setStatus('Unable to read record',e.message,'bad')}});
+$('clear').addEventListener('click',()=>{$('recordText').value='';$('recordFile').value='';$('recordCard').classList.remove('show');setStatus('Ready','Select or paste a signed record to begin.','warn')});loadKeys();
+})();
+</script>
+</body>
+</html>
