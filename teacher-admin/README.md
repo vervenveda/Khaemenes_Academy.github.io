@@ -17,17 +17,16 @@ The portal links the teacher to:
 - Cross-Academy teacher resources
 - Archaemenes, the Scholar and Educational Mentor of Khaemenes Academy
 
-## Institutional advisory sequence
+## Public academic review sequence
 
-The public-safe Academy coordination sequence is:
+The public teacher page presents only the educational sequence:
 
-`Noema → NAIB → Teacher Administration → Archaemenes → Teacher / Course / Academy decision`
+`Evidence → Teacher review → Educational guidance → Teacher / Course / Academy decision`
 
 The responsibilities are deliberately separated:
 
-- **Noema** supplies evidence-oriented findings or review envelopes. The public Academy surface does not expose protected Noema reasoning internals.
-- **NAIB** receives, interprets, delegates, and connects. For educator-facing academic review, it routes the public-safe envelope into Teacher Administration.
-- **Teacher Administration** is the human-facing institutional review point. It preserves the teacher's role in interpreting evidence and documenting decisions.
+- **Evidence review** holds disputed or uncertain results for inspection.
+- **Teacher Administration** preserves the teacher's role in interpreting evidence and documenting decisions.
 - **Archaemenes** provides academic mentoring, curriculum guidance, mastery guidance, evidence-review guidance, and learner-support recommendations.
 - **Course or Academy authority** remains responsible for any formal grade correction, mastery determination, placement action, or official record change.
 
@@ -35,7 +34,7 @@ The browser-local workflow contract is stored under:
 
 `khaemenes.teacher-advisory-workflow.v1`
 
-This is a public-safe coordination record only. It is not a claim that a live protected Noema or NAIB backend service is connected.
+This is a browser-local coordination record. It is not a secure account, permanent records service or claim that an external advisory service is connected.
 
 ## Archaemenes teacher advisory bridge
 
@@ -45,8 +44,8 @@ The portal directly loads:
 
 The bridge now supports both direct teacher guidance and the Academy workflow contract above. It can:
 
-- normalize a public-safe Noema evidence envelope;
-- represent NAIB routing into Teacher Administration;
+- normalize a public-safe evidence submission;
+- route that submission into Teacher Administration;
 - create a teacher-review workflow record;
 - request Archaemenes guidance for that record;
 - document a teacher review decision;
