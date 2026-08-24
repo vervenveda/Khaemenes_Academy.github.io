@@ -1,0 +1,30 @@
+name: Student Route Validation
+
+on:
+  pull_request:
+    paths:
+      - 'assets/khaemenes-front-door-router.js'
+      - 'student/index.html'
+      - 'tests/student-route-static.test.mjs'
+      - '.github/workflows/student-route-validation.yml'
+  push:
+    branches: [ main ]
+    paths:
+      - 'assets/khaemenes-front-door-router.js'
+      - 'student/index.html'
+      - 'tests/student-route-static.test.mjs'
+      - '.github/workflows/student-route-validation.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-student-route:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Check router syntax
+        run: node --check assets/khaemenes-front-door-router.js
+      - name: Validate student routes
+        run: node tests/student-route-static.test.mjs
