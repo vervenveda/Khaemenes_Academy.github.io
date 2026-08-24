@@ -1,15 +1,70 @@
 (function attachKhaemenesFamilySchoolBridge(global){
   "use strict";
 
-  const VERSION="2.0.1";
+  const VERSION="2.1.0";
   const script=document.currentScript;
   const surfaceStage=(script?.dataset?.khaemenesStage||"").trim();
   const surfaceGrades=(script?.dataset?.khaemenesGrades||"").split(",").map(x=>x.trim()).filter(Boolean);
   const familyPortal="https://vervenveda.com/Khaemenes_Academy.github.io/family/";
   const studentPortal="https://vervenveda.com/Khaemenes_Academy.github.io/student/";
+  const archaemenesPortal="https://artist1970.github.io/Archaemenes.github.io/";
 
   function escapeHTML(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c])}
   function normalizeGrade(registry,value){return registry.normalizeGrade?registry.normalizeGrade(value):String(value||"").replace(/[^0-9]/g,"").padStart(2,"0")}
+  function normalizedSurfaceStage(registry=global.KhaemenesFamilyRegistry){return registry?.normalizeStage?registry.normalizeStage(surfaceStage):surfaceStage}
+  function navigate(url){try{global.location.assign(url)}catch{global.location.href=url}}
+
+  function activeFamilyState(registry=global.KhaemenesFamilyRegistry){
+    if(!registry)return {family:null,adult:null,learner:null,signedIn:false};
+    const family=registry.getFamily?.()||null;
+    const adult=registry.getAdult?.()||null;
+    const learner=registry.getLearner?.()||null;
+    return {family,adult,learner,signedIn:Boolean(family&&(adult||learner))};
+  }
+
+  function mentorDestination(registry=global.KhaemenesFamilyRegistry){
+    return activeFamilyState(registry).signedIn?archaemenesPortal:familyPortal;
+  }
+
+  /* Preschool Mentor doorway policy:
+     - no active family session -> Family Portal
+     - active family session -> Archaemenes
+     - a named child Mentor button selects that learner first, then opens Archaemenes
+     The listener runs in capture phase so legacy Preschool handlers cannot redirect
+     a named child back into the older standalone mentor surface. */
+  function bindPreschoolMentorRouting(){
+    if(normalizedSurfaceStage()!=="preschool"||document.documentElement.dataset.khaemenesMentorRoutingBound==="1")return;
+    document.documentElement.dataset.khaemenesMentorRoutingBound="1";
+
+    document.addEventListener("click",event=>{
+      const origin=event.target;
+      if(!origin?.closest)return;
+      const namedMentor=origin.closest("[data-enter-child-mentor]");
+      const mentorDoor=namedMentor||origin.closest('a[href="#familyMentorEntry"]');
+      if(!mentorDoor)return;
+
+      const registry=global.KhaemenesFamilyRegistry;
+
+      if(namedMentor){
+        const family=registry?.getFamily?.()||null;
+        const learnerId=String(namedMentor.dataset.enterChildMentor||"").trim();
+        const learner=family?.learners?.find?.(item=>item?.learnerId===learnerId)||null;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        if(registry&&family&&learner){
+          registry.setActive?.({familyId:family.familyId,learnerId});
+          navigate(archaemenesPortal);
+        }else{
+          navigate(familyPortal);
+        }
+        return;
+      }
+
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      navigate(mentorDestination(registry));
+    },true);
+  }
 
   function injectSharedRegistry(){
     if(global.KhaemenesFamilyRegistry){render(global.KhaemenesFamilyRegistry);return}
@@ -47,10 +102,18 @@
       box.innerHTML=`<strong>${escapeHTML(learner.nickname)}</strong><br><span>${escapeHTML(family?.displayName||"Khaemenes Family")} · ${escapeHTML(placementLabel)}</span>${mismatchHTML}<div style="margin-top:7px"><a href="${studentPortal}" style="color:#2f7140;font-weight:700">Student Portal →</a> · <a href="${familyPortal}" style="color:#2f7140;font-weight:700">Family Profile →</a></div>`;
     }
     document.body.appendChild(box);
-    global.dispatchEvent(new CustomEvent("khaemenes-school-bridge-ready",{detail:{version:VERSION,stage:surfaceStage,learnerId:learner?.learnerId||null,mismatch:placement.mismatch,previewAllowed:true,hardRedirect:false}}));
+    global.dispatchEvent(new CustomEvent("khaemenes-school-bridge-ready",{detail:{version:VERSION,stage:surfaceStage,learnerId:learner?.learnerId||null,mismatch:placement.mismatch,previewAllowed:true,hardRedirect:false,mentorDestination:mentorDestination(registry)}}));
   }
 
-  global.KhaemenesFamilySchoolBridge=Object.freeze({version:VERSION,placementState,policy:Object.freeze({previewAllowed:true,hardRedirect:false})});
+  global.KhaemenesFamilySchoolBridge=Object.freeze({
+    version:VERSION,
+    placementState,
+    activeFamilyState,
+    mentorDestination,
+    routes:Object.freeze({familyPortal,studentPortal,archaemenesPortal}),
+    policy:Object.freeze({previewAllowed:true,hardRedirect:false,preschoolMentorRouting:"family-portal-unless-active-family-session-then-archaemenes"})
+  });
+  bindPreschoolMentorRouting();
   global.addEventListener("khaemenes-family-changed",()=>global.KhaemenesFamilyRegistry&&render(global.KhaemenesFamilyRegistry));
   global.addEventListener("khaemenes-learner-placement-changed",()=>global.KhaemenesFamilyRegistry&&render(global.KhaemenesFamilyRegistry));
   injectSharedRegistry();
