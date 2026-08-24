@@ -1,7 +1,7 @@
 (function attachKhaemenesFamilyRegistry(global){
   "use strict";
 
-  const VERSION="1.3.0";
+  const VERSION="1.3.1";
   const ARCHAEMENES_ID="archaemenes";
   const KEYS=Object.freeze({
     registry:"khaemenes_family_registry_v1",
@@ -118,22 +118,35 @@
     const prior=raw?.mentorIdentity&&typeof raw.mentorIdentity==="object"?raw.mentorIdentity:{};
     const priorMentorId=clean(raw?.mentorId,80);
     const baseStyle=normalizeMentorStyle(prior.communicationStyle)||normalizeMentorStyle(prior.baseStyle)||LEGACY_MENTOR_STYLE[priorMentorId.toLowerCase()]||null;
+    const {
+      id:_legacyId,
+      mentorId:_legacyMentorField,
+      name:legacyName,
+      title:legacyTitle,
+      avatar:legacyAvatar,
+      colors:legacyColors,
+      mode:legacyMode,
+      expression:_legacyExpression,
+      ...safePrior
+    }=prior;
+    const presentationPreference={
+      ...(safePrior.presentationPreference&&typeof safePrior.presentationPreference==="object"?safePrior.presentationPreference:{}),
+      ...(legacyName?{legacyCustomName:clean(legacyName,40)}:{}),
+      ...(legacyTitle?{legacyTitle:clean(legacyTitle,80)}:{}),
+      ...(legacyAvatar?{legacyAvatar:clean(legacyAvatar,12)}:{}),
+      ...(Array.isArray(legacyColors)&&legacyColors.length===2?{legacyColors:[...legacyColors]}:{})
+    };
+    delete safePrior.presentationPreference;
     const identity={
-      ...prior,
+      ...safePrior,
       mode:"archaemenes",
       mentorId:ARCHAEMENES_ID,
       expression:mentorExpression(stage),
-      ...(baseStyle?{baseStyle,communicationStyle:baseStyle}:{})
+      ...(baseStyle?{baseStyle,communicationStyle:baseStyle}:{}),
+      ...(Object.keys(presentationPreference).length?{presentationPreference}:{})
     };
     if(priorMentorId&&priorMentorId.toLowerCase()!==ARCHAEMENES_ID)identity.legacyMentorId=priorMentorId;
-    if(prior.mode==="custom"){
-      identity.presentationPreference={
-        ...(identity.presentationPreference&&typeof identity.presentationPreference==="object"?identity.presentationPreference:{}),
-        ...(prior.name?{legacyCustomName:clean(prior.name,40)}:{}),
-        ...(prior.avatar?{legacyAvatar:clean(prior.avatar,12)}:{}),
-        ...(Array.isArray(prior.colors)&&prior.colors.length===2?{legacyColors:[...prior.colors]}:{})
-      };
-    }
+    if(legacyMode&&legacyMode!=="archaemenes")identity.legacyMode=clean(legacyMode,40);
     return identity;
   }
 
@@ -239,7 +252,7 @@
     if(!rawExisting&&readJSON(KEYS.legacyPreschool,null))migrateLegacyPreschool();
     else if(rawExisting){
       const learners=Object.values(rawExisting.learners&&typeof rawExisting.learners==="object"?rawExisting.learners:{});
-      const needsMentorMigration=learners.some(learner=>learner?.mentorId!==ARCHAEMENES_ID||learner?.mentorIdentity?.mode!=="archaemenes");
+      const needsMentorMigration=learners.some(learner=>learner?.mentorId!==ARCHAEMENES_ID||learner?.mentorIdentity?.mode!=="archaemenes"||learner?.mentorIdentity?.name||learner?.mentorIdentity?.avatar||learner?.mentorIdentity?.colors);
       if(rawExisting.version!==VERSION||needsMentorMigration)save(rawExisting);
     }
   }catch{}
