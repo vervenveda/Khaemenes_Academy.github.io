@@ -6,13 +6,12 @@ const router=fs.readFileSync(new URL("../assets/khaemenes-front-door-router.js",
 const portal=fs.readFileSync(new URL("../student/index.html",import.meta.url),"utf8");
 
 test("identified Grade 09 learner routes to the real student dashboard",()=>{
-  assert.match(router,/grade==="09"/);
-  assert.match(router,/Khaemenes_High\.github\.io\/grades\/grade-09\/student-profile\//);
+  assert.match(router,/const base="https:\/\/vervenveda\.com\/Khaemenes_High\.github\.io"/);
+  assert.match(router,/if\(grade==="09"\)return `\$\{base\}\/grades\/grade-09\/student-profile\/`/);
 });
 
 test("identified Grade 10 learner routes to the real Grade 10 portal",()=>{
-  assert.match(router,/grade==="10"/);
-  assert.match(router,/Khaemenes_High\.github\.io\/grades\/grade-10\//);
+  assert.match(router,/if\(grade==="10"\)return `\$\{base\}\/grades\/grade-10\/`/);
 });
 
 test("high-school fallback no longer depends on the dead grades anchor",()=>{
