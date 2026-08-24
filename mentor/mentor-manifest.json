@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "id": "archaemenes",
+  "name": "Archaemenes",
+  "title": "Scholar and Educational Mentor of Khaemenes Academy",
+  "authority": "single-academy-mentor",
+  "url": "https://vervenveda.com/Khaemenes_Academy.github.io/mentor/",
+  "familyRegistry": "https://vervenveda.com/Khaemenes_Academy.github.io/assets/khaemenes-family-registry.js",
+  "identityPolicy": {
+    "familyAuthority": "academy-family-registry",
+    "activeLearnerRequiredForPersonalization": true,
+    "learnerIdInUrl": false,
+    "familyIdInUrl": false,
+    "schoolSpecificMentorPrograms": false,
+    "legacyMentorPages": "redirect-only"
+  },
+  "expressions": {
+    "preschool": "Wise Owl",
+    "kindergarten": "Wise Owl",
+    "elementary": "Academy Mentor",
+    "middle": "Academy Mentor",
+    "high": "Academy Mentor",
+    "higher": "Scholar"
+  },
+  "earlyLearnerPolicy": {
+    "unrestrictedPrivateTextChat": false,
+    "boundedPromptControls": true
+  },
+  "publicHome": "https://artist1970.github.io/Archaemenes.github.io/"
+}
