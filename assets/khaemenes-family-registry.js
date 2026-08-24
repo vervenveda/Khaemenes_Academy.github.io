@@ -1,7 +1,8 @@
 (function attachKhaemenesFamilyRegistry(global){
   "use strict";
 
-  const VERSION="1.2.0";
+  const VERSION="1.3.0";
+  const ARCHAEMENES_ID="archaemenes";
   const KEYS=Object.freeze({
     registry:"khaemenes_family_registry_v1",
     activeFamily:"khaemenes_active_family_v1",
@@ -16,6 +17,8 @@
   const STAGES=Object.freeze(["preschool","kindergarten","elementary","middle","high","higher"]);
   const GRADES=Object.freeze(["pre-k","k","01","02","03","04","05","06","07","08","09","10","11","12"]);
   const ADULT_ROLES=Object.freeze(["parent","guardian","caregiver","educator","other-authorized-adult"]);
+  const LEGACY_MENTOR_STYLE=Object.freeze({pip:"playful",miri:"curious",nova:"imaginative",sage:"steady"});
+  const VALID_MENTOR_STYLES=new Set(["playful","curious","imaginative","steady"]);
 
   const GRADE_META=Object.freeze({
     "pre-k":Object.freeze({grade:"pre-k",label:"Pre-K",stage:"preschool",school:"Khaemenes Preschool"}),
@@ -102,11 +105,43 @@
     return Object.freeze({stage:placement.stage,grade:placement.grade,url,label});
   }
 
+  function mentorExpression(stage){
+    const s=normalizeStage(stage);
+    if(s==="preschool"||s==="kindergarten")return "wise-owl";
+    if(s==="higher")return "scholar";
+    return "academy-mentor";
+  }
+
+  function normalizeMentorStyle(value){const style=clean(value,40).toLowerCase();return VALID_MENTOR_STYLES.has(style)?style:null}
+
+  function canonicalMentorIdentity(raw={},stage=null){
+    const prior=raw?.mentorIdentity&&typeof raw.mentorIdentity==="object"?raw.mentorIdentity:{};
+    const priorMentorId=clean(raw?.mentorId,80);
+    const baseStyle=normalizeMentorStyle(prior.communicationStyle)||normalizeMentorStyle(prior.baseStyle)||LEGACY_MENTOR_STYLE[priorMentorId.toLowerCase()]||null;
+    const identity={
+      ...prior,
+      mode:"archaemenes",
+      mentorId:ARCHAEMENES_ID,
+      expression:mentorExpression(stage),
+      ...(baseStyle?{baseStyle,communicationStyle:baseStyle}:{})
+    };
+    if(priorMentorId&&priorMentorId.toLowerCase()!==ARCHAEMENES_ID)identity.legacyMentorId=priorMentorId;
+    if(prior.mode==="custom"){
+      identity.presentationPreference={
+        ...(identity.presentationPreference&&typeof identity.presentationPreference==="object"?identity.presentationPreference:{}),
+        ...(prior.name?{legacyCustomName:clean(prior.name,40)}:{}),
+        ...(prior.avatar?{legacyAvatar:clean(prior.avatar,12)}:{}),
+        ...(Array.isArray(prior.colors)&&prior.colors.length===2?{legacyColors:[...prior.colors]}:{})
+      };
+    }
+    return identity;
+  }
+
   function emptyRegistry(){return {version:VERSION,families:{},adults:{},learners:{},memberships:{},learnerAdultAccess:{},createdAt:now(),updatedAt:now()}}
 
   function normalizeLearner(raw={}){
     const placement=canonicalPlacement({stage:raw.stage,grade:raw.grade});
-    return {...raw,stage:placement.stage,grade:placement.grade||null};
+    return {...raw,stage:placement.stage,grade:placement.grade||null,mentorId:ARCHAEMENES_ID,mentorIdentity:canonicalMentorIdentity(raw,placement.stage)};
   }
 
   function normalizeRegistry(raw){
@@ -144,9 +179,9 @@
   function registerLearner({familyId,nickname,stage="preschool",grade=null,ageBand="",interests=[],mentorId=null,mentorIdentity=null,guardianRelease=null,existingLearnerId=null,linkedAdultId=null,selfDirectedAdult=false}={}){
     const registry=load();if(!registry.families[familyId])throw new Error("family-not-found");
     const learnerId=existingLearnerId||id("learner"),accountId=id("learneracct"),prior=registry.learners[learnerId]||{},placement=canonicalPlacement({stage,grade});
-    registry.learners[learnerId]={...prior,learnerId,accountId:prior.accountId||accountId,familyId,nickname:clean(nickname,40)||"Learner",stage:placement.stage,grade:placement.grade,ageBand:clean(ageBand,30),interests:arr(interests,30),mentorId:mentorId||prior.mentorId||null,mentorIdentity:mentorIdentity?clone(mentorIdentity):(prior.mentorIdentity||null),guardianRelease:guardianRelease?clone(guardianRelease):(prior.guardianRelease||null),linkedAdultId:linkedAdultId||prior.linkedAdultId||null,selfDirectedAdult:Boolean(selfDirectedAdult||prior.selfDirectedAdult),accountState:prior.accountState||(selfDirectedAdult?"local-self-managed":"local-parent-managed"),createdAt:prior.createdAt||now(),updatedAt:now()};
+    registry.learners[learnerId]={...prior,learnerId,accountId:prior.accountId||accountId,familyId,nickname:clean(nickname,40)||"Learner",stage:placement.stage,grade:placement.grade,ageBand:clean(ageBand,30),interests:arr(interests,30),mentorId:mentorId||prior.mentorId||ARCHAEMENES_ID,mentorIdentity:mentorIdentity?clone(mentorIdentity):(prior.mentorIdentity||null),guardianRelease:guardianRelease?clone(guardianRelease):(prior.guardianRelease||null),linkedAdultId:linkedAdultId||prior.linkedAdultId||null,selfDirectedAdult:Boolean(selfDirectedAdult||prior.selfDirectedAdult),accountState:prior.accountState||(selfDirectedAdult?"local-self-managed":"local-parent-managed"),createdAt:prior.createdAt||now(),updatedAt:now()};
     registry.families[familyId].learnerIds=[...new Set([...(registry.families[familyId].learnerIds||[]),learnerId])];
-    save(registry);setActive({familyId,learnerId});audit("learner.registered",{familyId,learnerId,stage:placement.stage,grade:placement.grade,selfDirectedAdult:Boolean(selfDirectedAdult)});return clone(registry.learners[learnerId]);
+    save(registry);setActive({familyId,learnerId});audit("learner.registered",{familyId,learnerId,stage:placement.stage,grade:placement.grade,selfDirectedAdult:Boolean(selfDirectedAdult),mentorId:ARCHAEMENES_ID});return getLearner(learnerId);
   }
 
   function registerAdultLearner({adultId=activeIds().adultId,familyId=activeIds().familyId,nickname="",interests=[]}={}){
@@ -154,7 +189,7 @@
     const adult=registry.adults[adultId];if(!adult)throw new Error("adult-not-found");
     familyId=familyId||(adult.familyIds||[])[0]||null;if(!familyId||!registry.families[familyId])throw new Error("family-not-found");
     const existing=Object.values(registry.learners).find(l=>l?.linkedAdultId===adultId&&l?.selfDirectedAdult===true&&l?.stage==="higher");
-    if(existing){setActive({familyId,adultId,learnerId:existing.learnerId});return clone(existing)}
+    if(existing){setActive({familyId,adultId,learnerId:existing.learnerId});return getLearner(existing.learnerId)}
     const learner=registerLearner({familyId,nickname:clean(nickname,40)||adult.displayName||"Adult Scholar",stage:"higher",grade:null,ageBand:"adult",interests,linkedAdultId:adultId,selfDirectedAdult:true});
     grantAdultAccess({familyId,adultId,learnerId:learner.learnerId,permissionPreset:"self-scholar"});
     setActive({familyId,adultId,learnerId:learner.learnerId});audit("adult.self-learning-registered",{familyId,adultId,learnerId:learner.learnerId,stage:"higher"});return getLearner(learner.learnerId);
@@ -179,7 +214,7 @@
   function updateLearnerPlacement(learnerId,{stage=null,grade=null}={}){
     const registry=load(),learner=registry.learners[learnerId];if(!learner)throw new Error("learner-not-found");
     const placement=canonicalPlacement({stage:stage||learner.stage,grade:grade===undefined?learner.grade:grade});
-    learner.stage=placement.stage;learner.grade=placement.grade;learner.updatedAt=now();save(registry);audit("learner.placement-updated",{learnerId,stage:learner.stage,grade:learner.grade});global.dispatchEvent(new CustomEvent("khaemenes-learner-placement-changed",{detail:{learnerId,stage:learner.stage,grade:learner.grade}}));return clone(learner);
+    learner.stage=placement.stage;learner.grade=placement.grade;learner.updatedAt=now();save(registry);audit("learner.placement-updated",{learnerId,stage:learner.stage,grade:learner.grade});global.dispatchEvent(new CustomEvent("khaemenes-learner-placement-changed",{detail:{learnerId,stage:learner.stage,grade:learner.grade}}));return getLearner(learnerId);
   }
   function updateLearnerStage(learnerId,stage){const s=normalizeStage(stage);if(!s)throw new Error("invalid-stage");const learner=getLearner(learnerId);if(!learner)throw new Error("learner-not-found");return updateLearnerPlacement(learnerId,{stage:s,grade:gradeAllowedForStage(learner.grade,s)?learner.grade:null})}
   function updateLearnerGrade(learnerId,grade){const g=normalizeGrade(grade);if(!g)throw new Error("invalid-grade");return updateLearnerPlacement(learnerId,{stage:stageForGrade(g),grade:g})}
@@ -188,18 +223,26 @@
   function migrateLegacyPreschool({familyId=null,adultId=null}={}){
     const legacy=readJSON(KEYS.legacyPreschool,null);if(!legacy?.learnerId)return {migrated:false,reason:"no-legacy-learner"};let ids=activeIds();if(!familyId)familyId=ids.familyId;if(!adultId)adultId=ids.adultId;
     if(!familyId){const created=createFamily({displayName:"Khaemenes Family",adultName:"Parent / Guardian",adultRole:"parent"});familyId=created.familyId;adultId=created.adultId}
-    const registry=load();if(!registry.learners[legacy.learnerId])registerLearner({familyId,nickname:legacy.nickname||"Learner",stage:legacy.pathway==="kindergarten"?"kindergarten":"preschool",grade:legacy.pathway==="kindergarten"?"k":"pre-k",ageBand:legacy.ageBand||"",interests:legacy.interests||[],mentorId:legacy.mentorId||null,mentorIdentity:legacy.mentorIdentity||null,guardianRelease:legacy.guardianRelease||null,existingLearnerId:legacy.learnerId});
+    const registry=load();if(!registry.learners[legacy.learnerId])registerLearner({familyId,nickname:legacy.nickname||"Learner",stage:legacy.pathway==="kindergarten"?"kindergarten":"preschool",grade:legacy.pathway==="kindergarten"?"k":"pre-k",ageBand:legacy.ageBand||"",interests:legacy.interests||[],mentorId:legacy.mentorId||ARCHAEMENES_ID,mentorIdentity:legacy.mentorIdentity||null,guardianRelease:legacy.guardianRelease||null,existingLearnerId:legacy.learnerId});
     if(adultId&&!load().learnerAdultAccess[`${legacy.learnerId}:${adultId}`])grantAdultAccess({familyId,adultId,learnerId:legacy.learnerId,permissionPreset:"co-guardian"});
-    audit("legacy.preschool-migrated",{familyId,adultId,learnerId:legacy.learnerId});return {migrated:true,familyId,adultId,learnerId:legacy.learnerId};
+    audit("legacy.preschool-migrated",{familyId,adultId,learnerId:legacy.learnerId,mentorId:ARCHAEMENES_ID});return {migrated:true,familyId,adultId,learnerId:legacy.learnerId};
   }
 
-  function exportFamily(familyId=activeIds().familyId){const registry=load(),family=registry.families[familyId];if(!family)throw new Error("family-not-found");const adultIds=family.adultIds||[],learnerIds=family.learnerIds||[];return {format:"khaemenes-family-export-v1.2",exportedAt:now(),family:clone(family),adults:adultIds.map(id=>registry.adults[id]).filter(Boolean).map(clone),learners:learnerIds.map(id=>registry.learners[id]).filter(Boolean).map(clone),access:Object.values(registry.learnerAdultAccess).filter(x=>adultIds.includes(x.adultId)&&learnerIds.includes(x.learnerId)).map(clone),note:"Local family/adult-learning backup. This file is not an authenticated cross-device account."}}
+  function exportFamily(familyId=activeIds().familyId){const registry=load(),family=registry.families[familyId];if(!family)throw new Error("family-not-found");const adultIds=family.adultIds||[],learnerIds=family.learnerIds||[];return {format:"khaemenes-family-export-v1.3",exportedAt:now(),family:clone(family),adults:adultIds.map(id=>registry.adults[id]).filter(Boolean).map(clone),learners:learnerIds.map(id=>registry.learners[id]).filter(Boolean).map(clone),access:Object.values(registry.learnerAdultAccess).filter(x=>adultIds.includes(x.adultId)&&learnerIds.includes(x.learnerId)).map(clone),note:"Local family/adult-learning backup. This file is not an authenticated cross-device account."}}
   function auditLog(){return clone(readJSON(KEYS.audit,[]))}
-  function status(){const registry=load(),ids=activeIds();return {version:VERSION,origin:global.location?.origin||"",recommendedSharedOrigin:/^https:\/\/vervenveda\.com$/i.test(global.location?.origin||""),families:Object.keys(registry.families).length,adults:Object.keys(registry.adults).length,learners:Object.keys(registry.learners).length,active:ids,activeLearner:getLearner(ids.learnerId),activeAdult:getAdult(ids.adultId),adultLearner:getAdultLearner(ids.adultId)}}
+  function status(){const registry=load(),ids=activeIds();return {version:VERSION,origin:global.location?.origin||"",recommendedSharedOrigin:/^https:\/\/vervenveda\.com$/i.test(global.location?.origin||""),families:Object.keys(registry.families).length,adults:Object.keys(registry.adults).length,learners:Object.keys(registry.learners).length,active:ids,activeLearner:getLearner(ids.learnerId),activeAdult:getAdult(ids.adultId),adultLearner:getAdultLearner(ids.adultId),mentorAuthority:"academy-archaemenes"}}
 
-  global.KhaemenesFamilyRegistry=Object.freeze({version:VERSION,keys:KEYS,stages:STAGES,grades:GRADES,gradeMeta:GRADE_META,adultRoles:ADULT_ROLES,permissionPresets:PERMISSION_PRESETS,normalizeStage,normalizeGrade,stageForGrade,gradeAllowedForStage,canonicalPlacement,destinationFor,load,save,status,activeIds,setActive,createFamily,addAdultLocal,registerLearner,registerAdultLearner,getAdultLearner,grantAdultAccess,revokeAdultAccess,canAdult,getFamily,getAdult,getLearner,adultAccessForLearner,migrateLegacyPreschool,updateLearnerStage,updateLearnerGrade,updateLearnerPlacement,learnerDestination,exportFamily,auditLog});
+  global.KhaemenesFamilyRegistry=Object.freeze({version:VERSION,keys:KEYS,stages:STAGES,grades:GRADES,gradeMeta:GRADE_META,adultRoles:ADULT_ROLES,permissionPresets:PERMISSION_PRESETS,mentorId:ARCHAEMENES_ID,mentorAuthority:"academy-archaemenes",normalizeStage,normalizeGrade,stageForGrade,gradeAllowedForStage,canonicalPlacement,destinationFor,mentorExpression,load,save,status,activeIds,setActive,createFamily,addAdultLocal,registerLearner,registerAdultLearner,getAdultLearner,grantAdultAccess,revokeAdultAccess,canAdult,getFamily,getAdult,getLearner,adultAccessForLearner,migrateLegacyPreschool,updateLearnerStage,updateLearnerGrade,updateLearnerPlacement,learnerDestination,exportFamily,auditLog});
 
-  try{const existing=load();if(!Object.keys(existing.families).length&&readJSON(KEYS.legacyPreschool,null))migrateLegacyPreschool();else if(existing.version!==VERSION)save(existing)}catch{}
+  try{
+    const rawExisting=readJSON(KEYS.registry,null);
+    if(!rawExisting&&readJSON(KEYS.legacyPreschool,null))migrateLegacyPreschool();
+    else if(rawExisting){
+      const learners=Object.values(rawExisting.learners&&typeof rawExisting.learners==="object"?rawExisting.learners:{});
+      const needsMentorMigration=learners.some(learner=>learner?.mentorId!==ARCHAEMENES_ID||learner?.mentorIdentity?.mode!=="archaemenes");
+      if(rawExisting.version!==VERSION||needsMentorMigration)save(rawExisting);
+    }
+  }catch{}
   global.dispatchEvent(new CustomEvent("khaemenes-family-ready",{detail:status()}));
 })(window);
 
