@@ -1,7 +1,7 @@
 (function attachKhaemenesFamilySchoolBridge(global){
   "use strict";
 
-  const VERSION="2.2.0";
+  const VERSION="2.3.0";
   const script=document.currentScript;
   const surfaceStage=(script?.dataset?.khaemenesStage||"").trim();
   const surfaceGrades=(script?.dataset?.khaemenesGrades||"").split(",").map(x=>x.trim()).filter(Boolean);
@@ -30,17 +30,22 @@
      - no active family session -> Family Portal
      - active family session -> Academy-hosted Archaemenes Mentor
      - a named learner Mentor button selects that learner first, then opens Archaemenes
+     - explicit Archaemenes Mentor links may use data-khaemenes-mentor or the canonical Mentor URL
+     - the historical Preschool #familyMentorEntry doorway remains a compatibility alias
      The Academy-hosted Mentor shares the same vervenveda.com origin as the Family Registry,
      so learner continuity is preserved without placing learner or family IDs in the URL. */
-  function bindPreschoolMentorRouting(){
-    if(normalizedSurfaceStage()!=="preschool"||document.documentElement.dataset.khaemenesMentorRoutingBound==="1")return;
+  function bindMentorRouting(){
+    if(document.documentElement.dataset.khaemenesMentorRoutingBound==="1")return;
     document.documentElement.dataset.khaemenesMentorRoutingBound="1";
 
     document.addEventListener("click",event=>{
       const origin=event.target;
       if(!origin?.closest)return;
+
       const namedMentor=origin.closest("[data-enter-child-mentor]");
-      const mentorDoor=namedMentor||origin.closest('a[href="#familyMentorEntry"]');
+      const explicitMentor=origin.closest('[data-khaemenes-mentor],a[href="https://vervenveda.com/Khaemenes_Academy.github.io/mentor/"],a[href="/Khaemenes_Academy.github.io/mentor/"]');
+      const legacyPreschoolDoor=normalizedSurfaceStage()==="preschool"?origin.closest('a[href="#familyMentorEntry"]'):null;
+      const mentorDoor=namedMentor||explicitMentor||legacyPreschoolDoor;
       if(!mentorDoor)return;
 
       const registry=global.KhaemenesFamilyRegistry;
@@ -99,7 +104,7 @@
       const placementLabel=gradeMeta?.label||learner.stage||"Learner";
       const mismatch=placement.mismatch;
       const mismatchHTML=mismatch?`<div style="margin-top:8px;padding:8px;border-radius:7px;background:#fff4d8;color:#6d5325"><strong>Different campus context.</strong><br>${escapeHTML(learner.nickname)} is registered for ${escapeHTML(placementLabel)}. This page remains available for parent/teacher preview, but learner work should normally continue from the registered path.${destination?.url?`<br><a href="${escapeHTML(destination.url)}" style="display:inline-block;margin-top:5px;color:#6d5325;font-weight:700">Go to registered path →</a>`:""}</div>`:"";
-      box.innerHTML=`<strong>${escapeHTML(learner.nickname)}</strong><br><span>${escapeHTML(family?.displayName||"Khaemenes Family")} · ${escapeHTML(placementLabel)}</span>${mismatchHTML}<div style="margin-top:7px"><a href="${archaemenesPortal}" style="color:#2f7140;font-weight:700">Archaemenes →</a> · <a href="${studentPortal}" style="color:#2f7140;font-weight:700">Student Portal →</a> · <a href="${familyPortal}" style="color:#2f7140;font-weight:700">Family Profile →</a></div>`;
+      box.innerHTML=`<strong>${escapeHTML(learner.nickname)}</strong><br><span>${escapeHTML(family?.displayName||"Khaemenes Family")} · ${escapeHTML(placementLabel)}</span>${mismatchHTML}<div style="margin-top:7px"><a href="${archaemenesPortal}" data-khaemenes-mentor style="color:#2f7140;font-weight:700">Archaemenes →</a> · <a href="${studentPortal}" style="color:#2f7140;font-weight:700">Student Portal →</a> · <a href="${familyPortal}" style="color:#2f7140;font-weight:700">Family Profile →</a></div>`;
     }
     document.body.appendChild(box);
     global.dispatchEvent(new CustomEvent("khaemenes-school-bridge-ready",{detail:{version:VERSION,stage:surfaceStage,learnerId:learner?.learnerId||null,mismatch:placement.mismatch,previewAllowed:true,hardRedirect:false,mentorDestination:mentorDestination(registry)}}));
@@ -111,9 +116,9 @@
     activeFamilyState,
     mentorDestination,
     routes:Object.freeze({familyPortal,studentPortal,archaemenesPortal}),
-    policy:Object.freeze({previewAllowed:true,hardRedirect:false,mentorAuthority:"academy-archaemenes",preschoolMentorRouting:"family-portal-unless-active-family-session-then-archaemenes"})
+    policy:Object.freeze({previewAllowed:true,hardRedirect:false,mentorAuthority:"academy-archaemenes",mentorRouting:"all-stages-explicit-doorways",preschoolLegacyMentorRouting:"family-portal-unless-active-family-session-then-archaemenes"})
   });
-  bindPreschoolMentorRouting();
+  bindMentorRouting();
   global.addEventListener("khaemenes-family-changed",()=>global.KhaemenesFamilyRegistry&&render(global.KhaemenesFamilyRegistry));
   global.addEventListener("khaemenes-learner-placement-changed",()=>global.KhaemenesFamilyRegistry&&render(global.KhaemenesFamilyRegistry));
   injectSharedRegistry();
