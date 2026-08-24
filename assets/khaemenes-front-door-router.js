@@ -1,11 +1,23 @@
 (function attachKhaemenesFrontDoorRouter(global){
   "use strict";
-  const VERSION="1.2.0";
+  const VERSION="1.3.0";
+  const ACADEMY_MENTOR="https://vervenveda.com/Khaemenes_Academy.github.io/mentor/";
+  const FAMILY_PORTAL="https://vervenveda.com/Khaemenes_Academy.github.io/family/";
+  const ARCHAEMENES_HOME="https://artist1970.github.io/Archaemenes.github.io/";
 
   function registry(){return global.KhaemenesFamilyRegistry||null}
   function naib(){return global.KhaemenesNAIB||null}
   function context(){return global.KhaemenesLearnerContext||null}
   function activeLearner(){return registry()?.getLearner?.()||null}
+
+  function mentorDestination(){
+    const r=registry();
+    if(!r)return FAMILY_PORTAL;
+    const family=r.getFamily?.()||null;
+    const adult=r.getAdult?.()||null;
+    const learner=r.getLearner?.()||null;
+    return family&&(adult||learner)?ACADEMY_MENTOR:FAMILY_PORTAL;
+  }
 
   function identifiedStudentDestination({stage=null,grade=null}={}){
     if(stage!=="high")return null;
@@ -65,7 +77,7 @@
 
   function familySnapshot(){
     const r=registry(),family=r?.getFamily?.()||null,learner=r?.getLearner?.()||null;
-    return Object.freeze({version:VERSION,hasRegistry:Boolean(r),family,learner,learnerContext:context()?.snapshot?.()||null,route:routeForLearner(learner)});
+    return Object.freeze({version:VERSION,hasRegistry:Boolean(r),family,learner,learnerContext:context()?.snapshot?.()||null,route:routeForLearner(learner),mentorDestination:mentorDestination()});
   }
 
   function attachVerificationDoorway(){
@@ -79,8 +91,54 @@
     records.appendChild(link);
   }
 
-  global.KhaemenesFrontDoorRouter=Object.freeze({version:VERSION,activeLearner,identifiedStudentDestination,routeForLearner,continueLearner,switchLearner,familySnapshot});
-  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",attachVerificationDoorway,{once:true});
-  else attachVerificationDoorway();
+  function attachArchaemenesDoorway(){
+    if(document.querySelector('[data-academy-archaemenes]'))return;
+
+    const services=document.querySelector("#services .service-grid");
+    if(services){
+      const cards=[...services.querySelectorAll(".service")];
+      const combined=cards.find(card=>card.querySelector("h3")?.textContent.trim()==="NAIB & Mentor Routing");
+      if(combined){
+        const heading=combined.querySelector("h3");
+        const text=combined.querySelector("p");
+        const link=combined.querySelector("a");
+        if(heading)heading.textContent="NAIB · Navigation & Delegation";
+        if(text)text.textContent="NAIB helps learners and families reach the appropriate Academy doorway, specialist, resource, or support path without becoming a second Academy Mentor.";
+        if(link){link.href="./student/";link.textContent="Student Navigation →";}
+      }
+
+      const card=document.createElement("article");
+      card.className="service";
+      card.dataset.academyArchaemenes="true";
+      card.innerHTML=`<span class="service-mark">A</span><h3>Archaemenes · Principal & Mentor</h3><p>Archaemenes is Principal of Khaemenes Academy and its one continuous educational Mentor. His expression grows from Wise Owl to Academy Mentor to Scholar while learner identity, grades, placement, and mastery remain with their proper Academy authorities.</p><a href="${mentorDestination()}" data-academy-mentor-enter>Talk with Archaemenes →</a><br><a href="${ARCHAEMENES_HOME}" rel="noopener noreferrer">Meet Archaemenes →</a>`;
+      services.appendChild(card);
+    }
+
+    const heroActions=document.querySelector(".hero-actions");
+    if(heroActions&&!heroActions.querySelector('[data-academy-mentor-hero]')){
+      const link=document.createElement("a");
+      link.className="btn";
+      link.href=mentorDestination();
+      link.dataset.academyMentorHero="true";
+      link.textContent="Talk with Archaemenes";
+      heroActions.appendChild(link);
+    }
+  }
+
+  function refreshMentorDoorways(){
+    const destination=mentorDestination();
+    document.querySelectorAll('[data-academy-mentor-enter],[data-academy-mentor-hero]').forEach(link=>link.href=destination);
+  }
+
+  function attachFrontDoorEnhancements(){
+    attachVerificationDoorway();
+    attachArchaemenesDoorway();
+    refreshMentorDoorways();
+  }
+
+  global.KhaemenesFrontDoorRouter=Object.freeze({version:VERSION,activeLearner,mentorDestination,identifiedStudentDestination,routeForLearner,continueLearner,switchLearner,familySnapshot});
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",attachFrontDoorEnhancements,{once:true});
+  else attachFrontDoorEnhancements();
+  global.addEventListener("khaemenes-family-changed",refreshMentorDoorways);
   global.dispatchEvent(new CustomEvent("khaemenes-front-door-router-ready",{detail:{version:VERSION}}));
 })(window);
