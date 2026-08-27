@@ -7,7 +7,7 @@ Move Academy identity and learning continuity from browser-local storage toward 
 The first production milestone is intentionally narrow:
 
 1. family account sign-in;
-2. student sign-in with Student ID + password/passphrase;
+2. student sign-in with Student ID + password;
 3. parent/guardian-managed student password reset;
 4. cross-device restoration of canonical learner identity;
 5. cross-device restoration of learner-scoped course continuity.
@@ -35,10 +35,24 @@ Account Account     Account
 
 A parent/guardian may create or manage a student's sign-in credential, reset that credential, and revoke the student's active sessions. The parent must not be able to retrieve the student's existing password because passwords are never stored reversibly.
 
+## Academy Family Account password policy
+
+Khaemenes Academy Family Accounts follow the current protected `MemberRegistryVault` password contract. This is the Academy family/student credential policy unless deliberately revised through a later security review.
+
+A password must:
+
+- contain at least 12 characters;
+- contain no more than 512 characters;
+- use at least three of these four categories: lowercase letters, uppercase letters, numbers, symbols;
+- not match a blocked common password;
+- be processed only by the protected server-side password authority.
+
+The current protected implementation derives password records with `scrypt`, a per-password random salt, and timing-safe verification. Public Academy clients must not reproduce password hashing or retain passwords after the authentication request completes.
+
 ## Student sign-in contract
 
 - username: confirmed Khaemenes Student ID;
-- secret: password/passphrase;
+- secret: Academy password satisfying the Family Account password policy above;
 - session: protected server-issued HttpOnly cookie;
 - recovery: authorized family adult reset flow.
 
@@ -58,31 +72,66 @@ If local and protected records conflict, surface a reconciliation state rather t
 
 Parents/guardians may create an initial student credential, issue/reset a temporary password, require a credential change after temporary-password use where appropriate, revoke student sessions, and view non-secret account/session status. They may never retrieve the current password.
 
-## Academic firewall
+## Optional 333 Network account linking
 
-Account-management actions must never silently alter grades, mastery, assessment evidence, course completion, placement, certificates, or transcripts.
+Enrollment in Khaemenes Academy does not require enrollment in the 333 Network. The Family Account must remain fully usable as an Academy account on its own.
 
-## Phase v1 protected endpoints
+If a family separately chooses to enroll in the 333 Network, the protected infrastructure may explicitly link the family's Academy account to approved 333 identities and services, including the family's 333 number, email identity, and social account.
 
-The initial backend should provide equivalent protected operations for:
+The linkage must be opt-in and server-authorized. It must not:
+
+- copy or expose passwords between public clients;
+- place authentication or session secrets in browser storage;
+- silently create a 333 account for an Academy family;
+- make 333 enrollment a condition of receiving Academy instruction;
+- merge academic authority with communication/social authority;
+- permit a 333 profile, number, email, or social account to change grades, mastery, placement, or learner identity;
+- destroy the Academy Family Account or academic continuity if the family later unlinks from 333.
+
+The intended relationship is an authenticated identity association, not a public-client credential handoff:
 
 ```text
-POST /v1/account/adult/login
-POST /v1/account/student/login
-POST /v1/account/logout
-GET  /v1/account/session
-POST /v1/account/student/credential
-POST /v1/account/student/credential/reset
-POST /v1/account/student/sessions/revoke
-GET  /v1/account/learner/continuity
-PUT  /v1/account/learner/continuity
+Khaemenes Family Account
+        │
+        ├── Academy learner identity / progress / records
+        │
+        └── optional explicit link
+                    │
+                    ▼
+              333 Network
+              ├── number
+              ├── email
+              └── social account
+```
+
+## Academic firewall
+
+Account-management actions and optional 333 linking must never silently alter grades, mastery, assessment evidence, course completion, placement, certificates, or transcripts.
+
+## Phase v1 protected operations
+
+The Academy public client should consume protected operations through the approved trusted gateway rather than inventing a second account authority. The existing OHMIC account authority and `MemberRegistryVault` are the current protected identity/session foundation under forensic review.
+
+Phase v1 requires equivalent protected capabilities for:
+
+```text
+adult/family authentication
+student authentication by Student ID + password
+logout and session invalidation
+current-session lookup
+parent-managed student credential creation/reset
+student session revocation
+learner continuity read/write
+optional 333 identity-link creation/status/revocation after Academy authentication is certified
 ```
 
 Exact private backend topology, storage engines, rate-limit thresholds, signing keys, recovery internals, and anti-abuse rules must not be published here.
 
 ## Release gate
 
-Do not enable protected account mode for public students until all are verified: HTTPS-only transport; modern password hashing; secure HttpOnly sessions; appropriate CSRF protection; login/reset rate limiting; non-enumerating errors; parent isolation across two test families; student isolation across two test learners; logout/session revocation; cross-device learnerId restoration; cross-device Pre-Algebra continuity restoration; no auth/session secrets in web storage; secret-redacted audit logging; and rollback/recovery evidence.
+Do not enable protected account mode for public students until all are verified: HTTPS-only transport; current MemberRegistryVault password-policy enforcement; protected password derivation and verification; secure HttpOnly sessions; appropriate CSRF protection; login/reset rate limiting; non-enumerating errors; parent isolation across two test families; student isolation across two test learners; logout/session revocation; cross-device learnerId restoration; cross-device Pre-Algebra continuity restoration; no auth/session secrets in web storage; secret-redacted audit logging; and rollback/recovery evidence.
+
+Optional 333 linking has its own later gate and must not delay or weaken standalone Academy Family Account persistence.
 
 ## Next phase
 
