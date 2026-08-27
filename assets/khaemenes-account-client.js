@@ -1,7 +1,7 @@
 (function attachKhaemenesAccountClient(global){
   "use strict";
 
-  const VERSION="1.0.0";
+  const VERSION="1.1.0";
   const DEFAULT_TIMEOUT_MS=8000;
   const FORBIDDEN_KEYS=/password|passcode|secret|token|otp|verification.?code|recovery.?code|session.?id|cookie|hash|pepper|private.?key|refresh/i;
   let config=Object.freeze({enabled:false,baseUrl:null,timeoutMs:DEFAULT_TIMEOUT_MS});
@@ -46,9 +46,9 @@
     config=Object.freeze({enabled:true,baseUrl:url.origin+url.pathname.replace(/\/$/,""),timeoutMs:Number.isFinite(timeout)&&timeout>=1000&&timeout<=30000?timeout:DEFAULT_TIMEOUT_MS});
     return config;
   }
-  async function request(path,{method="GET",body=null,signal=null}={}){
+  async function fetchJson(path,{method="GET",body=null,signal=null,allowCredentialBody=false}={}){
     if(!config.enabled||!config.baseUrl)throw new Error("account-service-not-configured");
-    if(body!==null)assertSafeObject(body,"request");
+    if(body!==null&&!allowCredentialBody)assertSafeObject(body,"request");
     const url=assertSafeUrl(`${config.baseUrl}/${clean(path,180).replace(/^\/+/,"")}`);
     const controller=new AbortController();
     const timer=global.setTimeout(()=>controller.abort("timeout"),config.timeoutMs);
@@ -66,17 +66,30 @@
       });
       const type=response.headers.get("content-type")||"";
       const data=type.includes("application/json")?await response.json():null;
-      if(!response.ok)throw new Error(`account-service-error:${response.status}`);
+      if(!response.ok){
+        const err=new Error(`account-service-error:${response.status}`);
+        err.status=response.status;
+        throw err;
+      }
       return data;
     }finally{global.clearTimeout(timer)}
   }
+  function request(path,options={}){return fetchJson(path,options)}
   async function session(){return safeSession(await request("session"))}
+  async function studentLogin({institutionalId,password,signal=null}={}){
+    const id=clean(institutionalId,64).toUpperCase();
+    const secret=String(password??"");
+    if(!id||!secret)throw new Error("student-login-fields-required");
+    if(secret.length>1024)throw new Error("student-password-too-long");
+    const raw=await fetchJson("student/login",{method:"POST",body:{institutionalId:id,password:secret},signal,allowCredentialBody:true});
+    return safeSession(raw);
+  }
   async function logout(){
     await request("logout",{method:"POST",body:{action:"logout"}});
     return Object.freeze({authenticated:false});
   }
-  function status(){return Object.freeze({version:VERSION,enabled:config.enabled,configured:Boolean(config.baseUrl),transport:config.baseUrl?"https":"none",credentialStorage:"httpOnly-cookie-only",webStorageTokens:false})}
+  function status(){return Object.freeze({version:VERSION,enabled:config.enabled,configured:Boolean(config.baseUrl),transport:config.baseUrl?"https":"none",credentialStorage:"httpOnly-cookie-only",webStorageTokens:false,studentPasswordStorage:false})}
 
-  global.KhaemenesAccountClient=Object.freeze({version:VERSION,configure,status,session,logout,safeSession});
+  global.KhaemenesAccountClient=Object.freeze({version:VERSION,configure,status,session,studentLogin,logout,safeSession});
   global.dispatchEvent(new CustomEvent("khaemenes-account-client-ready",{detail:status()}));
 })(window);
