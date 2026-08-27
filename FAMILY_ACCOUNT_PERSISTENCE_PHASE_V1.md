@@ -58,6 +58,19 @@ The current protected implementation derives password records with `scrypt`, a p
 
 A Student ID is an identifier, not a secret.
 
+## Enrollment numbering
+
+Khaemenes Academy uses human-readable sequential enrollment numbers for administration while preserving non-sequential internal continuity identifiers.
+
+```text
+KA-FAM-001  founding family enrollment number
+KA-STU-001  founding student enrollment number
+```
+
+The Academy maintains independent family, adult, and student sequences. Student numbers are Academy-wide and do not restart inside each family. Enrollment numbers are never recycled and are never authenticators.
+
+Protected records retain immutable internal identifiers such as `familyId` and `learnerId` for authorization and continuity. A new enrollment number must not silently replace an existing internal identity.
+
 ## Cross-device continuity contract
 
 After authentication, the Account Service resolves the signed-in student to the canonical internal `learnerId` and returns only display/routing-safe context. The `learnerId` becomes the continuity key used to recover learner-scoped course state across devices. Server authorization remains authoritative for protected operations.
@@ -68,9 +81,23 @@ The existing browser-local Family Registry remains available during migration. O
 
 If local and protected records conflict, surface a reconciliation state rather than overwriting either side silently.
 
+A family may deliberately choose to begin a new protected learner record instead of migrating old browser-local progress. In that case, leave the prior local record untouched as historical/local data unless the family explicitly chooses to remove it.
+
 ## Parent-managed student credential flow
 
 Parents/guardians may create an initial student credential, issue/reset a temporary password, require a credential change after temporary-password use where appropriate, revoke student sessions, and view non-secret account/session status. They may never retrieve the current password.
+
+## Homeschool compliance reporting foundation
+
+Family and student reports must follow `HOMESCHOOL_COMPLIANCE_FRAMEWORK_V1.md`.
+
+There is no single U.S. national homeschool rulebook that can be applied uniformly to every family. Khaemenes therefore uses a national academic record core plus a jurisdiction-specific state/territory compliance overlay based on authoritative current sources.
+
+Protected Family Accounts should retain the family's jurisdiction, education path, academic year, ruleset ID/version, and ruleset review date. Generated compliance-support reports must preserve the ruleset version used when they were created.
+
+A state-law requirement must never be guessed. If a requirement has not been verified against an authoritative source, the system must surface it as unknown/review-required rather than presenting an unsupported compliance claim.
+
+Student-facing dashboards emphasize the learner's own academic record. Family dashboards may additionally show authorized compliance-support requirements, deadlines, portfolio/evaluation status, and recordkeeping tools. Academy admin may maintain ruleset provenance and aggregate enrollment information without exposing one family's records to another.
 
 ## Optional 333 Network account linking
 
@@ -85,7 +112,7 @@ The linkage must be opt-in and server-authorized. It must not:
 - silently create a 333 account for an Academy family;
 - make 333 enrollment a condition of receiving Academy instruction;
 - merge academic authority with communication/social authority;
-- permit a 333 profile, number, email, or social account to change grades, mastery, placement, or learner identity;
+- permit a 333 profile, number, email, or social account to change grades, mastery, placement, learner identity, jurisdiction, or homeschool compliance state;
 - destroy the Academy Family Account or academic continuity if the family later unlinks from 333.
 
 The intended relationship is an authenticated identity association, not a public-client credential handoff:
@@ -106,7 +133,7 @@ Khaemenes Family Account
 
 ## Academic firewall
 
-Account-management actions and optional 333 linking must never silently alter grades, mastery, assessment evidence, course completion, placement, certificates, or transcripts.
+Account-management actions and optional 333 linking must never silently alter grades, mastery, assessment evidence, course completion, placement, certificates, transcripts, jurisdiction, or compliance-support records.
 
 ## Phase v1 protected operations
 
@@ -129,10 +156,10 @@ Exact private backend topology, storage engines, rate-limit thresholds, signing 
 
 ## Release gate
 
-Do not enable protected account mode for public students until all are verified: HTTPS-only transport; current MemberRegistryVault password-policy enforcement; protected password derivation and verification; secure HttpOnly sessions; appropriate CSRF protection; login/reset rate limiting; non-enumerating errors; parent isolation across two test families; student isolation across two test learners; logout/session revocation; cross-device learnerId restoration; cross-device Pre-Algebra continuity restoration; no auth/session secrets in web storage; secret-redacted audit logging; and rollback/recovery evidence.
+Do not enable protected account mode for public students until all are verified: HTTPS-only transport; current MemberRegistryVault password-policy enforcement; protected password derivation and verification; secure HttpOnly sessions; appropriate CSRF protection; login/reset rate limiting; non-enumerating errors; parent isolation across two test families; student isolation across two test learners; logout/session revocation; cross-device learnerId restoration; cross-device course continuity restoration; no auth/session secrets in web storage; secret-redacted audit logging; rollback/recovery evidence; jurisdiction-aware report metadata; ruleset version/date provenance; authoritative source links for any state-law requirement shown as verified; and visible failure for stale/unknown compliance requirements rather than unsupported assumptions.
 
 Optional 333 linking has its own later gate and must not delay or weaken standalone Academy Family Account persistence.
 
 ## Next phase
 
-After Phase v1 passes the release gate, add protected Family Account file/document storage scoped by `familyId` and `learnerId`, with explicit sharing permissions and the same human/academic authority boundaries.
+After Phase v1 passes the release gate, add protected Family Account file/document storage scoped by `familyId` and `learnerId`, with explicit sharing permissions and the same human/academic authority boundaries. Expand Student Profile v2 and Family Profile v2 against the national academic record core and verified jurisdiction rulesets.
