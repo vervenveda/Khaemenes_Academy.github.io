@@ -1,0 +1,180 @@
+{
+  "schemaVersion": "1.0.0",
+  "rulesetId": "KA-HS-CA-2026-v1",
+  "jurisdiction": {
+    "code": "CA",
+    "name": "California",
+    "kind": "state",
+    "country": "US"
+  },
+  "version": 1,
+  "publishedAt": null,
+  "reviewedAt": "2026-08-27T21:30:00Z",
+  "effectiveFrom": null,
+  "effectiveTo": null,
+  "supersedes": null,
+  "verificationStatus": "human-review-required",
+  "educationPaths": ["home-education", "private-school"],
+  "sources": [
+    {
+      "sourceId": "CA-CDE-HOME-SCHOOLING-2026",
+      "authorityLevel": "state-agency",
+      "title": "Schooling at Home",
+      "authority": "California Department of Education",
+      "url": "https://www.cde.ca.gov/sp/ps/homeschool.asp",
+      "citation": null,
+      "effectiveDate": null,
+      "reviewedAt": "2026-08-27T21:30:00Z",
+      "status": "active",
+      "notes": "Current CDE guidance on home-based private schools, instruction, and required records."
+    },
+    {
+      "sourceId": "CA-CDE-HOME-FAQ-2026",
+      "authorityLevel": "state-agency",
+      "title": "Schooling at Home Frequently Asked Questions",
+      "authority": "California Department of Education",
+      "url": "https://www.cde.ca.gov/sp/ps/schoolingathomefaq.asp",
+      "citation": null,
+      "effectiveDate": null,
+      "reviewedAt": "2026-08-27T21:30:00Z",
+      "status": "active",
+      "notes": "Agency FAQ explaining the home-based private-school affidavit path and local verification of the compulsory-attendance exemption."
+    },
+    {
+      "sourceId": "CA-EC-33190-48222-2026",
+      "authorityLevel": "statute",
+      "title": "California Education Code §§ 33190 and 48222 — Private School Affidavit and Attendance in Private School",
+      "authority": "California Legislature, reproduced by California Department of Education",
+      "url": "https://www.cde.ca.gov/sp/ps/psaffedcode.asp",
+      "citation": "Cal. Educ. Code §§ 33190, 48222",
+      "effectiveDate": null,
+      "reviewedAt": "2026-08-27T21:30:00Z",
+      "status": "active",
+      "notes": "Primary code text for annual affidavit, full-time private-school instruction, English instruction, branches of study, attendance register, and district verification."
+    },
+    {
+      "sourceId": "CA-CDE-PSA-2026-27",
+      "authorityLevel": "state-agency",
+      "title": "Private School Affidavit 2026–27",
+      "authority": "California Department of Education",
+      "url": "https://www3.cde.ca.gov/psa/?area=Main",
+      "citation": null,
+      "effectiveDate": null,
+      "reviewedAt": "2026-08-27T21:30:00Z",
+      "status": "active",
+      "notes": "Current filing portal confirms annual filing under EC § 33190 and eligibility criteria for full-time private schools."
+    },
+    {
+      "sourceId": "CA-CDE-PRIVATE-SCHOOL-FAQ-2026",
+      "authorityLevel": "state-agency",
+      "title": "Private Schools Frequently Asked Questions",
+      "authority": "California Department of Education",
+      "url": "https://www.cde.ca.gov/sp/ps/psfaq.asp",
+      "citation": null,
+      "effectiveDate": null,
+      "reviewedAt": "2026-08-27T21:30:00Z",
+      "status": "active",
+      "notes": "Agency FAQ distinguishes the private-school exemption from the credentialed-private-tutor exemption and explains annual affidavit timing."
+    }
+  ],
+  "requirements": [
+    {
+      "requirementId": "CA-compulsory-attendance-private-school-path",
+      "category": "compulsoryAttendanceAge",
+      "legalStatus": "conditional",
+      "summary": "California's home-based private-school path is used to establish an exemption from compulsory public-school attendance for school-age children. CDE guidance describes the affidavit path for children ages 6 through 18 and requires the private-school criteria in Education Code §§ 33190 and 48222 to be met.",
+      "appliesWhen": "A family is using a home-based private school to satisfy California compulsory-education requirements.",
+      "sourceIds": ["CA-CDE-HOME-FAQ-2026", "CA-EC-33190-48222-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": "California offers other legal education paths, including the separate credentialed-private-tutor exemption; this ruleset models the home-based private-school path first."
+    },
+    {
+      "requirementId": "CA-private-school-affidavit",
+      "category": "noticeOrRegistration",
+      "legalStatus": "required",
+      "summary": "A parent operating a qualifying home-based private school must file a Private School Affidavit with the California Department of Education each year. Education Code § 33190 specifies the statutory filing period of October 1 through October 15, while CDE opens the filing system more broadly to accommodate new schools and home schools.",
+      "appliesWhen": "The family relies on the home-based private-school exemption under Education Code § 48222.",
+      "sourceIds": ["CA-CDE-HOME-FAQ-2026", "CA-EC-33190-48222-2026", "CA-CDE-PSA-2026-27", "CA-CDE-PRIVATE-SCHOOL-FAQ-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": "Filing the affidavit is registration, not CDE approval, endorsement, validation, or certification."
+    },
+    {
+      "requirementId": "CA-local-exemption-verification",
+      "category": "noticeOrRegistration",
+      "legalStatus": "conditional",
+      "summary": "For the private-school compulsory-attendance exemption to be valid, Education Code § 48222 requires verification by the district attendance supervisor or other designated district official that the private school has complied with the annual affidavit requirement.",
+      "appliesWhen": "The family relies on the home-based private-school exemption under Education Code § 48222.",
+      "sourceIds": ["CA-CDE-HOME-FAQ-2026", "CA-EC-33190-48222-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": "CDE's home-school FAQ also states that after affidavit filing the family is not generally required to make continuing reports to the district solely because it home schools."
+    },
+    {
+      "requirementId": "CA-required-subjects-language",
+      "category": "requiredSubjects",
+      "legalStatus": "required",
+      "summary": "A qualifying private full-time day school must be taught in English, except as otherwise provided by law, and must offer instruction in the several branches of study required to be taught in California public schools. CDE points to Education Code §§ 51210 and 51220 for grade-band courses of study.",
+      "appliesWhen": "The family operates a home-based private school under Education Code § 48222.",
+      "sourceIds": ["CA-EC-33190-48222-2026", "CA-CDE-HOME-SCHOOLING-2026", "CA-CDE-PRIVATE-SCHOOL-FAQ-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": "A later subject-matrix sub-ruleset should map the grade-specific branches of study without treating Khaemenes course titles as statutory wording."
+    },
+    {
+      "requirementId": "CA-attendance-register",
+      "category": "instructionTimeOrAttendance",
+      "legalStatus": "required",
+      "summary": "Private-school authorities must keep pupil attendance in a register, clearly indicating every absence of a half day or more during each day the school is maintained.",
+      "appliesWhen": "The family operates a home-based private school under Education Code § 48222.",
+      "sourceIds": ["CA-EC-33190-48222-2026", "CA-CDE-HOME-SCHOOLING-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": "This ruleset records the required attendance-register function without inventing a home-school-specific annual hours total."
+    },
+    {
+      "requirementId": "CA-private-school-records",
+      "category": "portfolioOrRecordkeeping",
+      "legalStatus": "required",
+      "summary": "CDE states that a home-based private school must maintain the attendance records required by Education Code § 48222, the courses of study offered, and the names and addresses of faculty together with records of their educational qualifications. A copy of the affidavit is also required to be kept at the school under CDE guidance implementing § 33190.",
+      "appliesWhen": "The family operates and files as a California private school for home instruction.",
+      "sourceIds": ["CA-CDE-HOME-SCHOOLING-2026", "CA-CDE-HOME-FAQ-2026", "CA-EC-33190-48222-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": "Khaemenes may separately recommend retaining transcripts, student work, and portfolio artifacts for academic continuity."
+    },
+    {
+      "requirementId": "CA-teacher-qualification-private-school",
+      "category": "teacherOrParentQualifications",
+      "legalStatus": "conditional",
+      "summary": "Under the private-school exemption, instruction must be provided by persons capable of teaching; CDE explains that private-school teachers are not required to hold a California teaching credential. A separate private-tutor exemption does require a valid California teaching credential and has separate instructional-time conditions.",
+      "appliesWhen": "The family is selecting between the home-based private-school exemption and the separate credentialed-private-tutor exemption.",
+      "sourceIds": ["CA-EC-33190-48222-2026", "CA-CDE-PRIVATE-SCHOOL-FAQ-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": "The Family Profile should ask which California legal education path the family is using before applying credential requirements."
+    },
+    {
+      "requirementId": "CA-evaluation-testing",
+      "category": "evaluationOrTesting",
+      "legalStatus": "unknown",
+      "summary": "This research version does not assert a statewide annual standardized-testing or annual-evaluation requirement for the home-based private-school path because the official sources reviewed here do not establish one as part of that exemption.",
+      "appliesWhen": "The family uses the home-based private-school path and asks whether a separate annual test is legally required.",
+      "sourceIds": ["CA-CDE-HOME-SCHOOLING-2026", "CA-CDE-HOME-FAQ-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": "Remain unknown until human review confirms the full current statutory and regulatory landscape."
+    },
+    {
+      "requirementId": "CA-record-retention",
+      "category": "recordRetention",
+      "legalStatus": "unknown",
+      "summary": "The official sources reviewed establish categories of records that must be maintained but this v1 research does not assert one universal statutory retention duration for all home-based private-school records.",
+      "appliesWhen": "The family is deciding retention periods for California home-based private-school records.",
+      "sourceIds": ["CA-CDE-HOME-SCHOOLING-2026", "CA-CDE-HOME-FAQ-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": "Khaemenes should default to durable academic retention while distinguishing recommended retention from a verified California legal period."
+    }
+  ],
+  "reportingHints": {
+    "portfolioRetentionYears": null,
+    "annualEvaluationExpected": null,
+    "attendanceTrackingExpected": true,
+    "readingLogExpected": null,
+    "workSamplesExpected": null
+  },
+  "legalBoundary": "Compliance-support only; not legal advice, legal certification, or a government filing. California has multiple lawful education paths; this v1 primarily models the home-based private-school path and requires human review before verification."
+}
