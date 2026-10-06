@@ -1,0 +1,178 @@
+{
+  "schemaVersion": "1.0.0",
+  "rulesetId": "KA-HS-NY-2026-v1",
+  "jurisdiction": {
+    "code": "NY",
+    "name": "New York",
+    "kind": "state",
+    "country": "US"
+  },
+  "version": 1,
+  "publishedAt": null,
+  "reviewedAt": "2026-08-27T21:30:00Z",
+  "effectiveFrom": null,
+  "effectiveTo": null,
+  "supersedes": null,
+  "verificationStatus": "human-review-required",
+  "educationPaths": ["home-education"],
+  "sources": [
+    {
+      "sourceId": "NYSED-HOME-INSTRUCTION-2026",
+      "authorityLevel": "state-agency",
+      "title": "Home Instruction",
+      "authority": "New York State Education Department",
+      "url": "https://www.nysed.gov/nonpublic-schools/home-instruction",
+      "citation": null,
+      "effectiveDate": null,
+      "reviewedAt": "2026-08-27T21:30:00Z",
+      "status": "active",
+      "notes": "Current NYSED home-instruction landing page describing notice of intent, IHIP, required subjects, and the home-instruction process."
+    },
+    {
+      "sourceId": "NYSED-HOME-INSTRUCTION-QA-2026",
+      "authorityLevel": "state-agency",
+      "title": "Home Instruction Questions and Answers",
+      "authority": "New York State Education Department",
+      "url": "https://www.nysed.gov/nonpublic-schools/home-instruction-questions-and-answers",
+      "citation": null,
+      "effectiveDate": null,
+      "reviewedAt": "2026-08-27T21:30:00Z",
+      "status": "active",
+      "notes": "Operational guidance on district responses, IHIP content, quarterly reporting, attendance records, annual assessment, and midyear commencement. The page itself notes that portions are under review, so human review remains required."
+    },
+    {
+      "sourceId": "NY-EDL-3205-2026",
+      "authorityLevel": "statute",
+      "title": "New York Education Law § 3205 — Attendance of minors upon full time day instruction",
+      "authority": "New York State Senate",
+      "url": "https://www.nysenate.gov/legislation/laws/EDN/3205",
+      "citation": "N.Y. Educ. Law § 3205",
+      "effectiveDate": null,
+      "reviewedAt": "2026-08-27T21:30:00Z",
+      "status": "active",
+      "notes": "Primary statutory source for statewide compulsory-attendance age and local authority to extend attendance through age 17."
+    },
+    {
+      "sourceId": "NYCRR-100.10-RESEARCH",
+      "authorityLevel": "administrative-code",
+      "title": "8 NYCRR § 100.10 — Home instruction",
+      "authority": "New York State Education Department / New York Codes, Rules and Regulations",
+      "url": "https://govt.westlaw.com/nycrr/Document/I3652de29c22211ddb29d8bee567fca9f",
+      "citation": "8 NYCRR § 100.10",
+      "effectiveDate": null,
+      "reviewedAt": "2026-08-27T21:30:00Z",
+      "status": "unverified",
+      "notes": "Unofficial NYCRR presentation maintained under contract with the New York Department of State. Its page carries a content-currency warning; requirements derived from it remain human-review-required until checked against current official rulemaking records."
+    }
+  ],
+  "requirements": [
+    {
+      "requirementId": "NY-compulsory-attendance-age",
+      "category": "compulsoryAttendanceAge",
+      "legalStatus": "conditional",
+      "summary": "New York generally requires full-time instruction from age 6 through the school year in which the minor becomes 16. A local board of education may require certain minors from age 16 through the school year in which they become 17 to continue full-time instruction.",
+      "appliesWhen": "The child is of compulsory school age in the New York school district of residence; local rules must be checked for the age-16-to-17 extension.",
+      "sourceIds": ["NY-EDL-3205-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": "The family jurisdiction profile should preserve district/local applicability when the compulsory-attendance endpoint is extended."
+    },
+    {
+      "requirementId": "NY-notice-of-intent",
+      "category": "noticeOrRegistration",
+      "legalStatus": "required",
+      "summary": "Parents choosing home instruction must provide written notice of intent to the school district superintendent. For a program beginning during the school year or after moving into the district, NYSED guidance states that notice must be filed within 14 days of beginning home instruction in the district. The regular annual process is governed by 8 NYCRR § 100.10.",
+      "appliesWhen": "A parent provides home instruction to a child of compulsory school age in New York.",
+      "sourceIds": ["NYSED-HOME-INSTRUCTION-2026", "NYSED-HOME-INSTRUCTION-QA-2026", "NYCRR-100.10-RESEARCH"],
+      "verificationStatus": "human-review-required",
+      "notes": "The rules engine should support both annual-start and midyear-start timelines."
+    },
+    {
+      "requirementId": "NY-IHIP",
+      "category": "annualReporting",
+      "legalStatus": "required",
+      "summary": "An Individualized Home Instruction Plan (IHIP) is required for each home-instructed child of compulsory attendance age. The IHIP identifies the child and instructional plan, including curriculum materials or plan of instruction for required subjects, quarterly-report dates, and the individuals providing instruction.",
+      "appliesWhen": "A compulsory-school-age child is receiving home instruction under 8 NYCRR § 100.10.",
+      "sourceIds": ["NYSED-HOME-INSTRUCTION-2026", "NYSED-HOME-INSTRUCTION-QA-2026", "NYCRR-100.10-RESEARCH"],
+      "verificationStatus": "human-review-required",
+      "notes": "NYSED states that after a midyear letter of intent the district supplies the regulation and IHIP form within 10 business days, and the parent submits the completed IHIP within 4 weeks of receipt."
+    },
+    {
+      "requirementId": "NY-required-subjects",
+      "category": "requiredSubjects",
+      "legalStatus": "required",
+      "summary": "New York home instruction must cover the subjects required by law and regulation for the student's grade level. The IHIP must identify syllabi, curriculum materials, textbooks, or a plan of instruction for each required subject.",
+      "appliesWhen": "The student is receiving home instruction subject to 8 NYCRR § 100.10.",
+      "sourceIds": ["NYSED-HOME-INSTRUCTION-2026", "NYSED-HOME-INSTRUCTION-QA-2026", "NYCRR-100.10-RESEARCH"],
+      "verificationStatus": "human-review-required",
+      "notes": "The v1 dashboard should link to the detailed grade-band requirements rather than compressing all mandated subjects into a single generic checklist."
+    },
+    {
+      "requirementId": "NY-instruction-time",
+      "category": "instructionTimeOrAttendance",
+      "legalStatus": "required",
+      "summary": "The home-instruction regulation describes the substantial equivalent of 180 days of instruction, with 900 cumulative instructional hours per year for grades 1–6 and 990 hours for grades 7–12. Parents maintain attendance records, and quarterly reports document instructional time.",
+      "appliesWhen": "The student is receiving home instruction under 8 NYCRR § 100.10, subject to any current lawful exception or amendment.",
+      "sourceIds": ["NYSED-HOME-INSTRUCTION-QA-2026", "NYCRR-100.10-RESEARCH"],
+      "verificationStatus": "human-review-required",
+      "notes": "Because the NYCRR web presentation carries a currency warning, these numerical requirements must receive human current-rule verification before public compliance status is enabled."
+    },
+    {
+      "requirementId": "NY-attendance-records",
+      "category": "portfolioOrRecordkeeping",
+      "legalStatus": "required",
+      "summary": "Parents are required to maintain attendance records for each home-instructed student. NYSED recommends retaining additional evidence of the program, achievement, and correspondence even though its Q&A states there is no general legal obligation for parents to maintain other records beyond required attendance and reporting materials.",
+      "appliesWhen": "The student is receiving home instruction in New York.",
+      "sourceIds": ["NYSED-HOME-INSTRUCTION-QA-2026", "NYCRR-100.10-RESEARCH"],
+      "verificationStatus": "human-review-required",
+      "notes": null
+    },
+    {
+      "requirementId": "NY-quarterly-reports",
+      "category": "annualReporting",
+      "legalStatus": "required",
+      "summary": "Parents submit quarterly reports to the school district. NYSED describes quarterly-report content as including instructional hours, material covered in each IHIP subject, a grade or narrative evaluation of progress, and an explanation when less than 80 percent of the planned quarterly material in a subject has been covered.",
+      "appliesWhen": "The child has an active New York IHIP; for a midyear start, the number of reports is proportional to the remaining instructional period.",
+      "sourceIds": ["NYSED-HOME-INSTRUCTION-QA-2026", "NYCRR-100.10-RESEARCH"],
+      "verificationStatus": "human-review-required",
+      "notes": "This 80 percent reporting concept is a New York regulatory reporting threshold and must not be confused with Khaemenes Academy's separate 80% academic mastery gate."
+    },
+    {
+      "requirementId": "NY-annual-assessment",
+      "category": "evaluationOrTesting",
+      "legalStatus": "required",
+      "summary": "New York home instruction is subject to an annual assessment requirement under 8 NYCRR § 100.10(h). NYSED describes standardized-test and written-narrative pathways, with grade-dependent options and consent rules. Public-school State assessments are not independently mandatory for home-instructed students merely because they are required for public-school students.",
+      "appliesWhen": "At the annual assessment stage for a New York home-instruction program, using the option permitted for the student's grade and circumstances.",
+      "sourceIds": ["NYSED-HOME-INSTRUCTION-QA-2026", "NYCRR-100.10-RESEARCH"],
+      "verificationStatus": "human-review-required",
+      "notes": "The detailed grade-by-grade assessment-option matrix should be a later sub-ruleset reviewed directly against current § 100.10(h)."
+    },
+    {
+      "requirementId": "NY-parent-credentials",
+      "category": "teacherOrParentQualifications",
+      "legalStatus": "not-required",
+      "summary": "NYSED states that state law does not require specific credentials for the parent or tutor providing home instruction.",
+      "appliesWhen": "A parent or tutor provides home instruction under New York's home-instruction rules.",
+      "sourceIds": ["NYSED-HOME-INSTRUCTION-QA-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": null
+    },
+    {
+      "requirementId": "NY-record-retention",
+      "category": "recordRetention",
+      "legalStatus": "conditional",
+      "summary": "NYSED states that parents must keep attendance records but identifies no general legal retention period for other parent-held home-instruction records. It recommends retaining evidence of the program and student achievement. District record-retention recommendations are separate from the parent's legal duties.",
+      "appliesWhen": "A New York family is deciding how long to retain home-instruction evidence after satisfying required attendance and reporting obligations.",
+      "sourceIds": ["NYSED-HOME-INSTRUCTION-QA-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": "Khaemenes should recommend long-term academic retention without falsely labeling the recommendation as a state-law retention period."
+    }
+  ],
+  "reportingHints": {
+    "portfolioRetentionYears": null,
+    "annualEvaluationExpected": true,
+    "attendanceTrackingExpected": true,
+    "readingLogExpected": null,
+    "workSamplesExpected": null
+  },
+  "legalBoundary": "Compliance-support only; not legal advice, legal certification, or a government filing. New York's detailed regulation is complex and this research version must receive human current-rule review before being marked verified."
+}

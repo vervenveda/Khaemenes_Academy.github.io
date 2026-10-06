@@ -1,0 +1,136 @@
+{
+  "schemaVersion": "1.0.0",
+  "rulesetId": "KA-HS-TX-2026-v1",
+  "jurisdiction": {
+    "code": "TX",
+    "name": "Texas",
+    "kind": "state",
+    "country": "US"
+  },
+  "version": 1,
+  "publishedAt": null,
+  "reviewedAt": "2026-08-27T21:30:00Z",
+  "effectiveFrom": null,
+  "effectiveTo": null,
+  "supersedes": null,
+  "verificationStatus": "human-review-required",
+  "educationPaths": ["home-education", "private-school"],
+  "sources": [
+    {
+      "sourceId": "TX-TEC-25.085-25.086-2026",
+      "authorityLevel": "statute",
+      "title": "Texas Education Code §§ 25.085–25.086 — Compulsory Attendance and Exemptions",
+      "authority": "Texas Legislature",
+      "url": "https://statutes.capitol.texas.gov/Docs/ED/htm/ED.25.htm",
+      "citation": "Tex. Educ. Code §§ 25.085–25.086",
+      "effectiveDate": null,
+      "reviewedAt": "2026-08-27T21:30:00Z",
+      "status": "active",
+      "notes": "Primary statutory source for compulsory-attendance ages and the private/parochial-school good-citizenship exemption used in Texas home-school law."
+    },
+    {
+      "sourceId": "TEA-HOME-SCHOOLING-2026",
+      "authorityLevel": "state-agency",
+      "title": "Home Schooling",
+      "authority": "Texas Education Agency",
+      "url": "https://tea.texas.gov/families-and-students/finding-school-your-child/home-schooling",
+      "citation": null,
+      "effectiveDate": null,
+      "reviewedAt": "2026-08-27T21:30:00Z",
+      "status": "active",
+      "notes": "TEA states that it does not regulate, index, monitor, approve, register, or accredit home-school programs and summarizes the Leeper framework."
+    },
+    {
+      "sourceId": "TEA-HOME-SCHOOLS-LETTER-2019",
+      "authorityLevel": "state-agency",
+      "title": "Home Schools — Commissioner Correspondence",
+      "authority": "Texas Education Agency",
+      "url": "https://tea.texas.gov/administrator-addressed-taa/taa-letters/home-schools",
+      "citation": null,
+      "effectiveDate": null,
+      "reviewedAt": "2026-08-27T21:30:00Z",
+      "status": "active",
+      "notes": "Agency guidance on withdrawal documentation, letters of assurance, and the basic education goals described for a home-school curriculum."
+    }
+  ],
+  "requirements": [
+    {
+      "requirementId": "TX-compulsory-attendance-age",
+      "category": "compulsoryAttendanceAge",
+      "legalStatus": "conditional",
+      "summary": "Texas compulsory attendance generally applies beginning at age 6, or earlier in specified enrollment circumstances, until the child reaches the 19th birthday, unless a statutory exemption applies. A child attending a qualifying private or parochial school that includes a study of good citizenship is exempt, and Texas home schools operate within the private-school exemption recognized by Leeper.",
+      "appliesWhen": "The child is within the compulsory-attendance range and the family is relying on the Texas home-school/private-school exemption.",
+      "sourceIds": ["TX-TEC-25.085-25.086-2026", "TEA-HOME-SCHOOLING-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": "The dashboard should present the exemption and age rule together rather than imply home-schooled students must attend a public school."
+    },
+    {
+      "requirementId": "TX-state-registration",
+      "category": "noticeOrRegistration",
+      "legalStatus": "not-required",
+      "summary": "The Texas Education Agency does not register home-school programs. TEA states that it does not regulate, index, monitor, approve, register, or accredit programs chosen by parents for home schooling.",
+      "appliesWhen": "A family is operating a Texas home school and is asking whether annual registration with TEA is required.",
+      "sourceIds": ["TEA-HOME-SCHOOLING-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": "This does not eliminate separate withdrawal or local assurance interactions when applicable."
+    },
+    {
+      "requirementId": "TX-withdrawal-from-public-school",
+      "category": "withdrawalOrTermination",
+      "legalStatus": "conditional",
+      "summary": "When a student is leaving a Texas public school to be home schooled, TEA guidance states that a signed and dated parent or guardian notice or withdrawal form stating that the student is being home schooled and the date home schooling began is sufficient documentation for disenrollment.",
+      "appliesWhen": "The student is currently enrolled in a Texas public school and the family is withdrawing the student to begin home schooling.",
+      "sourceIds": ["TEA-HOME-SCHOOLS-LETTER-2019"],
+      "verificationStatus": "human-review-required",
+      "notes": "TEA guidance says personal appearance, curriculum review, or additional withdrawal requirements are not necessary for successful withdrawal."
+    },
+    {
+      "requirementId": "TX-letter-of-assurance",
+      "category": "noticeOrRegistration",
+      "legalStatus": "conditional",
+      "summary": "A public school district that becomes aware of a student who may be home schooled may request a written letter of assurance from the parents. TEA guidance states that such a letter is not required each year.",
+      "appliesWhen": "A Texas public school district requests assurance that a student is being home schooled.",
+      "sourceIds": ["TEA-HOME-SCHOOLING-2026", "TEA-HOME-SCHOOLS-LETTER-2019"],
+      "verificationStatus": "human-review-required",
+      "notes": null
+    },
+    {
+      "requirementId": "TX-required-subjects",
+      "category": "requiredSubjects",
+      "legalStatus": "required",
+      "summary": "TEA's current home-school guidance states that the course of study must include good citizenship. TEA's commissioner correspondence describes the home-school curriculum as designed to meet basic education goals including reading, spelling, grammar, mathematics, and a study of good citizenship.",
+      "appliesWhen": "The family is operating a bona fide Texas home school under the Leeper/private-school framework.",
+      "sourceIds": ["TX-TEC-25.085-25.086-2026", "TEA-HOME-SCHOOLING-2026", "TEA-HOME-SCHOOLS-LETTER-2019"],
+      "verificationStatus": "human-review-required",
+      "notes": "The ruleset preserves both the statutory good-citizenship language and TEA's broader Leeper-based curriculum description for human review."
+    },
+    {
+      "requirementId": "TX-portfolio-recordkeeping",
+      "category": "portfolioOrRecordkeeping",
+      "legalStatus": "unknown",
+      "summary": "No statewide home-school portfolio requirement is asserted by this ruleset because the official sources reviewed for this version do not establish one.",
+      "appliesWhen": "Any Texas home-school family using Khaemenes compliance-support records.",
+      "sourceIds": ["TEA-HOME-SCHOOLING-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": "Khaemenes may recommend educational portfolios, transcripts, and work samples without labeling them as Texas legal requirements."
+    },
+    {
+      "requirementId": "TX-evaluation-testing",
+      "category": "evaluationOrTesting",
+      "legalStatus": "unknown",
+      "summary": "This research version does not assert a statewide annual home-school testing or evaluation mandate because the official sources reviewed here do not establish one.",
+      "appliesWhen": "Any Texas home-school family using Khaemenes compliance-support records.",
+      "sourceIds": ["TEA-HOME-SCHOOLING-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": "Remain unknown until human review confirms whether any additional current authority should be represented."
+    }
+  ],
+  "reportingHints": {
+    "portfolioRetentionYears": null,
+    "annualEvaluationExpected": null,
+    "attendanceTrackingExpected": null,
+    "readingLogExpected": null,
+    "workSamplesExpected": null
+  },
+  "legalBoundary": "Compliance-support only; not legal advice, legal certification, or a government filing. Human administrative review is required before this ruleset is marked verified."
+}

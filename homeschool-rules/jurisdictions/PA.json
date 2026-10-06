@@ -1,0 +1,198 @@
+{
+  "schemaVersion": "1.0.0",
+  "rulesetId": "KA-HS-PA-2026-v1",
+  "jurisdiction": {
+    "code": "PA",
+    "name": "Pennsylvania",
+    "kind": "state",
+    "country": "US"
+  },
+  "version": 1,
+  "publishedAt": null,
+  "reviewedAt": "2026-08-27T21:30:00Z",
+  "effectiveFrom": null,
+  "effectiveTo": null,
+  "supersedes": null,
+  "verificationStatus": "human-review-required",
+  "educationPaths": ["home-education"],
+  "sources": [
+    {
+      "sourceId": "PA-PDE-HOME-ED-BEC-2026",
+      "authorityLevel": "state-agency",
+      "title": "Home Education Program — 24 P.S. § 13-1327.1",
+      "authority": "Pennsylvania Department of Education",
+      "url": "https://www.pa.gov/agencies/education/resources/policies-acts-and-laws/basic-education-circulars-becs/purdons-statutes/home-education-program",
+      "citation": "24 P.S. § 13-1327.1",
+      "effectiveDate": null,
+      "reviewedAt": "2026-08-27T21:30:00Z",
+      "status": "active",
+      "notes": "PDE Basic Education Circular reviewed August 10, 2026; current agency guidance on establishment, annual filing, evaluation, testing, and participation."
+    },
+    {
+      "sourceId": "PA-PDE-HOME-ED-GUIDE-2026",
+      "authorityLevel": "state-agency",
+      "title": "Home Education and Private Tutoring Guide",
+      "authority": "Pennsylvania Department of Education",
+      "url": "https://www.pa.gov/content/dam/copapwp-pagov/en/education/documents/instruction/home-education-and-private-tutoring/home%20education%20and%20private%20tutoring%20guide.pdf",
+      "citation": null,
+      "effectiveDate": null,
+      "reviewedAt": "2026-08-27T21:30:00Z",
+      "status": "active",
+      "notes": "PDE guide used for portfolio, instructional-time, mandatory-course, evaluator, and testing details."
+    },
+    {
+      "sourceId": "PA-PDE-COMPULSORY-ATTENDANCE-2026",
+      "authorityLevel": "state-agency",
+      "title": "Compulsory School Attendance, Unlawful Absences and School Attendance Improvement Conferences",
+      "authority": "Pennsylvania Department of Education",
+      "url": "https://www.pa.gov/agencies/education/resources/policies-acts-and-laws/basic-education-circulars-becs/purdons-statutes/compulsory-school-attendance-unlawful-absences-and-school-attendance-improvement-conferences",
+      "citation": "24 P.S. §§ 13-1326–13-1354",
+      "effectiveDate": null,
+      "reviewedAt": "2026-08-27T21:30:00Z",
+      "status": "active",
+      "notes": "Agency guidance for compulsory-school-age and home-education instructional day/hour alternatives."
+    },
+    {
+      "sourceId": "PA-PDE-KINDER-AGE-2026",
+      "authorityLevel": "state-agency",
+      "title": "Admission to Kindergarten and Beginners",
+      "authority": "Pennsylvania Department of Education",
+      "url": "https://www.pa.gov/agencies/education/resources/policies-acts-and-laws/basic-education-circulars-becs/purdons-statutes/admission-to-kindergarten-and-beginners",
+      "citation": "24 P.S. § 13-1326",
+      "effectiveDate": null,
+      "reviewedAt": "2026-08-27T21:30:00Z",
+      "status": "active",
+      "notes": "Current PDE explanation that compulsory attendance runs from no later than age 6 through age 18, subject to statutory exceptions."
+    }
+  ],
+  "requirements": [
+    {
+      "requirementId": "PA-compulsory-attendance-age",
+      "category": "compulsoryAttendanceAge",
+      "legalStatus": "required",
+      "summary": "Pennsylvania compulsory school age generally runs from the time a child enters school, which must be no later than age 6, until the child reaches age 18 or graduates from high school, subject to statutory exceptions.",
+      "appliesWhen": "A Pennsylvania child is within compulsory school age and has not otherwise satisfied or been exempted from the compulsory-attendance requirement.",
+      "sourceIds": ["PA-PDE-KINDER-AGE-2026", "PA-PDE-COMPULSORY-ATTENDANCE-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": null
+    },
+    {
+      "requirementId": "PA-supervisor-qualification",
+      "category": "teacherOrParentQualifications",
+      "legalStatus": "required",
+      "summary": "The supervisor of a Pennsylvania home education program must be the parent, guardian, or legal custodian and must hold a high school diploma or its equivalent.",
+      "appliesWhen": "A person acts as supervisor of a home education program under 24 P.S. § 13-1327.1.",
+      "sourceIds": ["PA-PDE-HOME-ED-BEC-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": null
+    },
+    {
+      "requirementId": "PA-affidavit-declaration",
+      "category": "noticeOrRegistration",
+      "legalStatus": "required",
+      "summary": "Before beginning a home education program and annually thereafter no later than August 1, the supervisor must submit a notarized affidavit or an unsworn declaration to the superintendent of the school district of residence. PDE states that school-district approval is not required once all necessary paperwork has been filed.",
+      "appliesWhen": "A Pennsylvania family establishes or continues a home education program for a new school year.",
+      "sourceIds": ["PA-PDE-HOME-ED-BEC-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": "PDE also identifies attachments including proposed educational objectives by subject and applicable immunization/medical-service evidence or exemptions."
+    },
+    {
+      "requirementId": "PA-required-subjects",
+      "category": "requiredSubjects",
+      "legalStatus": "required",
+      "summary": "Pennsylvania specifies mandatory courses by level. At the elementary level these include English, arithmetic, science, geography, U.S. and Pennsylvania history, civics, safety/fire prevention, health and physiology, physical education, music, and art. At the secondary level they include English, science, geography, social studies including civics and world/U.S./Pennsylvania history, mathematics including general mathematics, algebra and geometry, art, music, physical education, health, and safety/fire-prevention instruction.",
+      "appliesWhen": "The learner is in a Pennsylvania home education program; grade-level course requirements apply according to the student's elementary or secondary level.",
+      "sourceIds": ["PA-PDE-HOME-ED-GUIDE-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": "The detailed graduation-course requirements for grades 9–12 should be represented separately in the academic-record/transcript layer."
+    },
+    {
+      "requirementId": "PA-instruction-days-hours",
+      "category": "instructionTimeOrAttendance",
+      "legalStatus": "required",
+      "summary": "A Pennsylvania home education program must provide at least 180 days of instruction or 900 hours per year at the elementary level, or 990 hours per year at the secondary level.",
+      "appliesWhen": "The family is documenting annual instruction for a Pennsylvania home education student.",
+      "sourceIds": ["PA-PDE-COMPULSORY-ATTENDANCE-2026", "PA-PDE-HOME-ED-GUIDE-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": "The portfolio log is used to demonstrate the selected days-or-hours pathway."
+    },
+    {
+      "requirementId": "PA-portfolio-recordkeeping",
+      "category": "portfolioOrRecordkeeping",
+      "legalStatus": "required",
+      "summary": "The home education portfolio must include samples of writings, worksheets, workbooks, or creative materials used or developed by the student and a contemporaneous log identifying reading materials by title. For grades 3, 5, and 8, required test results are also included.",
+      "appliesWhen": "A Pennsylvania family maintains the portfolio reviewed as part of the annual evaluation.",
+      "sourceIds": ["PA-PDE-HOME-ED-GUIDE-2026", "PA-PDE-HOME-ED-BEC-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": null
+    },
+    {
+      "requirementId": "PA-reading-log",
+      "category": "readingMaterialLog",
+      "legalStatus": "required",
+      "summary": "The portfolio must include a log made contemporaneously with instruction that designates by title the reading materials used.",
+      "appliesWhen": "The supervisor maintains the statutory portfolio for a Pennsylvania home education student.",
+      "sourceIds": ["PA-PDE-HOME-ED-GUIDE-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": null
+    },
+    {
+      "requirementId": "PA-work-samples",
+      "category": "workSamples",
+      "legalStatus": "required",
+      "summary": "The portfolio must include samples of writings, worksheets, workbooks, or creative materials used or developed by the student.",
+      "appliesWhen": "The supervisor maintains the statutory portfolio for a Pennsylvania home education student.",
+      "sourceIds": ["PA-PDE-HOME-ED-GUIDE-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": null
+    },
+    {
+      "requirementId": "PA-annual-evaluation",
+      "category": "evaluationOrTesting",
+      "legalStatus": "required",
+      "summary": "A written annual evaluation of the student's educational progress by a qualified evaluator is required. PDE states that the evaluation report for each home-educated student must be submitted to the district of residence on or before June 30.",
+      "appliesWhen": "At the close of each Pennsylvania home education program year.",
+      "sourceIds": ["PA-PDE-HOME-ED-BEC-2026", "PA-PDE-HOME-ED-GUIDE-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": "Evaluator qualification and evaluation-content rules should be represented in a detailed sub-rule before automated evaluator eligibility decisions are enabled."
+    },
+    {
+      "requirementId": "PA-testing-grades-3-5-8",
+      "category": "assessmentOptions",
+      "legalStatus": "required",
+      "summary": "For home education students in grades 3, 5, and 8, the portfolio must include results from the statewide PSSA reading/language arts and mathematics tests or an authorized nationally normed standardized achievement test.",
+      "appliesWhen": "The Pennsylvania home education student is in grade 3, 5, or 8.",
+      "sourceIds": ["PA-PDE-HOME-ED-BEC-2026", "PA-PDE-HOME-ED-GUIDE-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": "PDE publishes a current list of approved nationally normed alternatives."
+    },
+    {
+      "requirementId": "PA-public-school-access",
+      "category": "publicSchoolAccess",
+      "legalStatus": "conditional",
+      "summary": "Pennsylvania law and PDE guidance provide home education students access to specified extracurricular and cocurricular activities and, under current provisions, certain academic courses and career and technical education opportunities, subject to district policies and statutory conditions.",
+      "appliesWhen": "A Pennsylvania home education student seeks participation in an eligible district activity, course, or CTE program.",
+      "sourceIds": ["PA-PDE-HOME-ED-BEC-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": "This should be exposed as an informational family resource, not an Academy enrollment requirement."
+    },
+    {
+      "requirementId": "PA-record-retention",
+      "category": "recordRetention",
+      "legalStatus": "unknown",
+      "summary": "This v1 research does not assert a universal parent-held portfolio retention period because the current official materials reviewed here focus on annual portfolio/evaluation content and submission rather than one general post-year retention duration.",
+      "appliesWhen": "The family is deciding long-term retention of Pennsylvania home education records after annual evaluation requirements are satisfied.",
+      "sourceIds": ["PA-PDE-HOME-ED-BEC-2026", "PA-PDE-HOME-ED-GUIDE-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": "Khaemenes should retain durable academic evidence and label that practice as Academy recordkeeping unless a state retention period is separately verified."
+    }
+  ],
+  "reportingHints": {
+    "portfolioRetentionYears": null,
+    "annualEvaluationExpected": true,
+    "attendanceTrackingExpected": true,
+    "readingLogExpected": true,
+    "workSamplesExpected": true
+  },
+  "legalBoundary": "Compliance-support only; not legal advice, legal certification, or a government filing. Human administrative review is required before this ruleset is marked verified."
+}

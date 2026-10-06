@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "1.0.0",
+  "batchId": "KA-HS-RESEARCH-2026-08-27-FIRST-FIVE",
+  "createdAt": "2026-08-27T21:30:00Z",
+  "status": "human-review-required",
+  "purpose": "Stress-test the Khaemenes jurisdiction ruleset model against materially different U.S. home-education regulatory structures before broader nationwide population.",
+  "jurisdictions": [
+    {
+      "code": "FL",
+      "name": "Florida",
+      "rulesetPath": "../jurisdictions/FL.json",
+      "status": "human-review-required",
+      "researchEmphasis": ["notice", "portfolio", "reading log", "work samples", "annual evaluation", "two-year portfolio retention", "termination notice"]
+    },
+    {
+      "code": "TX",
+      "name": "Texas",
+      "rulesetPath": "../jurisdictions/TX.json",
+      "status": "human-review-required",
+      "researchEmphasis": ["private-school exemption", "no TEA registration", "withdrawal", "conditional letter of assurance", "core curriculum description"]
+    },
+    {
+      "code": "NY",
+      "name": "New York",
+      "rulesetPath": "../jurisdictions/NY.json",
+      "status": "human-review-required",
+      "researchEmphasis": ["notice", "IHIP", "required subjects", "instructional days and hours", "attendance records", "quarterly reports", "annual assessment"]
+    },
+    {
+      "code": "CA",
+      "name": "California",
+      "rulesetPath": "../jurisdictions/CA.json",
+      "status": "human-review-required",
+      "researchEmphasis": ["home-based private-school path", "annual Private School Affidavit", "district exemption verification", "branches of study", "attendance register", "private-school records"]
+    },
+    {
+      "code": "PA",
+      "name": "Pennsylvania",
+      "rulesetPath": "../jurisdictions/PA.json",
+      "status": "human-review-required",
+      "researchEmphasis": ["supervisor qualification", "annual affidavit or declaration", "mandatory courses", "days or hours", "portfolio", "annual evaluation", "testing in grades 3 5 8"]
+    }
+  ],
+  "releaseRule": "No ruleset in this batch may be marked verified or used to assert legal compliance until human administrative review confirms each source, applicability condition, and requirement against current authoritative law and agency guidance.",
+  "legalBoundary": "Compliance-support research only; not legal advice, legal certification, or a government filing."
+}

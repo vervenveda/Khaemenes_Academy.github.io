@@ -1,0 +1,144 @@
+{
+  "schemaVersion": "1.0.0",
+  "rulesetId": "KA-HS-FL-2026-v1",
+  "jurisdiction": {
+    "code": "FL",
+    "name": "Florida",
+    "kind": "state",
+    "country": "US"
+  },
+  "version": 1,
+  "publishedAt": null,
+  "reviewedAt": "2026-08-27T21:30:00Z",
+  "effectiveFrom": null,
+  "effectiveTo": null,
+  "supersedes": null,
+  "verificationStatus": "human-review-required",
+  "educationPaths": ["home-education"],
+  "sources": [
+    {
+      "sourceId": "FL-STAT-1002.41-2026",
+      "authorityLevel": "statute",
+      "title": "Florida Statutes § 1002.41 — Home education programs",
+      "authority": "Florida Legislature",
+      "url": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=1000-1099/1002/Sections/1002.41.html",
+      "citation": "Fla. Stat. § 1002.41",
+      "effectiveDate": null,
+      "reviewedAt": "2026-08-27T21:30:00Z",
+      "status": "active",
+      "notes": "Primary source for notice, portfolio, annual evaluation, retention, termination, parent certification, and school-day exemption requirements."
+    },
+    {
+      "sourceId": "FLDOE-HOME-ED-PARENT-RESOURCES-2026",
+      "authorityLevel": "state-agency",
+      "title": "Parent Home Education Resources",
+      "authority": "Florida Department of Education",
+      "url": "https://www.fldoe.org/schools/school-choice/home-edu/parent-resources.stml",
+      "citation": null,
+      "effectiveDate": null,
+      "reviewedAt": "2026-08-27T21:30:00Z",
+      "status": "active",
+      "notes": "Agency summary identifies notice of intent, annual evaluation, and termination notice as the three statutory parent requirements."
+    }
+  ],
+  "requirements": [
+    {
+      "requirementId": "FL-notice-registration",
+      "category": "noticeOrRegistration",
+      "legalStatus": "required",
+      "summary": "A parent establishing a home education program must give the district school superintendent written notice of intent. The notice must be filed within 30 days after the program is established and include the full legal names, addresses, and birthdates of the participating children.",
+      "appliesWhen": "A parent establishes and maintains a Florida home education program under Fla. Stat. § 1002.41.",
+      "sourceIds": ["FL-STAT-1002.41-2026", "FLDOE-HOME-ED-PARENT-RESOURCES-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": "District registration is for attendance-compliance purposes; the district may not require additional information except as provided by statute."
+    },
+    {
+      "requirementId": "FL-parent-qualification",
+      "category": "teacherOrParentQualifications",
+      "legalStatus": "not-required",
+      "summary": "The parent directing a Florida home education program is not required to hold a valid regular Florida teaching certificate.",
+      "appliesWhen": "The family is operating a home education program under Fla. Stat. § 1002.41.",
+      "sourceIds": ["FL-STAT-1002.41-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": null
+    },
+    {
+      "requirementId": "FL-school-day-hours",
+      "category": "instructionTimeOrAttendance",
+      "legalStatus": "not-required",
+      "summary": "A Florida home education program is excluded from the statutory requirements of a school day.",
+      "appliesWhen": "The student is enrolled in a home education program governed by Fla. Stat. § 1002.41.",
+      "sourceIds": ["FL-STAT-1002.41-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": "The Academy may still track learning activity for educational records without presenting an Academy hour target as a Florida legal requirement."
+    },
+    {
+      "requirementId": "FL-portfolio-recordkeeping",
+      "category": "portfolioOrRecordkeeping",
+      "legalStatus": "required",
+      "summary": "The parent must maintain a portfolio containing a contemporaneous log of educational activities and samples of student writings, worksheets, workbooks, or creative materials.",
+      "appliesWhen": "The student is participating in a Florida home education program.",
+      "sourceIds": ["FL-STAT-1002.41-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": null
+    },
+    {
+      "requirementId": "FL-reading-material-log",
+      "category": "readingMaterialLog",
+      "legalStatus": "required",
+      "summary": "The contemporaneous educational activity log in the portfolio must designate by title the reading materials used.",
+      "appliesWhen": "The parent maintains the statutory portfolio for a Florida home education student.",
+      "sourceIds": ["FL-STAT-1002.41-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": null
+    },
+    {
+      "requirementId": "FL-work-samples",
+      "category": "workSamples",
+      "legalStatus": "required",
+      "summary": "The statutory portfolio must include samples of writings, worksheets, workbooks, or creative materials used or developed by the student.",
+      "appliesWhen": "The parent maintains the statutory portfolio for a Florida home education student.",
+      "sourceIds": ["FL-STAT-1002.41-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": null
+    },
+    {
+      "requirementId": "FL-annual-evaluation",
+      "category": "evaluationOrTesting",
+      "legalStatus": "required",
+      "summary": "The parent must provide an annual educational evaluation documenting educational progress commensurate with the student's ability and file a copy annually with the district superintendent. Statutory evaluation options include certified-teacher portfolio review, a nationally normed achievement test administered by a certified teacher, a state assessment administered under approved conditions, evaluation by an authorized licensed psychologist, or another valid measurement tool mutually agreed upon with the superintendent.",
+      "appliesWhen": "Annually while the student remains in a Florida home education program, subject to any statutory exceptions that may apply to a particular student or program.",
+      "sourceIds": ["FL-STAT-1002.41-2026", "FLDOE-HOME-ED-PARENT-RESOURCES-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": "The rules engine should preserve the selected evaluation method as evidence rather than assuming a single required test."
+    },
+    {
+      "requirementId": "FL-record-retention",
+      "category": "recordRetention",
+      "legalStatus": "required",
+      "summary": "The parent must preserve the home education portfolio for 2 years and make it available for inspection upon 15 days' written notice from the district school superintendent or the superintendent's agent.",
+      "appliesWhen": "The family maintains a portfolio under Fla. Stat. § 1002.41.",
+      "sourceIds": ["FL-STAT-1002.41-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": null
+    },
+    {
+      "requirementId": "FL-termination-notice",
+      "category": "withdrawalOrTermination",
+      "legalStatus": "required",
+      "summary": "Upon completion of the home education program, the parent must file a written notice of termination with the district superintendent, together with the annual evaluation, within 30 days of termination.",
+      "appliesWhen": "The family terminates a Florida home education program.",
+      "sourceIds": ["FL-STAT-1002.41-2026", "FLDOE-HOME-ED-PARENT-RESOURCES-2026"],
+      "verificationStatus": "human-review-required",
+      "notes": null
+    }
+  ],
+  "reportingHints": {
+    "portfolioRetentionYears": 2,
+    "annualEvaluationExpected": true,
+    "attendanceTrackingExpected": false,
+    "readingLogExpected": true,
+    "workSamplesExpected": true
+  },
+  "legalBoundary": "Compliance-support only; not legal advice, legal certification, or a government filing. Human administrative review is required before this ruleset is marked verified."
+}

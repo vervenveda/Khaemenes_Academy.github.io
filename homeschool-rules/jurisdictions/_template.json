@@ -1,0 +1,89 @@
+{
+  "schemaVersion": "1.0.0",
+  "rulesetId": "KA-HS-XX-2026-v1",
+  "jurisdiction": {
+    "code": "XX",
+    "name": "REPLACE WITH JURISDICTION NAME",
+    "kind": "state",
+    "country": "US"
+  },
+  "version": 1,
+  "publishedAt": null,
+  "reviewedAt": null,
+  "effectiveFrom": null,
+  "effectiveTo": null,
+  "supersedes": null,
+  "verificationStatus": "source-discovery-required",
+  "educationPaths": ["home-education"],
+  "sources": [],
+  "requirements": [
+    {
+      "requirementId": "XX-notice-registration",
+      "category": "noticeOrRegistration",
+      "legalStatus": "unknown",
+      "summary": "Not yet verified against current authoritative sources.",
+      "appliesWhen": "Unknown until jurisdiction research is complete.",
+      "sourceIds": [],
+      "verificationStatus": "unverified",
+      "notes": null
+    },
+    {
+      "requirementId": "XX-compulsory-attendance-age",
+      "category": "compulsoryAttendanceAge",
+      "legalStatus": "unknown",
+      "summary": "Not yet verified against current authoritative sources.",
+      "appliesWhen": "Unknown until jurisdiction research is complete.",
+      "sourceIds": [],
+      "verificationStatus": "unverified",
+      "notes": null
+    },
+    {
+      "requirementId": "XX-required-subjects",
+      "category": "requiredSubjects",
+      "legalStatus": "unknown",
+      "summary": "Not yet verified against current authoritative sources.",
+      "appliesWhen": "Unknown until jurisdiction research is complete.",
+      "sourceIds": [],
+      "verificationStatus": "unverified",
+      "notes": null
+    },
+    {
+      "requirementId": "XX-recordkeeping",
+      "category": "portfolioOrRecordkeeping",
+      "legalStatus": "unknown",
+      "summary": "Not yet verified against current authoritative sources.",
+      "appliesWhen": "Unknown until jurisdiction research is complete.",
+      "sourceIds": [],
+      "verificationStatus": "unverified",
+      "notes": null
+    },
+    {
+      "requirementId": "XX-evaluation-testing",
+      "category": "evaluationOrTesting",
+      "legalStatus": "unknown",
+      "summary": "Not yet verified against current authoritative sources.",
+      "appliesWhen": "Unknown until jurisdiction research is complete.",
+      "sourceIds": [],
+      "verificationStatus": "unverified",
+      "notes": null
+    },
+    {
+      "requirementId": "XX-record-retention",
+      "category": "recordRetention",
+      "legalStatus": "unknown",
+      "summary": "Not yet verified against current authoritative sources.",
+      "appliesWhen": "Unknown until jurisdiction research is complete.",
+      "sourceIds": [],
+      "verificationStatus": "unverified",
+      "notes": null
+    }
+  ],
+  "reportingHints": {
+    "portfolioRetentionYears": null,
+    "annualEvaluationExpected": null,
+    "attendanceTrackingExpected": null,
+    "readingLogExpected": null,
+    "workSamplesExpected": null
+  },
+  "legalBoundary": "Compliance-support only; not legal advice, legal certification, or a government filing."
+}

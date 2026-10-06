@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vervenveda.com/Khaemenes_Academy.github.io/homeschool-rules/ruleset.schema.json",
+  "title": "Khaemenes Academy Homeschool Jurisdiction Ruleset",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "rulesetId",
+    "jurisdiction",
+    "version",
+    "verificationStatus",
+    "reviewedAt",
+    "sources",
+    "requirements"
+  ],
+  "properties": {
+    "schemaVersion": {"const": "1.0.0"},
+    "rulesetId": {"type": "string", "pattern": "^KA-HS-[A-Z]{2}-[0-9]{4}-v[0-9]+$"},
+    "jurisdiction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "name", "kind", "country"],
+      "properties": {
+        "code": {"type": "string", "pattern": "^[A-Z]{2}$"},
+        "name": {"type": "string", "minLength": 1, "maxLength": 120},
+        "kind": {"enum": ["state", "district", "territory"]},
+        "country": {"const": "US"}
+      }
+    },
+    "version": {"type": "integer", "minimum": 1},
+    "publishedAt": {"type": ["string", "null"], "format": "date-time"},
+    "reviewedAt": {"type": ["string", "null"], "format": "date-time"},
+    "effectiveFrom": {"type": ["string", "null"], "format": "date"},
+    "effectiveTo": {"type": ["string", "null"], "format": "date"},
+    "supersedes": {"type": ["string", "null"]},
+    "verificationStatus": {"enum": ["source-discovery-required", "research-in-progress", "human-review-required", "verified", "stale-review-required"]},
+    "educationPaths": {
+      "type": "array",
+      "items": {"enum": ["home-education", "umbrella", "private-school", "other"]},
+      "uniqueItems": true
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["sourceId", "authorityLevel", "title", "authority", "url", "reviewedAt", "status"],
+        "properties": {
+          "sourceId": {"type": "string", "minLength": 1},
+          "authorityLevel": {"enum": ["statute", "administrative-code", "state-agency", "local-authority", "federal-discovery", "secondary-research-lead"]},
+          "title": {"type": "string"},
+          "authority": {"type": "string"},
+          "url": {"type": "string", "format": "uri"},
+          "citation": {"type": ["string", "null"]},
+          "effectiveDate": {"type": ["string", "null"], "format": "date"},
+          "reviewedAt": {"type": ["string", "null"], "format": "date-time"},
+          "status": {"enum": ["active", "superseded", "unverified", "stale"]},
+          "notes": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "requirements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["requirementId", "category", "legalStatus", "summary", "appliesWhen", "sourceIds", "verificationStatus"],
+        "properties": {
+          "requirementId": {"type": "string", "minLength": 1},
+          "category": {"enum": ["noticeOrRegistration", "compulsoryAttendanceAge", "requiredSubjects", "instructionTimeOrAttendance", "portfolioOrRecordkeeping", "readingMaterialLog", "workSamples", "evaluationOrTesting", "annualReporting", "teacherOrParentQualifications", "assessmentOptions", "recordRetention", "withdrawalOrTermination", "publicSchoolAccess", "specialEducationAccess", "otherStateSpecificRequirements"]},
+          "legalStatus": {"enum": ["required", "conditional", "recommended", "not-required", "unknown"]},
+          "summary": {"type": "string", "maxLength": 2000},
+          "appliesWhen": {"type": "string", "maxLength": 2000},
+          "sourceIds": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+          "verificationStatus": {"enum": ["unverified", "research-in-progress", "human-review-required", "verified", "stale-review-required"]},
+          "notes": {"type": ["string", "null"], "maxLength": 2000}
+        }
+      }
+    },
+    "reportingHints": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "portfolioRetentionYears": {"type": ["number", "null"], "minimum": 0},
+        "annualEvaluationExpected": {"type": ["boolean", "null"]},
+        "attendanceTrackingExpected": {"type": ["boolean", "null"]},
+        "readingLogExpected": {"type": ["boolean", "null"]},
+        "workSamplesExpected": {"type": ["boolean", "null"]}
+      }
+    },
+    "legalBoundary": {"const": "Compliance-support only; not legal advice, legal certification, or a government filing."}
+  }
+}

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Khaemenes Academy student sign-in using a Student ID and protected password.">
+<meta name="theme-color" content="#17392f">
+<meta name="referrer" content="no-referrer">
+<title>Khaemenes Academy · Student Sign In</title>
+<style>
+:root{--paper:#f4f0e7;--panel:#fffdf8;--ink:#17251f;--muted:#66736d;--forest:#17392f;--gold:#b48b45;--line:rgba(20,40,32,.16);--formal:Cinzel,"Palatino Linotype",Palatino,Georgia,serif;--body:"Brandon Grotesque","Avenir Next",Avenir,"Segoe UI",Arial,sans-serif;--r:10px}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;color:var(--ink);background:radial-gradient(circle at 50% -8rem,rgba(180,139,69,.14),transparent 30rem),var(--paper);font:16px/1.6 var(--body)}main{width:min(100%,520px);padding:34px;border:1px solid var(--line);border-radius:24px;background:var(--panel);box-shadow:0 18px 50px rgba(20,40,32,.09)}h1{margin:0;color:var(--forest);font:500 clamp(2.2rem,8vw,4rem)/1 var(--formal);text-align:center}.eyebrow{margin:0 0 8px;color:#71363e;font:600 11px/1.4 var(--formal);letter-spacing:.16em;text-transform:uppercase;text-align:center}.intro{margin:16px auto 28px;color:var(--muted);text-align:center;max-width:430px}.field{display:grid;gap:7px;margin:16px 0}label{font-weight:700;color:var(--forest)}input{width:100%;min-height:48px;padding:11px 13px;border:1px solid var(--line);border-radius:var(--r);background:#fff;color:var(--ink);font:inherit}input:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offset:3px}.btn{width:100%;min-height:48px;margin-top:10px;border:1px solid var(--forest);border-radius:var(--r);background:var(--forest);color:#fff;font:700 12px var(--body);letter-spacing:.06em;text-transform:uppercase;cursor:pointer}.btn:disabled{opacity:.55;cursor:not-allowed}.notice{margin-top:18px;padding:13px 14px;border-left:4px solid var(--gold);border-radius:var(--r);background:#fbf4df;color:#66502b}.notice.error{border-left-color:#9a4a4a;background:#fff0ef;color:#71363e}.notice.good{border-left-color:#4e755a;background:#eef7f0;color:#315f3c}.links{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:22px;font-size:12px}.links a{color:var(--forest)}.privacy{margin-top:22px;color:var(--muted);font-size:11px;text-align:center}
+</style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">Khaemenes Academy</p>
+  <h1>Student Sign In</h1>
+  <p class="intro">Use your confirmed Student ID and password to continue your learning path on this device.</p>
+  <form id="signInForm" autocomplete="on" novalidate>
+    <div class="field"><label for="studentId">Student ID</label><input id="studentId" name="username" inputmode="text" autocomplete="username" autocapitalize="characters" spellcheck="false" maxlength="64" placeholder="KA-2026-…" required></div>
+    <div class="field"><label for="password">Password</label><input id="password" name="current-password" type="password" autocomplete="current-password" maxlength="1024" required></div>
+    <button id="submitButton" class="btn" type="submit">Sign In</button>
+  </form>
+  <div id="status" class="notice" role="status" aria-live="polite">Protected account sign-in activates only when the Academy Account Service is configured.</div>
+  <div class="links"><a href="../">Student Portal</a><a href="../../family/">Family Hub</a></div>
+  <p class="privacy">Passwords are sent only to the protected HTTPS Account Service. They are never stored in this page, localStorage, or sessionStorage.</p>
+</main>
+<script src="../../assets/account-runtime-config.js" defer></script>
+<script src="../../assets/khaemenes-account-client.js"></script>
+<script>
+(() => {
+  "use strict";
+  const form=document.getElementById("signInForm"),button=document.getElementById("submitButton"),status=document.getElementById("status");
+  const client=window.KhaemenesAccountClient;
+  const runtime=window.KHAEMENES_ACCOUNT_RUNTIME&&typeof window.KHAEMENES_ACCOUNT_RUNTIME==="object"?window.KHAEMENES_ACCOUNT_RUNTIME:null;
+  if(runtime?.enabled===true&&runtime.baseUrl){try{client.configure(runtime)}catch{status.className="notice error";status.textContent="Protected account service configuration is invalid."}}
+  const state=client?.status?.();
+  if(!state?.configured)button.disabled=true;
+  form.addEventListener("submit",async event=>{
+    event.preventDefault();if(button.disabled)return;button.disabled=true;status.className="notice";status.textContent="Signing in…";
+    try{
+      const result=await client.studentLogin({institutionalId:form.studentId.value,password:form.password.value});
+      form.password.value="";
+      if(!result?.authenticated)throw new Error("authentication-not-confirmed");
+      status.className="notice good";status.textContent="Sign-in confirmed. Opening your Student Portal…";location.replace("../");
+    }catch(error){
+      form.password.value="";status.className="notice error";status.textContent=error?.message==="account-service-not-configured"?"Protected student sign-in is not commissioned yet.":"Sign-in could not be completed. Check your Student ID and password, then try again.";button.disabled=!client?.status?.().configured;
+    }
+  });
+})();
+</script>
+</body>
+</html>
