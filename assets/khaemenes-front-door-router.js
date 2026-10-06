@@ -35,7 +35,7 @@
     const stage=placement?.stage||learner.stage||null;
     const grade=placement?.grade||learner.grade||null;
     const n=naib()?.routeLearnerEntry?.({learnerId:learner.learnerId,stage,grade,surface:"academy-front-door",intent:"continue-learning"})||null;
-    const requiresPlacement=!grade;
+    const requiresPlacement=stage!=="higher"&&!grade;
     const studentDestination=identifiedStudentDestination({stage,grade});
     const destination=requiresPlacement
       ? "https://vervenveda.com/Khaemenes_Academy.github.io/family/enroll/"

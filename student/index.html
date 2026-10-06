@@ -66,8 +66,9 @@ h1{margin:11px auto 0;font-size:clamp(3rem,8vw,6.3rem);line-height:.96}.hero p{m
     <div class="heading">
       <p class="eyebrow">Active learner</p>
       <h2>Continue from your profile.</h2>
-      <p>Your learner profile keeps school placement and course shortcuts together across Khaemenes Academy.</p>
+      <p>Your learner profile keeps school placement and course shortcuts together on this device.</p>
     </div>
+    <p class="notice">This is a learner profile saved in this browser. On a tablet, create or select the learner here and use the same browser to continue. Export backups regularly. Protected account sign-in and cross-device sync are not connected yet.</p>
     <div id="app"></div>
   </div>
 </main>
@@ -128,6 +129,7 @@ function render(){
       <div class="chips"><span class="chip">${esc(m.label)}</span><span class="chip">${esc(learner.stage||"Academy")}</span></div>
       <div class="actions">
         <button class="btn" id="continueLearning" type="button">Continue Learning</button>
+        <a class="btn gold" href="https://vervenveda.com/Khaemenes_High.github.io/courses/mathematics/pre-algebra/">Open Pre-Algebra</a>
         <a class="btn secondary" href="../family/enroll/">Review Placement</a>
         <a class="btn secondary" href="../family/">Family Hub</a>
       </div>
@@ -136,7 +138,7 @@ function render(){
     <section class="card col5">
       <p class="eyebrow">Pinned courses</p>
       <h3>Return quickly.</h3>
-      <p>Courses pinned from Khaemenes learning pages appear here for the active learner.</p>
+      <p>Open Pre-Algebra above to begin or resume. Its readiness and mastery checks guide your next lesson.</p>
       ${renderPins(learner)}
     </section>
     <section class="card col12">
