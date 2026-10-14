@@ -324,7 +324,13 @@ function setLanguage(next,interactive=false){
  document.dispatchEvent(new CustomEvent("vnv:language-change",{detail:{language:lang}}));
 }
 function internalRoute(url){
- return url.protocol==="https:"&&(url.hostname==="vervenveda.com"||url.hostname==="www.vervenveda.com"||url.hostname==="vervenveda.github.io");
+ // Only first-party ecosystem hosts receive the interface preference.
+ // Never append it to unrelated links, downloads, mail, or third-party sites.
+ if(url.protocol!=="https:")return false;
+ const host=url.hostname.toLowerCase();
+ return host==="vervenveda.com"||host==="www.vervenveda.com"||
+  host==="vervenveda.github.io"||host==="khaemenesacademy.github.io"||
+  host==="artist1970.github.io";
 }
 document.addEventListener("click",event=>{
  const link=event.target.closest&&event.target.closest("a[href]");
