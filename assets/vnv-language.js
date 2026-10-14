@@ -172,6 +172,7 @@ if(urlLang&&CODES.includes(urlLang))storePref(lang);
 function translate(s){
  const source=normalize(s),idx=CODES.indexOf(lang);
  if(idx===0)return source;
+ if(EXPANDED_PHRASES[source]?.[lang])return EXPANDED_PHRASES[source][lang];
  const row=MAP.get(source);
  if(row&&idx<7&&row[idx])return row[idx];
  if(idx>=7&&EXTENDED[source]?.[idx-7])return EXTENDED[source][idx-7];
