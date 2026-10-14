@@ -4,7 +4,7 @@
 import http from "node:http";
 import path from "node:path";
 import fs from "node:fs";
-import {spawnSync} from "node:child_process";
+import {spawnSync,spawn} from "node:child_process";
 import {fileURLToPath} from "node:url";
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
 const browsers=["google-chrome","chromium","chromium-browser"];
@@ -22,7 +22,7 @@ const testCode=String.raw`
       if(!api)throw Error("missing VNVLanguage");
       api.setLanguage("es");
       result.selected=api.getLanguage()==="es";
-      result.title=document.title!==document.title.replace(/Academy|Verve N Veda|Polyglot/,"")&&document.title!=="Khaemenes Academy | Front Desk";
+      result.title=!(["Verve N Veda | Public Gateway","Khaemenes Academy | Front Desk","Polyglot | Khaemenes Academy Linguistics & World Language Campus"].includes(document.title));
       result.coverage=api.coverage().language==="es";
       const button=document.createElement("button");
       button.id="i18n-browser-test-button";button.textContent="Welcome Home";
@@ -47,8 +47,8 @@ const testCode=String.raw`
       document.body.dataset.i18nDetails=String(e.message);
     }
   }
-  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",run,{once:true});
-  else run();
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",()=>setTimeout(run,350),{once:true});
+  else setTimeout(run,350);
 })();
 </script>
 `;
@@ -69,7 +69,15 @@ const server=http.createServer((req,res)=>{
 });
 await new Promise(resolve=>server.listen(0,"127.0.0.1",resolve));
 const port=server.address().port;
-const result=spawnSync(browser,["--headless=new","--no-sandbox","--disable-gpu","--disable-dev-shm-usage","--no-first-run","--no-default-browser-check","--virtual-time-budget=6000","--dump-dom","http://127.0.0.1:"+port+"/index.html"],{encoding:"utf8",timeout:30000,maxBuffer:12*1024*1024});
+const result=await new Promise(resolve=>{
+ let stdout="",stderr="",ended=false;
+ const child=spawn(browser,["--headless=new","--no-sandbox","--disable-gpu","--disable-dev-shm-usage","--no-first-run","--no-default-browser-check","--virtual-time-budget=6500","--dump-dom","http://127.0.0.1:"+port+"/index.html"]);
+ const stop=setTimeout(()=>{if(!ended)child.kill("SIGKILL")},25000);
+ child.stdout.on("data",chunk=>{stdout+=chunk.toString()});
+ child.stderr.on("data",chunk=>{if(stderr.length<20000)stderr+=chunk.toString()});
+ child.on("error",error=>{ended=true;clearTimeout(stop);resolve({status:1,error,stdout,stderr})});
+ child.on("close",status=>{if(ended)return;ended=true;clearTimeout(stop);resolve({status,stdout,stderr})});
+});
 server.close();
 const page=result.stdout||"";
 const marker=page.match(/data-i18n-smoke="([^"]+)"/);
