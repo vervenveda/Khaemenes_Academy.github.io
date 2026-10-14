@@ -372,7 +372,6 @@
     .piano-wrap{padding:12px 6px}
   }
 </style>
-<link rel="stylesheet" href="../assets/khaemenes-sacred-layout.css" data-khaemenes-sacred-layout>
 </head>
 <body>
 <div class="app">
@@ -1280,8 +1279,7 @@ printStaffBtn.onclick = ()=>{
     <h3>${currentTrack ? currentTrack.name : "Staff"}</h3>
     ${staffMain.innerHTML}
     <script>setTimeout(()=>window.print(),150);<\/script>
-  <script src="../assets/khaemenes-global-navigation.js" defer></script>
-</body></html>`;
+  </body></html>`;
   win.document.write(html);
   win.document.close();
 };
