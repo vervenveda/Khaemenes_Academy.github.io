@@ -25,5 +25,6 @@ if(!adult||!family){pane.innerHTML=`<div class="field"><label>Your display name<
 pane.innerHTML=`<div class="notice">An Academy adult profile already exists for <strong>${esc(adult.displayName)}</strong>. You can add a Higher Learning identity to it.</div><div class="field"><label>Scholar display name</label><input id="name" value="${esc(adult.displayName)}"></div><div class="field"><label>Learning interests</label><input id="interests" placeholder="mathematics, science, languages, art, career development"></div><div class="actions"><button class="btn gold" id="create">Create My Higher Learning Identity</button></div>`;document.getElementById('create').onclick=()=>{const interests=document.getElementById('interests').value.split(',').map(x=>x.trim()).filter(Boolean);scholar=ensure(R.registerAdultLearner({adultId:adult.adultId,familyId:family.familyId,nickname:document.getElementById('name').value,interests}));go(scholar,adult)}}render()})();
 </script>
 <script src="/assets/vnv-beta-link.js" defer></script>
+<script src="../../assets/khaemenes-global-navigation.js" defer></script>
 </body>
 </html>
