@@ -27,7 +27,7 @@ const main=document.createElement("div");main.className="khae-nav-inner";
 const brand=document.createElement("a");brand.href="https://vervenveda.com/";brand.textContent="Verve N Veda Home";brand.setAttribute("aria-label","Return to Verve N Veda home");
 const menu=document.createElement("details"),summary=document.createElement("summary");summary.textContent="Academy Menu ▾";menu.append(summary);
 const options=document.createElement("div");options.className="khae-nav-options";
-for(const [label,url] of [["Academy Home",home],["Student Profile",link("student/index.html")],["My Pinned Courses",link("student/index.html#pinned")],["Family Profile",link("family/index.html")],["High School", "https://vervenveda.com/Khaemenes_High.github.io/"],["Offline Learning",link("offline/index.html")],["Teacher Admin",link("teacher-admin/index.html")],["Mentor",link("mentor/index.html")]]){
+for(const [label,url] of [["Academy Home",home],["Student Profile",link("student/index.html")],["My Pinned Courses",link("student/index.html")],["Family Profile",link("family/index.html")],["High School", "https://vervenveda.com/Khaemenes_High.github.io/"],["Offline Learning",link("offline/index.html")],["Teacher Admin",link("teacher-admin/index.html")],["Mentor",link("mentor/index.html")]]){
 const a=document.createElement("a");a.href=url;a.textContent=label;options.append(a)}
 menu.append(options);main.append(brand,menu);wrap.append(main);
 const crumbs=document.createElement("div");crumbs.className="khae-breadcrumbs";crumbs.setAttribute("aria-label","Breadcrumb");
