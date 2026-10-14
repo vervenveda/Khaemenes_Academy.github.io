@@ -59,6 +59,9 @@ function translateTree(root){
 }
 const styles=document.createElement("style");
 styles.textContent=`
+#vnv-language-actions{display:flex;justify-self:end;align-items:center;justify-content:flex-end;gap:8px;min-width:0}
+.vnv-language-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;justify-self:end;min-width:0}
+.vnv-language-actions .menu-button{flex:0 0 40px}
 #vnv-language-switch{display:inline-flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap;padding:7px 10px;margin:7px;border:1px solid rgba(87,74,48,.3);border-radius:7px;background:#fffdf8;color:#162b24;font:400 12px/1.4 "Brandon Grotesque","Avenir Next",Arial,sans-serif;text-align:center;max-width:100%;position:relative;z-index:1550}
 #vnv-language-switch label{font-weight:400;white-space:nowrap}
 #vnv-language-select{appearance:auto;max-width:175px;min-width:112px;padding:7px 9px;border:1px solid #a89a79;border-radius:7px;background:#fff;color:#17211d;font:inherit}
@@ -80,9 +83,14 @@ function makeSelector(){
  let target;
  if(document.querySelector(".site-header .header-inner")){
   target=document.querySelector(".site-header .header-inner");
-  target.insertBefore(wrap,target.querySelector("#menuButton")||null);
- }else if(document.querySelector("header .head-actions")){
-  target=document.querySelector("header .head-actions");target.prepend(wrap);
+  const btn=target.querySelector("#menuButton");
+  if(btn){
+   const actions=document.createElement("div");
+   actions.className="vnv-language-actions";
+   btn.before(actions);actions.append(wrap,btn);
+  }else target.append(wrap);
+ }else if(document.querySelector(".ribbon")){
+  target=document.querySelector(".ribbon");target.append(wrap);
  }else{
   target=document.querySelector("header")||document.body;target.append(wrap);
  }
