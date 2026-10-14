@@ -62,7 +62,11 @@ const server=http.createServer((req,res)=>{
     if(err){res.writeHead(404);res.end("not found");return}
     const isHome=pathname==="/"||pathname==="/index.html";
     let content=body;
-    if(isHome)content=Buffer.from(body.toString("utf8").replace("</body>",testCode+"\n</body>"));
+    if(isHome){
+      const page=body.toString("utf8"),at=page.lastIndexOf("</body>");
+      if(at<0)throw Error("HTML missing closing body");
+      content=Buffer.from(page.slice(0,at)+testCode+"\n"+page.slice(at));
+    }
     res.writeHead(200,{"Content-Type":(mime[path.extname(file)]||"application/octet-stream")+"; charset=utf-8","Cache-Control":"no-store"});
     res.end(content);
   });
