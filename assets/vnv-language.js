@@ -172,6 +172,10 @@ if(urlLang&&CODES.includes(urlLang))storePref(lang);
 function translate(s){
  const source=normalize(s),idx=CODES.indexOf(lang);
  if(idx===0)return source;
+ // Reuse the canonical sovereign Interlingual library. A genuinely reviewed
+ // browser-local pair outranks public draft interface translations.
+ const sovereign=window.KhaemenesSovereignTranslate?.lookupLocal?.({from:"en",to:lang,text:source});
+ if(sovereign?.verified===true&&sovereign.translation)return sovereign.translation;
  if(EXPANDED_PHRASES[source]?.[lang])return EXPANDED_PHRASES[source][lang];
  const row=MAP.get(source);
  if(row&&idx<7&&row[idx])return row[idx];
@@ -183,7 +187,7 @@ function translate(s){
   const match=source.match(/^Open (.+)$/);
   if(match&&EXPANDED_PHRASES.Open?.[lang])return EXPANDED_PHRASES.Open[lang]+" "+(translate(match[1])||match[1]);
  }
- return cachedTranslation(source,lang);
+ return (sovereign?.translation||cachedTranslation(source,lang));
 }
 function ignored(el){
  return !!(el&&el.closest("script,style,noscript,svg,math,code,pre,textarea,select,option,[contenteditable],#adminGate,[data-i18n-ignore],.world-ribbon,.phrase-main,.phrase-translation,.phrase-language"));
