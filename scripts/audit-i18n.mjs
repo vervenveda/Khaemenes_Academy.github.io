@@ -16,6 +16,8 @@ const jsonAfter=prefix=>{
 const rows=[...jsonAfter("const ROWS="),...(source.includes("const POLYGLOT_ROWS=")?jsonAfter("const POLYGLOT_ROWS="):[])];
 const extra=jsonAfter("const EXTENDED=");
 const titles=jsonAfter("const TITLE_TRANSLATIONS=");
+const expanded=jsonAfter("const EXPANDED_PHRASES=");
+const longCopy=jsonAfter("const REVIEWED_PUBLIC_COPY=");
 const strings=new Map();
 function add(text,kind){
  const t=String(text||"").replace(/&amp;/g,"&").replace(/&nbsp;/g," ").replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/\s+/g," ").trim();
@@ -34,6 +36,7 @@ if(registry){
   const apps=JSON.parse(registry[1]);
   for(const app of apps){
     for(const key of ["title","category","desc"])add(app[key],"app directory");
+    add("Open "+app.title,"app action");
     for(const item of app.features||[])add(item,"app feature");
   }
 }
@@ -47,7 +50,8 @@ const translate=(text,lang)=>{
  const i=LANGS.indexOf(lang);
  if(row&&i>=0&&i<7&&row[i])return true;
  if(i>=7&&extra[text]?.[i-7])return true;
- if(titles[text]?.[lang])return true;
+ if(titles[text]?.[lang]||expanded[text]?.[lang]||longCopy[text]?.[lang])return true;
+ if(text.startsWith("Open ")&&expanded.Open?.[lang])return true;
  return false;
 };
 const labels={};
