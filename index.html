@@ -246,6 +246,69 @@ footer{padding:38px 0;color:rgba(255,255,255,.67);background:var(--night);font-s
 .footer-left{text-align:left}.footer-right{text-align:right}
 .footer-links{display:flex;justify-content:center;gap:13px;flex-wrap:wrap}
 
+
+/* Compact Academy information dock.
+   Namespaced to the front-desk page so these controls cannot overtake
+   layouts elsewhere in the Khaemenes Academy environment. */
+.academy-info-dock{
+  position:relative;z-index:40;
+  border-bottom:1px solid var(--line);
+  background:rgba(255,253,248,.96);
+  box-shadow:0 5px 16px rgba(19,31,25,.035);
+}
+.academy-info-dock-inner{
+  min-height:44px;display:flex;align-items:center;justify-content:flex-end;
+  gap:7px;padding:6px 0;
+}
+.academy-info-button{
+  min-height:30px;display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  padding:5px 10px;border:1px solid var(--line2);border-radius:var(--r);
+  color:var(--navy);background:rgba(255,255,255,.76);
+  font:400 9px/1.2 var(--sans);letter-spacing:.06em;text-transform:uppercase;
+}
+.academy-info-button:hover{background:#fff;box-shadow:var(--shadow2)}
+.academy-info-symbol{
+  width:19px;height:19px;display:grid;place-items:center;flex:0 0 auto;
+  border-radius:50%;color:#fff;background:var(--forest);
+  font:400 10px/1 var(--ceremonial);
+}
+.academy-info-button.offline .academy-info-symbol{background:var(--gold);color:#241b0c}
+.academy-info-dialog{
+  width:min(620px,calc(100vw - 28px));max-height:min(78vh,720px);
+  margin:auto;padding:0;border:1px solid var(--line2);border-radius:var(--r);
+  color:var(--ink);background:var(--paper2);box-shadow:0 26px 80px rgba(7,21,33,.28);
+  text-align:center;overflow:auto;
+}
+.academy-info-dialog::backdrop{background:rgba(7,21,33,.58);backdrop-filter:blur(3px)}
+.academy-info-dialog-card{position:relative;padding:30px 30px 26px}
+.academy-info-dialog-close{
+  position:absolute;right:10px;top:10px;width:34px;height:34px;display:grid;place-items:center;
+  padding:0;border:1px solid var(--line);border-radius:var(--r);
+  color:var(--navy);background:transparent;font-size:20px;line-height:1;
+}
+.academy-info-dialog-close:hover{background:var(--paper)}
+.academy-info-dialog h2{
+  margin:8px auto 0;color:var(--forest);
+  font:400 clamp(27px,4vw,38px)/1.08 var(--display);
+}
+.academy-info-dialog p{
+  max-width:520px;margin:13px auto 0;color:var(--muted);
+  font-size:12px;line-height:1.65;
+}
+.academy-info-dialog [data-academy-account-status]{
+  margin-top:18px;padding:10px 12px;border:1px solid rgba(180,139,69,.34);
+  border-radius:var(--r);background:#fff8e7;color:#3c3428;
+  font-size:11px;
+}
+.academy-info-dialog-actions{
+  display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin-top:20px;
+}
+@media(max-width:650px){
+  .academy-info-dock-inner{justify-content:center;min-height:42px}
+  .academy-info-button{flex:1 1 0;min-width:0;max-width:190px;padding-inline:8px}
+  .academy-info-dialog-card{padding:28px 18px 22px}
+}
+
 @media(max-width:1160px){
   .header-inner{grid-template-columns:1fr auto}.navlinks{display:none}
   .quick-grid{grid-template-columns:repeat(2,1fr)}
@@ -304,7 +367,47 @@ footer{padding:38px 0;color:rgba(255,255,255,.67);background:var(--night);font-s
   </div>
 </header>
 
-<main id="main"><aside aria-label="Academy account connection status" style="max-width:1040px;margin:14px auto;padding:14px 18px;background:#fff8e7;border:1px solid #bbad8e;border-radius:7px;color:#221f19"><strong style="font-weight:500">Account &amp; learner continuity</strong><p data-academy-account-status role="status" aria-live="polite">LOCAL PROFILE — Account Cloud connection is not verified.</p><p style="font-size:14px">This browser may keep learner work locally. Export important records and maintain another backup; cloud access must be verified through a protected authenticated session before being described as connected.</p></aside><aside aria-label="Offline education across the Academy" style="max-width:1100px;margin:18px auto;padding:18px;border:1px solid #ad966e;border-radius:7px;background:#fff3d8;color:#211e1a"><h2 style="font-size:24px;font-weight:400">Free learning, even without internet access</h2><p>Students and families with limited connectivity can save reading materials, explore available offline courses, and learn how to protect assignments and reports. High-school downloads are available now; other grade levels will be added as tested.</p><p><a href="./offline/index.html">Visit the Academy Offline Learning Center →</a></p></aside>
+
+<div class="academy-info-dock" aria-label="Academy information">
+  <div class="shell academy-info-dock-inner">
+    <button class="academy-info-button" type="button" data-academy-info-open="accountContinuityDialog" aria-haspopup="dialog">
+      <span class="academy-info-symbol" aria-hidden="true">i</span>
+      <span>Account continuity</span>
+    </button>
+    <button class="academy-info-button offline" type="button" data-academy-info-open="offlineLearningDialog" aria-haspopup="dialog">
+      <span class="academy-info-symbol" aria-hidden="true">↓</span>
+      <span>Offline learning</span>
+    </button>
+  </div>
+</div>
+
+<dialog class="academy-info-dialog" id="accountContinuityDialog" aria-labelledby="accountContinuityTitle">
+  <div class="academy-info-dialog-card">
+    <button class="academy-info-dialog-close" type="button" data-academy-info-close aria-label="Close account continuity information">×</button>
+    <p class="kicker">Account &amp; learner continuity</p>
+    <h2 id="accountContinuityTitle">Keep the learner record clear and portable.</h2>
+    <p data-academy-account-status role="status" aria-live="polite">LOCAL PROFILE — Account Cloud connection is not verified.</p>
+    <p>This browser may keep learner work locally. Export important records and maintain another backup; cloud access must be verified through a protected authenticated session before being described as connected.</p>
+    <div class="academy-info-dialog-actions">
+      <a class="btn primary" href="./family/">Create / Manage Account</a>
+      <a class="btn" href="./student/">Student Entry</a>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="academy-info-dialog" id="offlineLearningDialog" aria-labelledby="offlineLearningTitle">
+  <div class="academy-info-dialog-card">
+    <button class="academy-info-dialog-close" type="button" data-academy-info-close aria-label="Close offline learning information">×</button>
+    <p class="kicker">Offline learning</p>
+    <h2 id="offlineLearningTitle">Free learning, even without internet access.</h2>
+    <p>Students and families with limited connectivity can save reading materials, explore available offline courses, and learn how to protect assignments and reports. High-school downloads are available now; other grade levels will be added as tested.</p>
+    <div class="academy-info-dialog-actions">
+      <a class="btn gold" href="./offline/index.html">Visit Offline Learning Center</a>
+    </div>
+  </div>
+</dialog>
+
+<main id="main">
 <section class="hero">
   <div class="shell hero-inner">
     <p class="eyebrow">Welcome to the Academy</p>
@@ -442,6 +545,28 @@ footer{padding:38px 0;color:rgba(255,255,255,.67);background:var(--night);font-s
 "use strict";
 const $=id=>document.getElementById(id);
 document.querySelectorAll('a[href^="https://"]').forEach(a=>a.rel="noopener noreferrer");
+
+document.querySelectorAll("[data-academy-info-open]").forEach(button=>{
+  button.addEventListener("click",()=>{
+    const dialog=$(button.getAttribute("data-academy-info-open"));
+    if(!dialog)return;
+    if(typeof dialog.showModal==="function")dialog.showModal();
+    else dialog.setAttribute("open","");
+  });
+});
+document.querySelectorAll(".academy-info-dialog").forEach(dialog=>{
+  dialog.querySelectorAll("[data-academy-info-close]").forEach(button=>{
+    button.addEventListener("click",()=>dialog.close?.());
+  });
+  dialog.addEventListener("click",event=>{
+    if(event.target!==dialog)return;
+    const box=dialog.getBoundingClientRect();
+    const inside=
+      event.clientX>=box.left&&event.clientX<=box.right&&
+      event.clientY>=box.top&&event.clientY<=box.bottom;
+    if(!inside)dialog.close?.();
+  });
+});
 })();
 </script>
 <script src="/assets/vnv-beta-link.js" defer></script>
