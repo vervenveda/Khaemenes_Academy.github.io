@@ -1,0 +1,38 @@
+name: Adult Learner Route Validation
+
+on:
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'family/**'
+      - 'adult/**'
+      - 'student/index.html'
+      - 'assets/khaemenes-family-registry.js'
+      - 'tests/adult-learner-route-static.test.mjs'
+      - '.github/workflows/adult-learner-route-validation.yml'
+  push:
+    branches: [ main ]
+    paths:
+      - 'index.html'
+      - 'family/**'
+      - 'adult/**'
+      - 'student/index.html'
+      - 'assets/khaemenes-family-registry.js'
+      - 'tests/adult-learner-route-static.test.mjs'
+      - '.github/workflows/adult-learner-route-validation.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-adult-route:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+      - name: Check family registry syntax
+        run: node --check assets/khaemenes-family-registry.js
+      - name: Validate adult learner route
+        run: node tests/adult-learner-route-static.test.mjs

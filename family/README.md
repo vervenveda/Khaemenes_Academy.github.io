@@ -7,6 +7,7 @@ The Family layer coordinates one family identity with separate learner identitie
 - `family/index.html` — full family workspace, adult permissions, records, invitations, and learner switching.
 - `family/enroll/index.html` — canonical local enrollment and exact-grade placement flow.
 - `student/index.html` — active-learner front door that routes the learner to the registered school path.
+- `adult/enroll/index.html` — self-directed adult-scholar enrollment that creates or links an adult learner identity and routes directly to Higher Learning.
 
 ## Placement rule
 
@@ -27,6 +28,22 @@ Each learner receives one Academy `learnerId` and one `accountId`. School portal
 School-specific course state may remain local when it is learner-scoped and does not replace the Academy learner record.
 
 ## Routing
+
+## Adult learner rule
+
+Adults learning for themselves do **not** receive a K–12 grade. The canonical adult path is:
+
+```text
+Academy Front Desk
+→ Adult Scholar
+→ adult/enroll/
+→ linked adult + learner identity
+→ stage: higher
+→ Scholar ID
+→ Khaemenes Higher Learning
+```
+
+The adult learner record is marked `selfDirectedAdult: true`, remains separate from K–12 learner placement, and uses the `self-scholar` access preset. The K–12 Student Portal intentionally excludes self-directed adult records from its family learner switcher.
 
 NAIB may route an active learner to the correct registered school surface. Routing is advisory and cannot silently change formal placement, learner identity, grades, or mastery.
 
