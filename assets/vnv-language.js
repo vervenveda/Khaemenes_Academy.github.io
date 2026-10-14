@@ -21,9 +21,16 @@ const titleState={source:document.title,rendered:null};
 let coverageScheduled=false;
 /* Translation coverage engine: static and dynamically inserted public UI only. */
 const LANG_CACHE_KEY="vnv_translated_phrases_v2";
+const SESSION_TRANSLATION_KEY="vnv_public_translation_consent_v1";
 let translationsCache={};
 try{translationsCache=JSON.parse(localStorage.getItem(LANG_CACHE_KEY)||"{}")||{}}catch{}
 let translationBusy=false,translationStop=false;
+function getConsent(){try{return sessionStorage.getItem(SESSION_TRANSLATION_KEY)}catch{return null}}
+function setConsent(v){try{sessionStorage.setItem(SESSION_TRANSLATION_KEY,v)}catch{}}
+function requestOnlineConsent(){
+ const answer=window.confirm("Complete this public page's untranslated text with MyMemory? Only public page text is sent to the translation service. Learner answers, account data and private workspaces are excluded. Cancel keeps this page offline.");
+ setConsent(answer?"yes":"no");return answer;
+}
 function cacheKey(src,code){return code+"|"+src}
 function cachedTranslation(src,code){return translationsCache[cacheKey(src,code)]||null}
 function cacheTranslation(src,code,value){
@@ -119,12 +126,12 @@ async function completeMissingTranslations(){
  try{
   const originals=new Set();const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let node;
   while((node=walker.nextNode())){
-   if(!node.parentElement||ignored(node.parentElement)||node.parentElement.closest("#adminGate,form,[data-private],[data-i18n-no-online]"))continue;
+   if(!node.parentElement||ignored(node.parentElement)||node.parentElement.closest("#adminGate,form,[data-private],[data-learner],[data-student],[data-account],[data-i18n-no-online]"))continue;
    const text=normalize(original.get(node)??node.nodeValue);
    if(shouldTranslateText(text)&&!translate(text))originals.add(text);
   }
   for(const el of document.querySelectorAll("[placeholder],[aria-label],[title],[alt]")){
-   if(ignored(el)||el.closest("#adminGate,form,[data-private],[data-i18n-no-online]"))continue;
+   if(ignored(el)||el.closest("#adminGate,form,[data-private],[data-learner],[data-student],[data-account],[data-i18n-no-online]"))continue;
    const attrs=attributeBase.get(el)||{};
    for(const key of ["placeholder","aria-label","title","alt"]){
     const text=normalize(attrs[key]??el.getAttribute(key)??"");
@@ -135,8 +142,8 @@ async function completeMissingTranslations(){
   const remaining=[...originals];if(!remaining.length){updateCoverage();return}
   let machine=await localTranslator(target),useOnline=false;
   if(!machine){
-   const approved=window.confirm("A local browser translation model is not available. Translate public page text through MyMemory instead? This sends the public English page phrases to an external service. Do not use this for personal or student records. Cancel keeps all translation offline.");
-   if(!approved){updateProgress("Offline phrases only · external translation declined");return}
+   const approved=getConsent()==="yes"||requestOnlineConsent();
+   if(!approved){updateProgress("Offline translations only · online translation declined");return}
    useOnline=true;
   }
   let done=0,failed=0;
@@ -262,7 +269,7 @@ function makeSelector(){
    mirrorSelect.id="vnv-language-select-drawer";
    const heading=drawer.querySelector(".drawer-top");
    if(heading)heading.after(mirror);else drawer.prepend(mirror);
-   mirrorSelect.addEventListener("change",()=>setLanguage(mirrorSelect.value));
+   mirrorSelect.addEventListener("change",()=>setLanguage(mirrorSelect.value,true));
    const mirrorButton=mirror.querySelector(".vnv-translate-complete");
    if(mirrorButton)mirrorButton.addEventListener("click",completeMissingTranslations);
    const auditButton=mirror.querySelector(".vnv-translation-audit");
@@ -277,7 +284,7 @@ function makeSelector(){
   const main=document.querySelector("main");
   if(main)main.before(wrap);else document.body.prepend(wrap);
  }
- select.addEventListener("change",()=>setLanguage(select.value));
+ select.addEventListener("change",()=>setLanguage(select.value,true));
  updateLabel();
 }
 function updateLabel(){
@@ -287,21 +294,28 @@ function updateLabel(){
  document.querySelectorAll(".vnv-translate-complete").forEach(b=>{if(!translationBusy)b.textContent=control[0]});
  document.querySelectorAll(".vnv-translation-audit").forEach(b=>b.textContent=control[1]);
 }
-async function completeWithInstalledModel(selected){
- if(selected==="en"||!window.Translator||typeof window.Translator.availability!=="function")return;
+async function completeWithInstalledModel(selected,interactive=false){
+ if(selected==="en"||!coverage().missing)return;
+ let available=false;
  try{
-  const state=await window.Translator.availability({sourceLanguage:"en",targetLanguage:selected});
-  if(state==="available"&&lang===selected)completeMissingTranslations();
+  if(window.Translator?.availability){
+   const state=await window.Translator.availability({sourceLanguage:"en",targetLanguage:selected});
+   available=state==="available";
+  }
  }catch{}
+ if(lang!==selected)return;
+ if(available){completeMissingTranslations();return}
+ if(getConsent()==="yes"){completeMissingTranslations();return}
+ if(interactive&&getConsent()!=="no"&&requestOnlineConsent()){completeMissingTranslations()}
 }
-function setLanguage(next){
+function setLanguage(next,interactive=false){
  if(!CODES.includes(next))return;
  lang=next;storePref(lang);
  document.documentElement.lang=lang;
  document.documentElement.dir=lang==="ar"?"rtl":"ltr";
  translationStop=true;
  updateLabel();translateTree(document.body);translatePageTitle();updateCoverage();
- completeWithInstalledModel(lang);
+ completeWithInstalledModel(lang,interactive);
  document.dispatchEvent(new CustomEvent("vnv:language-change",{detail:{language:lang}}));
 }
 function internalRoute(url){
