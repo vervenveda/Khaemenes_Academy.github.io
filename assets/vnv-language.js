@@ -8,11 +8,15 @@ const CODES=["en","es","fr","ar","zh","de","ru","pt","hi","ja","ko","it","bn"];
 const ROWS=[["Explore","Explorar","Explorer","استكشف","探索","Entdecken","Исследовать"],["Halls","Salas","Salles","القاعات","展馆","Hallen","Залы"],["Matrix","Matriz","Matrice","المصفوفة","矩阵","Matrix","Матрица"],["Civic","Cívica","Civique","المدنية","公民","Bürgerwesen","Гражданское"],["Promise","Compromiso","Engagement","الوعد","承诺","Versprechen","Обещание"],["Donate","Donar","Faire un don","تبرع","捐助","Spenden","Пожертвовать"],["News","Noticias","Actualités","الأخبار","新闻","Nachrichten","Новости"],["Weather","Clima","Météo","الطقس","天气","Wetter","Погода"],["Creative","Creatividad","Créativité","الإبداع","创意","Kreatives","Творчество"],["Professional","Profesional","Professionnel","المهني","专业","Berufliches","Профессиональное"],["Education","Educación","Éducation","التعليم","教育","Bildung","Образование"],["Games","Juegos","Jeux","الألعاب","游戏","Spiele","Игры"],["Earth","Tierra","Terre","الأرض","地球","Erde","Земля"],["Health","Salud","Santé","الصحة","健康","Gesundheit","Здоровье"],["Connect","Conectar","Connexion","تواصل","连接","Verbinden","Связь"],["Finance","Finanzas","Finance","المالية","金融","Finanzen","Финансы"],["Research","Investigación","Recherche","البحث","研究","Forschung","Исследования"],["Knowledge","Conocimiento","Connaissances","المعرفة","知识","Wissen","Знания"],["Public Service","Servicio público","Service public","الخدمة العامة","公共服务","Öffentlicher Dienst","Общественная служба"],["Creative & Professional","Creativo y profesional","Créativité et métiers","الإبداع والمهن","创意与专业","Kreatives und Berufliches","Творчество и профессии"],["Gateways","Portales","Portails","البوابات","门户","Portale","Порталы"],["Pages","Páginas","Pages","الصفحات","页面","Seiten","Страницы"],["Apps","Aplicaciones","Applications","التطبيقات","应用","Apps","Приложения"],["Tools","Herramientas","Outils","الأدوات","工具","Werkzeuge","Инструменты"],["Courses","Cursos","Cours","الدورات","课程","Kurse","Курсы"],["Resources","Recursos","Ressources","الموارد","资源","Ressourcen","Ресурсы"],["Portals","Portales","Portails","البوابات","门户","Portale","Порталы"],["Workshops","Talleres","Ateliers","ورش العمل","工作坊","Workshops","Мастер-классы"],["Studios","Estudios","Studios","الاستوديوهات","工作室","Studios","Студии"],["Assessments","Evaluaciones","Évaluations","التقييمات","测评","Bewertungen","Оценивания"],["Mentors & Guides","Mentores y guías","Mentors et guides","الموجهون والمرشدون","导师与指南","Mentoren und Begleiter","Наставники и гиды"],["Explore the Ecosystem","Explorar el ecosistema","Explorer l'écosystème","استكشف المنظومة","探索生态系统","Ökosystem entdecken","Исследовать экосистему"],["Discover the Halls","Descubrir las salas","Découvrir les salles","اكتشف القاعات","发现各展馆","Hallen entdecken","Открыть залы"],["Open 333 Network","Abrir la red 333","Ouvrir le réseau 333","افتح شبكة 333","打开 333 网络","333-Netzwerk öffnen","Открыть сеть 333"],["Scroll to Explore","Desplázate para explorar","Défiler pour explorer","مرّر للاستكشاف","滚动探索","Zum Entdecken scrollen","Листайте для знакомства"],["Featured Sites","Sitios destacados","Sites à découvrir","المواقع المميزة","精选网站","Ausgewählte Seiten","Избранные сайты"],["Choose a doorway or browse its complete resources.","Elige una entrada o explora todos sus recursos.","Choisissez un portail ou parcourez toutes ses ressources.","اختر بوابة أو تصفح مواردها الكاملة.","选择入口或浏览全部资源。","Wählen Sie einen Zugang oder erkunden Sie alle Ressourcen.","Выберите раздел или изучите все его ресурсы."],["The Four Great Halls","Las cuatro grandes salas","Les quatre grandes salles","القاعات الأربع الكبرى","四大展馆","Die vier großen Hallen","Четыре главных зала"],["Many public resources. One organized home.","Muchos recursos públicos. Un espacio organizado.","De nombreuses ressources publiques. Un espace organisé.","موارد عامة كثيرة في مكان واحد منظم.","众多公共资源，汇于一处。","Viele öffentliche Ressourcen. Ein geordnetes Zuhause.","Множество открытых ресурсов. Единая система."],["Featured Public Destinations","Destinos públicos destacados","Destinations publiques à découvrir","وجهات عامة مميزة","精选公共站点","Ausgewählte öffentliche Angebote","Избранные общественные ресурсы"],["Featured across Verve N Veda","Destacado en Verve N Veda","À découvrir dans Verve N Veda","مميز عبر فيرف إن فيدا","Verve N Veda 精选","Vorgestellt bei Verve N Veda","Рекомендуем в Verve N Veda"],["Discover the ecosystem","Descubre el ecosistema","Découvrez l'écosystème","اكتشف المنظومة","发现生态系统","Entdecken Sie das Ökosystem","Откройте экосистему"],["Open in ecosystem viewer","Abrir en el visor","Ouvrir dans la visionneuse","افتح في عارض المنظومة","在站点查看器中打开","Im Ökosystem-Betrachter öffnen","Открыть в просмотрщике"],["Pause","Pausar","Pause","إيقاف مؤقت","暂停","Pause","Пауза"],["Resume","Reanudar","Reprendre","استئناف","继续","Fortsetzen","Продолжить"],["Print","Imprimir","Imprimer","طباعة","打印","Drucken","Печать"],["Verve N Veda Directory","Directorio Verve N Veda","Annuaire Verve N Veda","دليل فيرف إن فيدا","Verve N Veda 目录","Verve N Veda Verzeichnis","Каталог Verve N Veda"],["Search the complete directory","Buscar en el directorio completo","Rechercher dans tout l'annuaire","ابحث في الدليل الكامل","搜索完整目录","Gesamtes Verzeichnis durchsuchen","Поиск по всему каталогу"],["Search education, law, weather, art, veterans…","Buscar educación, derecho, clima, arte, veteranos…","Rechercher éducation, droit, météo, art, anciens combattants…","ابحث عن التعليم والقانون والطقس والفن والمحاربين القدامى…","搜索教育、法律、天气、艺术、退伍军人…","Bildung, Recht, Wetter, Kunst, Veteranen suchen…","Поиск: образование, право, погода, искусство, ветераны…"],["The Verve N Veda Promise","El compromiso de Verve N Veda","L'engagement de Verve N Veda","وعد فيرف إن فيدا","Verve N Veda 的承诺","Das Verve N Veda Versprechen","Обещание Verve N Veda"],["Welcome Home","Bienvenidos","Bienvenue","أهلاً بكم","欢迎","Willkommen","Добро пожаловать"],["Support Independent Creation","Apoya la creación independiente","Soutenir la création indépendante","ادعم الإبداع المستقل","支持独立创作","Unabhängige Kreativität unterstützen","Поддержать независимое творчество"],["Accounts","Cuentas","Comptes","الحسابات","账户","Konten","Аккаунты"],["Find My School","Encontrar mi escuela","Trouver mon école","ابحث عن مدرستي","寻找学校","Meine Schule finden","Найти школу"],["Academy Services","Servicios de la Academia","Services de l'Académie","خدمات الأكاديمية","学院服务","Akademie-Dienste","Услуги Академии"],["Beta Program","Programa beta","Programme bêta","البرنامج التجريبي","测试计划","Beta-Programm","Бета-программа"],["Help Desk","Centro de ayuda","Centre d'aide","مركز المساعدة","帮助中心","Hilfezentrum","Служба помощи"],["Front Desk","Recepción","Accueil","الاستقبال","服务台","Empfang","Приёмная"],["Schools","Escuelas","Écoles","المدارس","学校","Schulen","Школы"],["Services","Servicios","Services","الخدمات","服务","Dienste","Услуги"],["Beta","Beta","Bêta","تجريبي","测试版","Beta","Бета"],["Help","Ayuda","Aide","مساعدة","帮助","Hilfe","Помощь"],["Student Entry","Acceso de estudiantes","Accès élève","دخول الطالب","学生入口","Schülerzugang","Вход ученика"],["Create / Manage Account","Crear o gestionar cuenta","Créer ou gérer un compte","إنشاء أو إدارة حساب","创建或管理账户","Konto erstellen oder verwalten","Создать или управлять аккаунтом"],["What do you need today?","¿Qué necesitas hoy?","De quoi avez-vous besoin aujourd'hui ?","ما الذي تحتاجه اليوم؟","今天需要什么帮助？","Was brauchen Sie heute?","Что вам нужно сегодня?"],["One calm path through the front desk.","Un camino claro desde la recepción.","Un parcours serein depuis l'accueil.","مسار واضح عبر مكتب الاستقبال.","从服务台开始的清晰路径。","Ein klarer Weg durch den Empfang.","Понятный путь через приёмную."],["Go directly to the learning stage you need.","Ve directamente a la etapa educativa que necesitas.","Accédez directement au niveau d'études souhaité.","انتقل مباشرة إلى المرحلة التعليمية التي تحتاجها.","直达所需学习阶段。","Direkt zur passenden Lernstufe.","Перейдите сразу к нужной ступени обучения."],["Common questions, direct answers.","Preguntas frecuentes, respuestas claras.","Questions fréquentes, réponses directes.","أسئلة شائعة وإجابات مباشرة.","常见问题，直接解答。","Häufige Fragen, klare Antworten.","Частые вопросы, прямые ответы."],["Preschool","Preescolar","Maternelle","مرحلة ما قبل المدرسة","学前班","Vorschule","Дошкольное обучение"],["Kinder Garden","Jardín de infancia","Jardin d'enfants","رياض الأطفال","幼儿园","Kindergarten","Детский сад"],["Elementary","Primaria","École primaire","الابتدائية","小学","Grundschule","Начальная школа"],["Middle School","Escuela intermedia","Collège","المرحلة المتوسطة","初中","Mittelstufe","Средняя школа"],["High School","Secundaria superior","Lycée","المرحلة الثانوية","高中","Oberstufe","Старшая школа"],["Higher Learning","Educación superior","Enseignement supérieur","التعليم العالي","高等教育","Höhere Bildung","Высшее образование"],["Linguistics","Lingüística","Linguistique","اللغويات","语言学","Linguistik","Лингвистика"],["Student","Estudiante","Élève","طالب","学生","Lernende","Ученик"],["Family","Familia","Famille","الأسرة","家庭","Familie","Семья"],["Family / Parent","Familia / Padres","Famille / Parents","الأسرة / الوالدين","家庭／家长","Familie / Eltern","Семья / Родители"],["Teacher / Faculty","Docentes","Enseignants","المعلمون","教师","Lehrkräfte","Преподаватели"],["Adult Scholar","Estudiante adulto","Apprenant adulte","متعلم بالغ","成人学员","Erwachsene Lernende","Взрослый учащийся"],["Account","Cuenta","Compte","الحساب","账户","Konto","Аккаунт"],["School","Escuela","École","المدرسة","学校","Schule","Школа"],["Learning","Aprendizaje","Apprentissage","التعلم","学习","Lernen","Обучение"],["Records","Expedientes","Dossiers","السجلات","记录","Unterlagen","Документы"],["Academy Compass","Guía de la Academia","Boussole de l'Académie","بوصلة الأكاديمية","学院导航","Akademie-Kompass","Навигатор Академии"],["Open Student Portal","Abrir portal del estudiante","Ouvrir l'espace élève","افتح بوابة الطالب","打开学生门户","Schülerportal öffnen","Открыть портал ученика"],["Open Family Portal","Abrir portal familiar","Ouvrir l'espace famille","افتح بوابة الأسرة","打开家庭门户","Familienportal öffnen","Открыть семейный портал"],["Teacher Administration","Administración docente","Administration pédagogique","إدارة المعلمين","教师管理","Lehrerverwaltung","Управление преподавателями"],["Adult Learning","Aprendizaje para adultos","Formation des adultes","تعليم الكبار","成人学习","Erwachsenenbildung","Образование взрослых"],["Open Preschool","Abrir preescolar","Ouvrir la maternelle","افتح ما قبل المدرسة","打开学前班","Vorschule öffnen","Открыть дошкольное обучение"],["Open Kindergarten","Abrir jardín de infancia","Ouvrir le jardin d'enfants","افتح الروضة","打开幼儿园","Kindergarten öffnen","Открыть детский сад"],["Open Elementary","Abrir primaria","Ouvrir l'école primaire","افتح الابتدائية","打开小学","Grundschule öffnen","Открыть начальную школу"],["Open Middle School","Abrir escuela intermedia","Ouvrir le collège","افتح المرحلة المتوسطة","打开初中","Mittelstufe öffnen","Открыть среднюю школу"],["Open High School","Abrir secundaria","Ouvrir le lycée","افتح الثانوية","打开高中","Oberstufe öffnen","Открыть старшую школу"],["Open Higher Learning","Abrir educación superior","Ouvrir l'enseignement supérieur","افتح التعليم العالي","打开高等教育","Höhere Bildung öffnen","Открыть высшее образование"],["Open Linguistics","Abrir lingüística","Ouvrir linguistique","افتح اللغويات","打开语言学","Linguistik öffnen","Открыть лингвистику"],["Open Help Desk →","Abrir centro de ayuda →","Ouvrir l'aide →","افتح مركز المساعدة ←","打开帮助中心 →","Hilfe öffnen →","Открыть помощь →"],["Join Beta Testing →","Participar en pruebas beta →","Rejoindre le programme bêta →","انضم للاختبار التجريبي ←","加入测试 →","Am Betatest teilnehmen →","Участвовать в бета-тесте →"],["Placement & Pathways","Asignación y trayectorias","Placement et parcours","التسكين والمسارات","分班与学习路径","Einstufung und Lernwege","Распределение и траектории"],["Records & Reports","Expedientes e informes","Dossiers et rapports","السجلات والتقارير","记录与报告","Unterlagen und Berichte","Документы и отчёты"],["Help & Orientation","Ayuda y orientación","Aide et orientation","المساعدة والإرشاد","帮助与指引","Hilfe und Orientierung","Помощь и ориентация"],["Beta & Improvement","Pruebas y mejoras","Tests et améliorations","الاختبار والتحسين","测试与改进","Beta und Verbesserung","Тестирование и улучшения"]];
 const POLYGLOT_ROWS=[["Language Apps","Aplicaciones de idiomas","Applications linguistiques","تطبيقات اللغات","语言应用","Sprach-Apps","Языковые приложения"],["Voice Studio","Estudio de voz","Studio vocal","استوديو الصوت","语音工作室","Sprachstudio","Голосовая студия"],["World Atlas","Atlas mundial","Atlas mondial","الأطلس العالمي","世界图集","Weltatlas","Мировой атлас"],["The World in Words","El mundo en palabras","Le monde en mots","العالم بالكلمات","语言中的世界","Die Welt in Worten","Мир в словах"],["Formal Academy","Academia formal","Académie des langues","الأكاديمية النظامية","正式学院","Sprachakademie","Языковая академия"],["Arabic Suite","Estudio de árabe","Atelier d'arabe","مجموعة العربية","阿拉伯语学习","Arabisch-Lernwelt","Арабский комплекс"],["German Studio","Estudio de alemán","Atelier d'allemand","استوديو الألمانية","德语工作室","Deutschstudio","Студия немецкого"],["Russian Studio","Estudio de ruso","Atelier de russe","استوديو الروسية","俄语工作室","Russischstudio","Студия русского"],["Language Tools","Herramientas lingüísticas","Outils linguistiques","أدوات اللغات","语言工具","Sprachwerkzeuge","Языковые инструменты"],["Enter Five-Language Academy","Entrar a la Academia de cinco idiomas","Entrer dans l'Académie des cinq langues","ادخل أكاديمية اللغات الخمس","进入五语学院","Fünf-Sprachen-Akademie öffnen","Войти в Академию пяти языков"],["Choose a voice","Elegir una voz","Choisir une voix","اختر صوتًا","选择语音","Stimme wählen","Выбрать голос"],["Begin with a greeting.","Comienza con un saludo.","Commencez par une salutation.","ابدأ بتحية.","从问候语开始。","Beginne mit einer Begrüßung.","Начните с приветствия."],["Hear phrase","Escuchar frase","Écouter la phrase","استمع للعبارة","播放短语","Satz anhören","Прослушать фразу"],["Next phrase","Siguiente frase","Phrase suivante","العبارة التالية","下一句","Nächster Satz","Следующая фраза"],["Formal Language Academy","Academia de idiomas","Académie des langues","أكاديمية اللغات","语言学院","Sprachakademie","Языковая академия"],["Open the Academy","Abrir la Academia","Ouvrir l'Académie","افتح الأكاديمية","打开学院","Akademie öffnen","Открыть Академию"],["Language Studios & Tools","Estudios y herramientas lingüísticas","Ateliers et outils linguistiques","استوديوهات وأدوات اللغات","语言工作室与工具","Sprachstudios und Werkzeuge","Языковые студии и инструменты"],["Clear","Limpiar","Effacer","مسح","清除","Löschen","Очистить"],["Hear practice text","Escuchar texto de práctica","Écouter le texte","استمع إلى نص التدريب","朗读练习文本","Übungstext anhören","Прослушать учебный текст"],["Stop speech","Detener audio","Arrêter la lecture","أوقف النطق","停止朗读","Sprachausgabe stoppen","Остановить речь"],["Use browser default","Usar voz predeterminada","Utiliser la voix par défaut","استخدم الصوت الافتراضي","使用浏览器默认语音","Browserstandard verwenden","По умолчанию"],["Listening","Comprensión auditiva","Écoute","الاستماع","听力","Hören","Аудирование"],["Speaking","Expresión oral","Expression orale","التحدث","口语","Sprechen","Говорение"],["Reading","Lectura","Lecture","القراءة","阅读","Lesen","Чтение"],["Writing","Escritura","Écriture","الكتابة","写作","Schreiben","Письмо"],["Mediation","Mediación","Médiation","الوساطة اللغوية","语言调解","Sprachmittlung","Медиация"],["Translation","Traducción","Traduction","الترجمة","翻译","Übersetzung","Перевод"],["Culture","Cultura","Culture","الثقافة","文化","Kultur","Культура"],["Formal Study","Estudios formales","Études structurées","الدراسة النظامية","正式学习","Formales Lernen","Формальное обучение"],["Local Studios","Estudios locales","Ateliers locaux","استوديوهات محلية","本地工作室","Lokale Studios","Локальные студии"],["Campus & Support","Campus y ayuda","Campus et assistance","الحرم والدعم","校园与支持","Campus und Hilfe","Кампус и поддержка"],["Return to Top","Volver arriba","Retour en haut","العودة للأعلى","返回顶部","Nach oben","Наверх"],["Connected Learning Matrix","Red de aprendizaje conectado","Réseau d'apprentissage connecté","شبكة التعلم المتصل","互联学习矩阵","Vernetzte Lernmatrix","Матрица взаимосвязанного обучения"],["Support Polyglot","Apoyar Polyglot","Soutenir Polyglot","ادعم بوليغلوت","支持 Polyglot","Polyglot unterstützen","Поддержать Polyglot"],["Open Academy","Abrir Academia","Ouvrir l'Académie","افتح الأكاديمية","打开学院","Akademie öffnen","Открыть Академию"],["Open Field Lab","Abrir laboratorio de campo","Ouvrir le laboratoire de terrain","افتح المختبر الميداني","打开实地实验室","Feldlabor öffnen","Открыть полевую лабораторию"],["Open PROSE","Abrir PROSE","Ouvrir PROSE","افتح PROSE","打开 PROSE","PROSE öffnen","Открыть PROSE"],["Open ARSHIF","Abrir ARSHIF","Ouvrir ARSHIF","افتح أرشيف","打开 ARSHIF","ARSHIF öffnen","Открыть ARSHIF"],["Switch color theme","Cambiar tema visual","Changer le thème","بدّل المظهر","切换主题","Farbschema wechseln","Сменить тему"],["Open navigation","Abrir navegación","Ouvrir la navigation","افتح التنقل","打开导航","Navigation öffnen","Открыть навигацию"],["Search language apps","Buscar aplicaciones de idiomas","Rechercher les applications","ابحث عن تطبيقات اللغات","搜索语言应用","Sprach-Apps suchen","Поиск языковых приложений"],["Language filter","Filtro de idioma","Filtre de langue","مرشح اللغة","语言筛选","Sprachfilter","Фильтр языка"],["Voice","Voz","Voix","الصوت","语音","Stimme","Голос"],["Practice text","Texto de práctica","Texte d'entraînement","نص التدريب","练习文本","Übungstext","Текст для практики"],["Speech rate","Velocidad de voz","Débit de parole","سرعة النطق","语速","Sprechtempo","Темп речи"],["Voice pitch","Tono de voz","Hauteur de voix","طبقة الصوت","音高","Tonhöhe","Высота голоса"],["All available languages","Todos los idiomas disponibles","Toutes les langues disponibles","جميع اللغات المتاحة","所有可用语言","Alle verfügbaren Sprachen","Все доступные языки"],["Browser default voice","Voz predeterminada","Voix par défaut","الصوت الافتراضي","浏览器默认语音","Browser-Standardstimme","Голос браузера по умолчанию"],["Primary navigation","Navegación principal","Navigation principale","التنقل الرئيسي","主导航","Hauptnavigation","Основная навигация"],["Quick access","Acceso rápido","Accès rapide","وصول سريع","快速访问","Schnellzugriff","Быстрый доступ"]];
 for(const row of POLYGLOT_ROWS){if(!ROWS.some(existing=>existing[0]===row[0]))ROWS.push(row)}
+const TITLE_TRANSLATIONS={"Polyglot | Khaemenes Academy Linguistics & World Language Campus":{"es":"Polyglot | Khaemenes Academy: Lingüística e idiomas del mundo","fr":"Polyglot | Khaemenes Academy : linguistique et langues du monde","ar":"Polyglot | أكاديمية خيمينيس: اللغويات ولغات العالم","zh":"Polyglot | Khaemenes 学院：语言学与世界语言","de":"Polyglot | Khaemenes Academy: Linguistik und Weltsprachen","ru":"Polyglot | Академия Хеменес: лингвистика и языки мира","pt":"Polyglot | Academia Khaemenes: Linguística e línguas do mundo","hi":"Polyglot | खेमेनेस अकादमी: भाषाविज्ञान और विश्व भाषाएँ","ja":"Polyglot | Khaemenes Academy：言語学と世界の言語","ko":"Polyglot | Khaemenes Academy: 언어학과 세계 언어","it":"Polyglot | Accademia Khaemenes: linguistica e lingue del mondo","bn":"Polyglot | খেমেনেস একাডেমি: ভাষাবিজ্ঞান ও বিশ্বভাষা"},"Khaemenes Academy | Front Desk":{"es":"Khaemenes Academy | Recepción","fr":"Khaemenes Academy | Accueil","ar":"أكاديمية خيمينيس | الاستقبال","zh":"Khaemenes 学院 | 服务台","de":"Khaemenes Academy | Empfang","ru":"Академия Хеменес | Приёмная","pt":"Academia Khaemenes | Recepção","hi":"खेमेनेस अकादमी | स्वागत कक्ष","ja":"Khaemenes Academy | 受付","ko":"Khaemenes Academy | 안내 데스크","it":"Accademia Khaemenes | Accoglienza","bn":"খেমেনেস একাডেমি | অভ্যর্থনা"},"Verve N Veda | Public Gateway":{"es":"Verve N Veda | Portal público","fr":"Verve N Veda | Portail public","ar":"فيرف إن فيدا | البوابة العامة","zh":"Verve N Veda | 公共门户","de":"Verve N Veda | Öffentliches Portal","ru":"Verve N Veda | Общедоступный портал","pt":"Verve N Veda | Portal público","hi":"Verve N Veda | सार्वजनिक पोर्टल","ja":"Verve N Veda | 公開ポータル","ko":"Verve N Veda | 공개 포털","it":"Verve N Veda | Portale pubblico","bn":"Verve N Veda | উন্মুক্ত প্রবেশদ্বার"}};
 const EXTENDED={"Language":["Idioma","भाषा","言語","언어","Lingua","ভাষা"],"Explore":["Explorar","देखें","探索","탐색","Esplora","অন্বেষণ"],"Halls":["Salões","सभागार","ホール","홀","Sale","হল"],"Matrix":["Matriz","मैट्रिक्स","マトリックス","매트릭스","Matrice","ম্যাট্রিক্স"],"Academy":["Academia","अकादमी","アカデミー","아카데미","Accademia","একাডেমি"],"Education":["Educação","शिक्षा","教育","교육","Istruzione","শিক্ষা"],"Language Apps":["Aplicativos de idiomas","भाषा ऐप","語学アプリ","언어 앱","App linguistiche","ভাষা অ্যাপ"],"Voice Studio":["Estúdio de voz","वॉइस स्टूडियो","音声スタジオ","음성 스튜디오","Studio vocale","ভয়েস স্টুডিও"],"World Atlas":["Atlas mundial","विश्व एटलस","世界地図帳","세계 지도책","Atlante mondiale","বিশ্ব অ্যাটলাস"],"Research":["Pesquisa","अनुसंधान","研究","연구","Ricerca","গবেষণা"],"News":["Notícias","समाचार","ニュース","뉴스","Notizie","সংবাদ"],"Weather":["Clima","मौसम","天気","날씨","Meteo","আবহাওয়া"],"Creative":["Criatividade","सृजनात्मक","創作","창작","Creatività","সৃজনশীল"],"Professional":["Profissional","पेशेवर","専門","전문","Professionale","পেশাদার"],"Games":["Jogos","खेल","ゲーム","게임","Giochi","গেম"],"Earth":["Terra","पृथ्वी","地球","지구","Terra","পৃথিবী"],"Health":["Saúde","स्वास्थ्य","健康","건강","Salute","স্বাস্থ্য"],"Connect":["Conectar","जुड़ें","つながる","연결","Connetti","সংযুক্ত করুন"],"Finance":["Finanças","वित्त","金融","재정","Finanza","অর্থব্যবস্থা"],"Civic":["Cidadania","नागरिक","市民","시민","Civico","নাগরিক"],"Promise":["Compromisso","वादा","約束","약속","Impegno","প্রতিশ্রুতি"],"Donate":["Doar","दान करें","寄付","기부","Dona","অনুদান দিন"],"Gateways":["Portais","प्रवेश द्वार","入口","포털","Portali","প্রবেশপথ"],"Pages":["Páginas","पृष्ठ","ページ","페이지","Pagine","পৃষ্ঠা"],"Apps":["Aplicativos","ऐप","アプリ","앱","App","অ্যাপ"],"Tools":["Ferramentas","उपकरण","ツール","도구","Strumenti","সরঞ্জাম"],"Courses":["Cursos","पाठ्यक्रम","コース","과정","Corsi","কোর্স"],"Resources":["Recursos","संसाधन","資料","자료","Risorse","রিসোর্স"],"Portals":["Portais","पोर्टल","ポータル","포털","Portali","পোর্টাল"],"Workshops":["Oficinas","कार्यशालाएँ","ワークショップ","워크숍","Laboratori","কর্মশালা"],"Studios":["Estúdios","स्टूडियो","スタジオ","스튜디오","Studi","স্টুডিও"],"Assessments":["Avaliações","मूल्यांकन","評価","평가","Valutazioni","মূল্যায়ন"],"Language Tools":["Ferramentas de idiomas","भाषा उपकरण","言語ツール","언어 도구","Strumenti linguistici","ভাষার সরঞ্জাম"],"Formal Academy":["Academia formal","औपचारिक अकादमी","正規アカデミー","정규 아카데미","Accademia formale","আনুষ্ঠানিক একাডেমি"],"Formal Study":["Estudo formal","औपचारिक अध्ययन","正規学習","정규 학습","Studi formali","আনুষ্ঠানিক শিক্ষা"],"Local Studios":["Estúdios locais","स्थानीय स्टूडियो","ローカルスタジオ","로컬 스튜디오","Studi locali","স্থানীয় স্টুডিও"],"Schools":["Escolas","विद्यालय","学校","학교","Scuole","স্কুল"],"Services":["Serviços","सेवाएँ","サービス","서비스","Servizi","সেবা"],"Accounts":["Contas","खाते","アカウント","계정","Account","অ্যাকাউন্ট"],"Help Desk":["Central de ajuda","सहायता केंद्र","ヘルプデスク","안내 데스크","Centro assistenza","সহায়তা কেন্দ্র"],"Beta Program":["Programa beta","बीटा कार्यक्रम","ベータプログラム","베타 프로그램","Programma beta","বিটা প্রোগ্রাম"],"Help":["Ajuda","सहायता","ヘルプ","도움말","Aiuto","সাহায্য"],"Beta":["Beta","बीटा","ベータ","베타","Beta","বিটা"],"Student":["Estudante","विद्यार्थी","学生","학생","Studente","শিক্ষার্থী"],"Family":["Família","परिवार","家族","가족","Famiglia","পরিবার"],"Teacher":["Professor","शिक्षक","教師","교사","Insegnante","শিক্ষক"],"Learning":["Aprendizagem","सीखना","学習","학습","Apprendimento","শেখা"],"Records":["Registros","अभिलेख","記録","기록","Documenti","নথি"],"Linguistics":["Linguística","भाषाविज्ञान","言語学","언어학","Linguistica","ভাষাবিজ্ঞান"],"Spanish":["Espanhol","स्पेनिश","スペイン語","스페인어","Spagnolo","স্প্যানিশ"],"French":["Francês","फ़्रेंच","フランス語","프랑스어","Francese","ফরাসি"],"German":["Alemão","जर्मन","ドイツ語","독일어","Tedesco","জার্মান"],"Russian":["Russo","रूसी","ロシア語","러시아어","Russo","রুশ"],"Arabic":["Árabe","अरबी","アラビア語","아랍어","Arabo","আরবি"],"Mandarin Chinese":["Chinês mandarim","मंदारिन चीनी","中国語（普通話）","중국어(표준어)","Cinese mandarino","ম্যান্ডারিন চীনা"],"Japanese":["Japonês","जापानी","日本語","일본어","Giapponese","জাপানি"],"Listening":["Escuta","सुनना","聞くこと","듣기","Ascolto","শোনা"],"Speaking":["Fala","बोलना","話すこと","말하기","Conversazione","বলা"],"Reading":["Leitura","पढ़ना","読むこと","읽기","Lettura","পড়া"],"Writing":["Escrita","लिखना","書くこと","쓰기","Scrittura","লেখা"],"Translation":["Tradução","अनुवाद","翻訳","번역","Traduzione","অনুবাদ"],"Culture":["Cultura","संस्कृति","文化","문화","Cultura","সংস্কৃতি"],"Mediation":["Mediação","मध्यस्थता","仲介","중재","Mediazione","মধ্যস্থতা"],"Voice":["Voz","आवाज़","音声","음성","Voce","কণ্ঠ"],"Search":["Pesquisar","खोजें","検索","검색","Cerca","অনুসন্ধান"],"Clear":["Limpar","साफ़ करें","クリア","지우기","Cancella","মুছুন"],"Begin with a greeting.":["Comece com uma saudação.","एक अभिवादन से शुरू करें।","あいさつから始めましょう。","인사말로 시작하세요.","Inizia con un saluto.","একটি অভিবাদন দিয়ে শুরু করুন।"],"Hear phrase":["Ouvir frase","वाक्य सुनें","フレーズを聞く","문구 듣기","Ascolta la frase","বাক্যটি শুনুন"],"Next phrase":["Próxima frase","अगला वाक्य","次のフレーズ","다음 문구","Frase successiva","পরবর্তী বাক্য"],"Choose a voice":["Escolher uma voz","आवाज़ चुनें","音声を選択","음성 선택","Scegli una voce","কণ্ঠ বেছে নিন"],"Open the Academy":["Abrir a Academia","अकादमी खोलें","アカデミーを開く","아카데미 열기","Apri l'Accademia","একাডেমি খুলুন"],"Open Academy":["Abrir Academia","अकादमी खोलें","アカデミーを開く","아카데미 열기","Apri Accademia","একাডেমি খুলুন"],"Support Polyglot":["Apoiar o Polyglot","पॉलीग्लॉट का समर्थन करें","Polyglotを支援","Polyglot 후원","Sostieni Polyglot","Polyglot-কে সহায়তা করুন"],"Switch color theme":["Alterar tema de cores","रंग थीम बदलें","テーマを切り替える","테마 변경","Cambia tema","রঙের থিম বদলান"],"Open navigation":["Abrir navegação","नेविगेशन खोलें","ナビゲーションを開く","탐색 메뉴 열기","Apri navigazione","নেভিগেশন খুলুন"],"Language filter":["Filtro de idioma","भाषा फ़िल्टर","言語フィルター","언어 필터","Filtro lingua","ভাষা ফিল্টার"],"Practice text":["Texto de prática","अभ्यास पाठ","練習テキスト","연습 텍스트","Testo di esercizio","অনুশীলনের পাঠ্য"],"Speech rate":["Velocidade da fala","बोलने की गति","読み上げ速度","말하기 속도","Velocità voce","বলার গতি"],"Voice pitch":["Tom da voz","आवाज़ की पिच","声の高さ","음성 높이","Tono della voce","কণ্ঠের স্বর"],"Hear practice text":["Ouvir texto de prática","अभ्यास पाठ सुनें","練習テキストを聞く","연습 텍스트 듣기","Ascolta testo","অনুশীলনের পাঠ্য শুনুন"],"Stop speech":["Parar fala","बोलना रोकें","読み上げを停止","음성 중지","Ferma lettura","কণ্ঠ বন্ধ করুন"],"Use browser default":["Usar padrão do navegador","ब्राउज़र डिफ़ॉल्ट उपयोग करें","ブラウザーの既定を使用","브라우저 기본값 사용","Usa predefinito","ব্রাউজারের ডিফল্ট ব্যবহার করুন"],"Return to Top":["Voltar ao topo","ऊपर जाएँ","ページの先頭へ","맨 위로","Torna su","উপরে ফিরুন"],"Primary navigation":["Navegação principal","मुख्य नेविगेशन","メインナビゲーション","기본 탐색","Navigazione principale","প্রধান নেভিগেশন"],"Quick access":["Acesso rápido","त्वरित पहुँच","クイックアクセス","빠른 접근","Accesso rapido","দ্রুত প্রবেশ"],"World Language Atlas":["Atlas das línguas do mundo","विश्व भाषा एटलस","世界言語アトラス","세계 언어 지도","Atlante delle lingue del mondo","বিশ্ব ভাষা অ্যাটলাস"]};
 const MAP=new Map(ROWS.map(row=>[row[0],row]));
 const META={"en":["English","Language"],"es":["Español","Idioma"],"fr":["Français","Langue"],"ar":["العربية","اللغة"],"zh":["中文","语言"],"de":["Deutsch","Sprache"],"ru":["Русский","Язык"],"pt":["Português","Idioma"],"hi":["हिन्दी","भाषा"],"ja":["日本語","言語"],"ko":["한국어","언어"],"it":["Italiano","Lingua"],"bn":["বাংলা","ভাষা"]};
+const CONTROL_LABELS={"en":["Translate remaining text","Translation audit","Working…","English source","translated","phrases to review"],"es":["Traducir texto pendiente","Informe de traducción","Traduciendo…","Texto original en inglés","traducido","frases por revisar"],"fr":["Traduire le texte restant","Rapport de traduction","Traduction…","Texte original anglais","traduit","expressions à revoir"],"ar":["ترجمة النص المتبقي","تقرير الترجمة","جارٍ الترجمة…","النص الأصلي بالإنجليزية","مترجم","عبارات للمراجعة"],"zh":["翻译剩余文本","翻译检查报告","翻译中…","英文原文","已翻译","条待审核"],"de":["Restlichen Text übersetzen","Übersetzungsbericht","Übersetzung läuft…","Englischer Originaltext","übersetzt","Einträge zur Prüfung"],"ru":["Перевести оставшийся текст","Отчёт о переводе","Перевод…","Английский оригинал","переведено","фраз на проверку"],"pt":["Traduzir texto restante","Relatório de tradução","Traduzindo…","Texto original em inglês","traduzido","frases para revisar"],"hi":["शेष पाठ का अनुवाद","अनुवाद रिपोर्ट","अनुवाद जारी…","मूल अंग्रेज़ी पाठ","अनूदित","वाक्यांश समीक्षा के लिए"],"ja":["残りの文章を翻訳","翻訳レポート","翻訳中…","英語の原文","翻訳済み","要確認の文"],"ko":["남은 텍스트 번역","번역 검토 보고서","번역 중…","영어 원문","번역됨","검토할 문구"],"it":["Traduci testo rimanente","Rapporto traduzioni","Traduzione in corso…","Testo inglese originale","tradotto","frasi da rivedere"],"bn":["বাকি পাঠ্য অনুবাদ করুন","অনুবাদ প্রতিবেদন","অনুবাদ চলছে…","মূল ইংরেজি পাঠ্য","অনূদিত","পর্যালোচনার বাক্য"]};
 const KEY="vnv_language_v1",PARAM="lang";
-const original=new WeakMap(),lastRendered=new WeakMap(),attributeBase=new WeakMap();
+const original=new WeakMap(),lastRendered=new WeakMap(),attributeBase=new WeakMap(),lastAttrs=new WeakMap();
+const titleState={source:document.title,rendered:null};
+let coverageScheduled=false;
 /* Translation coverage engine: static and dynamically inserted public UI only. */
 const LANG_CACHE_KEY="vnv_translated_phrases_v2";
 let translationsCache={};
@@ -44,19 +48,40 @@ function coverage(){
    total++;if(lang==="en"||translate(source))covered++;else missing.add(source);
   }
  }
- return {language:lang,total,translated:covered,missing:missing.size,samples:[...missing].slice(0,20)};
+ if(shouldTranslateText(titleState.source)){
+  total++;if(lang==="en"||translate(titleState.source))covered++;else missing.add(titleState.source);
+ }
+ return {language:lang,total,translated:covered,missing:missing.size,samples:[...missing].slice(0,20),untranslated:[...missing]};
 }
 function updateCoverage(){
- const c=coverage();for(const el of document.querySelectorAll("[data-vnv-coverage]")){
-  el.textContent=lang==="en"?"English source":`${Math.round(100*c.translated/Math.max(c.total,1))}% translated · ${c.missing} phrases to review`;
+ const c=coverage(),labels=CONTROL_LABELS[lang]||CONTROL_LABELS.en;
+ for(const el of document.querySelectorAll("[data-vnv-coverage]")){
+  el.textContent=lang==="en"?labels[3]:`${Math.round(100*c.translated/Math.max(c.total,1))}% ${labels[4]} · ${c.missing} ${labels[5]}`;
  }
+}
+function scheduleCoverage(){
+ if(coverageScheduled)return;
+ coverageScheduled=true;
+ requestAnimationFrame(()=>{coverageScheduled=false;updateCoverage()});
+}
+function exportTranslationAudit(){
+ const report={version:1,page:location.pathname,language:lang,generatedAt:new Date().toISOString(),...coverage()};
+ const blob=new Blob([JSON.stringify(report,null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.download="translation-coverage-"+lang+".json";a.href=url;
+ document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 function addCoverageControl(wrap){
  const progress=document.createElement("span");progress.dataset.vnvCoverage="1";progress.setAttribute("role","status");progress.setAttribute("data-i18n-ignore","");progress.style.cssText="font-size:11px;line-height:1.4;color:#544f42;white-space:normal;max-width:165px";
- const btn=document.createElement("button");btn.type="button";btn.textContent="Translate remaining text";btn.className="vnv-translate-complete";
+ const btn=document.createElement("button");btn.type="button";btn.textContent=(CONTROL_LABELS[lang]||CONTROL_LABELS.en)[0];btn.className="vnv-translate-complete";
  btn.title="Complete missing public-page translations on this device when possible; online service only after consent";btn.setAttribute("data-i18n-ignore","");
  btn.addEventListener("click",completeMissingTranslations);
- wrap.append(progress,btn);
+ const audit=document.createElement("button");audit.type="button";
+ audit.textContent=(CONTROL_LABELS[lang]||CONTROL_LABELS.en)[1];audit.className="vnv-translation-audit";
+ audit.setAttribute("data-i18n-ignore","");
+ audit.title="Export missing visible public page phrases as JSON";
+ audit.addEventListener("click",exportTranslationAudit);
+ wrap.append(progress,btn,audit);
 }
 async function localTranslator(target){
  const api=window.Translator;
@@ -88,7 +113,7 @@ function updateProgress(msg){for(const el of document.querySelectorAll("[data-vn
 async function completeMissingTranslations(){
  if(lang==="en"||translationBusy)return;
  const target=lang;translationBusy=true;translationStop=false;
- document.querySelectorAll(".vnv-translate-complete").forEach(b=>{b.disabled=true;b.textContent="Working…"});
+ document.querySelectorAll(".vnv-translate-complete").forEach(b=>{b.disabled=true;b.textContent=(CONTROL_LABELS[lang]||CONTROL_LABELS.en)[2]});
  try{
   const originals=new Set();const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let node;
   while((node=walker.nextNode())){
@@ -96,6 +121,15 @@ async function completeMissingTranslations(){
    const text=normalize(original.get(node)??node.nodeValue);
    if(shouldTranslateText(text)&&!translate(text))originals.add(text);
   }
+  for(const el of document.querySelectorAll("[placeholder],[aria-label],[title],[alt]")){
+   if(ignored(el)||el.closest("#adminGate,form,[data-private],[data-i18n-no-online]"))continue;
+   const attrs=attributeBase.get(el)||{};
+   for(const key of ["placeholder","aria-label","title","alt"]){
+    const text=normalize(attrs[key]??el.getAttribute(key)??"");
+    if(shouldTranslateText(text)&&!translate(text))originals.add(text);
+   }
+  }
+  if(shouldTranslateText(titleState.source)&&!translate(titleState.source))originals.add(titleState.source);
   const remaining=[...originals];if(!remaining.length){updateCoverage();return}
   let machine=await localTranslator(target),useOnline=false;
   if(!machine){
@@ -114,10 +148,10 @@ async function completeMissingTranslations(){
    done++;if(done%3===0||done===remaining.length){translateTree(document.body);updateProgress(`${done}/${remaining.length} checked · ${failed} unavailable`)}
    if(useOnline)await new Promise(r=>setTimeout(r,260));
   }
-  translateTree(document.body);updateCoverage();
+  translateTree(document.body);translatePageTitle();updateCoverage();
   if(failed)updateProgress(`${coverage().translated}/${coverage().total} translated · ${failed} automated translations unavailable`);
   if(machine&&typeof machine.destroy==="function")machine.destroy();
- }finally{translationBusy=false;document.querySelectorAll(".vnv-translate-complete").forEach(b=>{b.disabled=false;b.textContent="Translate remaining text"})}
+ }finally{translationBusy=false;document.querySelectorAll(".vnv-translate-complete").forEach(b=>{b.disabled=false;b.textContent=(CONTROL_LABELS[lang]||CONTROL_LABELS.en)[0]})}
 }
 const normalize=s=>String(s).replace(/\s+/g," ").trim();
 function readPref(){try{return localStorage.getItem(KEY)}catch{return null}}
@@ -132,6 +166,7 @@ function translate(s){
  const row=MAP.get(source);
  if(row&&idx<7&&row[idx])return row[idx];
  if(idx>=7&&EXTENDED[source]?.[idx-7])return EXTENDED[source][idx-7];
+ if(TITLE_TRANSLATIONS[source]?.[lang])return TITLE_TRANSLATIONS[source][lang];
  return cachedTranslation(source,lang);
 }
 function ignored(el){
@@ -150,17 +185,22 @@ function textTranslate(n){
 }
 function attrsTranslate(el){
  if(ignored(el))return;
- let base=attributeBase.get(el);
- if(!base){
-  base={};
-  for(const a of ["placeholder","aria-label","title","alt"]){if(el.hasAttribute(a))base[a]=el.getAttribute(a)}
-  attributeBase.set(el,base);
+ let base=attributeBase.get(el),recent=lastAttrs.get(el);
+ if(!base){base={};recent={};attributeBase.set(el,base);lastAttrs.set(el,recent)}
+ for(const key of ["placeholder","aria-label","title","alt"]){
+  const current=el.getAttribute(key);if(current===null)continue;
+  if(!(key in base)||current!==recent[key])base[key]=current;
+  const replacement=translate(base[key]),next=replacement||base[key];
+  if(current!==next)el.setAttribute(key,next);
+  recent[key]=next;
  }
- for(const [key,value] of Object.entries(base)){
-  const translated=translate(value);
-  const next=translated||value;
-  if(el.getAttribute(key)!==next)el.setAttribute(key,next);
- }
+}
+function translatePageTitle(){
+ const current=document.title;
+ if(current!==titleState.rendered&&current!==titleState.source)titleState.source=current;
+ const replacement=translate(titleState.source),next=replacement||titleState.source;
+ if(current!==next)document.title=next;
+ titleState.rendered=next;
 }
 function translateTree(root){
  if(root.nodeType===Node.TEXT_NODE){textTranslate(root);return}
@@ -187,7 +227,7 @@ body > #vnv-language-switch{display:flex;width:max-content;max-width:calc(100% -
 #vnv-language-select{appearance:auto;max-width:175px;min-width:112px;padding:7px 9px;border:1px solid #a89a79;border-radius:7px;background:#fff;color:#17211d;font:inherit}
 #vnv-language-select:focus-visible{outline:3px solid #b48b45;outline-offset:2px}
 html[dir="rtl"] #vnv-language-switch,html[dir="rtl"] #vnv-language-switch-drawer{direction:rtl}
-.vnv-translate-complete{padding:6px 9px;border:1px solid #a89a79;border-radius:7px;background:#f5f0e4;color:#14261c;cursor:pointer;font:inherit;font-size:11px}.vnv-translate-complete:disabled{opacity:.6;cursor:wait}
+.vnv-translate-complete,.vnv-translation-audit{padding:6px 9px;border:1px solid #a89a79;border-radius:7px;background:#f5f0e4;color:#14261c;cursor:pointer;font:inherit;font-size:11px}.vnv-translate-complete:disabled{opacity:.6;cursor:wait}
 html[dir="rtl"] .ecosystem-category-grid,html[dir="rtl"] .quick-grid,html[dir="rtl"] .school-grid{direction:ltr}
 html[dir="rtl"] .ecosystem-category-grid > *,html[dir="rtl"] .quick-grid > *,html[dir="rtl"] .school-grid > *{direction:rtl}
 @media(max-width:480px){#vnv-language-switch{margin:6px auto}#vnv-language-select{min-width:106px}}
@@ -195,7 +235,7 @@ html[dir="rtl"] .ecosystem-category-grid > *,html[dir="rtl"] .quick-grid > *,htm
 document.head.append(styles);
 function makeSelector(){
  if(document.getElementById("vnv-language-switch"))return;
- const wrap=document.createElement("div");wrap.id="vnv-language-switch";
+ const wrap=document.createElement("div");wrap.id="vnv-language-switch";wrap.setAttribute("data-i18n-ignore","");
  const label=document.createElement("label");label.htmlFor="vnv-language-select";
  const select=document.createElement("select");select.id="vnv-language-select";
  select.setAttribute("aria-label","Choose interface language");
@@ -217,6 +257,8 @@ function makeSelector(){
    mirrorSelect.addEventListener("change",()=>setLanguage(mirrorSelect.value));
    const mirrorButton=mirror.querySelector(".vnv-translate-complete");
    if(mirrorButton)mirrorButton.addEventListener("click",completeMissingTranslations);
+   const auditButton=mirror.querySelector(".vnv-translation-audit");
+   if(auditButton)auditButton.addEventListener("click",exportTranslationAudit);
   }
  }else if(document.querySelector(".header-main-inner")){
   const main=document.querySelector("main");if(main)main.before(wrap);else document.body.append(wrap);
@@ -233,6 +275,9 @@ function makeSelector(){
 function updateLabel(){
  document.querySelectorAll('#vnv-language-switch label,#vnv-language-switch-drawer label').forEach(lab=>lab.textContent=META[lang][1]+":");
  for(const name of ["vnv-language-select","vnv-language-select-drawer"]){const sel=document.getElementById(name);if(sel)sel.value=lang;}
+ const control=CONTROL_LABELS[lang]||CONTROL_LABELS.en;
+ document.querySelectorAll(".vnv-translate-complete").forEach(b=>{if(!translationBusy)b.textContent=control[0]});
+ document.querySelectorAll(".vnv-translation-audit").forEach(b=>b.textContent=control[1]);
 }
 async function completeWithInstalledModel(selected){
  if(selected==="en"||!window.Translator||typeof window.Translator.availability!=="function")return;
@@ -247,7 +292,7 @@ function setLanguage(next){
  document.documentElement.lang=lang;
  document.documentElement.dir=lang==="ar"?"rtl":"ltr";
  translationStop=true;
- updateLabel();translateTree(document.body);updateCoverage();
+ updateLabel();translateTree(document.body);translatePageTitle();updateCoverage();
  completeWithInstalledModel(lang);
  document.dispatchEvent(new CustomEvent("vnv:language-change",{detail:{language:lang}}));
 }
@@ -267,13 +312,20 @@ function init(){
  makeSelector();
  setLanguage(lang);
  const observer=new MutationObserver(records=>{
+  let changed=false;
   for(const record of records){
-   for(const node of record.addedNodes)translateTree(node);
-   if(record.type==="characterData")translateTree(record.target);
+   if(record.type==="childList"){
+    for(const node of record.addedNodes){translateTree(node);changed=true}
+   }else if(record.type==="characterData"){
+    translateTree(record.target);changed=true;
+   }else if(record.type==="attributes"){
+    attrsTranslate(record.target);changed=true;
+   }
   }
+  if(changed)scheduleCoverage();
  });
- observer.observe(document.body,{subtree:true,childList:true,characterData:true});
+ observer.observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:["placeholder","aria-label","title","alt"]});
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();
-window.VNVLanguage=Object.freeze({getLanguage:()=>lang,setLanguage,availableLanguages:()=>CODES.slice(),coverage,refresh:()=>{translateTree(document.body);updateCoverage()},translateRemaining:completeMissingTranslations});
+window.VNVLanguage=Object.freeze({getLanguage:()=>lang,setLanguage,availableLanguages:()=>CODES.slice(),coverage,refresh:()=>{translateTree(document.body);translatePageTitle();updateCoverage()},translateRemaining:completeMissingTranslations,exportAudit:exportTranslationAudit});
 })();
