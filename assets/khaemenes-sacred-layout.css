@@ -1,0 +1,29 @@
+/* Khaemenes Academy shared presentation contract · sacred seven · 2026-10-14.
+   Presentation only. Preserves academic state, form behavior and private systems. */
+:root{--khae-sacred-radius:7px}
+html{overflow-wrap:normal;word-break:normal;hyphens:manual}
+body{overflow-wrap:normal;word-break:normal;hyphens:manual}
+body :is(h1,h2,h3,h4,h5,h6,p,li,label,summary,blockquote,figcaption,small,strong,span,a,button){
+  word-break:normal!important;overflow-wrap:normal!important;hyphens:manual!important
+}
+body :is(h1,h2,h3,h4,h5,h6){text-align:center;text-wrap:balance;line-height:1.35;max-width:100%}
+body :is(.eyebrow,.kicker,.overline,.subtitle,.hero-sub,.hero-subtitle){text-align:center;line-height:1.5!important}
+body :is(.hero,.hero-content,.hero-inner,.hero-copy){text-align:center}
+body :is(.card,.portal-card,.course-card,.feature-card,.resource-card,.tool-card,.grade-card,.tile,.panel,.box,.door,.module-card,.info-card){
+ border-radius:7px!important;min-width:0
+}
+body :is(button,.btn,.button,[role="button"],input[type="button"],input[type="submit"],input[type="reset"],.card-link,.action-btn,.head-btn,.nav-btn){
+ border-radius:7px!important
+}
+body :is(.card-grid,.grid,.cards,.course-grid,.grade-grid,.portal-grid,.resource-grid,.tool-grid,.tile-grid){
+ align-items:stretch
+}
+body :is(.card-grid,.grid,.cards,.course-grid,.grade-grid,.portal-grid,.resource-grid,.tool-grid,.tile-grid) > :is(.card,.portal-card,.course-card,.feature-card,.resource-card,.tool-card,.grade-card,.tile,.panel,.door){
+ height:100%;display:flex;flex-direction:column;align-items:stretch
+}
+body :is(.card-grid,.grid,.cards,.course-grid,.grade-grid,.portal-grid,.resource-grid,.tool-grid,.tile-grid) > :is(.card,.portal-card,.course-card,.feature-card,.resource-card,.tool-card,.grade-card,.tile,.panel,.door) :is(.actions,.buttons,.card-actions,.footer-actions){margin-top:auto}
+body :is(.card,.portal-card,.course-card,.feature-card,.resource-card,.tool-card,.grade-card,.tile,.door) > :is(h2,h3,h4){text-align:center}
+body :is(input,textarea,select){max-width:100%;border-radius:7px}
+body :is(pre,code,.code,table){overflow-wrap:anywhere;word-break:normal}
+body :is(.url,.long-link){overflow-wrap:anywhere}
+@media(max-width:640px){body :is(h1,h2,h3,h4){text-wrap:balance}body :is(.card-grid,.course-grid,.grade-grid,.portal-grid,.tool-grid){min-width:0}}
