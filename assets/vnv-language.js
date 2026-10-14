@@ -35,6 +35,15 @@ function coverage(){
   if(!shouldTranslateText(source))continue;
   total++;if(lang==="en"||translate(source))covered++;else missing.add(source);
  }
+ for(const el of document.querySelectorAll("[placeholder],[aria-label],[title],[alt]")){
+  if(ignored(el))continue;
+  const attrs=attributeBase.get(el)||{};
+  for(const key of ["placeholder","aria-label","title","alt"]){
+   const source=normalize(attrs[key]??el.getAttribute(key)??"");
+   if(!shouldTranslateText(source))continue;
+   total++;if(lang==="en"||translate(source))covered++;else missing.add(source);
+  }
+ }
  return {language:lang,total,translated:covered,missing:missing.size,samples:[...missing].slice(0,20)};
 }
 function updateCoverage(){
@@ -83,7 +92,7 @@ async function completeMissingTranslations(){
  try{
   const originals=new Set();const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let node;
   while((node=walker.nextNode())){
-   if(!node.parentElement||ignored(node.parentElement)||node.parentElement.closest("#adminGate,form,[data-private]"))continue;
+   if(!node.parentElement||ignored(node.parentElement)||node.parentElement.closest("#adminGate,form,[data-private],[data-i18n-no-online]"))continue;
    const text=normalize(original.get(node)??node.nodeValue);
    if(shouldTranslateText(text)&&!translate(text))originals.add(text);
   }
@@ -212,9 +221,11 @@ function makeSelector(){
  }else if(document.querySelector(".header-main-inner")){
   const main=document.querySelector("main");if(main)main.before(wrap);else document.body.append(wrap);
  }else if(document.querySelector(".ribbon")){
-  target=document.querySelector(".ribbon");target.append(wrap);
+  const main=document.querySelector("main");
+  if(main)main.before(wrap);else{target=document.querySelector(".ribbon");target.after(wrap)}
  }else{
-  target=document.querySelector("header")||document.body;target.append(wrap);
+  const main=document.querySelector("main");
+  if(main)main.before(wrap);else document.body.prepend(wrap);
  }
  select.addEventListener("change",()=>setLanguage(select.value));
  updateLabel();
@@ -241,8 +252,7 @@ function setLanguage(next){
  document.dispatchEvent(new CustomEvent("vnv:language-change",{detail:{language:lang}}));
 }
 function internalRoute(url){
- return (url.hostname==="vervenveda.com"||url.hostname==="www.vervenveda.com"||url.hostname==="vervenveda.github.io")&&
- (/\/Khaemenes_Academy\.github\.io(?:\/|$)/.test(url.pathname)||url.pathname==="/Khaemenes_Linguistics.github.io/"||url.pathname==="/"||url.pathname==="/vervenveda.github.io/");
+ return url.protocol==="https:"&&(url.hostname==="vervenveda.com"||url.hostname==="www.vervenveda.com"||url.hostname==="vervenveda.github.io");
 }
 document.addEventListener("click",event=>{
  const link=event.target.closest&&event.target.closest("a[href]");
