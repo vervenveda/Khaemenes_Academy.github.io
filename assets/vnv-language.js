@@ -62,11 +62,15 @@ styles.textContent=`
 #vnv-language-actions{display:flex;justify-self:end;align-items:center;justify-content:flex-end;gap:8px;min-width:0}
 .vnv-language-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;justify-self:end;min-width:0}
 .vnv-language-actions .menu-button{flex:0 0 40px}
+#vnv-language-switch-drawer{display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap;margin:10px auto 16px;max-width:100%;padding:8px;border:1px solid rgba(87,74,48,.3);border-radius:7px;background:#fffdf8;color:#162b24;font:400 12px/1.4 Arial,sans-serif}
+#vnv-language-switch-drawer select{max-width:175px;min-width:112px;padding:7px 9px;border:1px solid #a89a79;border-radius:7px;background:#fff;color:#17211d;font:inherit}
+#vnv-language-switch-drawer label{white-space:nowrap}
+body > #vnv-language-switch{display:flex;width:max-content;max-width:calc(100% - 24px);margin:10px auto;min-height:45px}
 #vnv-language-switch{display:inline-flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap;padding:7px 10px;margin:7px;border:1px solid rgba(87,74,48,.3);border-radius:7px;background:#fffdf8;color:#162b24;font:400 12px/1.4 "Brandon Grotesque","Avenir Next",Arial,sans-serif;text-align:center;max-width:100%;position:relative;z-index:1550}
 #vnv-language-switch label{font-weight:400;white-space:nowrap}
 #vnv-language-select{appearance:auto;max-width:175px;min-width:112px;padding:7px 9px;border:1px solid #a89a79;border-radius:7px;background:#fff;color:#17211d;font:inherit}
 #vnv-language-select:focus-visible{outline:3px solid #b48b45;outline-offset:2px}
-html[dir="rtl"] #vnv-language-switch{direction:rtl}
+html[dir="rtl"] #vnv-language-switch,html[dir="rtl"] #vnv-language-switch-drawer{direction:rtl}
 html[dir="rtl"] .ecosystem-category-grid,html[dir="rtl"] .quick-grid,html[dir="rtl"] .school-grid{direction:ltr}
 html[dir="rtl"] .ecosystem-category-grid > *,html[dir="rtl"] .quick-grid > *,html[dir="rtl"] .school-grid > *{direction:rtl}
 @media(max-width:480px){#vnv-language-switch{margin:6px auto}#vnv-language-select{min-width:106px}}
@@ -82,13 +86,19 @@ function makeSelector(){
  select.value=lang;wrap.append(label,select);
  let target;
  if(document.querySelector(".site-header .header-inner")){
-  target=document.querySelector(".site-header .header-inner");
-  const btn=target.querySelector("#menuButton");
-  if(btn){
-   const actions=document.createElement("div");
-   actions.className="vnv-language-actions";
-   btn.before(actions);actions.append(wrap,btn);
-  }else target.append(wrap);
+  const main=document.querySelector("main");
+  if(main)main.before(wrap);else document.body.append(wrap);
+  const drawer=document.getElementById("menuDrawer");
+  if(drawer){
+   const mirror=wrap.cloneNode(true);
+   mirror.id="vnv-language-switch-drawer";
+   mirror.querySelector("label").htmlFor="vnv-language-select-drawer";
+   const mirrorSelect=mirror.querySelector("select");
+   mirrorSelect.id="vnv-language-select-drawer";
+   const heading=drawer.querySelector(".drawer-top");
+   if(heading)heading.after(mirror);else drawer.prepend(mirror);
+   mirrorSelect.addEventListener("change",()=>setLanguage(mirrorSelect.value));
+  }
  }else if(document.querySelector(".ribbon")){
   target=document.querySelector(".ribbon");target.append(wrap);
  }else{
@@ -98,10 +108,8 @@ function makeSelector(){
  updateLabel();
 }
 function updateLabel(){
- const lab=document.querySelector('#vnv-language-switch label');
- if(lab)lab.textContent=META[lang][1]+":";
- const sel=document.getElementById("vnv-language-select");
- if(sel)sel.value=lang;
+ document.querySelectorAll('#vnv-language-switch label,#vnv-language-switch-drawer label').forEach(lab=>lab.textContent=META[lang][1]+":");
+ for(const name of ["vnv-language-select","vnv-language-select-drawer"]){const sel=document.getElementById(name);if(sel)sel.value=lang;}
 }
 function setLanguage(next){
  if(!CODES.includes(next))return;
