@@ -39,3 +39,12 @@ test("family registry keeps adult learning separate from K-12 placement",()=>{
 test("K-12 Student Portal intentionally excludes self-directed adult scholar records",()=>{
   assert.match(student,/filter\(l=>l&&!l\.selfDirectedAdult\)/);
 });
+
+test("Higher Learning learner routes preserve the canonical shared-origin bridge",()=>{
+  assert.ok(!family.includes('href="https://vervenveda.com/Khaemenes_Higher_Learning.github.io/">Browse Higher Learning</a>'));
+  assert.match(family,/Khaemenes_Higher_Learning\.github\.io\/start\//);
+  assert.match(student,/learner\?\.stage==="higher"/);
+  assert.match(student,/Open Higher Learning/);
+  assert.match(student,/Khaemenes_Higher_Learning\.github\.io\/start\//);
+  assert.match(registry,/Khaemenes_Higher_Learning\.github\.io\/start\//);
+});

@@ -105,6 +105,16 @@ function renderPins(learner){
   if(!pins.length)return '<div class="empty">No courses are pinned yet. Open a course and choose “Pin to Profile” to place it here.</div>';
   return `<div class="pin-list">${pins.map(p=>`<a class="pin-row" href="${esc(p.href||"#")}"><span><strong>${esc(p.title||"Course")}</strong><small>${esc(p.subtitle||"Return to course")}</small></span><span class="pin-mark" aria-hidden="true">★</span></a>`).join("")}</div>`;
 }
+function primaryLearningAction(learner){
+  return learner?.stage==="higher"
+    ? '<a class="btn gold" href="https://vervenveda.com/Khaemenes_Higher_Learning.github.io/start/">Open Higher Learning</a>'
+    : '${primaryLearningAction(learner)}';
+}
+function pinnedGuidance(learner){
+  return learner?.stage==="higher"
+    ? "Higher Learning course pins and scholar preferences remain tied to this Academy learner on the shared Verve N Veda origin."
+    : "Open Pre-Algebra above to begin or resume. Its readiness and mastery checks guide your next lesson.";
+}
 function renderLearners(family,active){
   const list=Array.isArray(family?.learners)?family.learners.filter(l=>l&&!l.selfDirectedAdult):[];
   if(!list.length)return '<div class="empty">No K–12 learners are registered in this family profile yet.</div>';
@@ -138,7 +148,7 @@ function render(){
     <section class="card col5">
       <p class="eyebrow">Pinned courses</p>
       <h3>Return quickly.</h3>
-      <p>Open Pre-Algebra above to begin or resume. Its readiness and mastery checks guide your next lesson.</p>
+      <p>${esc(pinnedGuidance(learner))}</p>
       ${renderPins(learner)}
     </section>
     <section class="card col12">
