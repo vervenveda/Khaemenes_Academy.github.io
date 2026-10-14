@@ -1,0 +1,20 @@
+name: Multilingual Browser Smoke
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'assets/vnv-language.js'
+      - 'scripts/browser-i18n-smoke.mjs'
+      - '.github/workflows/i18n-browser-smoke.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - name: Exercise language switch in headless Chrome
+        run: node scripts/browser-i18n-smoke.mjs
