@@ -373,7 +373,7 @@
   }
 </style>
 </head>
-<body>
+<body data-i18n-no-online>
 <div class="app">
   <header>
     <div>
@@ -1279,7 +1279,8 @@ printStaffBtn.onclick = ()=>{
     <h3>${currentTrack ? currentTrack.name : "Staff"}</h3>
     ${staffMain.innerHTML}
     <script>setTimeout(()=>window.print(),150);<\/script>
-  </body></html>`;
+  <script src="../assets/vnv-language.js" defer></script>
+</body></html>`;
   win.document.write(html);
   win.document.close();
 };
