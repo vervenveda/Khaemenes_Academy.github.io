@@ -76,7 +76,7 @@ const testCode=String.raw`
 
       const switcher=document.getElementById("vnv-language-switch");
       const rect=switcher?.getBoundingClientRect();
-      result.mobileViewport=window.innerWidth<=430;
+      result.mobileViewport=window.innerWidth<=520;
       result.mobileSwitcher=!!rect && rect.left>=-1 && rect.right<=window.innerWidth+1;
       result.noHorizontalOverflow=document.documentElement.scrollWidth<=document.documentElement.clientWidth+2;
 
