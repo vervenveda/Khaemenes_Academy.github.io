@@ -10,7 +10,7 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
 const browsers=["google-chrome","chromium","chromium-browser"];
 const browser=browsers.find(x=>spawnSync("which",[x],{encoding:"utf8"}).status===0);
 if(!browser){console.error("BROWSER_I18N=FAIL: Chromium or Chrome unavailable");process.exit(1)}
-const testCode=String.raw\`
+const testCode=String.raw`
 <script data-test-only>
 (function(){
   const EXPECTED=["en","es","fr","ar","zh","de","ru","pt","hi","ja","ko","it","bn"];
@@ -142,7 +142,7 @@ const testCode=String.raw\`
   }else setTimeout(run,500);
 })();
 </script>
-\`;
+`;
 const mime={".html":"text/html",".js":"text/javascript",".json":"application/json",".css":"text/css",".svg":"image/svg+xml",".webmanifest":"application/manifest+json"};
 const server=http.createServer((req,res)=>{
   const pathname=decodeURIComponent(new URL(req.url,"http://127.0.0.1").pathname);
