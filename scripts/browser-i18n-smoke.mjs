@@ -10,48 +10,139 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
 const browsers=["google-chrome","chromium","chromium-browser"];
 const browser=browsers.find(x=>spawnSync("which",[x],{encoding:"utf8"}).status===0);
 if(!browser){console.error("BROWSER_I18N=FAIL: Chromium or Chrome unavailable");process.exit(1)}
-const testCode=String.raw`
+const testCode=String.raw\`
 <script data-test-only>
 (function(){
+  const EXPECTED=["en","es","fr","ar","zh","de","ru","pt","hi","ja","ko","it","bn"];
+  const PREF_KEY="vnv_language_v1";
+  const STAGE_KEY="vnv_i18n_smoke_stage_v2";
+
+  function finish(result){
+    document.body.dataset.i18nSmoke=Object.values(result).every(Boolean)?"PASS":"FAIL";
+    document.body.dataset.i18nDetails=JSON.stringify(result);
+  }
+
+  function protectedClick(link){
+    if(!link)return false;
+    link.addEventListener("click",event=>event.preventDefault(),{once:true});
+    link.dispatchEvent(new MouseEvent("click",{bubbles:true,cancelable:true,button:0}));
+    return true;
+  }
+
   function run(){
     const result={};
     try{
       const api=window.VNVLanguage;
       result.engine=!!api;
-      result.options=document.getElementById("vnv-language-select")?.options.length===13;
       if(!api)throw Error("missing VNVLanguage");
+
+      const available=api.availableLanguages();
+      result.languages=JSON.stringify(available)===JSON.stringify(EXPECTED);
+      result.options=document.getElementById("vnv-language-select")?.options.length===EXPECTED.length;
+      result.audit=typeof api.exportAudit==="function";
+
+      const stage=localStorage.getItem(STAGE_KEY);
+      if(stage!=="reload-de"){
+        api.setLanguage("de");
+        result.persistWrite=localStorage.getItem(PREF_KEY)==="de";
+        if(!result.persistWrite){finish(result);return}
+        localStorage.setItem(STAGE_KEY,"reload-de");
+        setTimeout(()=>location.reload(),90);
+        return;
+      }
+
+      result.persistReload=api.getLanguage()==="de" &&
+        document.documentElement.lang==="de" &&
+        localStorage.getItem(PREF_KEY)==="de";
+      localStorage.removeItem(STAGE_KEY);
+
+      result.allLanguages=EXPECTED.every(code=>{
+        api.setLanguage(code);
+        return api.getLanguage()===code &&
+          document.documentElement.lang===code &&
+          api.coverage().language===code &&
+          document.documentElement.dir===(code==="ar"?"rtl":"ltr");
+      });
+
+      api.setLanguage("ar");
+      result.arabicRtl=document.documentElement.lang==="ar" &&
+        document.documentElement.dir==="rtl";
+
+      const grid=document.querySelector(".ecosystem-category-grid,.quick-grid,.school-grid");
+      const child=grid?.firstElementChild;
+      result.rtlGrid=!grid ||
+        (getComputedStyle(grid).direction==="ltr" &&
+         (!child||getComputedStyle(child).direction==="rtl"));
+
+      const switcher=document.getElementById("vnv-language-switch");
+      const rect=switcher?.getBoundingClientRect();
+      result.mobileViewport=window.innerWidth<=430;
+      result.mobileSwitcher=!!rect && rect.left>=-1 && rect.right<=window.innerWidth+1;
+      result.noHorizontalOverflow=document.documentElement.scrollWidth<=document.documentElement.clientWidth+2;
+
       api.setLanguage("es");
-      result.selected=api.getLanguage()==="es";
-      result.title=!(["Verve N Veda | Public Gateway","Khaemenes Academy | Front Desk","Polyglot | Khaemenes Academy Linguistics & World Language Campus"].includes(document.title));
-      result.coverage=api.coverage().language==="es";
-      const button=document.createElement("button");
-      button.id="i18n-browser-test-button";button.textContent="Welcome Home";
-      button.setAttribute("aria-label","Open navigation");document.body.append(button);
+      const dynamic=document.createElement("button");
+      dynamic.id="i18n-browser-test-button";
+      dynamic.textContent="Welcome Home";
+      dynamic.setAttribute("aria-label","Open navigation");
+      document.body.append(dynamic);
+
       setTimeout(function(){
-        result.dynamic=button.textContent==="Bienvenidos a casa";
-        result.attribute=button.getAttribute("aria-label")==="Abrir navegación";
-        button.setAttribute("aria-label","Switch color theme");
+        result.dynamic=dynamic.textContent==="Bienvenidos a casa";
+        result.attribute=dynamic.getAttribute("aria-label")==="Abrir navegación";
+
+        dynamic.setAttribute("aria-label","Switch color theme");
+
         setTimeout(function(){
-          result.attributeChanged=button.getAttribute("aria-label")==="Cambiar tema visual";
-          api.setLanguage("fr");
-          result.french=button.textContent==="Bienvenue chez vous";
+          result.attributeChanged=dynamic.getAttribute("aria-label")==="Cambiar tema visual";
+
+          const firstParty=document.createElement("a");
+          firstParty.href="https://vervenveda.com/Khaemenes_Academy.github.io/student/";
+          firstParty.textContent="Student Entry";
+          document.body.append(firstParty);
+          protectedClick(firstParty);
+          result.firstPartyPropagation=new URL(firstParty.href).searchParams.get("lang")==="es";
+
+          const thirdParty=document.createElement("a");
+          thirdParty.href="https://example.com/";
+          thirdParty.textContent="External";
+          document.body.append(thirdParty);
+          protectedClick(thirdParty);
+          result.thirdPartyIsolation=!new URL(thirdParty.href).searchParams.has("lang");
+
+          const student=document.querySelector('a[href="./student/"],a[href$="/student/"]');
+          const family=document.querySelector('a[href="./family/"],a[href$="/family/"]');
+          result.studentDoorway=!student||student instanceof HTMLAnchorElement;
+          result.familyDoorway=!family||family instanceof HTMLAnchorElement;
+
+          api.setLanguage("pt");
+          dynamic.textContent="Language";
+          api.refresh();
+          result.extendedLanguage=dynamic.textContent==="Idioma";
+
           api.setLanguage("en");
-          result.restore=button.textContent==="Welcome Home";
-          result.audit=typeof api.exportAudit==="function";
-          document.body.dataset.i18nSmoke=Object.values(result).every(Boolean)?"PASS":"FAIL";
-          document.body.dataset.i18nDetails=JSON.stringify(result);
-        },90);
-      },90);
+          result.restore=document.documentElement.dir==="ltr" &&
+            api.getLanguage()==="en" &&
+            localStorage.getItem(PREF_KEY)==="en";
+
+          dynamic.remove();
+          firstParty.remove();
+          thirdParty.remove();
+          finish(result);
+        },120);
+      },120);
     }catch(e){
       document.body.dataset.i18nSmoke="FAIL";
       document.body.dataset.i18nDetails=String(e.message);
     }
   }
-  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",()=>setTimeout(run,350),{once:true});
-  else setTimeout(run,350);
+
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded",()=>setTimeout(run,500),{once:true});
+  }else setTimeout(run,500);
 })();
 </script>
-`;
+\`;
 const mime={".html":"text/html",".js":"text/javascript",".json":"application/json",".css":"text/css",".svg":"image/svg+xml",".webmanifest":"application/manifest+json"};
 const server=http.createServer((req,res)=>{
   const pathname=decodeURIComponent(new URL(req.url,"http://127.0.0.1").pathname);
@@ -75,7 +166,7 @@ await new Promise(resolve=>server.listen(0,"127.0.0.1",resolve));
 const port=server.address().port;
 const result=await new Promise(resolve=>{
  let stdout="",stderr="",ended=false;
- const child=spawn(browser,["--headless=new","--no-sandbox","--disable-gpu","--disable-dev-shm-usage","--no-first-run","--no-default-browser-check","--virtual-time-budget=6500","--dump-dom","http://127.0.0.1:"+port+"/index.html"]);
+ const child=spawn(browser,["--headless=new","--no-sandbox","--disable-gpu","--disable-dev-shm-usage","--no-first-run","--no-default-browser-check","--window-size=390,844","--virtual-time-budget=8500","--dump-dom","http://127.0.0.1:"+port+"/index.html"]);
  const stop=setTimeout(()=>{if(!ended)child.kill("SIGKILL")},25000);
  child.stdout.on("data",chunk=>{stdout+=chunk.toString()});
  child.stderr.on("data",chunk=>{if(stderr.length<20000)stderr+=chunk.toString()});
@@ -89,4 +180,4 @@ const details=page.match(/data-i18n-details="([^"]+)"/);
 if(result.error||result.status!==0||marker?.[1]!=="PASS"){
  console.error("BROWSER_I18N=FAIL",{status:result.status,result:marker?.[1],details:details?.[1],error:result.error?.message,stderr:(result.stderr||"").slice(-1200)});
  process.exitCode=1;
-}else console.log("BROWSER_I18N=PASS; 13 locale options, Spanish, French, dynamic label changes and English restore");
+}else console.log("BROWSER_I18N=PASS; 13 languages, persistence reload, Arabic RTL, mobile layout, dynamic text/attributes, first-party propagation and English restore");
