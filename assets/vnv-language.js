@@ -40,13 +40,27 @@ function cacheTranslation(src,code,value){
  try{localStorage.setItem(LANG_CACHE_KEY,JSON.stringify(translationsCache))}catch{}
 }
 function shouldTranslateText(src){return /[\p{L}]/u.test(src) && src.length>=2}
+function translationEvidence(source){
+ if(lang==="en")return "source-language";
+ const hit=window.KhaemenesSovereignTranslate?.lookupLocal?.({from:"en",to:lang,text:source});
+ if(hit?.verified===true&&hit.translation)return "locally-reviewed";
+ const idx=CODES.indexOf(lang),row=MAP.get(source);
+ if(EXPANDED_PHRASES[source]?.[lang]||(row&&idx<7&&row[idx])||(idx>=7&&EXTENDED[source]?.[idx-7])||TITLE_TRANSLATIONS[source]?.[lang]||REVIEWED_PUBLIC_COPY[source]?.[lang])return "curated-public-copy";
+ if(/^Open (.+)$/.test(source)&&EXPANDED_PHRASES.Open?.[lang]&&translate(source))return "composed-interface";
+ if(hit?.translation)return "unreviewed-source-draft";
+ if(cachedTranslation(source,lang))return "machine-or-browser-cache";
+ return "untranslated";
+}
 function coverage(){
  const missing=new Set();let total=0,covered=0;
+ const evidence={"source-language":0,"locally-reviewed":0,"curated-public-copy":0,"composed-interface":0,"unreviewed-source-draft":0,"machine-or-browser-cache":0,"untranslated":0};
+ function count(source){const type=translationEvidence(source);total++;evidence[type]++;if(type==="untranslated")missing.add(source);else covered++;}
+
  const walk=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let n;
  while((n=walk.nextNode())){if(!n.parentElement||ignored(n.parentElement))continue;
   const source=normalize(original.get(n)===undefined?n.nodeValue:original.get(n));
   if(!shouldTranslateText(source))continue;
-  total++;if(lang==="en"||translate(source))covered++;else missing.add(source);
+  count(source);
  }
  for(const el of document.querySelectorAll("[placeholder],[aria-label],[title],[alt]")){
   if(ignored(el))continue;
@@ -54,18 +68,26 @@ function coverage(){
   for(const key of ["placeholder","aria-label","title","alt"]){
    const source=normalize(attrs[key]??el.getAttribute(key)??"");
    if(!shouldTranslateText(source))continue;
-   total++;if(lang==="en"||translate(source))covered++;else missing.add(source);
+   count(source);
   }
  }
  if(shouldTranslateText(titleState.source)){
   total++;if(lang==="en"||translate(titleState.source))covered++;else missing.add(titleState.source);
  }
- return {language:lang,total,translated:covered,missing:missing.size,samples:[...missing].slice(0,20),untranslated:[...missing]};
+ return {language:lang,total,translated:covered,missing:missing.size,evidence,coverageMeaning:"Source-string lookup categories; not independent human accuracy verification.",samples:[...missing].slice(0,20),untranslated:[...missing]};
 }
 function updateCoverage(){
  const c=coverage(),labels=CONTROL_LABELS[lang]||CONTROL_LABELS.en;
  for(const el of document.querySelectorAll("[data-vnv-coverage]")){
-  el.textContent=lang==="en"?labels[3]:`${Math.round(100*c.translated/Math.max(c.total,1))}% ${labels[4]} · ${c.missing} ${labels[5]}`;
+  // Show provenance rather than suggesting every available phrase is independently verified.
+  const e=c.evidence;
+  const drafts=e["unreviewed-source-draft"]+e["machine-or-browser-cache"];
+  el.textContent=lang==="en"?labels[3]:
+   `${Math.round(100*c.translated/Math.max(c.total,1))}% available · ${e["locally-reviewed"]} reviewed · ${e["curated-public-copy"]} curated · ${drafts} drafts · ${e.untranslated} untranslated`;
+  el.title="Source-string matches, not a human accuracy score. Composed interface: "+e["composed-interface"]+
+   "; unreviewed source: "+e["unreviewed-source-draft"]+"; machine/browser cache: "+e["machine-or-browser-cache"]+
+   "; original language: "+e["source-language"]+". Export Translation audit for full details.";
+  el.lang="en";el.dir="ltr";
  }
 }
 function scheduleCoverage(){
