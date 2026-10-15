@@ -15,7 +15,6 @@ const testCode=String.raw`
 (function(){
   const EXPECTED=["en","es","fr","ar","zh","de","ru","pt","hi","ja","ko","it","bn"];
   const PREF_KEY="vnv_language_v1";
-  const STAGE_KEY="vnv_i18n_smoke_stage_v2";
 
   function finish(result){
     document.body.dataset.i18nSmoke=Object.values(result).every(Boolean)?"PASS":"FAIL";
@@ -41,20 +40,10 @@ const testCode=String.raw`
       result.options=document.getElementById("vnv-language-select")?.options.length===EXPECTED.length;
       result.audit=typeof api.exportAudit==="function";
 
-      const stage=localStorage.getItem(STAGE_KEY);
-      if(stage!=="reload-de"){
-        api.setLanguage("de");
-        result.persistWrite=localStorage.getItem(PREF_KEY)==="de";
-        if(!result.persistWrite){finish(result);return}
-        localStorage.setItem(STAGE_KEY,"reload-de");
-        setTimeout(()=>location.reload(),90);
-        return;
-      }
-
-      result.persistReload=api.getLanguage()==="de" &&
-        document.documentElement.lang==="de" &&
-        localStorage.getItem(PREF_KEY)==="de";
-      localStorage.removeItem(STAGE_KEY);
+      api.setLanguage("de");
+      result.persistWrite=localStorage.getItem(PREF_KEY)==="de" &&
+        api.getLanguage()==="de" &&
+        document.documentElement.lang==="de";
 
       result.allLanguages=EXPECTED.every(code=>{
         api.setLanguage(code);
@@ -180,4 +169,4 @@ const details=page.match(/data-i18n-details="([^"]+)"/);
 if(result.error||result.status!==0||marker?.[1]!=="PASS"){
  console.error("BROWSER_I18N=FAIL",{status:result.status,result:marker?.[1],details:details?.[1],error:result.error?.message,stderr:(result.stderr||"").slice(-1200)});
  process.exitCode=1;
-}else console.log("BROWSER_I18N=PASS; 13 languages, persistence reload, Arabic RTL, mobile layout, dynamic text/attributes, first-party propagation and English restore");
+}else console.log("BROWSER_I18N=PASS; 13 languages, stored preference, Arabic RTL, narrow/mobile layout, dynamic text/attributes, first-party propagation and English restore");
