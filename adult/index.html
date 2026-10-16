@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Khaemenes Academy Adult Learner Portal — a self-directed scholar workspace for Higher Learning, GED, career, languages, continuing study, records, and next learning steps.">
+<meta name="referrer" content="no-referrer">
+<title>Khaemenes Academy · Adult Learner Portal</title>
+<style>
+:root{
+  --paper:#f4f0e7;--paper2:#fffdf8;--panel:#fff;--ink:#17211d;--muted:#68736d;
+  --forest:#233e34;--navy:#102b43;--night:#071521;--gold:#b48b45;--gold2:#ead9b8;
+  --line:rgba(20,31,26,.15);--shadow:0 18px 42px rgba(19,31,25,.08);
+  --serif:Cinzel,"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:"Brandon Grotesque","Avenir Next",Avenir,"Segoe UI",Arial,sans-serif;
+  --r:7px;--max:1120px
+}
+*{box-sizing:border-box}
+html{background:var(--paper);scroll-behavior:smooth}
+body{margin:0;min-width:300px;color:var(--ink);background:radial-gradient(circle at 10% 0,rgba(180,139,69,.11),transparent 28rem),linear-gradient(180deg,#fbfaf6,var(--paper));font:15px/1.68 var(--sans)}
+a{color:inherit;text-decoration:none}button{font:inherit;cursor:pointer}:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.shell{width:min(calc(100% - 32px),var(--max));margin:auto}
+.top{color:#fff;background:linear-gradient(135deg,var(--night),var(--navy) 55%,#173b4f)}
+.nav{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:11px}.mark{width:43px;height:43px;display:grid;place-items:center;border:1px solid rgba(234,217,184,.68);border-radius:7px;color:#213026;background:linear-gradient(145deg,#fff7df,#d6b66f);font:600 13px var(--serif)}
+.brand strong{display:block;font:500 14px var(--serif);letter-spacing:.07em;text-transform:uppercase}.brand small{display:block;margin-top:3px;color:#cbd7e0;font-size:9px;letter-spacing:.08em;text-transform:uppercase}
+.navlinks{display:flex;gap:7px;flex-wrap:wrap}.navlinks a{min-height:38px;display:flex;align-items:center;padding:7px 10px;border:1px solid rgba(255,255,255,.16);border-radius:7px;font-size:9px;letter-spacing:.06em;text-transform:uppercase}
+.hero{padding:70px 0 56px;text-align:center}.eyebrow{margin:0;color:var(--gold2);font:500 11px var(--serif);letter-spacing:.16em;text-transform:uppercase}.hero h1{margin:12px auto 0;font:500 clamp(3rem,7vw,5.8rem)/.98 var(--serif)}.hero p{max-width:780px;margin:18px auto 0;color:#d5deea}
+.section{padding:58px 0}.heading{max-width:790px;margin:0 auto 30px;text-align:center}.heading .eyebrow{color:#8a672e}.heading h2{margin:9px 0 0;color:var(--forest);font:500 clamp(2rem,5vw,3.4rem)/1.05 var(--serif)}.heading p{max-width:690px;margin:12px auto 0;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:15px}.card{grid-column:span 12;padding:23px;border:1px solid var(--line);border-radius:7px;background:rgba(255,253,248,.97);box-shadow:var(--shadow)}.col7{grid-column:span 7}.col5{grid-column:span 5}.col6{grid-column:span 6}.col4{grid-column:span 4}
+.card h3{margin:0;color:var(--forest);font:500 1.55rem var(--serif)}.card p{color:var(--muted)}.profile-name{margin:7px 0 0;color:var(--forest);font:500 clamp(2.2rem,5vw,4.2rem)/1 var(--serif)}
+.chips,.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.chip{display:inline-flex;padding:6px 9px;border:1px solid var(--line);border-radius:999px;background:#faf7ef;color:var(--forest);font-size:10px}
+.btn{min-height:42px;display:inline-flex;align-items:center;justify-content:center;padding:8px 12px;border:1px solid var(--forest);border-radius:7px;color:#fff;background:var(--forest);font-size:10px;font-weight:700;letter-spacing:.045em;text-transform:uppercase}.btn.secondary{color:var(--forest);background:#fff;border-color:var(--line)}.btn.gold{color:#2b2417;background:var(--gold2);border-color:#c6a55f}.btn.dark{background:var(--navy);border-color:var(--navy)}
+.notice{padding:13px 15px;border-left:4px solid var(--gold);border-radius:7px;background:#fff8e8;color:#66502b}.notice.good{border-left-color:#4f775b;background:#eef7f0;color:#315f3c}
+.next-grid{display:grid;gap:9px;margin-top:14px}.next-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding:14px;border:1px solid var(--line);border-radius:7px;background:#fff}.next-row strong{display:block;color:var(--forest)}.next-row small{display:block;margin-top:3px;color:var(--muted)}.status{display:inline-flex;margin-top:6px;padding:4px 7px;border:1px solid var(--line);border-radius:999px;background:#faf7ef;color:#7b473f;font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+.path-card{min-height:190px;display:flex;flex-direction:column}.path-card .actions{margin-top:auto}.path-mark{width:42px;height:38px;display:grid;place-items:center;border:1px solid var(--line);border-radius:7px;background:#f8f4ea;color:var(--navy);font:500 11px var(--serif)}
+.footer{padding:38px 20px;color:#cbd6df;background:var(--night);text-align:center;font-size:10px}.footer strong{display:block;color:#fff;font:500 1.15rem var(--serif)}
+@media(max-width:820px){.col7,.col5,.col6,.col4{grid-column:span 12}.nav{justify-content:center;text-align:center;flex-wrap:wrap}.navlinks{justify-content:center}}
+@media(max-width:560px){.shell{width:min(calc(100% - 22px),var(--max))}.hero{padding:54px 0 42px}.next-row{grid-template-columns:1fr}.next-row .btn,.actions .btn{width:100%}.brand small{display:none}}
+</style>
+</head>
+<body data-i18n-no-online>
+<header class="top">
+  <div class="shell nav">
+    <a class="brand" href="../"><span class="mark">KA</span><span><strong>Khaemenes Academy</strong><small>Adult Learner Portal</small></span></a>
+    <nav class="navlinks">
+      <a href="../family/">Family / Parent</a>
+      <a href="enroll/">Adult Enrollment</a>
+      <a href="https://vervenveda.com/Khaemenes_Higher_Learning.github.io/start/">Higher Learning</a>
+      <a href="../">Academy Home</a>
+    </nav>
+  </div>
+  <section class="hero shell">
+    <p class="eyebrow">Self-Directed Adult Scholar</p>
+    <h1>Adult Learner Portal</h1>
+    <p>Your own learning path stays separate from any parent or guardian role. Continue from your actual starting point — foundational study, GED, career development, languages, college-level coursework, or advanced independent scholarship.</p>
+  </section>
+</header>
+
+<main class="section">
+  <div class="shell">
+    <div id="app"></div>
+  </div>
+</main>
+
+<section class="section" style="background:rgba(255,255,255,.54);border-block:1px solid var(--line)">
+  <div class="shell">
+    <div class="heading"><p class="eyebrow">Choose Your Direction</p><h2>No artificial grade label.</h2><p>Adult learners enter the pathway appropriate to their current goals and preparation. Exploring a pathway does not change K–12 records or another learner's placement.</p></div>
+    <div class="grid">
+      <article class="card col4 path-card"><span class="path-mark">HL</span><h3>Higher Learning</h3><p>University-level study, independent scholarship, advanced mathematics, research preparation, and expanding collegiate departments.</p><div class="actions"><a class="btn dark" href="https://vervenveda.com/Khaemenes_Higher_Learning.github.io/start/">Enter Higher Learning</a></div></article>
+      <article class="card col4 path-card"><span class="path-mark">GED</span><h3>GED & Foundations</h3><p>Rebuild foundations or prepare for high-school-equivalency study without being placed into a child grade.</p><div class="actions"><a class="btn" href="https://vervenveda.com/Khaemenes_Higher_Learning.github.io/GED/">Open GED Pathway</a></div></article>
+      <article class="card col4 path-card"><span class="path-mark">C</span><h3>Career Development</h3><p>Career assessment, professional skills, practical planning, transition support, and continuing workforce development.</p><div class="actions"><a class="btn" href="https://vervenveda.com/Khaemenes_Higher_Learning.github.io/Career/">Open Career Portal</a></div></article>
+      <article class="card col4 path-card"><span class="path-mark">L</span><h3>Languages</h3><p>Study languages through the Linguistics campus as an adult learner without entering a K–12 language requirement.</p><div class="actions"><a class="btn secondary" href="https://vervenveda.com/Khaemenes_Linguistics.github.io/">Open Linguistics</a></div></article>
+      <article class="card col4 path-card"><span class="path-mark">M</span><h3>Scholar Mentor</h3><p>Use the Academy mentor for planning, study strategy, course interpretation, and bounded academic guidance.</p><div class="actions"><a class="btn secondary" href="../mentor/">Open Scholar Mentor</a></div></article>
+      <article class="card col4 path-card"><span class="path-mark">F</span><h3>Family / Parent Role</h3><p>If you also support children or other learners, switch deliberately to the Family Portal. Your own adult coursework stays separate.</p><div class="actions"><a class="btn secondary" href="../family/">Open Family Portal</a></div></article>
+    </div>
+  </div>
+</section>
+
+<footer class="footer"><strong>Khaemenes Academy</strong><span>Jennifer Kay Pearl · Adult Learner Portal · Lifelong Learning</span></footer>
+
+<script src="../assets/khaemenes-family-registry.js"></script>
+<script src="../assets/khaemenes-learning-continuation.js"></script>
+<script>
+(()=>{"use strict";
+const R=window.KhaemenesFamilyRegistry,C=window.KhaemenesLearningContinuation,app=document.getElementById("app");
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const label=s=>({continue:"Continue Study",practice:"Practice",corrections:"Corrections",mastery:"Mastery Required",assessment:"Assessment Next",complete:"Complete",paused:"Paused"})[s]||"Continue Study";
+function continuation(scholar){
+  const list=C?.readLearner?.(scholar?.learnerId)||[];
+  if(!list.length)return '<div class="notice">No course has published a continuation snapshot yet. You can still enter Higher Learning, GED, Career, or Linguistics normally.</div>';
+  return `<div class="next-grid">${list.slice(0,8).map(s=>`<div class="next-row"><span><strong>${esc(s.courseTitle||s.courseId)}</strong><small>${esc(s.nextTitle||s.summary||"Next study step")}</small><span class="status">${esc(label(s.status))}</span></span>${s.nextHref?`<a class="btn secondary" href="${esc(s.nextHref)}">Open</a>`:""}</div>`).join("")}</div>`;
+}
+function render(){
+  if(!R){
+    app.innerHTML='<div class="notice">The Academy learner registry is unavailable. Adult learning remains open through Higher Learning, but local scholar continuity cannot be shown here.</div>';
+    return;
+  }
+  const ids=R.activeIds?.()||{},adult=R.getAdult?.(ids.adultId)||null,scholar=adult?R.getAdultLearner?.(adult.adultId):null;
+  if(!adult||!scholar){
+    app.innerHTML=`<div class="grid"><section class="card col7"><p class="eyebrow" style="color:#8a672e">Adult learner setup</p><h3>Begin or resume your own learning identity.</h3><p>This is separate from enrolling a child. Adult learners receive a self-directed Higher Learning scholar identity without a K–12 grade assignment.</p><div class="actions"><a class="btn gold" href="enroll/">Create / Resume Adult Learner</a><a class="btn secondary" href="../family/">I am here as a Parent / Guardian</a></div></section><section class="card col5"><h3>What stays separate</h3><p>Your adult coursework, next steps, and scholar records do not become a child's grades or placement. Your parent/guardian permissions remain available through the Family Portal when you choose that role.</p></section></div>`;
+    return;
+  }
+  R.setActive?.({familyId:scholar.familyId,adultId:adult.adultId,learnerId:scholar.learnerId});
+  const interests=Array.isArray(scholar.interests)?scholar.interests.filter(Boolean):[];
+  const next=(C?.readLearner?.(scholar.learnerId)||[]).find(x=>x.status!=="complete"&&x.nextHref)||null;
+  app.innerHTML=`<div class="grid">
+    <section class="card col7">
+      <p class="eyebrow" style="color:#8a672e">Active adult scholar</p>
+      <div class="profile-name">${esc(scholar.nickname||adult.displayName||"Adult Scholar")}</div>
+      <div class="chips"><span class="chip">Higher Learning</span><span class="chip">Self-directed adult</span>${interests.slice(0,5).map(x=>`<span class="chip">${esc(x)}</span>`).join("")}</div>
+      <div class="actions">${next?`<a class="btn gold" href="${esc(next.nextHref)}">${esc(next.nextLabel||"Continue Study")}</a>`:'<a class="btn gold" href="https://vervenveda.com/Khaemenes_Higher_Learning.github.io/start/">Continue to Higher Learning</a>'}<a class="btn secondary" href="enroll/">Review Adult Profile</a><a class="btn secondary" href="../family/">Switch to Parent / Family Role</a></div>
+      <p class="notice good" style="margin-top:18px">Your adult learner identity is active. This portal does not change any child's school placement or academic record.</p>
+    </section>
+    <section class="card col5">
+      <h3>Your next study steps</h3>
+      <p>Courses publish summary-only continuation records here. They cannot award mastery, change scores, or unlock protected assessments.</p>
+      ${continuation(scholar)}
+    </section>
+  </div>`;
+}
+window.addEventListener("khaemenes-family-changed",render);
+window.addEventListener("khaemenes-learning-continuation-changed",render);
+render();
+})();
+</script>
+<script src="https://vervenveda.com/assets/vnv-beta-link.js" defer></script>
+</body>
+</html>
