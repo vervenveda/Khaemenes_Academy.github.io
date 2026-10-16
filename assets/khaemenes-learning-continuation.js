@@ -1,7 +1,7 @@
 (function attachKhaemenesLearningContinuation(global){
   "use strict";
 
-  const VERSION="1.0.0";
+  const VERSION="1.0.1";
   const KEY="khaemenes.learning.continuation.v1";
   const ALLOWED_STATUS=new Set(["continue","practice","corrections","mastery","assessment","complete","paused"]);
   const MAX_COURSES_PER_LEARNER=80;
@@ -18,6 +18,15 @@
   function number(value,min=0,max=100){
     const n=Number(value);
     return Number.isFinite(n)?Math.max(min,Math.min(max,n)):null;
+  }
+  function absoluteHref(value){
+    const raw=clean(value,500);
+    if(!raw)return "";
+    try{
+      const url=new URL(raw,global.location?.href||"https://vervenveda.com/");
+      if(!/^https?:$/.test(url.protocol))return "";
+      return url.href;
+    }catch{return ""}
   }
   function read(){
     try{
@@ -70,7 +79,7 @@
       status,
       nextLabel:clean(input.nextLabel||status,60),
       nextTitle:clean(input.nextTitle||input.courseTitle||courseId,140),
-      nextHref:clean(input.nextHref||"",500),
+      nextHref:absoluteHref(input.nextHref||""),
       summary:clean(input.summary||"",260),
       progress:normalizeProgress(input.progress),
       mastery:normalizeMastery(input.mastery),
@@ -78,7 +87,7 @@
         needsAction:input.family?.needsAction===true,
         label:clean(input.family?.label||"",90),
         summary:clean(input.family?.summary||"",220),
-        href:clean(input.family?.href||"",500)
+        href:absoluteHref(input.family?.href||"")
       },
       source:clean(input.source||global.location?.pathname||"unknown",240),
       updatedAt:now
