@@ -132,6 +132,7 @@ function render(){
     return;
   }
   const learner=R.getLearner?.()||null,family=R.getFamily?.()||null;
+  if(learner?.selfDirectedAdult===true){location.replace("../adult/");return}
   if(!learner){
     app.innerHTML=`<div class="card"><p class="eyebrow">Welcome</p><h3>Choose a learner profile first.</h3><p>Register a learner or open the Family Hub to select the person who is studying.</p><div class="actions"><a class="btn" href="../family/enroll/">Enroll a Learner</a><a class="btn secondary" href="../family/">Family Hub</a></div></div>`;
     return;
