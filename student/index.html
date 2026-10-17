@@ -105,7 +105,7 @@ function continuationStatus(value){return ({continue:"Continue",practice:"Practi
 function learnerContinuation(learner){
   const snapshots=C?.readLearner?.(learner?.learnerId)||[];
   if(!snapshots.length)return '<div class="empty">No course has published a continuation snapshot yet. Your pinned courses and school placement still work normally.</div>';
-  return `<div class="next-grid">${snapshots.slice(0,6).map(s=>`<div class="next-row"><span><strong>${esc(s.courseTitle||s.courseId)}</strong><small>${esc(s.nextTitle||s.summary||"Next learning step")}</small><span class="next-status">${esc(continuationStatus(s.status))}</span></span>${s.nextHref?`<a class="btn secondary" href="${esc(s.nextHref)}">Open</a>`:""}</div>`).join("")}</div>`;
+  return `<div class="next-grid">${snapshots.slice(0,6).map(s=>`<div class="next-row"><span><strong>${esc(s.courseTitle||s.courseId)}</strong><small>${esc(s.nextTitle||s.summary||"Next learning step")}</small>${s.stale?`<small><strong>Progress changed.</strong> Open the course to refresh this summary.</small>`:""}<span class="next-status">${esc(continuationStatus(s.status))}</span></span>${s.nextHref?`<a class="btn secondary" href="${esc(s.nextHref)}">${s.stale?"Refresh":"Open"}</a>`:""}</div>`).join("")}</div>`;
 }
 function bestContinuation(learner){
   return (C?.readLearner?.(learner?.learnerId)||[]).find(s=>s.status!=="complete"&&s.nextHref)||null;
