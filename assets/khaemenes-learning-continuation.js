@@ -1,7 +1,7 @@
 (function attachKhaemenesLearningContinuation(global){
   "use strict";
 
-  const VERSION="1.0.1";
+  const VERSION="1.1.0";
   const KEY="khaemenes.learning.continuation.v1";
   const ALLOWED_STATUS=new Set(["continue","practice","corrections","mastery","assessment","complete","paused"]);
   const MAX_COURSES_PER_LEARNER=80;
@@ -111,6 +111,33 @@
     write(store);
     return Object.freeze({...snapshot});
   }
+  function scopedCourseUpdatedAt(snapshot){
+    try{
+      if(!snapshot?.learnerId||!snapshot?.courseId)return null;
+      const key=`khaemenes.course:${snapshot.learnerId}:${snapshot.courseId}`;
+      const raw=native.getItem.call(global.localStorage,key);
+      if(!raw)return null;
+      const parsed=JSON.parse(raw);
+      const value=parsed?.updatedAt||parsed?.state?.updatedAt||null;
+      const ms=value?Date.parse(value):NaN;
+      return Number.isFinite(ms)?ms:null;
+    }catch{return null}
+  }
+  function withFreshness(snapshot){
+    const published=Date.parse(snapshot?.updatedAt||"");
+    const courseUpdated=scopedCourseUpdatedAt(snapshot);
+    const stale=Number.isFinite(published)&&Number.isFinite(courseUpdated)&&courseUpdated>published+250;
+    return Object.freeze({
+      ...snapshot,
+      freshness:stale?"stale":"current",
+      stale,
+      courseUpdatedAt:courseUpdated?new Date(courseUpdated).toISOString():null,
+      progress:{...snapshot.progress},
+      mastery:{...snapshot.mastery},
+      family:{...snapshot.family}
+    });
+  }
+
   function readLearner(learnerId){
     const id=clean(learnerId,120);
     if(!id)return [];
@@ -119,7 +146,7 @@
     return Object.values(learner.courses)
       .filter(x=>x&&x.learnerId===id)
       .sort((a,b)=>String(b.updatedAt).localeCompare(String(a.updatedAt)))
-      .map(x=>Object.freeze({...x,progress:{...x.progress},mastery:{...x.mastery},family:{...x.family}}));
+      .map(withFreshness);
   }
   function readCourse(learnerId,courseId){
     const id=clean(learnerId,120),course=clean(courseId,140);
