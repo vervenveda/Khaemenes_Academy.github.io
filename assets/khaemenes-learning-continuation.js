@@ -1,7 +1,7 @@
 (function attachKhaemenesLearningContinuation(global){
   "use strict";
 
-  const VERSION="1.1.0";
+  const VERSION="1.1.1";
   const KEY="khaemenes.learning.continuation.v1";
   const ALLOWED_STATUS=new Set(["continue","practice","corrections","mastery","assessment","complete","paused"]);
   const MAX_COURSES_PER_LEARNER=80;
@@ -111,16 +111,36 @@
     write(store);
     return Object.freeze({...snapshot});
   }
+  function newestTimestamp(value,depth=0){
+    if(!value||typeof value!=="object"||depth>3)return null;
+    let newest=null;
+    for(const key of ["updatedAt","updated","modifiedAt","savedAt"]){
+      const raw=value[key],ms=raw?Date.parse(raw):NaN;
+      if(Number.isFinite(ms))newest=newest===null?ms:Math.max(newest,ms);
+    }
+    if(depth<3){
+      const entries=Array.isArray(value)?value:Object.values(value);
+      for(const child of entries.slice(0,220)){
+        const ms=newestTimestamp(child,depth+1);
+        if(Number.isFinite(ms))newest=newest===null?ms:Math.max(newest,ms);
+      }
+    }
+    return newest;
+  }
   function scopedCourseUpdatedAt(snapshot){
     try{
       if(!snapshot?.learnerId||!snapshot?.courseId)return null;
-      const key=`khaemenes.course:${snapshot.learnerId}:${snapshot.courseId}`;
-      const raw=native.getItem.call(global.localStorage,key);
-      if(!raw)return null;
-      const parsed=JSON.parse(raw);
-      const value=parsed?.updatedAt||parsed?.state?.updatedAt||null;
-      const ms=value?Date.parse(value):NaN;
-      return Number.isFinite(ms)?ms:null;
+      const prefix=`khaemenes.course:${snapshot.learnerId}:${snapshot.courseId}`;
+      let newest=null;
+      for(let i=0;i<global.localStorage.length;i++){
+        const key=global.localStorage.key(i);
+        if(!key||(key!==prefix&&!key.startsWith(prefix+":")))continue;
+        const raw=native.getItem.call(global.localStorage,key);
+        if(!raw)continue;
+        const ms=newestTimestamp(JSON.parse(raw));
+        if(Number.isFinite(ms))newest=newest===null?ms:Math.max(newest,ms);
+      }
+      return newest;
     }catch{return null}
   }
   function withFreshness(snapshot){
