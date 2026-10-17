@@ -26,7 +26,7 @@ a{color:inherit;text-decoration:none}button,input,select{font:inherit}:focus-vis
 </style>
 </head>
 <body data-i18n-no-online>
-<header class="top"><div class="shell"><div class="brand">Khaemenes Academy</div><nav><a href="../../">Academy Home</a><a href="../">Family Hub</a><a href="../../student/">Student Portal</a><a href="../../adult/enroll/">Adult Learning</a></nav></div></header>
+<header class="top"><div class="shell"><div class="brand">Khaemenes Academy</div><nav><a href="../../">Academy Home</a><a href="../">Family Hub</a><a href="../../student/">Student Portal</a><a href="../../adult/">Adult Learning</a></nav></div></header>
 
 <section class="hero shell"><div class="eyebrow">Enrollment & Placement</div><h1>Begin the right learning path.</h1><p>Create or open a family profile, register each K–12 learner with an exact grade, or begin an adult learning path through Khaemenes Higher Learning.</p></section>
 
@@ -34,7 +34,7 @@ a{color:inherit;text-decoration:none}button,input,select{font:inherit}:focus-vis
 <section class="card"><div class="eyebrow">Step 1</div><h2>Family Profile</h2><div id="familyPane"></div></section>
 <section class="card"><div class="eyebrow">Step 2</div><h2>K–12 Learner Placement</h2><div id="learnerPane"></div></section>
 <section class="card adult-card"><div class="eyebrow">Adult Pathway</div><h2>Learn for Yourself</h2><div id="adultPane"></div></section>
-<section class="card adult-card"><div class="eyebrow">Higher Learning</div><h2>Adult and continuing education</h2><p>Adults who are studying for themselves enter through Khaemenes Higher Learning rather than receiving a K–12 grade.</p><div class="actions"><a class="btn secondary" href="../../adult/enroll/">Adult Enrollment</a><a class="btn gold" href="https://vervenveda.com/Khaemenes_Higher_Learning.github.io/start/">Higher Learning Entry</a></div></section>
+<section class="card adult-card"><div class="eyebrow">Higher Learning</div><h2>Adult and continuing education</h2><p>Adults who are studying for themselves enter through Khaemenes Higher Learning rather than receiving a K–12 grade.</p><div class="actions"><a class="btn secondary" href="../../adult/">Adult Learner Portal</a><a class="btn gold" href="https://vervenveda.com/Khaemenes_Higher_Learning.github.io/start/">Higher Learning Entry</a></div></section>
 <section class="card wide"><div class="eyebrow">Family Stewardship</div><h2>Keep learner records clear and current.</h2><p>Use each learner’s own profile, review grade placement whenever circumstances change, and keep exported family records in a private place.</p><p>The Student Portal continues from the active learner’s registered school path. Mentors and learning tools support study without replacing the learner’s formal placement or assessment record.</p></section>
 </main>
 
@@ -77,8 +77,8 @@ function render(){
   });
 
   const adult=R.getAdult(),self=adult?R.getAdultLearner(adult.adultId):null;
-  ap.innerHTML=self?`<div class="notice ok"><strong>${esc(self.nickname)}</strong> has an active Higher Learning path.<br>${idMarkup(self)}</div><div class="actions"><button class="btn gold" id="resumeAdult" type="button">Continue Higher Learning</button></div>`:`<p>Your adult profile can also become a learner without a K–12 grade.</p><div class="field"><label>Scholar display name</label><input id="adultScholarName" value="${esc(adult?.displayName||"")}" placeholder="Adult Scholar"></div><div class="field"><label>Interests (comma separated)</label><input id="adultInterests" placeholder="mathematics, science, art, career development"></div><div class="actions"><button class="btn gold" id="startAdult" type="button">Start My Higher Learning Path</button></div>`;
-  if(self)document.getElementById("resumeAdult").addEventListener("click",()=>{R.setActive({familyId:self.familyId,adultId:adult.adultId,learnerId:self.learnerId});location.href="https://vervenveda.com/Khaemenes_Higher_Learning.github.io/start/"});
+  ap.innerHTML=self?`<div class="notice ok"><strong>${esc(self.nickname)}</strong> has an active adult learner path.<br>${idMarkup(self)}</div><div class="actions"><button class="btn gold" id="resumeAdult" type="button">Open Adult Learner Portal</button></div>`:`<p>Your adult profile can also become a learner without a K–12 grade.</p><div class="field"><label>Scholar display name</label><input id="adultScholarName" value="${esc(adult?.displayName||"")}" placeholder="Adult Scholar"></div><div class="field"><label>Interests (comma separated)</label><input id="adultInterests" placeholder="mathematics, science, art, career development"></div><div class="actions"><button class="btn gold" id="startAdult" type="button">Create My Adult Learner Path</button></div>`;
+  if(self)document.getElementById("resumeAdult").addEventListener("click",()=>{R.setActive({familyId:self.familyId,adultId:adult.adultId,learnerId:self.learnerId});location.href="../../adult/"});
   else document.getElementById("startAdult").addEventListener("click",()=>{const interests=document.getElementById("adultInterests").value.split(",").map(x=>x.trim()).filter(Boolean);let scholar=R.registerAdultLearner({adultId:adult.adultId,familyId:family.familyId,nickname:document.getElementById("adultScholarName").value,interests});try{IDs?.ensureLearner?.(scholar.learnerId);scholar=R.getLearner(scholar.learnerId)}catch{}R.setActive({familyId:family.familyId,adultId:adult.adultId,learnerId:scholar.learnerId});location.href="https://vervenveda.com/Khaemenes_Higher_Learning.github.io/start/"});
   renderExisting();
 }
