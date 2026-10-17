@@ -89,7 +89,7 @@ const label=s=>({continue:"Continue Study",practice:"Practice",corrections:"Corr
 function continuation(scholar){
   const list=C?.readLearner?.(scholar?.learnerId)||[];
   if(!list.length)return '<div class="notice">No course has published a continuation snapshot yet. You can still enter Higher Learning, GED, Career, or Linguistics normally.</div>';
-  return `<div class="next-grid">${list.slice(0,8).map(s=>`<div class="next-row"><span><strong>${esc(s.courseTitle||s.courseId)}</strong><small>${esc(s.nextTitle||s.summary||"Next study step")}</small><span class="status">${esc(label(s.status))}</span></span>${s.nextHref?`<a class="btn secondary" href="${esc(s.nextHref)}">Open</a>`:""}</div>`).join("")}</div>`;
+  return `<div class="next-grid">${list.slice(0,8).map(s=>`<div class="next-row"><span><strong>${esc(s.courseTitle||s.courseId)}</strong><small>${esc(s.nextTitle||s.summary||"Next study step")}</small>${s.stale?`<small><strong>Course state changed.</strong> Reopen the course to refresh this study summary.</small>`:""}<span class="status">${esc(label(s.status))}</span></span>${s.nextHref?`<a class="btn secondary" href="${esc(s.nextHref)}">${s.stale?"Refresh":"Open"}</a>`:""}</div>`).join("")}</div>`;
 }
 function render(){
   if(!R){
