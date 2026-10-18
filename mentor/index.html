@@ -128,6 +128,7 @@ const HISTORY_KEY='khaemenes_archaemenes_mentor_history_v1';
 const PRESCHOOL_CONTEXT_KEY='khaemenes_preschool_mentor_context_v1';
 const KINDERGARTEN_CONTEXT_KEY='khaemenes_kindergarten_mentor_context_v1';
 const ELEMENTARY_CONTEXT_KEY='khaemenes_elementary_mentor_context_v1';
+const MIDDLE_CONTEXT_KEY='khaemenes_middle_mentor_context_v1';
 const $=id=>document.getElementById(id);
 let registry=null,family=null,adult=null,learner=null,mode='Academy Mentor';
 
@@ -157,7 +158,13 @@ function elementaryContext(){
   if(!context||context.learnerId!==learner.learnerId)return null;
   return context;
 }
-function activeLearnerContext(){return elementaryContext()||kindergartenContext()||preschoolContext()}
+function middleContext(){
+  if(!learner||learnerStage(learner)!=='middle')return null;
+  const context=readLocalJSON(MIDDLE_CONTEXT_KEY,null);
+  if(!context||context.learnerId!==learner.learnerId||context.stage!=='middle')return null;
+  return context;
+}
+function activeLearnerContext(){return middleContext()||elementaryContext()||kindergartenContext()||preschoolContext()}
 function activeYoungContext(){return kindergartenContext()||preschoolContext()}
 function preschoolCatalog(){return window.KhaemenesPreschoolCatalog||null}
 function preschoolActivity(id){const catalog=preschoolCatalog();return catalog?.byId?.(id)||catalog?.byMentorId?.(id)||null}
@@ -204,13 +211,33 @@ function renderPreschoolContext(){
   const panel=$('preschoolContextPanel'),list=$('preschoolContextList'),intro=$('preschoolContextIntro');
   if(!panel||!list||!intro)return;
   const stage=learnerStage(learner);
-  if(!learner||!['preschool','kindergarten','elementary'].includes(stage)){panel.hidden=true;return}
+  if(!learner||!['preschool','kindergarten','elementary','middle'].includes(stage)){panel.hidden=true;return}
   panel.hidden=false;
 
   const heading=panel.querySelector('h3');
   const action=panel.querySelector('.actions a');
+  const middle=middleContext();
   const elementary=elementaryContext();
   const kinder=kindergartenContext();
+
+  if(middle){
+    if(heading)heading.textContent='Middle School Learning Context';
+    if(action){action.href='https://vervenveda.com/Khaemenes_Middle.github.io/';action.textContent='Open Middle School'}
+    intro.textContent='Archaemenes can use the active learner’s sanitized Middle School progress, formative checkpoint summary, verified assessment score, and review-skill names. Locked assessment content never crosses this boundary.';
+    const lessons=Array.isArray(middle.recentLessonEvidence)?middle.recentLessonEvidence:[];
+    const assessments=Array.isArray(middle.recentAssessmentAttempts)?middle.recentAssessmentAttempts:[];
+    const latestLesson=lessons[lessons.length-1]||null;
+    const latestAssessment=assessments[assessments.length-1]||null;
+    const rows=[];
+    rows.push(`<div class="context-item"><strong>Grade & current focus</strong><span>Grade ${esc(middle.grade||'—')} · ${esc(middle.currentFocus?.subject||'Middle School')} ${middle.currentFocus?.week?'· Week '+String(middle.currentFocus.week).padStart(2,'0'):''}</span></div>`);
+    rows.push(`<div class="context-item"><strong>Formal progress</strong><span>${esc(String(middle.curriculum?.completedWeeks||0))}/36 weeks at mastery · ${esc(String(middle.curriculum?.weeklyAverage||0))}% attempted-week average · 80% mastery threshold</span></div>`);
+    rows.push(`<div class="context-item"><strong>Recent lesson evidence</strong><span>${lessons.length?esc(String(lessons.length)+' saved formative checkpoint'+(lessons.length===1?'':'s')+(latestLesson?' · latest '+String(latestLesson.score||0)+'%':'')):'No recent lesson checkpoints saved'}</span></div>`);
+    rows.push(`<div class="context-item"><strong>Latest verified assessment</strong><span>${latestAssessment?esc((latestAssessment.kind||'assessment')+(latestAssessment.week?' · Week '+String(latestAssessment.week).padStart(2,'0'):'')+' · '+String(latestAssessment.score||0)+'%'):'No recent verified assessment attempt'}</span></div>`);
+    rows.push(`<div class="context-item"><strong>Review skills</strong><span>${latestAssessment?.reviewSkills?.length?esc(latestAssessment.reviewSkills.join(' · ')):'No review-skill summary recorded yet'}</span></div>`);
+    rows.push(`<div class="context-item"><strong>Human-reviewed completion evidence</strong><span>Portfolio: ${middle.curriculum?.portfolio?'approved':'pending'}${middle.grade==='08'?' · Transition plan: '+(middle.curriculum?.transition?'complete':'pending'):''}</span></div>`);
+    list.innerHTML=rows.join('');
+    return;
+  }
 
   if(elementary){
     if(heading)heading.textContent='Elementary Learning Context';
@@ -232,6 +259,14 @@ function renderPreschoolContext(){
     rows.push(`<div class="context-item"><strong>Matched support</strong><span>${practice.length?esc(practice.map(item=>item.title).join(' · ')):'Formal lesson first; optional support can be selected afterward.'}</span></div>`);
     rows.push(`<div class="context-item"><strong>Family observation</strong><span>${latest?esc((latest.domain||'Current learning')+' · '+(labels[latest.level]||'observed')):'No optional family observation saved'}</span></div>`);
     list.innerHTML=rows.join('');
+    return;
+  }
+
+  if(stage==='middle'){
+    if(heading)heading.textContent='Middle School Learning Context';
+    if(action){action.href='https://vervenveda.com/Khaemenes_Middle.github.io/';action.textContent='Open Middle School'}
+    intro.textContent='No matching Middle School learning context is stored for this learner yet.';
+    list.innerHTML='<div class="context-item"><strong>Ready after Middle School activity</strong><span>Open the registered Grade 06–08 pathway. The shared learning bridge will publish sanitized progress and review-skill summaries without assessment questions or answer keys.</span></div>';
     return;
   }
 
@@ -280,11 +315,43 @@ function renderPreschoolContext(){
 function mentorMode(l){const stage=registry?.normalizeStage?.(l?.stage)||l?.stage||'';if(['preschool','kindergarten'].includes(stage))return 'Wise Owl';if(stage==='higher')return 'Scholar';return 'Academy Mentor'}
 function isYoung(l){const stage=registry?.normalizeStage?.(l?.stage)||l?.stage||'';return ['preschool','kindergarten'].includes(stage)}
 function stageLabel(l){if(!l)return'Learner';const gm=l.grade&&registry?.gradeMeta?.[l.grade]?registry.gradeMeta[l.grade]:null;return gm?.label||({preschool:'Pre-K',kindergarten:'Kindergarten',elementary:'Elementary',middle:'Middle School',high:'High School',higher:'Higher Learning'}[l.stage]||l.stage||'Learner')}
-function greeting(){const name=learner?.nickname||'learner';if(mode==='Wise Owl'){const kinder=kindergartenContext(),pre=preschoolContext();if(kinder)return `Hello, ${name}! I’m Archaemenes. I can see your current Kinder Garden learning place from this browser. We can take the formal step first, then choose practice, exploration, or a break.`;if(pre)return `Hello, ${name}! I’m Archaemenes. I can see your Crechè learning path from this browser. We can notice, wonder, try, and learn together. What should we do first?`;return `Hello, ${name}! I’m Archaemenes. We can notice, wonder, try, and learn together. What would you like to do?`};const elementary=elementaryContext();if(elementary)return `Hello, ${name}. I’m Archaemenes. I can see that you are in Grade ${elementary.grade||'Elementary'} at ${elementary.academicPosition?.label||'your current learning step'}. We can work from the formal lesson, use a clue, or choose matched practice after the lesson.`;if(mode==='Scholar')return `Welcome, ${name}. I’m Archaemenes. Bring me a question, argument, problem, source, or idea and we’ll examine it carefully.`;return `Hello, ${name}. I’m Archaemenes. Tell me what you are working on, where it becomes confusing, or what you want to understand better.`}
+function greeting(){
+  const name=learner?.nickname||'learner';
+  if(mode==='Wise Owl'){
+    const kinder=kindergartenContext(),pre=preschoolContext();
+    if(kinder)return `Hello, ${name}! I’m Archaemenes. I can see your current Kinder Garden learning place from this browser. We can take the formal step first, then choose practice, exploration, or a break.`;
+    if(pre)return `Hello, ${name}! I’m Archaemenes. I can see your Crechè learning path from this browser. We can notice, wonder, try, and learn together. What should we do first?`;
+    return `Hello, ${name}! I’m Archaemenes. We can notice, wonder, try, and learn together. What would you like to do?`;
+  }
+  const middle=middleContext();
+  if(middle)return `Hello, ${name}. I’m Archaemenes. I can see your Grade ${middle.grade||'Middle School'} progress summary and current learning focus. I can help you interpret verified results, review skills, plan study, or prepare for the next formal step without revealing locked assessment content.`;
+  const elementary=elementaryContext();
+  if(elementary)return `Hello, ${name}. I’m Archaemenes. I can see that you are in Grade ${elementary.grade||'Elementary'} at ${elementary.academicPosition?.label||'your current learning step'}. We can work from the formal lesson, use a clue, or choose matched practice after the lesson.`;
+  if(mode==='Scholar')return `Welcome, ${name}. I’m Archaemenes. Bring me a question, argument, problem, source, or idea and we’ll examine it carefully.`;
+  return `Hello, ${name}. I’m Archaemenes. Tell me what you are working on, where it becomes confusing, or what you want to understand better.`;
+}
 
 function responseFor(text){
   const raw=String(text||'').trim();const q=raw.toLowerCase();const name=learner?.nickname||'learner';
   if(!raw)return `What would you like to investigate, ${name}?`;
+  const middle=middleContext();
+  if(middle&&/(what should|work on|start|today|do next|help me get started)/.test(q)){
+    const focus=middle.currentFocus||{},latest=Array.isArray(middle.recentAssessmentAttempts)?middle.recentAssessmentAttempts.slice(-1)[0]:null;
+    const review=latest?.reviewSkills?.length?` Your latest verified assessment identifies ${latest.reviewSkills.slice(0,3).join(', ')} as review areas.`:'';
+    return `Begin with ${focus.week?'Week '+String(focus.week).padStart(2,'0')+' · ':''}${focus.subject||'your current Middle School course'}. Complete the formal work first, then use practice or Mentor support to strengthen reasoning.${review}`;
+  }
+  if(middle&&/(what did|remember|this week|progress|how am i doing)/.test(q)){
+    const lessons=Array.isArray(middle.recentLessonEvidence)?middle.recentLessonEvidence:[],assessments=Array.isArray(middle.recentAssessmentAttempts)?middle.recentAssessmentAttempts:[],latest=assessments[assessments.length-1]||null;
+    return `Your Middle School record shows ${middle.curriculum?.completedWeeks||0}/36 weekly mastery gates complete with a ${middle.curriculum?.weeklyAverage||0}% average across attempted weeks. You have ${lessons.length} recent formative checkpoint${lessons.length===1?'':'s'} saved.${latest?` Your latest verified ${latest.kind||'assessment'} score is ${latest.score||0}%.`:''} Formative checkpoints help us study; verified assessments control mastery.`;
+  }
+  if(middle&&/(what should i review|where did i struggle|what did i miss|study|review for|weak skill)/.test(q)){
+    const assessments=Array.isArray(middle.recentAssessmentAttempts)?middle.recentAssessmentAttempts:[],latest=assessments[assessments.length-1]||null,skills=Array.isArray(latest?.reviewSkills)?latest.reviewSkills.filter(Boolean):[];
+    if(skills.length)return `Your latest verified assessment suggests reviewing ${skills.slice(0,5).join(', ')}. I can teach those skills with fresh examples and reasoning without exposing the assessment questions, choices, selections, or answer key.`;
+    return `I do not have a missed-skill summary from a recent verified Middle School assessment yet. Start with ${middle.currentFocus?.subject||'the current course focus'} and tell me the exact concept or strategy that feels uncertain.`;
+  }
+  if(middle&&/(hint|clue)/.test(q)){
+    return `Start by naming the claim, quantity, concept, or source you are working with. Then identify the evidence or rule you are certain about. We can build the next step from that without reproducing a locked assessment item.`;
+  }
   const elementary=elementaryContext();
   if(elementary&&/(what should|work on|start|today|do next|help me get started)/.test(q)){
     const place=elementary.academicPosition?.label||'your current Elementary step';
@@ -383,7 +450,7 @@ function renderLearner(){
   const state=$('learnerState'),composer=$('composer'),note=$('conversationNote'),badges=$('identityBadges');badges.innerHTML='';
   if(!learner){state.innerHTML='<div class="notice"><strong>Select a learner.</strong><br>Archaemenes personalizes his expression to the active learner while remaining the same Mentor.</div>';composer.hidden=true;note.textContent='Choose an active learner from the Family Registry.';$('messages').innerHTML='';$('quickPrompts').innerHTML='';renderPreschoolContext();return}
   mode=mentorMode(learner);const dest=registry?.learnerDestination?.(learner)||{url:STUDENT_URL,label:'Student Portal'};
-  const context=activeLearnerContext();const style=context?.communicationStyle?String(context.communicationStyle).replace(/[-_]/g,' '):'';const elementaryMode=elementaryContext()?.developmentalMode||'';badges.innerHTML=`<span class="badge">${esc(learner.nickname||'Learner')}</span><span class="badge">${esc(stageLabel(learner))}</span><span class="badge">Archaemenes · ${esc(mode)}</span>${isYoung(learner)&&style?`<span class="badge">Encouragement · ${esc(style)}</span>`:''}${elementaryMode?`<span class="badge">${esc(elementaryMode)}</span>`:''}`;
+  const context=activeLearnerContext();const style=context?.communicationStyle?String(context.communicationStyle).replace(/[-_]/g,' '):'';const elementaryMode=elementaryContext()?.developmentalMode||'',middleMode=middleContext()?.developmentalMode||'';badges.innerHTML=`<span class="badge">${esc(learner.nickname||'Learner')}</span><span class="badge">${esc(stageLabel(learner))}</span><span class="badge">Archaemenes · ${esc(mode)}</span>${isYoung(learner)&&style?`<span class="badge">Encouragement · ${esc(style)}</span>`:''}${elementaryMode?`<span class="badge">${esc(elementaryMode)}</span>`:''}${middleMode?`<span class="badge">${esc(middleMode)}</span>`:''}`;
   state.innerHTML=`<div class="kv"><span>Name</span><span>${esc(learner.nickname||'Learner')}</span></div><div class="kv"><span>Placement</span><span>${esc(stageLabel(learner))}</span></div><div class="kv"><span>Mentor expression</span><span>${esc(mode)}</span></div>`;
   $('campusLink').href=dest.url||STUDENT_URL;$('campusLink').querySelector('strong').textContent=`Continue to ${dest.label||stageLabel(learner)}`;
   $('campusLink').querySelector('span').textContent='Open the learner’s registered Khaemenes pathway.';
