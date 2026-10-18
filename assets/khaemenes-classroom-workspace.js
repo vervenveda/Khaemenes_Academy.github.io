@@ -170,6 +170,65 @@ function importClassroom(bundle){
   return get(room.classroomId);
 }
 
+
+function sameAcademyOrigin(url){
+  const host=String(url?.hostname||"").toLowerCase();
+  return host==="vervenveda.com"||host==="www.vervenveda.com";
+}
+function printableUnitFromSnapshot(snapshot){
+  if(!snapshot||snapshot.stale===true)return null;
+  if(snapshot.status==="assessment")return null;
+  const raw=String(snapshot.nextHref||"").trim();
+  if(!raw)return null;
+  let url;
+  try{url=new URL(raw,global.location?.href||"https://vervenveda.com/")}catch{return null}
+  if(!sameAcademyOrigin(url))return null;
+  const path=url.pathname;
+  if(!/\/Khaemenes_(?:Preschool|KinderGarden|Elementary|Middle|High)\.github\.io\//i.test(path))return null;
+  if(/\/(?:assessments?|quiz(?:zes)?|tests?|exam(?:s)?|answer[-_ ]?keys?|gradebook|records?|certificates?)\//i.test(path))return null;
+  const unitMatch=path.match(/\/(unit|week)[-_]?(0?[1-9]|[12]\d|3[0-6])(?:\/|\.|-|_)/i);
+  if(!unitMatch)return null;
+  const unitNumber=String(Number(unitMatch[2])).padStart(2,"0");
+  return Object.freeze({
+    courseId:snapshot.courseId,
+    courseTitle:snapshot.courseTitle||snapshot.courseId,
+    unitType:unitMatch[1].toLowerCase(),
+    unitNumber,
+    label:(unitMatch[1].toLowerCase()==="week"?"Week ":"Unit ")+unitNumber,
+    href:url.href,
+    status:snapshot.status,
+    masteryBest:snapshot.mastery?.best??null,
+    masteryThreshold:snapshot.mastery?.threshold??80,
+    unlocked:true,
+    bulkDownload:false,
+    includesAssessment:false
+  });
+}
+function unitPrintables(learnerId,{classroomId=activeClassroomId()}={}){
+  const room=get(classroomId);if(!room)return[];
+  const learner=room.learners.find(l=>l.learnerId===learnerId);if(!learner)return[];
+  const registry=R();
+  if(!registry.canAdult?.(room.educatorAdultId,learnerId,"progress.view"))return[];
+  return (C()?.readLearner?.(learnerId)||[])
+    .map(printableUnitFromSnapshot)
+    .filter(Boolean)
+    .sort((a,b)=>String(a.courseTitle).localeCompare(String(b.courseTitle)));
+}
+function printablePolicy(){
+  return Object.freeze({
+    bulkCurriculumDownload:false,
+    arbitraryUrlInput:false,
+    currentUnlockedUnitOnly:true,
+    assessmentDownloads:false,
+    answerKeyDownloads:false,
+    futureUnitDownloads:false,
+    gradebookDownloads:false,
+    classroomBackupContainsCurriculum:false,
+    masteryThreshold:80,
+    note:"The course engine controls nextHref. Printable access follows that already-unlocked continuation route and never advances the learner."
+  });
+}
+
 global.KhaemenesClassroomWorkspace=Object.freeze({
   version:VERSION,
   format:FORMAT,
@@ -177,6 +236,7 @@ global.KhaemenesClassroomWorkspace=Object.freeze({
   activeKey:ACTIVE_KEY,
   list,get,createClassroom,setActiveClassroom,addLearner,selectLearner,
   learnerSummary,classSummary,exportClassroom,importClassroom,
+  printableUnitFromSnapshot,unitPrintables,printablePolicy,
   policy:Object.freeze({
     sharedDevice:true,
     multipleLearners:true,
@@ -187,7 +247,10 @@ global.KhaemenesClassroomWorkspace=Object.freeze({
     awardsMastery:false,
     changesScores:false,
     changesPlacement:false,
-    unlocksCurriculum:false
+    unlocksCurriculum:false,
+    bulkCurriculumDownload:false,
+    arbitraryCurriculumUrlDownload:false,
+    currentUnlockedUnitPrintableOnly:true
   })
 });
 })(window);
