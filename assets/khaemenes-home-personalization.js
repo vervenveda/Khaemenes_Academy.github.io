@@ -1,5 +1,5 @@
 /*
- * Khaemenes Academy Home Personalization v1.1.0
+ * Khaemenes Academy Home Personalization v1.3.0
  * Public home remains unchanged before an Academy identity exists.
  */
 (function attachKhaemenesHomePersonalization(global){
