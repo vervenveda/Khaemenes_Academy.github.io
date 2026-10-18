@@ -12,6 +12,10 @@ const DIALOG_ID="khaemenesStudyStudioDialog";
 const HOME_BUTTON_ID="khaemenesHomeStudyStudioButton";
 const PORTAL_CARD_ID="khaemenesStudyStudioCard";
 const STYLE_ID="khaemenesStudyStudioStyles";
+const FAMILY_CARD_ID="khaemenesStudySupportFamilyCard";
+const ASSET_URL=document.currentScript?.src||location.href;
+const ACADEMY_ROOT=new URL("../",ASSET_URL).href;
+const FAMILY_URL=new URL("family/",ACADEMY_ROOT).href;
 const INTERVALS=Object.freeze([1,3,7,14,30,60]);
 const MAX_HISTORY=240,MAX_SESSIONS=120;
 const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -40,8 +44,8 @@ function reviewLearner(id,store=reviewStore()){return store.learners[id]&&typeof
 function saveReviewLearner(id,data,store=reviewStore()){data.updatedAt=iso();store.learners[id]=data;store.updatedAt=data.updatedAt;const ok=write(REVIEW_KEY,store);if(ok)global.dispatchEvent(new CustomEvent("khaemenes-study-review-changed",{detail:{learnerId:id,updatedAt:data.updatedAt}}));return ok}
 function reviewPrompt(s){const title=clean(s?.courseTitle||s?.courseId||"this course",120),next=clean(s?.nextTitle||s?.summary||"",180);return next?"Without opening notes, explain the main idea or method behind “"+next+"” in "+title+". Then give one example, connection, or problem type where it applies.":"Without opening notes, recall three important ideas from "+title+". Then explain one connection or example in your own words."}
 function initialDue(s){const status=String(s?.status||"continue"),base=Date.parse(s?.updatedAt||"")?s.updatedAt:iso();if(["corrections","mastery","assessment","practice"].includes(status))return iso();if(status==="complete")return addDays(base,3);return addDays(base,1)}
-function syncReviewQueue(){
-  const ctx=accountContext(),l=ctx.learner,C=continuation();if(!l?.learnerId||!C?.readLearner)return[];
+function syncReviewQueueFor(l){
+  const C=continuation();if(!l?.learnerId||!C?.readLearner)return[];
   const store=reviewStore(),record=reviewLearner(l.learnerId,store);record.items=record.items&&typeof record.items==="object"?record.items:{};
   for(const s of C.readLearner(l.learnerId)||[]){
     if(!s?.courseId)continue;
@@ -50,6 +54,7 @@ function syncReviewQueue(){
   }
   saveReviewLearner(l.learnerId,record,store);return Object.values(record.items);
 }
+function syncReviewQueue(){return syncReviewQueueFor(accountContext().learner)}
 function interleave(items){const left=items.slice().sort((a,b)=>String(a.dueAt).localeCompare(String(b.dueAt))),out=[];let last="";while(left.length){let i=left.findIndex(x=>clean(x.subject,90)!==last);if(i<0)i=0;const next=left.splice(i,1)[0];out.push(next);last=clean(next.subject,90)}return out}
 function reviewItems(){const id=accountContext().learner?.learnerId;if(!id)return[];syncReviewQueue();return interleave(Object.values(reviewLearner(id).items||{}))}
 function dueReviewItems(){const now=Date.now();return reviewItems().filter(x=>Date.parse(x.dueAt||"")<=now)}
@@ -91,7 +96,7 @@ function selectTab(tab){const d=ensureDialog();d.querySelectorAll("[data-study-t
 function relativeDue(value){const ms=Date.parse(value||"")-Date.now();if(!Number.isFinite(ms))return"Review date unavailable";if(ms<=0)return"Due now";const days=Math.ceil(ms/86400000);return days===1?"Due tomorrow":"Due in "+days+" days"}
 function renderReviewPanel(){
   const panel=ensureDialog().querySelector('[data-study-panel="review"]'),ctx=accountContext();
-  if(!ctx.learner?.learnerId){panel.innerHTML='<div class="study-note">Choose an active learner or Adult Scholar profile before using Smart Review.</div><div class="study-actions"><a href="./family/" class="gold">Open Family Hub</a></div>';return}
+  if(!ctx.learner?.learnerId){panel.innerHTML='<div class="study-note">Choose an active learner or Adult Scholar profile before using Smart Review.</div><div class="study-actions"><a href="'+esc(FAMILY_URL)+'" class="gold">Open Family Hub</a></div>';return}
   const all=reviewItems(),due=all.filter(x=>Date.parse(x.dueAt||"")<=Date.now()),upcoming=all.filter(x=>Date.parse(x.dueAt||"")>Date.now()).slice(0,4),record=reviewLearner(ctx.learner.learnerId),history=Array.isArray(record.history)?record.history:[],list=due.length?due:upcoming;
   panel.innerHTML='<div class="study-note"><strong>Recall before reopening notes.</strong> Smart Review spaces course retrieval across days and mixes subjects when more than one review is due. Rate how retrieval felt; the next interval adjusts locally.</div><div class="study-stats"><div class="study-stat"><strong>'+due.length+'</strong><span>Due now</span></div><div class="study-stat"><strong>'+all.length+'</strong><span>Courses in review</span></div><div class="study-stat"><strong>'+history.length+'</strong><span>Saved retrievals</span></div></div>'+(list.length?'<div class="review-list">'+list.map(item=>'<article class="review-card" data-review-course="'+esc(item.courseId)+'"><h3>'+esc(item.courseTitle)+'</h3><p class="review-meta">'+esc(item.subject)+' · '+esc(relativeDue(item.dueAt))+' · Interval '+esc(INTERVALS[item.level]||1)+' day'+((INTERVALS[item.level]||1)===1?"":"s")+'</p><p class="review-prompt">'+esc(item.prompt)+'</p><div class="study-field"><label>Optional retrieval note — write what you remembered before opening the course</label><textarea data-review-recall placeholder="A few words are enough. This stays in this browser."></textarea></div><div class="study-actions"><button type="button" data-review-rate="again">Need review</button><button type="button" data-review-rate="effort" class="gold">Got it with effort</button><button type="button" data-review-rate="easy" class="primary">Retrieved easily</button>'+(item.href?'<a href="'+esc(item.href)+'">Open course after recall</a>':"")+'</div></article>').join("")+'</div>':'<div class="study-note">No course continuation snapshots are available yet. Once a course publishes a learning continuation, it will enter the review planner automatically.</div>');
   panel.querySelectorAll("[data-review-rate]").forEach(btn=>btn.addEventListener("click",()=>{const card=btn.closest("[data-review-course]"),recall=card?.querySelector("[data-review-recall]")?.value||"";if(rateReview(card?.dataset.reviewCourse,btn.dataset.reviewRate,recall))renderReviewPanel()}));
@@ -127,11 +132,24 @@ function mountPortalCard(){
   card.innerHTML='<p style="margin:0;color:#725f82;font-size:10px;letter-spacing:.12em;text-transform:uppercase">Study Studio</p><h3>Remember longer. Learn more deliberately.</h3><p>'+(ctx.learner?.learnerId?(due?due+' spaced retrieval review'+(due===1?' is':'s are')+' due. ':'Your review queue is current. ')+(active?'A Plan · Monitor · Reflect session is active.':'Use the learning cycle to set a goal, monitor your strategy, and reflect afterward.'):'Choose an active learner to use the Study Studio.')+'</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="khaemenes-study-launch" data-open-review>Smart Review'+(due?' · '+due:'')+'</button><button type="button" class="khaemenes-study-launch" data-open-plan>Plan · Monitor · Reflect</button></div>';
   card.querySelector("[data-open-review]")?.addEventListener("click",()=>openStudio("review"));card.querySelector("[data-open-plan]")?.addEventListener("click",()=>openStudio("plan"));
 }
+function mountFamilySupport(){
+  const R=registry(),root=document.getElementById("familyApp");let card=document.getElementById(FAMILY_CARD_ID);
+  if(!R||!root){card?.remove();return}
+  const family=R.getFamily?.()||null,adult=R.getAdult?.()||null;
+  const learners=Array.isArray(family?.learners)?family.learners.filter(l=>l?.learnerId&&l.selfDirectedAdult!==true&&adult&&R.canAdult?.(adult.adultId,l.learnerId,"progress.view")):[];
+  if(!learners.length){card?.remove();return}
+  if(!card){card=document.createElement("section");card.id=FAMILY_CARD_ID;card.className="card";card.style.marginTop="34px";root.appendChild(card)}
+  const rows=learners.map(l=>{
+    const items=syncReviewQueueFor(l),due=items.filter(x=>Date.parse(x.dueAt||"")<=Date.now()).length,s=selfLearner(l.learnerId).sessions||[],complete=s.filter(x=>x?.status==="complete").length,active=s.some(x=>x?.status==="active");
+    return '<article style="padding:12px;border:1px solid rgba(23,57,47,.12);border-radius:7px;background:#faf8f2"><strong style="display:block;color:#17392f">'+esc(l.nickname||"Learner")+'</strong><small style="display:block;margin-top:4px;color:#68736d">'+due+' spaced review'+(due===1?"":"s")+' due · '+complete+' completed learning cycle'+(complete===1?"":"s")+(active?' · study session active':'')+'</small><small style="display:block;margin-top:4px;color:#68736d">Read-only support summary. Formal grades and mastery are unchanged.</small></article>';
+  }).join("");
+  card.innerHTML='<p style="margin:0;color:#725f82;font-size:10px;letter-spacing:.12em;text-transform:uppercase">Study Support</p><h3>Help learners space practice and reflect on strategy.</h3><p>This family view shows summary counts only for learners you may view. Retrieval ratings, private notes, and study reflections remain in the learner workspace.</p><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:9px;margin-top:13px">'+rows+'</div>';
+}
 let mountTimer=0;
-function refresh(){clearTimeout(mountTimer);mountTimer=setTimeout(()=>{addStyles();mountHomeButton();mountPortalCard()},60)}
+function refresh(){clearTimeout(mountTimer);mountTimer=setTimeout(()=>{addStyles();mountHomeButton();mountPortalCard();mountFamilySupport()},60)}
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",refresh,{once:true});else refresh();
 new MutationObserver(refresh).observe(document.documentElement,{childList:true,subtree:true});
 for(const eventName of ["pageshow","khaemenes-family-ready","khaemenes-family-changed","khaemenes-learner-placement-changed","khaemenes-learning-continuation-changed","khaemenes-study-review-changed","khaemenes-study-selfreg-changed"])global.addEventListener(eventName,refresh);
 global.addEventListener("storage",event=>{if([REVIEW_KEY,SELFREG_KEY,continuation()?.storageKey].includes(event.key))refresh()});
-global.KhaemenesLearningScience=Object.freeze({version:VERSION,keys:Object.freeze({review:REVIEW_KEY,selfRegulation:SELFREG_KEY}),intervalsDays:INTERVALS,accountContext,syncReviewQueue,reviewItems,dueReviewItems,rateReview,sessions,activeSession,startSession,monitorSession,finishSession,strategySummary,open:openStudio,policy:Object.freeze({localFirst:true,summaryOnly:true,awardsMastery:false,changesScores:false,unlocksCurriculum:false,changesPlacement:false,assessmentAuthority:false})});
+global.KhaemenesLearningScience=Object.freeze({version:VERSION,keys:Object.freeze({review:REVIEW_KEY,selfRegulation:SELFREG_KEY}),intervalsDays:INTERVALS,accountContext,syncReviewQueue,syncReviewQueueFor,reviewItems,dueReviewItems,rateReview,sessions,activeSession,startSession,monitorSession,finishSession,strategySummary,open:openStudio,policy:Object.freeze({localFirst:true,summaryOnly:true,parentSummaryReadOnly:true,awardsMastery:false,changesScores:false,unlocksCurriculum:false,changesPlacement:false,assessmentAuthority:false})});
 })(window);
