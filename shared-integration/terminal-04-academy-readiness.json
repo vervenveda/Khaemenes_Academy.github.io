@@ -1,0 +1,52 @@
+{
+  "schema": "khaemenes-academy-terminal04-readiness-manifest-v1",
+  "version": 1,
+  "terminalId": "04",
+  "state": "dormant-readiness",
+  "live": false,
+  "commissioned": false,
+  "transport": "unconfigured",
+  "academy": {
+    "role": "learning-and-family-continuity",
+    "accountStorageOwner": "Khaemenes Academy",
+    "storageNamespace": "academy",
+    "stosStorageSeparate": true
+  },
+  "adapter": "assets/khaemenes-terminal04-readiness.js",
+  "handoffSchema": "khaemenes-academy-terminal04-readiness-v1",
+  "permittedSummary": [
+    "stable family and learner IDs at runtime",
+    "placement summary",
+    "course continuation summary",
+    "mastery summary",
+    "family-attention flag",
+    "stale-record flag"
+  ],
+  "excluded": [
+    "passwords",
+    "emails",
+    "private learner reflections",
+    "child conversations",
+    "assessment responses",
+    "answer keys",
+    "raw browser storage",
+    "STOS secrets",
+    "network endpoints"
+  ],
+  "authority": {
+    "changesGrades": false,
+    "awardsMastery": false,
+    "changesPlacement": false,
+    "changesLearnerIdentity": false,
+    "changesFamilyPermissions": false,
+    "activatesTerminal": false
+  },
+  "cutoverGates": [
+    "Terminal 04 separately commissioned",
+    "protected authenticated transport configured outside public repository",
+    "Academy account storage remains separate from STOS storage",
+    "family and learner permissions revalidated at handoff",
+    "regression workflow green",
+    "rollback path verified"
+  ]
+}
