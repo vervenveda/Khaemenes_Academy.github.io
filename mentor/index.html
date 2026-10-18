@@ -41,7 +41,16 @@ footer{padding:30px 0 42px;border-top:1px solid var(--line);color:#737a74;font-s
 .empty{padding:26px;text-align:center}.empty h2{margin:0 0 8px;color:var(--forest);font-family:var(--serif);font-weight:500}.empty p{max-width:680px;margin:0 auto;color:var(--muted)}
 @media(max-width:850px){.hero-grid,.layout{grid-template-columns:1fr}.hero{text-align:center}.hero .lede{margin-left:auto;margin-right:auto}.identity{justify-content:center}.owl{width:190px;font-size:6rem}.nav{align-items:flex-start;padding:12px 0}.navlinks{max-width:48%}}
 @media(max-width:620px){.nav{flex-direction:column;align-items:center}.navlinks{max-width:none;justify-content:center}.hero{padding-top:36px}.panel-pad{padding:16px}.messages{height:330px}.msg{max-width:92%}.composer{grid-template-columns:1fr}.composer button{min-height:42px}}
+
+.preschool-context[hidden]{display:none}
+.preschool-context .context-list{display:grid;gap:8px;margin-top:12px}
+.context-item{padding:10px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.context-item strong{display:block;color:var(--forest);font-size:.78rem}
+.context-item span{display:block;margin-top:2px;color:var(--muted);font-size:.76rem}
+.context-note{margin-top:10px;padding:10px;border-radius:10px;color:#5c5139;background:#fff8e7;font-size:.76rem}
+
 </style>
+<script defer src="https://vervenveda.com/Khaemenes_Preschool.github.io/assets/preschool-catalog.js"></script>
 <script defer src="../assets/khaemenes-family-registry.js"></script>
 </head>
 <body data-i18n-no-online>
@@ -93,6 +102,13 @@ footer{padding:30px 0 42px;border-top:1px solid var(--line);color:#737a74;font-s
       <h3>Active Learner</h3>
       <div id="learnerState" class="small" style="margin-top:9px">No learner loaded yet.</div>
     </section>
+    <section class="panel panel-pad preschool-context" id="preschoolContextPanel" hidden>
+      <h3>Crechè Learning Context</h3>
+      <p class="small" id="preschoolContextIntro" style="margin:7px 0 0">Reading this learner’s local Preschool context…</p>
+      <div class="context-list" id="preschoolContextList"></div>
+      <div class="actions"><a class="btn gold" href="https://vervenveda.com/Khaemenes_Preschool.github.io/">Open Crechè Home</a></div>
+      <div class="context-note">This context is local to this browser and is used only when it belongs to the active Family Registry learner.</div>
+    </section>
     <section class="panel panel-pad">
       <h3>Learning Doorway</h3>
       <a class="route-card" id="campusLink" href="../student/"><strong>Student Portal</strong><span>Continue from the learner's registered stage.</span></a>
@@ -109,6 +125,7 @@ footer{padding:30px 0 42px;border-top:1px solid var(--line);color:#737a74;font-s
 const FAMILY_URL='https://vervenveda.com/Khaemenes_Academy.github.io/family/';
 const STUDENT_URL='https://vervenveda.com/Khaemenes_Academy.github.io/student/';
 const HISTORY_KEY='khaemenes_archaemenes_mentor_history_v1';
+const PRESCHOOL_CONTEXT_KEY='khaemenes_preschool_mentor_context_v1';
 const $=id=>document.getElementById(id);
 let registry=null,family=null,adult=null,learner=null,mode='Academy Mentor';
 
@@ -118,17 +135,97 @@ function saveHistory(all){try{localStorage.setItem(HISTORY_KEY,JSON.stringify(al
 function learnerHistory(){if(!learner)return[];const all=loadHistory();return Array.isArray(all[learner.learnerId])?all[learner.learnerId]:[]}
 function pushHistory(role,text){if(!learner)return;const all=loadHistory();const list=Array.isArray(all[learner.learnerId])?all[learner.learnerId]:[];list.push({role,text:String(text).slice(0,1200),at:new Date().toISOString()});all[learner.learnerId]=list.slice(-60);saveHistory(all)}
 function clearHistory(){if(!learner)return;const all=loadHistory();delete all[learner.learnerId];saveHistory(all);renderConversation(true)}
+function readLocalJSON(key,fallback=null){try{const raw=localStorage.getItem(key);return raw?JSON.parse(raw):fallback}catch{return fallback}}
+function preschoolContext(){
+  if(!learner||!isYoung(learner))return null;
+  const context=readLocalJSON(PRESCHOOL_CONTEXT_KEY,null);
+  if(!context||context.learnerId!==learner.learnerId)return null;
+  return context;
+}
+function preschoolCatalog(){return window.KhaemenesPreschoolCatalog||null}
+function preschoolActivity(id){const catalog=preschoolCatalog();return catalog?.byId?.(id)||catalog?.byMentorId?.(id)||null}
+function preschoolDomainLabel(domain){return preschoolCatalog()?.mentorDomains?.[domain]?.label||domain||'Preschool learning'}
+function topWeeklyDomain(context){
+  const pairs=Object.entries(context?.weeklyDomains||{}).sort((a,b)=>b[1]-a[1]);
+  return pairs[0]?.[0]||null;
+}
+function preschoolPlanItems(context=preschoolContext()){
+  const ids=Array.isArray(context?.dailyPlan?.ids)?context.dailyPlan.ids:[];
+  return ids.map(preschoolActivity).filter(Boolean);
+}
+function preschoolRecentItems(context=preschoolContext()){
+  const events=Array.isArray(context?.recentVisits)?context.recentVisits:[];
+  return events.slice(-5).map(event=>preschoolActivity(event.id)).filter(Boolean);
+}
+function preschoolSuggestion({different=false}={}){
+  const context=preschoolContext(),catalog=preschoolCatalog();
+  if(!context||!catalog)return null;
+  const plan=preschoolPlanItems(context);
+  const recentIds=new Set((context.recentVisits||[]).slice(-12).map(item=>item.id));
+  if(!different&&plan.length){
+    const next=plan.find(item=>!recentIds.has(item.id))||plan[0];
+    if(next)return {app:next,reason:`It is already part of today’s short Wise Owl path.`};
+  }
+  const age=context.ageBand||learner?.ageBand||'4-5';
+  const weekly=context.weeklyDomains||{};
+  const choices=catalog.mentorActivities({preserveLegacyIds:false})
+    .filter(item=>item.ages.includes(age))
+    .sort((a,b)=>(weekly[a.domain]||0)-(weekly[b.domain]||0));
+  const pick=choices.find(item=>!recentIds.has(item.catalogId))||choices[0];
+  const app=pick?preschoolActivity(pick.catalogId):null;
+  return app?{app,reason:`It adds a little ${preschoolDomainLabel(pick.domain).toLowerCase()} balance.`}:null;
+}
+function preschoolObservationSummary(context=preschoolContext()){
+  const observations=Array.isArray(context?.observations)?context.observations:[];
+  const latest=observations[observations.length-1];
+  if(!latest)return null;
+  const app=preschoolActivity(latest.id);
+  const labels={exploring:'just exploring',growing:'getting the idea',confident:'doing this confidently'};
+  return {app,label:labels[latest.level]||'observed',domain:latest.domain||app?.mentor?.domain||null};
+}
+function renderPreschoolContext(){
+  const panel=$('preschoolContextPanel'),list=$('preschoolContextList'),intro=$('preschoolContextIntro');
+  if(!panel||!list||!intro)return;
+  if(!learner||!isYoung(learner)){panel.hidden=true;return}
+  panel.hidden=false;
+  const context=preschoolContext();
+  if(!context){
+    intro.textContent='No matching Crechè context is stored for this learner yet.';
+    list.innerHTML='<div class="context-item"><strong>Ready when the family is</strong><span>Open Crechè, create today’s path, or explore an adventure. Archaemenes will use that local context here.</span></div>';
+    return;
+  }
+  intro.textContent='Archaemenes can use this learner’s current browser-local Preschool context without changing the Family Registry.';
+  const plan=preschoolPlanItems(context),recent=preschoolRecentItems(context),observation=preschoolObservationSummary(context),top=topWeeklyDomain(context);
+  const rows=[];
+  rows.push(`<div class="context-item"><strong>Today’s path</strong><span>${plan.length?esc(plan.map(x=>x.title).join(' · ')):'No path created yet'}</span></div>`);
+  rows.push(`<div class="context-item"><strong>Recent exploration</strong><span>${recent.length?esc([...new Set(recent.map(x=>x.title))].slice(-3).join(' · ')):'No timed exploration yet'}</span></div>`);
+  rows.push(`<div class="context-item"><strong>Curiosity this week</strong><span>${top?esc(preschoolDomainLabel(top)):'Still discovering'}</span></div>`);
+  rows.push(`<div class="context-item"><strong>Grown-up observation</strong><span>${observation?esc(`${observation.app?.title||'Recent activity'} · ${observation.label}`):'No optional observation saved'}</span></div>`);
+  list.innerHTML=rows.join('');
+}
 
 function mentorMode(l){const stage=registry?.normalizeStage?.(l?.stage)||l?.stage||'';if(['preschool','kindergarten'].includes(stage))return 'Wise Owl';if(stage==='higher')return 'Scholar';return 'Academy Mentor'}
 function isYoung(l){const stage=registry?.normalizeStage?.(l?.stage)||l?.stage||'';return ['preschool','kindergarten'].includes(stage)}
 function stageLabel(l){if(!l)return'Learner';const gm=l.grade&&registry?.gradeMeta?.[l.grade]?registry.gradeMeta[l.grade]:null;return gm?.label||({preschool:'Pre-K',kindergarten:'Kindergarten',elementary:'Elementary',middle:'Middle School',high:'High School',higher:'Higher Learning'}[l.stage]||l.stage||'Learner')}
-function greeting(){const name=learner?.nickname||'learner';if(mode==='Wise Owl')return `Hello, ${name}! I’m Archaemenes. We can notice, wonder, try, and learn together. What would you like to do?`;if(mode==='Scholar')return `Welcome, ${name}. I’m Archaemenes. Bring me a question, argument, problem, source, or idea and we’ll examine it carefully.`;return `Hello, ${name}. I’m Archaemenes. Tell me what you are working on, where it becomes confusing, or what you want to understand better.`}
+function greeting(){const name=learner?.nickname||'learner';if(mode==='Wise Owl'){const context=preschoolContext();return context?`Hello, ${name}! I’m Archaemenes. I can see your Crechè learning path from this browser. We can notice, wonder, try, and learn together. What should we do first?`:`Hello, ${name}! I’m Archaemenes. We can notice, wonder, try, and learn together. What would you like to do?`};if(mode==='Scholar')return `Welcome, ${name}. I’m Archaemenes. Bring me a question, argument, problem, source, or idea and we’ll examine it carefully.`;return `Hello, ${name}. I’m Archaemenes. Tell me what you are working on, where it becomes confusing, or what you want to understand better.`}
 
 function responseFor(text){
   const raw=String(text||'').trim();const q=raw.toLowerCase();const name=learner?.nickname||'learner';
   if(!raw)return `What would you like to investigate, ${name}?`;
+  if(mode==='Wise Owl'&&/(what should|work on|start|today|learn something|do next)/.test(q)){
+    const suggestion=preschoolSuggestion();
+    if(suggestion)return `Let’s try ${suggestion.app.title}. ${suggestion.reason} We can do one small part, then decide whether to keep going or take a break.`;
+  }
+  if(mode==='Wise Owl'&&/(different|another|change)/.test(q)){
+    const suggestion=preschoolSuggestion({different:true});
+    if(suggestion)return `Let’s choose something different: ${suggestion.app.title}. ${suggestion.reason} You can explore it gently and stop whenever you are ready.`;
+  }
+  if(mode==='Wise Owl'&&/(what did|remember|explored|this week)/.test(q)){
+    const context=preschoolContext(),recent=preschoolRecentItems(context),top=topWeeklyDomain(context);
+    if(context)return recent.length?`You have recently explored ${[...new Set(recent.map(x=>x.title))].slice(-3).join(', ')}. Your curiosity has leaned toward ${preschoolDomainLabel(top)}. What would you like to notice next?`:'Your Crechè trail is just beginning. One small adventure is enough for today.';
+  }
   if(/stuck|confus|don.?t understand|hard/.test(q))return mode==='Wise Owl'?'That is a good time for a tiny clue. Point to the part that feels tricky, and we will try one small step together.':'Good. Being stuck gives us evidence. Name the exact step where your reasoning stops, and we’ll separate what you know from what still needs to be found.';
-  if(/hint|clue/.test(q))return mode==='Wise Owl'?'Here is a clue: look for one thing you already know, then use it to choose your next tiny step.':'Start with the smallest fact you are certain about. What does that fact allow you to infer next? I’ll give a stronger hint only if you need it.';
+  if(/hint|clue/.test(q)){if(mode==='Wise Owl'){const context=preschoolContext(),recent=preschoolRecentItems(context),app=recent[recent.length-1];const guide=app?preschoolCatalog()?.observationFor?.(app):null;return guide?`Here is a tiny clue for ${app.title}: ${guide.parentPrompt} You do not need to hurry.`:'Here is a clue: look for one thing you already know, then use it to choose your next tiny step.'}return 'Start with the smallest fact you are certain about. What does that fact allow you to infer next? I’ll give a stronger hint only if you need it.';}
   if(/math|number|algebra|geometry|equation|fraction|calculate/.test(q))return mode==='Wise Owl'?'Let’s make the numbers visible. Can you count, group, draw, or compare them first?':'For mathematics, show the givens, the quantity you need, and your first attempted step. I’ll help you test the reasoning rather than simply hand over the result.';
   if(/write|essay|paragraph|grammar|sentence|story/.test(q))return mode==='Wise Owl'?'Tell me your idea first. We can turn the idea into one clear sentence together.':'Start with your claim or main idea in your own words. Then we can test organization, evidence, clarity, and grammar without replacing your voice.';
   if(/science|biology|chemistry|physics|experiment/.test(q))return 'Let’s separate observation from explanation. What did you observe, what do you think it means, and what evidence would help us test that explanation?';
@@ -145,7 +242,7 @@ function addMessage(role,text,store=false){const box=$('messages');const div=doc
 function renderConversation(reset=false){const box=$('messages');box.innerHTML='';if(!learner)return;const history=reset?[]:learnerHistory();if(history.length){history.forEach(m=>addMessage(m.role==='user'?'user':'mentor',m.text,false))}else{addMessage('mentor',greeting(),true)}}
 function ask(text){if(!learner)return;const clean=String(text||'').trim();if(!clean)return;addMessage('user',clean,true);setTimeout(()=>addMessage('mentor',responseFor(clean),true),120)}
 
-function renderQuickPrompts(){const box=$('quickPrompts');box.innerHTML='';const prompts=isYoung(learner)?['Give me a clue','Let’s learn something','I feel stuck','I need a break']:['Help me get started','Give me a hint','What should I work on?','I feel stuck','Help me study'];prompts.forEach(p=>{const b=document.createElement('button');b.type='button';b.textContent=p;b.addEventListener('click',()=>ask(p));box.appendChild(b)})}
+function renderQuickPrompts(){const box=$('quickPrompts');box.innerHTML='';const prompts=isYoung(learner)?['What should we do next?','Give me a clue','I want something different','I need a break']:['Help me get started','Give me a hint','What should I work on?','I feel stuck','Help me study'];prompts.forEach(p=>{const b=document.createElement('button');b.type='button';b.textContent=p;b.addEventListener('click',()=>ask(p));box.appendChild(b)})}
 
 function renderFamily(){
   const state=$('familyState');
@@ -157,14 +254,14 @@ function renderFamily(){
 
 function renderLearner(){
   const state=$('learnerState'),composer=$('composer'),note=$('conversationNote'),badges=$('identityBadges');badges.innerHTML='';
-  if(!learner){state.innerHTML='<div class="notice"><strong>Select a learner.</strong><br>Archaemenes personalizes his expression to the active learner while remaining the same Mentor.</div>';composer.hidden=true;note.textContent='Choose an active learner from the Family Registry.';$('messages').innerHTML='';$('quickPrompts').innerHTML='';return}
+  if(!learner){state.innerHTML='<div class="notice"><strong>Select a learner.</strong><br>Archaemenes personalizes his expression to the active learner while remaining the same Mentor.</div>';composer.hidden=true;note.textContent='Choose an active learner from the Family Registry.';$('messages').innerHTML='';$('quickPrompts').innerHTML='';renderPreschoolContext();return}
   mode=mentorMode(learner);const dest=registry?.learnerDestination?.(learner)||{url:STUDENT_URL,label:'Student Portal'};
-  badges.innerHTML=`<span class="badge">${esc(learner.nickname||'Learner')}</span><span class="badge">${esc(stageLabel(learner))}</span><span class="badge">Archaemenes · ${esc(mode)}</span>`;
+  const context=preschoolContext();const style=context?.communicationStyle?String(context.communicationStyle).replace(/[-_]/g,' '):'';badges.innerHTML=`<span class="badge">${esc(learner.nickname||'Learner')}</span><span class="badge">${esc(stageLabel(learner))}</span><span class="badge">Archaemenes · ${esc(mode)}</span>${isYoung(learner)&&style?`<span class="badge">Encouragement · ${esc(style)}</span>`:''}`;
   state.innerHTML=`<div class="kv"><span>Name</span><span>${esc(learner.nickname||'Learner')}</span></div><div class="kv"><span>Placement</span><span>${esc(stageLabel(learner))}</span></div><div class="kv"><span>Mentor expression</span><span>${esc(mode)}</span></div>`;
   $('campusLink').href=dest.url||STUDENT_URL;$('campusLink').querySelector('strong').textContent=`Continue to ${dest.label||stageLabel(learner)}`;
   $('campusLink').querySelector('span').textContent='Open the learner’s registered Khaemenes pathway.';
   note.textContent=isYoung(learner)?'For early learners, Archaemenes uses bounded choices instead of an unrestricted private text chat.':'Conversation is stored locally for this learner in this browser.';
-  composer.hidden=isYoung(learner);renderQuickPrompts();renderConversation(false)
+  composer.hidden=isYoung(learner);renderQuickPrompts();renderConversation(false);renderPreschoolContext()
 }
 
 function boot(){
@@ -178,7 +275,7 @@ function boot(){
 $('composer').addEventListener('submit',e=>{e.preventDefault();const input=$('mentorInput');ask(input.value);input.value='';input.focus()});
 $('clearConversation').addEventListener('click',()=>clearHistory());
 window.addEventListener('khaemenes-family-changed',()=>boot());
-window.addEventListener('storage',e=>{if(['khaemenes_family_registry_v1','khaemenes_active_family_v1','khaemenes_active_adult_v1','khaemenes_active_learner_v1'].includes(e.key))boot()});
+window.addEventListener('storage',e=>{if(['khaemenes_family_registry_v1','khaemenes_active_family_v1','khaemenes_active_adult_v1','khaemenes_active_learner_v1',PRESCHOOL_CONTEXT_KEY].includes(e.key))boot()});
 window.addEventListener('DOMContentLoaded',()=>setTimeout(boot,0));
 })();
 </script>
