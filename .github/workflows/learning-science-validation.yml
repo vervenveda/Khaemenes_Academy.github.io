@@ -1,0 +1,49 @@
+name: Academy Study Studio Validation
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'index.html'
+      - 'student/index.html'
+      - 'adult/index.html'
+      - 'family/index.html'
+      - 'assets/khaemenes-learning-science.js'
+      - 'assets/khaemenes-learning-continuation.js'
+      - 'assets/khaemenes-family-registry.js'
+      - 'tests/learning-science-static.test.mjs'
+      - '.github/workflows/learning-science-validation.yml'
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'student/index.html'
+      - 'adult/index.html'
+      - 'family/index.html'
+      - 'assets/khaemenes-learning-science.js'
+      - 'assets/khaemenes-learning-continuation.js'
+      - 'assets/khaemenes-family-registry.js'
+      - 'tests/learning-science-static.test.mjs'
+      - '.github/workflows/learning-science-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: academy-study-studio-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      - name: Check Study Studio syntax
+        run: node --check assets/khaemenes-learning-science.js
+      - name: Validate learning-science contract
+        run: node tests/learning-science-static.test.mjs
