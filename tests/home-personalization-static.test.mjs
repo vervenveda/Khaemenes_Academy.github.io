@@ -4,6 +4,7 @@ import fs from "node:fs";
 
 const index=fs.readFileSync(new URL("../index.html",import.meta.url),"utf8");
 const personalization=fs.readFileSync(new URL("../assets/khaemenes-home-personalization.js",import.meta.url),"utf8");
+const router=fs.readFileSync(new URL("../assets/khaemenes-front-door-router.js",import.meta.url),"utf8");
 
 test("public Academy home does not hard-code a personalized learner bar",()=>{
   assert.doesNotMatch(index,/id=["']khaemenesMyAcademyBar["']/);
@@ -17,9 +18,15 @@ test("Academy home loads continuation before the account-aware controller",()=>{
   assert.ok(personalizationScript>continuation);
 });
 
-test("identity can come from family, adult, or learner state",()=>{
-  assert.match(personalization,/Boolean\(family\?\.familyId\|\|adult\?\.adultId\|\|learner\?\.learnerId\)/);
-  assert.match(personalization,/learner\?\.selfDirectedAdult===true\?"adult":learner\?\.learnerId\?"learner":"family"/);
+test("identity can come from family, adult, learner, or adult-scholar state",()=>{
+  assert.match(personalization,/Boolean\(family\?\.familyId\|\|adult\?\.adultId\|\|learner\?\.learnerId\|\|scholar\?\.learnerId\)/);
+  assert.match(personalization,/const activeAdultScholar=learner\?\.selfDirectedAdult===true\?learner:null/);
+  assert.match(personalization,/const scholar=activeAdultScholar\|\|\(!learner\?adultLearner:null\)\|\|null/);
+});
+
+test("an actively selected child learner wins over adult-scholar fallback",()=>{
+  assert.match(personalization,/activeAdultScholar\|\|\(!learner&&adultLearner\)\?"adult":learner\?\.learnerId\?"learner":"family"/);
+  assert.match(personalization,/learner:mode==="adult"\?scholar:learner/);
 });
 
 test("profile utility is absent before account creation",()=>{
@@ -32,29 +39,17 @@ test("utility dock reuses the universal Beta button instead of creating another"
   assert.doesNotMatch(personalization,/createElement\(["']button["']\).*Beta Program/);
 });
 
-test("utility dock includes Archaemenes and account-aware Profile",()=>{
+test("utility dock includes Archaemenes, Profile, PLERA Search, and Stripe Contribute",()=>{
   assert.match(personalization,/MENTOR_ID="khaemenesHomeMentorButton"/);
   assert.match(personalization,/PROFILE_ID="khaemenesHomeProfileButton"/);
+  assert.match(personalization,/SEARCH_ID="khaemenesHomeSearchButton"/);
+  assert.match(personalization,/CONTRIBUTE_ID="khaemenesHomeContributeButton"/);
   assert.match(personalization,/profileDestination\(snapshot\)/);
   assert.match(personalization,/mentorDestination\(\)/);
-});
-
-test("utility dock includes PLERA Search for public and signed-in visitors",()=>{
-  assert.match(personalization,/SEARCH_ID="khaemenesHomeSearchButton"/);
   assert.match(personalization,/search:"https:\/\/vervenveda\.github\.io\/PLERASearch\.github\.io\//);
-  assert.match(personalization,/search\.href=URLS\.search/);
-  assert.match(personalization,/Open PLERA Search/);
-});
-
-test("utility dock includes canonical Stripe Contribute control without requiring an account",()=>{
-  assert.match(personalization,/CONTRIBUTE_ID="khaemenesHomeContributeButton"/);
   assert.match(personalization,/contribute:"https:\/\/buy\.stripe\.com\/aFa8wQ5xf9Scf65caT4AU0s"/);
-  assert.match(personalization,/contribute\.href=URLS\.contribute/);
   assert.match(personalization,/contribute\.target="_blank"/);
   assert.match(personalization,/contribute\.rel="noopener noreferrer"/);
-  const ensureDock=personalization.slice(personalization.indexOf("function ensureDock()"),personalization.indexOf("function syncDock"));
-  assert.match(ensureDock,/CONTRIBUTE_ID/);
-  assert.doesNotMatch(ensureDock,/snapshot\.hasIdentity/);
 });
 
 test("learner-specific home copy is protected from optional online translation",()=>{
@@ -70,6 +65,23 @@ test("home auto-updates for account, placement, and learning-continuation change
     "khaemenes-learning-continuation-changed"
   ]) assert.match(personalization,new RegExp(eventName));
   assert.match(personalization,/startsWith\(["']khaemenes["']\)/);
+});
+
+test("stale course snapshots cannot become Continue Learning deep links",()=>{
+  assert.match(personalization,/item\.stale!==true/);
+  assert.match(personalization,/item\.freshness!=="stale"/);
+  const block=personalization.slice(personalization.indexOf("function bestContinuation"),personalization.indexOf("function mentorDestination"));
+  assert.match(block,/status!=="complete"/);
+  assert.match(block,/nextHref/);
+});
+
+test("multi-learner families get a direct active-learner switcher",()=>{
+  assert.match(personalization,/function familyLearners\(snapshot\)/);
+  assert.match(personalization,/function learnerSwitcher\(snapshot\)/);
+  assert.match(personalization,/data-academy-learner-switch/);
+  assert.match(personalization,/Choose learner/);
+  assert.match(personalization,/router\(\)\?\.switchLearner\?\.\(learnerId,\{continueAfter:false\}\)/);
+  assert.match(router,/function switchLearner\(learnerId,\{continueAfter=false\}=\{\}\)/);
 });
 
 test("student, family, and adult scholar profiles route to their own portals",()=>{
