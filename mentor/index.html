@@ -219,9 +219,15 @@ function renderPreschoolContext(){
     const latest=Array.isArray(elementary.recentObservations)?elementary.recentObservations[elementary.recentObservations.length-1]:null;
     const labels={support:'learning with support',independent:'working independently',transfer:'explaining and applying'};
     const practice=Array.isArray(elementary.suggestedPractice)?elementary.suggestedPractice.slice(0,2):[];
+    const lessonEvidence=Array.isArray(elementary.recentLessonEvidence)?elementary.recentLessonEvidence:[];
+    const assessmentEvidence=Array.isArray(elementary.recentAssessmentAttempts)?elementary.recentAssessmentAttempts:[];
+    const latestLesson=lessonEvidence[lessonEvidence.length-1]||null;
+    const latestAssessment=assessmentEvidence[assessmentEvidence.length-1]||null;
     const rows=[];
     rows.push(`<div class="context-item"><strong>Grade & current place</strong><span>Grade ${esc(elementary.grade||'—')} · ${esc(elementary.academicPosition?.label||'Elementary pathway')}</span></div>`);
     rows.push(`<div class="context-item"><strong>Formal progress</strong><span>${esc(String(elementary.curriculum?.completedWeeks||0))}/36 weeks at mastery · ${esc(String(elementary.curriculum?.weeklyAverage||0))}% attempted-week average · 80% mastery threshold</span></div>`);
+    rows.push(`<div class="context-item"><strong>Recent lesson evidence</strong><span>${lessonEvidence.length?esc(String(lessonEvidence.length)+' saved checkpoint'+(lessonEvidence.length===1?'':'s')+(latestLesson?' · latest: '+(latestLesson.subject||'lesson')+' '+String(latestLesson.score||0)+'%':'')):'No saved lesson checkpoints this week'}</span></div>`);
+    rows.push(`<div class="context-item"><strong>Latest verified assessment</strong><span>${latestAssessment?esc((latestAssessment.kind||'assessment')+(latestAssessment.week?' · Week '+String(latestAssessment.week).padStart(2,'0'):'')+' · '+String(latestAssessment.score||0)+'%'+(latestAssessment.reviewSkills?.length?' · review: '+latestAssessment.reviewSkills.join(', '):'')):'No recent verified assessment attempt'}</span></div>`);
     rows.push(`<div class="context-item"><strong>Learning goal</strong><span>${esc(elementary.learnerPreferences?.learningGoal||'No learner goal saved yet')}</span></div>`);
     rows.push(`<div class="context-item"><strong>Matched support</strong><span>${practice.length?esc(practice.map(item=>item.title).join(' · ')):'Formal lesson first; optional support can be selected afterward.'}</span></div>`);
     rows.push(`<div class="context-item"><strong>Family observation</strong><span>${latest?esc((latest.domain||'Current learning')+' · '+(labels[latest.level]||'observed')):'No optional family observation saved'}</span></div>`);
@@ -293,8 +299,24 @@ function responseFor(text){
   }
   if(elementary&&/(what did|remember|this week|progress|how am i doing)/.test(q)){
     const latest=Array.isArray(elementary.recentObservations)?elementary.recentObservations[elementary.recentObservations.length-1]:null;
+    const lessons=Array.isArray(elementary.recentLessonEvidence)?elementary.recentLessonEvidence:[];
+    const assessments=Array.isArray(elementary.recentAssessmentAttempts)?elementary.recentAssessmentAttempts:[];
+    const lastAssessment=assessments[assessments.length-1]||null;
     const obs=latest?` A family observation notes ${latest.domain||'the current learning'} as ${({support:'learning with support',independent:'working independently',transfer:'being explained and applied'}[latest.level]||'observed')}.`:'';
-    return `You are at ${elementary.academicPosition?.label||'your current Elementary step'}. ${elementary.curriculum?.completedWeeks||0} of 36 weeks are recorded at mastery, with a ${elementary.curriculum?.weeklyAverage||0}% average across attempted weeks.${obs}`;
+    const lessonNote=lessons.length?` You have ${lessons.length} saved lesson checkpoint${lessons.length===1?'':'s'} in the recent learning ledger.`:'';
+    const assessmentNote=lastAssessment?` Your latest verified ${lastAssessment.kind||'assessment'} score is ${lastAssessment.score||0}%.`:'';
+    return `You are at ${elementary.academicPosition?.label||'your current Elementary step'}. ${elementary.curriculum?.completedWeeks||0} of 36 weeks are recorded at mastery, with a ${elementary.curriculum?.weeklyAverage||0}% average across attempted weeks.${lessonNote}${assessmentNote}${obs}`;
+  }
+  if(elementary&&/(what should i review|where did i struggle|what did i miss|study|review for|weak skill)/.test(q)){
+    const assessments=Array.isArray(elementary.recentAssessmentAttempts)?elementary.recentAssessmentAttempts:[];
+    const lastAssessment=assessments[assessments.length-1]||null;
+    const skills=Array.isArray(lastAssessment?.reviewSkills)?lastAssessment.reviewSkills.filter(Boolean):[];
+    const practice=Array.isArray(elementary.suggestedPractice)?elementary.suggestedPractice:[];
+    if(skills.length){
+      const practiceNote=practice[0]?.title?` After reviewing, ${practice[0].title} is available as optional practice.`:'';
+      return `Your latest verified assessment suggests reviewing ${skills.slice(0,4).join(', ')}. I can help you reason through those skills without revealing or repeating test answers.${practiceNote}`;
+    }
+    return `I do not have a missed-skill summary from a recent verified assessment yet. Start with ${elementary.currentFocus?.domain||'the current lesson focus'}, and bring me the exact concept or strategy that feels uncertain.`;
   }
   if(elementary&&/(hint|clue)/.test(q)){
     return elementary.currentFocus?.gentleNextStep?`Here is a clue strategy: ${elementary.currentFocus.gentleNextStep}`:'Start by naming what the problem is asking, what evidence or information you already have, and one strategy you could test.';
