@@ -127,6 +127,7 @@ const STUDENT_URL='https://vervenveda.com/Khaemenes_Academy.github.io/student/';
 const HISTORY_KEY='khaemenes_archaemenes_mentor_history_v1';
 const PRESCHOOL_CONTEXT_KEY='khaemenes_preschool_mentor_context_v1';
 const KINDERGARTEN_CONTEXT_KEY='khaemenes_kindergarten_mentor_context_v1';
+const ELEMENTARY_CONTEXT_KEY='khaemenes_elementary_mentor_context_v1';
 const $=id=>document.getElementById(id);
 let registry=null,family=null,adult=null,learner=null,mode='Academy Mentor';
 
@@ -150,6 +151,13 @@ function kindergartenContext(){
   if(!context||context.learnerId!==learner.learnerId)return null;
   return context;
 }
+function elementaryContext(){
+  if(!learner||learnerStage(learner)!=='elementary')return null;
+  const context=readLocalJSON(ELEMENTARY_CONTEXT_KEY,null);
+  if(!context||context.learnerId!==learner.learnerId)return null;
+  return context;
+}
+function activeLearnerContext(){return elementaryContext()||kindergartenContext()||preschoolContext()}
 function activeYoungContext(){return kindergartenContext()||preschoolContext()}
 function preschoolCatalog(){return window.KhaemenesPreschoolCatalog||null}
 function preschoolActivity(id){const catalog=preschoolCatalog();return catalog?.byId?.(id)||catalog?.byMentorId?.(id)||null}
@@ -195,12 +203,39 @@ function preschoolObservationSummary(context=preschoolContext()){
 function renderPreschoolContext(){
   const panel=$('preschoolContextPanel'),list=$('preschoolContextList'),intro=$('preschoolContextIntro');
   if(!panel||!list||!intro)return;
-  if(!learner||!isYoung(learner)){panel.hidden=true;return}
+  const stage=learnerStage(learner);
+  if(!learner||!['preschool','kindergarten','elementary'].includes(stage)){panel.hidden=true;return}
   panel.hidden=false;
 
   const heading=panel.querySelector('h3');
   const action=panel.querySelector('.actions a');
+  const elementary=elementaryContext();
   const kinder=kindergartenContext();
+
+  if(elementary){
+    if(heading)heading.textContent='Elementary Learning Context';
+    if(action){action.href='https://vervenveda.com/Khaemenes_Elementary.github.io/';action.textContent='Open Elementary Home'}
+    intro.textContent='Archaemenes can use the active learner’s Elementary grade, current formal position, learning goal, matched support, and optional family observations. Course engines remain authoritative for mastery.';
+    const latest=Array.isArray(elementary.recentObservations)?elementary.recentObservations[elementary.recentObservations.length-1]:null;
+    const labels={support:'learning with support',independent:'working independently',transfer:'explaining and applying'};
+    const practice=Array.isArray(elementary.suggestedPractice)?elementary.suggestedPractice.slice(0,2):[];
+    const rows=[];
+    rows.push(`<div class="context-item"><strong>Grade & current place</strong><span>Grade ${esc(elementary.grade||'—')} · ${esc(elementary.academicPosition?.label||'Elementary pathway')}</span></div>`);
+    rows.push(`<div class="context-item"><strong>Formal progress</strong><span>${esc(String(elementary.curriculum?.completedWeeks||0))}/36 weeks at mastery · ${esc(String(elementary.curriculum?.weeklyAverage||0))}% attempted-week average · 80% mastery threshold</span></div>`);
+    rows.push(`<div class="context-item"><strong>Learning goal</strong><span>${esc(elementary.learnerPreferences?.learningGoal||'No learner goal saved yet')}</span></div>`);
+    rows.push(`<div class="context-item"><strong>Matched support</strong><span>${practice.length?esc(practice.map(item=>item.title).join(' · ')):'Formal lesson first; optional support can be selected afterward.'}</span></div>`);
+    rows.push(`<div class="context-item"><strong>Family observation</strong><span>${latest?esc((latest.domain||'Current learning')+' · '+(labels[latest.level]||'observed')):'No optional family observation saved'}</span></div>`);
+    list.innerHTML=rows.join('');
+    return;
+  }
+
+  if(stage==='elementary'){
+    if(heading)heading.textContent='Elementary Learning Context';
+    if(action){action.href='https://vervenveda.com/Khaemenes_Elementary.github.io/';action.textContent='Open Elementary Home'}
+    intro.textContent='No matching Elementary learning context is stored for this learner yet.';
+    list.innerHTML='<div class="context-item"><strong>Ready when the learner enters Elementary</strong><span>Open the registered Grade 01–05 pathway. Archaemenes will use the learner-scoped context after the Elementary experience layer publishes it.</span></div>';
+    return;
+  }
 
   if(kinder){
     if(heading)heading.textContent='Kinder Garden Learning Context';
@@ -239,11 +274,31 @@ function renderPreschoolContext(){
 function mentorMode(l){const stage=registry?.normalizeStage?.(l?.stage)||l?.stage||'';if(['preschool','kindergarten'].includes(stage))return 'Wise Owl';if(stage==='higher')return 'Scholar';return 'Academy Mentor'}
 function isYoung(l){const stage=registry?.normalizeStage?.(l?.stage)||l?.stage||'';return ['preschool','kindergarten'].includes(stage)}
 function stageLabel(l){if(!l)return'Learner';const gm=l.grade&&registry?.gradeMeta?.[l.grade]?registry.gradeMeta[l.grade]:null;return gm?.label||({preschool:'Pre-K',kindergarten:'Kindergarten',elementary:'Elementary',middle:'Middle School',high:'High School',higher:'Higher Learning'}[l.stage]||l.stage||'Learner')}
-function greeting(){const name=learner?.nickname||'learner';if(mode==='Wise Owl'){const kinder=kindergartenContext(),pre=preschoolContext();if(kinder)return `Hello, ${name}! I’m Archaemenes. I can see your current Kinder Garden learning place from this browser. We can take the formal step first, then choose practice, exploration, or a break.`;if(pre)return `Hello, ${name}! I’m Archaemenes. I can see your Crechè learning path from this browser. We can notice, wonder, try, and learn together. What should we do first?`;return `Hello, ${name}! I’m Archaemenes. We can notice, wonder, try, and learn together. What would you like to do?`};if(mode==='Scholar')return `Welcome, ${name}. I’m Archaemenes. Bring me a question, argument, problem, source, or idea and we’ll examine it carefully.`;return `Hello, ${name}. I’m Archaemenes. Tell me what you are working on, where it becomes confusing, or what you want to understand better.`}
+function greeting(){const name=learner?.nickname||'learner';if(mode==='Wise Owl'){const kinder=kindergartenContext(),pre=preschoolContext();if(kinder)return `Hello, ${name}! I’m Archaemenes. I can see your current Kinder Garden learning place from this browser. We can take the formal step first, then choose practice, exploration, or a break.`;if(pre)return `Hello, ${name}! I’m Archaemenes. I can see your Crechè learning path from this browser. We can notice, wonder, try, and learn together. What should we do first?`;return `Hello, ${name}! I’m Archaemenes. We can notice, wonder, try, and learn together. What would you like to do?`};const elementary=elementaryContext();if(elementary)return `Hello, ${name}. I’m Archaemenes. I can see that you are in Grade ${elementary.grade||'Elementary'} at ${elementary.academicPosition?.label||'your current learning step'}. We can work from the formal lesson, use a clue, or choose matched practice after the lesson.`;if(mode==='Scholar')return `Welcome, ${name}. I’m Archaemenes. Bring me a question, argument, problem, source, or idea and we’ll examine it carefully.`;return `Hello, ${name}. I’m Archaemenes. Tell me what you are working on, where it becomes confusing, or what you want to understand better.`}
 
 function responseFor(text){
   const raw=String(text||'').trim();const q=raw.toLowerCase();const name=learner?.nickname||'learner';
   if(!raw)return `What would you like to investigate, ${name}?`;
+  const elementary=elementaryContext();
+  if(elementary&&/(what should|work on|start|today|do next|help me get started)/.test(q)){
+    const place=elementary.academicPosition?.label||'your current Elementary step';
+    const practice=elementary.suggestedPractice?.[0]?.title;
+    const goal=elementary.learnerPreferences?.learningGoal;
+    return practice?`Begin with ${place}. After the formal work, ${practice} is matched support you can use if it helps.${goal?` Your current learning goal is: ${goal}`:''}`:`Begin with ${place}. Work one clear step at a time, then bring me the part that needs a clue or a second strategy.`;
+  }
+  if(elementary&&/(different|another|change|practice)/.test(q)){
+    const options=Array.isArray(elementary.suggestedPractice)?elementary.suggestedPractice:[];
+    const pick=options[1]||options[0];
+    if(pick)return `Keep the formal lesson as the academic anchor, and try ${pick.title} as optional practice. It supports the learning but does not create mastery.`;
+  }
+  if(elementary&&/(what did|remember|this week|progress|how am i doing)/.test(q)){
+    const latest=Array.isArray(elementary.recentObservations)?elementary.recentObservations[elementary.recentObservations.length-1]:null;
+    const obs=latest?` A family observation notes ${latest.domain||'the current learning'} as ${({support:'learning with support',independent:'working independently',transfer:'being explained and applied'}[latest.level]||'observed')}.`:'';
+    return `You are at ${elementary.academicPosition?.label||'your current Elementary step'}. ${elementary.curriculum?.completedWeeks||0} of 36 weeks are recorded at mastery, with a ${elementary.curriculum?.weeklyAverage||0}% average across attempted weeks.${obs}`;
+  }
+  if(elementary&&/(hint|clue)/.test(q)){
+    return elementary.currentFocus?.gentleNextStep?`Here is a clue strategy: ${elementary.currentFocus.gentleNextStep}`:'Start by naming what the problem is asking, what evidence or information you already have, and one strategy you could test.';
+  }
   if(mode==='Wise Owl'&&/(what should|work on|start|today|learn something|do next)/.test(q)){
     const kinder=kindergartenContext();
     if(kinder){
@@ -306,7 +361,7 @@ function renderLearner(){
   const state=$('learnerState'),composer=$('composer'),note=$('conversationNote'),badges=$('identityBadges');badges.innerHTML='';
   if(!learner){state.innerHTML='<div class="notice"><strong>Select a learner.</strong><br>Archaemenes personalizes his expression to the active learner while remaining the same Mentor.</div>';composer.hidden=true;note.textContent='Choose an active learner from the Family Registry.';$('messages').innerHTML='';$('quickPrompts').innerHTML='';renderPreschoolContext();return}
   mode=mentorMode(learner);const dest=registry?.learnerDestination?.(learner)||{url:STUDENT_URL,label:'Student Portal'};
-  const context=activeYoungContext();const style=context?.communicationStyle?String(context.communicationStyle).replace(/[-_]/g,' '):'';badges.innerHTML=`<span class="badge">${esc(learner.nickname||'Learner')}</span><span class="badge">${esc(stageLabel(learner))}</span><span class="badge">Archaemenes · ${esc(mode)}</span>${isYoung(learner)&&style?`<span class="badge">Encouragement · ${esc(style)}</span>`:''}`;
+  const context=activeLearnerContext();const style=context?.communicationStyle?String(context.communicationStyle).replace(/[-_]/g,' '):'';const elementaryMode=elementaryContext()?.developmentalMode||'';badges.innerHTML=`<span class="badge">${esc(learner.nickname||'Learner')}</span><span class="badge">${esc(stageLabel(learner))}</span><span class="badge">Archaemenes · ${esc(mode)}</span>${isYoung(learner)&&style?`<span class="badge">Encouragement · ${esc(style)}</span>`:''}${elementaryMode?`<span class="badge">${esc(elementaryMode)}</span>`:''}`;
   state.innerHTML=`<div class="kv"><span>Name</span><span>${esc(learner.nickname||'Learner')}</span></div><div class="kv"><span>Placement</span><span>${esc(stageLabel(learner))}</span></div><div class="kv"><span>Mentor expression</span><span>${esc(mode)}</span></div>`;
   $('campusLink').href=dest.url||STUDENT_URL;$('campusLink').querySelector('strong').textContent=`Continue to ${dest.label||stageLabel(learner)}`;
   $('campusLink').querySelector('span').textContent='Open the learner’s registered Khaemenes pathway.';
@@ -325,7 +380,7 @@ function boot(){
 $('composer').addEventListener('submit',e=>{e.preventDefault();const input=$('mentorInput');ask(input.value);input.value='';input.focus()});
 $('clearConversation').addEventListener('click',()=>clearHistory());
 window.addEventListener('khaemenes-family-changed',()=>boot());
-window.addEventListener('storage',e=>{if(['khaemenes_family_registry_v1','khaemenes_active_family_v1','khaemenes_active_adult_v1','khaemenes_active_learner_v1',PRESCHOOL_CONTEXT_KEY,KINDERGARTEN_CONTEXT_KEY].includes(e.key))boot()});
+window.addEventListener('storage',e=>{if(['khaemenes_family_registry_v1','khaemenes_active_family_v1','khaemenes_active_adult_v1','khaemenes_active_learner_v1',PRESCHOOL_CONTEXT_KEY,KINDERGARTEN_CONTEXT_KEY,ELEMENTARY_CONTEXT_KEY].includes(e.key))boot()});
 window.addEventListener('DOMContentLoaded',()=>setTimeout(boot,0));
 })();
 </script>
