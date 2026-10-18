@@ -129,6 +129,7 @@ const PRESCHOOL_CONTEXT_KEY='khaemenes_preschool_mentor_context_v1';
 const KINDERGARTEN_CONTEXT_KEY='khaemenes_kindergarten_mentor_context_v1';
 const ELEMENTARY_CONTEXT_KEY='khaemenes_elementary_mentor_context_v1';
 const MIDDLE_CONTEXT_KEY='khaemenes_middle_mentor_context_v1';
+const HIGH_CONTEXT_KEY='khaemenes_high_mentor_context_v1';
 const $=id=>document.getElementById(id);
 let registry=null,family=null,adult=null,learner=null,mode='Academy Mentor';
 
@@ -164,7 +165,13 @@ function middleContext(){
   if(!context||context.learnerId!==learner.learnerId||context.stage!=='middle')return null;
   return context;
 }
-function activeLearnerContext(){return middleContext()||elementaryContext()||kindergartenContext()||preschoolContext()}
+function highContext(){
+  if(!learner||learnerStage(learner)!=='high')return null;
+  const context=readLocalJSON(HIGH_CONTEXT_KEY,null);
+  if(!context||context.learnerId!==learner.learnerId||context.stage!=='high')return null;
+  return context;
+}
+function activeLearnerContext(){return highContext()||middleContext()||elementaryContext()||kindergartenContext()||preschoolContext()}
 function activeYoungContext(){return kindergartenContext()||preschoolContext()}
 function preschoolCatalog(){return window.KhaemenesPreschoolCatalog||null}
 function preschoolActivity(id){const catalog=preschoolCatalog();return catalog?.byId?.(id)||catalog?.byMentorId?.(id)||null}
@@ -211,14 +218,33 @@ function renderPreschoolContext(){
   const panel=$('preschoolContextPanel'),list=$('preschoolContextList'),intro=$('preschoolContextIntro');
   if(!panel||!list||!intro)return;
   const stage=learnerStage(learner);
-  if(!learner||!['preschool','kindergarten','elementary','middle'].includes(stage)){panel.hidden=true;return}
+  if(!learner||!['preschool','kindergarten','elementary','middle','high'].includes(stage)){panel.hidden=true;return}
   panel.hidden=false;
 
   const heading=panel.querySelector('h3');
   const action=panel.querySelector('.actions a');
+  const high=highContext();
   const middle=middleContext();
   const elementary=elementaryContext();
   const kinder=kindergartenContext();
+
+  if(high){
+    if(heading)heading.textContent='High School Learning Context';
+    if(action){action.href='https://vervenveda.com/Khaemenes_High.github.io/';action.textContent='Open High School'}
+    intro.textContent='Archaemenes can use the active learner’s sanitized High School course summaries, verified scores, and broad review-skill names. Assessment questions, choices, learner selections, and answer keys never cross this boundary.';
+    const courses=Array.isArray(high.courseSummaries)?high.courseSummaries:[];
+    const assessments=Array.isArray(high.recentAssessments)?high.recentAssessments:[];
+    const formatives=Array.isArray(high.recentFormatives)?high.recentFormatives:[];
+    const latest=high.latestAssessment||assessments[assessments.length-1]||null;
+    const rows=[];
+    rows.push(`<div class="context-item"><strong>Grade</strong><span>Grade ${esc(high.grade||'—')} · 80% mastery standard</span></div>`);
+    rows.push(`<div class="context-item"><strong>Course evidence</strong><span>${courses.length?esc(courses.map(x=>x.courseId+(x.latestScore!==null?' · '+x.latestScore+'%':'')).join(' | ')):'No shared course summaries recorded yet'}</span></div>`);
+    rows.push(`<div class="context-item"><strong>Latest verified assessment</strong><span>${latest?esc((latest.courseId||'course')+' · '+(latest.kind||'assessment')+' · '+String(latest.score??'—')+'%'):'No recent shared assessment summary'}</span></div>`);
+    rows.push(`<div class="context-item"><strong>Review skills</strong><span>${latest?.reviewSkills?.length?esc(latest.reviewSkills.join(' · ')):'No review-skill summary recorded yet'}</span></div>`);
+    rows.push(`<div class="context-item"><strong>Recent formative evidence</strong><span>${formatives.length?esc(String(formatives.length)+' saved formative event'+(formatives.length===1?'':'s')):'No shared formative evidence recorded yet'}</span></div>`);
+    list.innerHTML=rows.join('');
+    return;
+  }
 
   if(middle){
     if(heading)heading.textContent='Middle School Learning Context';
@@ -259,6 +285,14 @@ function renderPreschoolContext(){
     rows.push(`<div class="context-item"><strong>Matched support</strong><span>${practice.length?esc(practice.map(item=>item.title).join(' · ')):'Formal lesson first; optional support can be selected afterward.'}</span></div>`);
     rows.push(`<div class="context-item"><strong>Family observation</strong><span>${latest?esc((latest.domain||'Current learning')+' · '+(labels[latest.level]||'observed')):'No optional family observation saved'}</span></div>`);
     list.innerHTML=rows.join('');
+    return;
+  }
+
+  if(stage==='high'){
+    if(heading)heading.textContent='High School Learning Context';
+    if(action){action.href='https://vervenveda.com/Khaemenes_High.github.io/';action.textContent='Open High School'}
+    intro.textContent='No matching High School learning context is stored for this learner yet.';
+    list.innerHTML='<div class="context-item"><strong>Ready after High School activity</strong><span>Open the registered High School pathway. Adapter-aware courses publish score and review-skill summaries without assessment questions, choices, selections, or answer keys.</span></div>';
     return;
   }
 
@@ -323,6 +357,8 @@ function greeting(){
     if(pre)return `Hello, ${name}! I’m Archaemenes. I can see your Crechè learning path from this browser. We can notice, wonder, try, and learn together. What should we do first?`;
     return `Hello, ${name}! I’m Archaemenes. We can notice, wonder, try, and learn together. What would you like to do?`;
   }
+  const high=highContext();
+  if(high)return `Hello, ${name}. I’m Archaemenes. I can see your Grade ${high.grade||'High School'} sanitized course evidence summary. I can help you interpret verified results, review broad skills, plan study, and prepare for the next formal step without revealing locked assessment content.`;
   const middle=middleContext();
   if(middle)return `Hello, ${name}. I’m Archaemenes. I can see your Grade ${middle.grade||'Middle School'} progress summary and current learning focus. I can help you interpret verified results, review skills, plan study, or prepare for the next formal step without revealing locked assessment content.`;
   const elementary=elementaryContext();
@@ -334,6 +370,24 @@ function greeting(){
 function responseFor(text){
   const raw=String(text||'').trim();const q=raw.toLowerCase();const name=learner?.nickname||'learner';
   if(!raw)return `What would you like to investigate, ${name}?`;
+  const high=highContext();
+  if(high&&/(what should|work on|start|today|do next|help me get started)/.test(q)){
+    const latest=high.latestAssessment||high.recentAssessments?.slice(-1)[0]||null;
+    const review=latest?.reviewSkills?.length?` Your latest verified summary identifies ${latest.reviewSkills.slice(0,3).join(', ')} as review areas.`:'';
+    return `Continue from your registered Grade ${high.grade||'High School'} course pathway. Complete the formal course work first, then use Mentor support for reasoning and review.${review}`;
+  }
+  if(high&&/(what did|remember|this week|progress|how am i doing)/.test(q)){
+    const courses=Array.isArray(high.courseSummaries)?high.courseSummaries:[],latest=high.latestAssessment||high.recentAssessments?.slice(-1)[0]||null;
+    return `Your shared High School evidence summary currently contains ${courses.length} course${courses.length===1?'':'s'}.${latest?` Your latest verified result is ${latest.score??0}% in ${latest.courseId||'the current course'}.`:''} Course engines remain authoritative for grades, mastery, credit, and progression.`;
+  }
+  if(high&&/(what should i review|where did i struggle|what did i miss|study|review for|weak skill)/.test(q)){
+    const latest=high.latestAssessment||high.recentAssessments?.slice(-1)[0]||null,skills=Array.isArray(latest?.reviewSkills)?latest.reviewSkills.filter(Boolean):[];
+    if(skills.length)return `Your latest verified High School assessment summary suggests reviewing ${skills.slice(0,5).join(', ')}. I can teach those skills with fresh examples without exposing assessment questions, choices, learner selections, or answer keys.`;
+    return 'I do not have a recent High School review-skill summary yet. Tell me the course and exact concept that feels uncertain, and we can work from a fresh example.';
+  }
+  if(high&&/(hint|clue)/.test(q)){
+    return 'Start with the smallest fact, rule, source detail, or relationship you are certain about. Use that to state one defensible next step. I can strengthen the hint without reproducing a locked assessment item.';
+  }
   const middle=middleContext();
   if(middle&&/(what should|work on|start|today|do next|help me get started)/.test(q)){
     const focus=middle.currentFocus||{},latest=Array.isArray(middle.recentAssessmentAttempts)?middle.recentAssessmentAttempts.slice(-1)[0]:null;
