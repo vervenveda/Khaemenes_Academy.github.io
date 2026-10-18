@@ -23,10 +23,10 @@ function accountSnapshot(){
   }catch{}
   if(family?.familyId&&learner?.familyId&&learner.familyId!==family.familyId)learner=null;
   const activeAdultScholar=learner?.selfDirectedAdult===true?learner:null;
-  const scholar=activeAdultScholar||adultLearner||null;
+  const scholar=activeAdultScholar||(!learner?adultLearner:null)||null;
   const hasIdentity=Boolean(family?.familyId||adult?.adultId||learner?.learnerId||scholar?.learnerId);
-  const mode=!hasIdentity?"public":scholar?"adult":learner?.learnerId?"learner":"family";
-  return Object.freeze({mode,hasIdentity,family,adult,learner:mode==="adult"?scholar:learner,adultLearner:scholar});
+  const mode=!hasIdentity?"public":activeAdultScholar||(!learner&&adultLearner)?"adult":learner?.learnerId?"learner":"family";
+  return Object.freeze({mode,hasIdentity,family,adult,learner:mode==="adult"?scholar:learner,adultLearner:adultLearner||activeAdultScholar||null});
 }
 function gradeMeta(learner){
   const r=registry(),meta=learner?.grade&&r?.gradeMeta?.[learner.grade]?r.gradeMeta[learner.grade]:null;
@@ -41,7 +41,8 @@ function learnerSwitcher(snapshot){
   const learners=familyLearners(snapshot);
   if(learners.length<2)return "";
   const activeId=snapshot?.learner?.learnerId||"";
-  return '<label class="my-academy-switcher"><span>Active learner</span><select data-academy-learner-switch aria-label="Switch active learner">'+learners.map(item=>'<option value="'+esc(item.learnerId)+'"'+(item.learnerId===activeId?' selected':'')+'>'+esc(item.nickname||"Learner")+'</option>').join("")+'</select></label>';
+  const placeholder=activeId?"":'<option value="" selected disabled>Choose learner</option>';
+  return '<label class="my-academy-switcher"><span>Active learner</span><select data-academy-learner-switch aria-label="Switch active learner">'+placeholder+learners.map(item=>'<option value="'+esc(item.learnerId)+'"'+(item.learnerId===activeId?' selected':'')+'>'+esc(item.nickname||"Learner")+'</option>').join("")+'</select></label>';
 }
 function bestContinuation(learner){
   if(!learner?.learnerId)return null;
