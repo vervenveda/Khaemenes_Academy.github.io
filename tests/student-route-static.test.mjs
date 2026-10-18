@@ -14,6 +14,14 @@ test("identified Grade 10 learner routes to the real Grade 10 portal",()=>{
   assert.match(router,/if\(grade==="10"\)return `\$\{base\}\/grades\/grade-10\/`/);
 });
 
+test("identified Grade 11 learner routes to the real Grade 11 portal",()=>{
+  assert.match(router,/if\(grade==="11"\)return `\$\{base\}\/grades\/grade-11\/`/);
+});
+
+test("identified Grade 12 learner routes to the real Grade 12 portal",()=>{
+  assert.match(router,/if\(grade==="12"\)return `\$\{base\}\/grades\/grade-12\/`/);
+});
+
 test("high-school fallback no longer depends on the dead grades anchor",()=>{
   assert.doesNotMatch(router,/khaemenesGrade=grade-/);
   assert.doesNotMatch(router,/#grades/);
