@@ -30,10 +30,15 @@ jobs:
               except UnicodeDecodeError: continue
               t=original
               has_csp='content-security-policy' in t.lower()
+              has_marker='VNV_BETA_PROGRAM_V1' in t or 'id="vnvBetaProgramFallback"' in t
               has_direct='Open the Verve N Veda Beta Program' in t
               has_widget='vnv-beta-link.js' in t
-              if has_csp:
-                  if has_widget: t=script_re.sub(direct,t)
+              if has_marker:
+                  # Canonical fallback already guarantees a usable Beta doorway.
+                  # Never add or substitute a second fixed control on these pages.
+                  pass
+              elif has_csp:
+                  if has_widget and not has_direct: t=script_re.sub(direct,t)
                   elif not has_direct:
                       pos=t.lower().rfind('</body>')
                       if pos>=0: t=t[:pos]+'\n<!-- Verve N Veda Beta Program -->\n'+direct+'\n'+t[pos:]
