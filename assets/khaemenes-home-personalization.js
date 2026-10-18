@@ -148,10 +148,14 @@ function renderUpdates(snapshot=accountSnapshot()){
     actions=[makeAction("Continue Learning",continueDestination(snapshot),"primary"),makeAction("Student Profile",URLS.student),makeAction("Family Hub",URLS.family),makeAction("Archaemenes",mentorDestination(),"gold")];
   }else if(snapshot.mode==="family"){
     const count=familyLearners(snapshot).length;
+    let parentSummary=null;
+    try{parentSummary=global.KhaemenesParentActionCenter?.summary?.()||null}catch{}
+    const attention=Number(parentSummary?.totals?.needsAttention||0),due=Number(parentSummary?.totals?.dueReview||0);
     items.push(updateItem("Family account",count?count+" learner"+(count===1?"":"s")+" connected.":"No learner is enrolled yet."));
-    items.push(updateItem("Next family step",count?"Select or manage a learner from the Family Hub.":"Enroll a learner when you are ready."));
+    items.push(updateItem("Family attention",count?(attention+" learning item"+(attention===1?"":"s")+" need attention"+(due?" · "+due+" spaced review"+(due===1?"":"s")+" due":"")+"."):"Enroll a learner to begin family learning summaries."));
+    items.push(updateItem("Next family step",attention?"Open the Parent Action Center for the highest-priority next steps.":count?"Select or manage a learner from the Family Hub.":"Enroll a learner when you are ready."));
     items.push(updateItem("Support","Family permissions, placement, records, and learner management remain in the Family Hub."));
-    actions=[makeAction(count?"Open Family Hub":"Enroll Learner",count?URLS.family:URLS.enroll,"primary"),makeAction("Archaemenes",mentorDestination(),"gold")];
+    actions=[makeAction(count?"Parent Action Center":"Enroll Learner",count?URLS.family+"#khaemenesParentActionCenter":URLS.enroll,"primary"),makeAction("Family Profile",URLS.family),makeAction("Archaemenes",mentorDestination(),"gold")];
   }else if(snapshot.mode==="adult"){
     const learner=snapshot.learner||snapshot.adultLearner,next=bestContinuation(learner);
     items.push(updateItem("Adult Scholar","Your self-directed Academy pathway is active on this device."));
@@ -239,7 +243,7 @@ function renderBar(snapshot=accountSnapshot()){
     kicker="My Academy · Family";name="Welcome, "+(snapshot.adult?.displayName||snapshot.family?.displayName||"Family");
     meta=learnerCount?learnerCount+" learner"+(learnerCount===1?"":"s")+" connected":"Family profile ready · no K–12 learner selected yet";
     nextText=learnerCount?"Choose a learner here or open the Family Hub to manage enrollment, permissions, and records.":"Enroll a learner when you are ready. Public Academy exploration remains open.";
-    actions=[learnerSwitcher(snapshot),makeAction("Family Profile",URLS.family,"primary"),makeAction(learnerCount?"Manage Learners":"Enroll Learner",learnerCount?URLS.family:URLS.enroll),makeAction("Archaemenes",mentor,"gold")].join("");
+    actions=[learnerSwitcher(snapshot),makeAction("Family Profile",URLS.family,"primary"),makeAction(learnerCount?"Parent Actions":"Enroll Learner",learnerCount?URLS.family+"#khaemenesParentActionCenter":URLS.enroll),makeAction("Archaemenes",mentor,"gold")].join("");
   }
   bar.innerHTML='<div class="my-academy-inner"><div class="my-academy-identity"><p class="my-academy-kicker">'+esc(kicker)+'</p><h2 class="my-academy-name">'+esc(name)+'</h2><p class="my-academy-meta">'+esc(meta)+'</p>'+connectionMarkup()+'</div><div class="my-academy-next">'+nextText+setupMarkup(snapshot)+'</div><div class="my-academy-actions">'+actions+'</div></div>';
   bar.querySelector("[data-academy-account-health]")?.addEventListener("click",()=>openDialog("accountContinuityDialog"));
