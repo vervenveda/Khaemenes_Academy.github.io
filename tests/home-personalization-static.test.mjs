@@ -46,6 +46,17 @@ test("utility dock includes PLERA Search for public and signed-in visitors",()=>
   assert.match(personalization,/Open PLERA Search/);
 });
 
+test("utility dock includes canonical Stripe Contribute control without requiring an account",()=>{
+  assert.match(personalization,/CONTRIBUTE_ID="khaemenesHomeContributeButton"/);
+  assert.match(personalization,/contribute:"https:\/\/buy\.stripe\.com\/aFa8wQ5xf9Scf65caT4AU0s"/);
+  assert.match(personalization,/contribute\.href=URLS\.contribute/);
+  assert.match(personalization,/contribute\.target="_blank"/);
+  assert.match(personalization,/contribute\.rel="noopener noreferrer"/);
+  const ensureDock=personalization.slice(personalization.indexOf("function ensureDock()"),personalization.indexOf("function syncDock"));
+  assert.match(ensureDock,/CONTRIBUTE_ID/);
+  assert.doesNotMatch(ensureDock,/snapshot\.hasIdentity/);
+});
+
 test("learner-specific home copy is protected from optional online translation",()=>{
   assert.match(personalization,/setAttribute\(["']data-private["']/);
   assert.match(personalization,/setAttribute\(["']data-i18n-no-online["']/);
