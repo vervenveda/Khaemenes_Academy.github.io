@@ -126,6 +126,7 @@ const FAMILY_URL='https://vervenveda.com/Khaemenes_Academy.github.io/family/';
 const STUDENT_URL='https://vervenveda.com/Khaemenes_Academy.github.io/student/';
 const HISTORY_KEY='khaemenes_archaemenes_mentor_history_v1';
 const PRESCHOOL_CONTEXT_KEY='khaemenes_preschool_mentor_context_v1';
+const KINDERGARTEN_CONTEXT_KEY='khaemenes_kindergarten_mentor_context_v1';
 const $=id=>document.getElementById(id);
 let registry=null,family=null,adult=null,learner=null,mode='Academy Mentor';
 
@@ -136,12 +137,20 @@ function learnerHistory(){if(!learner)return[];const all=loadHistory();return Ar
 function pushHistory(role,text){if(!learner)return;const all=loadHistory();const list=Array.isArray(all[learner.learnerId])?all[learner.learnerId]:[];list.push({role,text:String(text).slice(0,1200),at:new Date().toISOString()});all[learner.learnerId]=list.slice(-60);saveHistory(all)}
 function clearHistory(){if(!learner)return;const all=loadHistory();delete all[learner.learnerId];saveHistory(all);renderConversation(true)}
 function readLocalJSON(key,fallback=null){try{const raw=localStorage.getItem(key);return raw?JSON.parse(raw):fallback}catch{return fallback}}
+function learnerStage(l=learner){return registry?.normalizeStage?.(l?.stage)||l?.stage||''}
 function preschoolContext(){
-  if(!learner||!isYoung(learner))return null;
+  if(!learner||learnerStage(learner)!=='preschool')return null;
   const context=readLocalJSON(PRESCHOOL_CONTEXT_KEY,null);
   if(!context||context.learnerId!==learner.learnerId)return null;
   return context;
 }
+function kindergartenContext(){
+  if(!learner||learnerStage(learner)!=='kindergarten')return null;
+  const context=readLocalJSON(KINDERGARTEN_CONTEXT_KEY,null);
+  if(!context||context.learnerId!==learner.learnerId)return null;
+  return context;
+}
+function activeYoungContext(){return kindergartenContext()||preschoolContext()}
 function preschoolCatalog(){return window.KhaemenesPreschoolCatalog||null}
 function preschoolActivity(id){const catalog=preschoolCatalog();return catalog?.byId?.(id)||catalog?.byMentorId?.(id)||null}
 function preschoolDomainLabel(domain){return preschoolCatalog()?.mentorDomains?.[domain]?.label||domain||'Preschool learning'}
@@ -188,6 +197,29 @@ function renderPreschoolContext(){
   if(!panel||!list||!intro)return;
   if(!learner||!isYoung(learner)){panel.hidden=true;return}
   panel.hidden=false;
+
+  const heading=panel.querySelector('h3');
+  const action=panel.querySelector('.actions a');
+  const kinder=kindergartenContext();
+
+  if(kinder){
+    if(heading)heading.textContent='Kinder Garden Learning Context';
+    if(action){action.href='https://vervenveda.com/Khaemenes_KinderGarden.github.io/';action.textContent='Open Kinder Garden Home'}
+    intro.textContent='Archaemenes can use the active learner’s current Kindergarten place, matched practice, and optional family observations. Formal mastery remains controlled by the course engine.';
+    const latest=Array.isArray(kinder.recentObservations)?kinder.recentObservations[kinder.recentObservations.length-1]:null;
+    const labels={support:'exploring with support',growing:'growing independence',explaining:'explaining confidently'};
+    const practice=Array.isArray(kinder.suggestedPractice)?kinder.suggestedPractice.slice(0,2):[];
+    const rows=[];
+    rows.push(`<div class="context-item"><strong>Current formal place</strong><span>${esc(kinder.academicPosition?.label||'Kindergarten pathway')}</span></div>`);
+    rows.push(`<div class="context-item"><strong>Formal progress</strong><span>${esc(String(kinder.curriculum?.completedUnits||0))}/36 weeks at mastery · ${esc(String(kinder.curriculum?.weeklyAverage||0))}% weekly average · 80% mastery threshold</span></div>`);
+    rows.push(`<div class="context-item"><strong>Matched practice</strong><span>${practice.length?esc(practice.map(item=>item.title).join(' · ')):'No optional practice selected yet'}</span></div>`);
+    rows.push(`<div class="context-item"><strong>Grown-up observation</strong><span>${latest?esc((latest.domain||'Current learning')+' · '+(labels[latest.level]||'observed')):'No optional family observation saved'}</span></div>`);
+    list.innerHTML=rows.join('');
+    return;
+  }
+
+  if(heading)heading.textContent='Crechè Learning Context';
+  if(action){action.href='https://vervenveda.com/Khaemenes_Preschool.github.io/';action.textContent='Open Crechè Home'}
   const context=preschoolContext();
   if(!context){
     intro.textContent='No matching Crechè context is stored for this learner yet.';
@@ -207,25 +239,43 @@ function renderPreschoolContext(){
 function mentorMode(l){const stage=registry?.normalizeStage?.(l?.stage)||l?.stage||'';if(['preschool','kindergarten'].includes(stage))return 'Wise Owl';if(stage==='higher')return 'Scholar';return 'Academy Mentor'}
 function isYoung(l){const stage=registry?.normalizeStage?.(l?.stage)||l?.stage||'';return ['preschool','kindergarten'].includes(stage)}
 function stageLabel(l){if(!l)return'Learner';const gm=l.grade&&registry?.gradeMeta?.[l.grade]?registry.gradeMeta[l.grade]:null;return gm?.label||({preschool:'Pre-K',kindergarten:'Kindergarten',elementary:'Elementary',middle:'Middle School',high:'High School',higher:'Higher Learning'}[l.stage]||l.stage||'Learner')}
-function greeting(){const name=learner?.nickname||'learner';if(mode==='Wise Owl'){const context=preschoolContext();return context?`Hello, ${name}! I’m Archaemenes. I can see your Crechè learning path from this browser. We can notice, wonder, try, and learn together. What should we do first?`:`Hello, ${name}! I’m Archaemenes. We can notice, wonder, try, and learn together. What would you like to do?`};if(mode==='Scholar')return `Welcome, ${name}. I’m Archaemenes. Bring me a question, argument, problem, source, or idea and we’ll examine it carefully.`;return `Hello, ${name}. I’m Archaemenes. Tell me what you are working on, where it becomes confusing, or what you want to understand better.`}
+function greeting(){const name=learner?.nickname||'learner';if(mode==='Wise Owl'){const kinder=kindergartenContext(),pre=preschoolContext();if(kinder)return `Hello, ${name}! I’m Archaemenes. I can see your current Kinder Garden learning place from this browser. We can take the formal step first, then choose practice, exploration, or a break.`;if(pre)return `Hello, ${name}! I’m Archaemenes. I can see your Crechè learning path from this browser. We can notice, wonder, try, and learn together. What should we do first?`;return `Hello, ${name}! I’m Archaemenes. We can notice, wonder, try, and learn together. What would you like to do?`};if(mode==='Scholar')return `Welcome, ${name}. I’m Archaemenes. Bring me a question, argument, problem, source, or idea and we’ll examine it carefully.`;return `Hello, ${name}. I’m Archaemenes. Tell me what you are working on, where it becomes confusing, or what you want to understand better.`}
 
 function responseFor(text){
   const raw=String(text||'').trim();const q=raw.toLowerCase();const name=learner?.nickname||'learner';
   if(!raw)return `What would you like to investigate, ${name}?`;
   if(mode==='Wise Owl'&&/(what should|work on|start|today|learn something|do next)/.test(q)){
+    const kinder=kindergartenContext();
+    if(kinder){
+      const place=kinder.academicPosition?.label||'your current Kindergarten step';
+      const practice=kinder.suggestedPractice?.[0]?.title;
+      return practice?`Let’s begin with ${place}. When that formal step is finished, ${practice} is matched practice you can use if it helps.`:`Let’s begin with ${place}. We can take one small step, then decide whether you need practice or a break.`;
+    }
     const suggestion=preschoolSuggestion();
     if(suggestion)return `Let’s try ${suggestion.app.title}. ${suggestion.reason} We can do one small part, then decide whether to keep going or take a break.`;
   }
   if(mode==='Wise Owl'&&/(different|another|change)/.test(q)){
+    const kinder=kindergartenContext();
+    if(kinder){
+      const options=Array.isArray(kinder.suggestedPractice)?kinder.suggestedPractice:[];
+      const pick=options[1]||options[0];
+      if(pick)return `We can keep the formal lesson in place and try ${pick.title} as a different way to practice. It is optional support, not a mastery gate.`;
+    }
     const suggestion=preschoolSuggestion({different:true});
     if(suggestion)return `Let’s choose something different: ${suggestion.app.title}. ${suggestion.reason} You can explore it gently and stop whenever you are ready.`;
   }
   if(mode==='Wise Owl'&&/(what did|remember|explored|this week)/.test(q)){
+    const kinder=kindergartenContext();
+    if(kinder){
+      const latest=Array.isArray(kinder.recentObservations)?kinder.recentObservations[kinder.recentObservations.length-1]:null;
+      const obs=latest?` A grown-up’s latest note says ${latest.domain||'the current learning'} is ${({support:'being explored with support',growing:'showing growing independence',explaining:'being explained confidently'}[latest.level]||'being observed')}.`:'';
+      return `You are at ${kinder.academicPosition?.label||'your current Kindergarten step'}. ${kinder.curriculum?.completedUnits||0} of 36 weeks are at formal mastery, with a recorded weekly average of ${kinder.curriculum?.weeklyAverage||0}%.${obs}`;
+    }
     const context=preschoolContext(),recent=preschoolRecentItems(context),top=topWeeklyDomain(context);
     if(context)return recent.length?`You have recently explored ${[...new Set(recent.map(x=>x.title))].slice(-3).join(', ')}. Your curiosity has leaned toward ${preschoolDomainLabel(top)}. What would you like to notice next?`:'Your Crechè trail is just beginning. One small adventure is enough for today.';
   }
   if(/stuck|confus|don.?t understand|hard/.test(q))return mode==='Wise Owl'?'That is a good time for a tiny clue. Point to the part that feels tricky, and we will try one small step together.':'Good. Being stuck gives us evidence. Name the exact step where your reasoning stops, and we’ll separate what you know from what still needs to be found.';
-  if(/hint|clue/.test(q)){if(mode==='Wise Owl'){const context=preschoolContext(),recent=preschoolRecentItems(context),app=recent[recent.length-1];const guide=app?preschoolCatalog()?.observationFor?.(app):null;return guide?`Here is a tiny clue for ${app.title}: ${guide.parentPrompt} You do not need to hurry.`:'Here is a clue: look for one thing you already know, then use it to choose your next tiny step.'}return 'Start with the smallest fact you are certain about. What does that fact allow you to infer next? I’ll give a stronger hint only if you need it.';}
+  if(/hint|clue/.test(q)){if(mode==='Wise Owl'){const kinder=kindergartenContext();if(kinder)return kinder.currentFocus?.gentleNextStep?`Here is a tiny clue: ${kinder.currentFocus.gentleNextStep} You do not need to hurry.`:'Here is a clue: show me one thing you already know about the current lesson, then choose one small next step.';const context=preschoolContext(),recent=preschoolRecentItems(context),app=recent[recent.length-1];const guide=app?preschoolCatalog()?.observationFor?.(app):null;return guide?`Here is a tiny clue for ${app.title}: ${guide.parentPrompt} You do not need to hurry.`:'Here is a clue: look for one thing you already know, then use it to choose your next tiny step.'}return 'Start with the smallest fact you are certain about. What does that fact allow you to infer next? I’ll give a stronger hint only if you need it.';}
   if(/math|number|algebra|geometry|equation|fraction|calculate/.test(q))return mode==='Wise Owl'?'Let’s make the numbers visible. Can you count, group, draw, or compare them first?':'For mathematics, show the givens, the quantity you need, and your first attempted step. I’ll help you test the reasoning rather than simply hand over the result.';
   if(/write|essay|paragraph|grammar|sentence|story/.test(q))return mode==='Wise Owl'?'Tell me your idea first. We can turn the idea into one clear sentence together.':'Start with your claim or main idea in your own words. Then we can test organization, evidence, clarity, and grammar without replacing your voice.';
   if(/science|biology|chemistry|physics|experiment/.test(q))return 'Let’s separate observation from explanation. What did you observe, what do you think it means, and what evidence would help us test that explanation?';
@@ -256,7 +306,7 @@ function renderLearner(){
   const state=$('learnerState'),composer=$('composer'),note=$('conversationNote'),badges=$('identityBadges');badges.innerHTML='';
   if(!learner){state.innerHTML='<div class="notice"><strong>Select a learner.</strong><br>Archaemenes personalizes his expression to the active learner while remaining the same Mentor.</div>';composer.hidden=true;note.textContent='Choose an active learner from the Family Registry.';$('messages').innerHTML='';$('quickPrompts').innerHTML='';renderPreschoolContext();return}
   mode=mentorMode(learner);const dest=registry?.learnerDestination?.(learner)||{url:STUDENT_URL,label:'Student Portal'};
-  const context=preschoolContext();const style=context?.communicationStyle?String(context.communicationStyle).replace(/[-_]/g,' '):'';badges.innerHTML=`<span class="badge">${esc(learner.nickname||'Learner')}</span><span class="badge">${esc(stageLabel(learner))}</span><span class="badge">Archaemenes · ${esc(mode)}</span>${isYoung(learner)&&style?`<span class="badge">Encouragement · ${esc(style)}</span>`:''}`;
+  const context=activeYoungContext();const style=context?.communicationStyle?String(context.communicationStyle).replace(/[-_]/g,' '):'';badges.innerHTML=`<span class="badge">${esc(learner.nickname||'Learner')}</span><span class="badge">${esc(stageLabel(learner))}</span><span class="badge">Archaemenes · ${esc(mode)}</span>${isYoung(learner)&&style?`<span class="badge">Encouragement · ${esc(style)}</span>`:''}`;
   state.innerHTML=`<div class="kv"><span>Name</span><span>${esc(learner.nickname||'Learner')}</span></div><div class="kv"><span>Placement</span><span>${esc(stageLabel(learner))}</span></div><div class="kv"><span>Mentor expression</span><span>${esc(mode)}</span></div>`;
   $('campusLink').href=dest.url||STUDENT_URL;$('campusLink').querySelector('strong').textContent=`Continue to ${dest.label||stageLabel(learner)}`;
   $('campusLink').querySelector('span').textContent='Open the learner’s registered Khaemenes pathway.';
@@ -275,7 +325,7 @@ function boot(){
 $('composer').addEventListener('submit',e=>{e.preventDefault();const input=$('mentorInput');ask(input.value);input.value='';input.focus()});
 $('clearConversation').addEventListener('click',()=>clearHistory());
 window.addEventListener('khaemenes-family-changed',()=>boot());
-window.addEventListener('storage',e=>{if(['khaemenes_family_registry_v1','khaemenes_active_family_v1','khaemenes_active_adult_v1','khaemenes_active_learner_v1',PRESCHOOL_CONTEXT_KEY].includes(e.key))boot()});
+window.addEventListener('storage',e=>{if(['khaemenes_family_registry_v1','khaemenes_active_family_v1','khaemenes_active_adult_v1','khaemenes_active_learner_v1',PRESCHOOL_CONTEXT_KEY,KINDERGARTEN_CONTEXT_KEY].includes(e.key))boot()});
 window.addEventListener('DOMContentLoaded',()=>setTimeout(boot,0));
 })();
 </script>
