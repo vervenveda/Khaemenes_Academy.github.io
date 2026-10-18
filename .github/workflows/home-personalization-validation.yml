@@ -9,6 +9,7 @@ on:
       - 'assets/khaemenes-front-door-router.js'
       - 'assets/khaemenes-learning-continuation.js'
       - 'assets/khaemenes-family-registry.js'
+      - 'assets/khaemenes-account-connection-status.js'
       - 'tests/home-personalization-static.test.mjs'
       - '.github/workflows/home-personalization-validation.yml'
   pull_request:
@@ -18,6 +19,7 @@ on:
       - 'assets/khaemenes-front-door-router.js'
       - 'assets/khaemenes-learning-continuation.js'
       - 'assets/khaemenes-family-registry.js'
+      - 'assets/khaemenes-account-connection-status.js'
       - 'tests/home-personalization-static.test.mjs'
       - '.github/workflows/home-personalization-validation.yml'
 
