@@ -420,6 +420,104 @@ Resources include:
 
 ---
 
+# Evidence-Based Study Studio
+
+Khaemenes Academy includes an account-aware Study Studio for registered learners and Adult Scholars.
+
+It adds two cross-course learning supports:
+
+## Smart Review
+
+Smart Review uses existing learner continuation summaries to create a local spaced-retrieval queue.
+
+- Reviews begin with recall before reopening notes.
+- Due items are interleaved across subjects when possible.
+- Learners rate retrieval as **Need review**, **Got it with effort**, or **Retrieved easily**.
+- The next review date adjusts locally.
+- The current starter intervals are **1, 3, 7, 14, 30, and 60 days**.
+- Those exact intervals are an implementation heuristic, not a formal academic rule or a claim that one spacing schedule is optimal for every learner or subject.
+
+Smart Review never writes a formal course score, mastery result, placement decision, or curriculum unlock.
+
+## Plan · Monitor · Reflect
+
+The self-regulated learning cycle helps learners make study strategy explicit.
+
+Before studying, the learner records:
+
+- a specific goal;
+- a strategy;
+- starting confidence.
+
+During study, the learner can record whether they are:
+
+- on track;
+- stuck;
+- changing strategy.
+
+After study, the learner records:
+
+- a self-evaluation;
+- what worked or did not work;
+- one next step.
+
+The Studio compares starting confidence with the learner's own end-of-session evaluation to encourage reflection. This comparison is a study aid only; it is not a grade, diagnostic result, or formal assessment.
+
+## Family boundary
+
+The Family Portal receives a read-only Study Support summary only for learners the active adult is authorized to view.
+
+The family summary can show:
+
+- how many spaced reviews are due;
+- how many learning cycles have been completed;
+- whether a study cycle is currently active.
+
+It does not expose the learner's private retrieval notes or study reflections, and it cannot rate a review or alter the learner's study record.
+
+## Privacy and authority
+
+Study Studio data is learner-scoped and local-first.
+
+Storage keys:
+
+```text
+khaemenes.learning.review.v1
+khaemenes.learning.selfregulation.v1
+```
+
+Authority boundary:
+
+```text
+Study Studio
+  ├─ supports recall
+  ├─ supports study planning
+  ├─ supports strategy monitoring
+  └─ supports reflection
+
+Study Studio does NOT
+  ├─ award mastery
+  ├─ change scores
+  ├─ unlock curriculum
+  ├─ change placement
+  └─ replace formal assessment
+```
+
+The implementation lives in:
+
+```text
+assets/khaemenes-learning-science.js
+```
+
+and is protected by:
+
+```text
+tests/learning-science-static.test.mjs
+.github/workflows/learning-science-validation.yml
+```
+
+---
+
 # Accessibility
 
 We strive to make learning accessible by providing:
