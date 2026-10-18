@@ -39,6 +39,13 @@ test("utility dock includes Archaemenes and account-aware Profile",()=>{
   assert.match(personalization,/mentorDestination\(\)/);
 });
 
+test("utility dock includes PLERA Search for public and signed-in visitors",()=>{
+  assert.match(personalization,/SEARCH_ID="khaemenesHomeSearchButton"/);
+  assert.match(personalization,/search:"https:\/\/vervenveda\.github\.io\/PLERASearch\.github\.io\//);
+  assert.match(personalization,/search\.href=URLS\.search/);
+  assert.match(personalization,/Open PLERA Search/);
+});
+
 test("learner-specific home copy is protected from optional online translation",()=>{
   assert.match(personalization,/setAttribute\(["']data-private["']/);
   assert.match(personalization,/setAttribute\(["']data-i18n-no-online["']/);
