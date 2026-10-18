@@ -39,13 +39,15 @@ test("utility dock reuses the universal Beta button instead of creating another"
   assert.doesNotMatch(personalization,/createElement\(["']button["']\).*Beta Program/);
 });
 
-test("utility dock includes Archaemenes, Profile, PLERA Search, and Stripe Contribute",()=>{
+test("utility dock includes Profile, Search, Updates, Archaemenes, Contribute, and the shared Beta doorway",()=>{
   assert.match(personalization,/MENTOR_ID="khaemenesHomeMentorButton"/);
   assert.match(personalization,/PROFILE_ID="khaemenesHomeProfileButton"/);
   assert.match(personalization,/SEARCH_ID="khaemenesHomeSearchButton"/);
+  assert.match(personalization,/UPDATES_ID="khaemenesHomeUpdatesButton"/);
   assert.match(personalization,/CONTRIBUTE_ID="khaemenesHomeContributeButton"/);
   assert.match(personalization,/profileDestination\(snapshot\)/);
   assert.match(personalization,/mentorDestination\(\)/);
+  assert.match(personalization,/renderUpdates\(accountSnapshot\(\)\)/);
   assert.match(personalization,/search:"https:\/\/vervenveda\.github\.io\/PLERASearch\.github\.io\//);
   assert.match(personalization,/contribute:"https:\/\/buy\.stripe\.com\/aFa8wQ5xf9Scf65caT4AU0s"/);
   assert.match(personalization,/contribute\.target="_blank"/);
@@ -88,4 +90,46 @@ test("student, family, and adult scholar profiles route to their own portals",()
   assert.match(personalization,/if\(snapshot\.mode==="adult"\)return URLS\.adult/);
   assert.match(personalization,/if\(snapshot\.mode==="learner"\)return URLS\.student/);
   assert.match(personalization,/if\(snapshot\.mode==="family"\)return URLS\.family/);
+});
+
+
+test("My Academy surfaces honest account connection health without claiming unverified cloud sync",()=>{
+  assert.match(personalization,/function connectionState\(\)/);
+  assert.match(personalization,/KhaemenesAccountConnectionStatus\?\.read/);
+  assert.match(personalization,/serverVerified:false/);
+  assert.match(personalization,/Cloud sync not verified/);
+  assert.match(personalization,/data-academy-account-health/);
+  assert.match(personalization,/openDialog\("accountContinuityDialog"\)/);
+  assert.match(index,/id="accountContinuityDialog"/);
+  assert.match(index,/data-academy-account-status/);
+});
+
+test("fresh accounts receive a role-aware setup checklist that disappears when setup is complete",()=>{
+  assert.match(personalization,/function setupPlan\(snapshot\)/);
+  assert.match(personalization,/function setupMarkup\(snapshot\)/);
+  assert.match(personalization,/if\(plan\.complete\|\|!plan\.total\)return ""/);
+  assert.match(personalization,/Academy account ready/);
+  assert.match(personalization,/Adult Scholar profile ready/);
+  assert.match(personalization,/Learner profile selected/);
+  assert.match(personalization,/Placement route ready/);
+  assert.match(personalization,/Learner enrolled/);
+  assert.match(personalization,/Active learner selected/);
+  assert.match(personalization,/role="status" aria-label="Academy account setup progress"/);
+});
+
+test("Updates and Help is role aware and never pretends to be a remote notification feed",()=>{
+  assert.match(personalization,/function ensureUpdatesDialog\(\)/);
+  assert.match(personalization,/function renderUpdates\(snapshot=accountSnapshot\(\)\)/);
+  assert.match(personalization,/snapshot\.mode==="learner"/);
+  assert.match(personalization,/snapshot\.mode==="family"/);
+  assert.match(personalization,/snapshot\.mode==="adult"/);
+  assert.match(personalization,/Public Academy/);
+  assert.match(personalization,/Account continuity/);
+  assert.match(personalization,/Beta feedback/);
+  assert.match(personalization,/data-i18n-no-online/);
+});
+
+test("account status changes cause the adaptive home to refresh",()=>{
+  assert.match(personalization,/for\(const eventName of \["pageshow","khaemenes-family-ready","khaemenes-family-changed","khaemenes-learner-placement-changed","khaemenes-learning-continuation-changed","online","offline"\]/);
+  assert.match(index,/\.\/assets\/khaemenes-account-connection-status\.js/);
 });
