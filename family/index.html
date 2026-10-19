@@ -108,7 +108,7 @@ function renderFamily(f){
     <section class="card scholar"><h3>Adult Learner Pathway</h3>${scholar?`<p><strong>${esc(scholar.nickname)}</strong> has a separate self-directed adult learner workspace. Parent/family responsibilities remain here; personal coursework remains in the Adult Learner Portal.</p><div class="actions"><a class="btn primary" href="../adult/">Open Adult Learner Portal</a><a class="btn" href="../adult/enroll/">Review Adult Profile</a></div>`:`<p>An adult family member can create a separate self-directed learning path without receiving a K–12 grade assignment.</p><div class="actions"><a class="btn primary" href="../adult/enroll/">Start Adult Learning</a><a class="btn" href="../adult/">Adult Learner Portal</a></div>`}</section>
   </div>
   <div class="grid cols2" style="margin-top:17px">
-    <section class="card"><h3>Family Records</h3><p>Open family record tools or save a backup of the current family profile.</p><div class="actions"><a class="btn" href="../Parent_resources/Homeschool_compass_index.html">Homeschool Compass</a><a class="btn" href="../Parent_resources/Transcript_generator_index.html">Transcript</a><a class="btn" href="../Parent_resources/Diploma_generator_index.html">Diploma</a><button class="btn gold" id="exportFamily" type="button">Export Backup</button></div></section>
+    <section class="card"><h3>Family Records</h3><p>Open family record tools or protect this browser-local family profile with a verified backup. Restore changes only the selected family identity; course grades and assessment records remain under their own course authorities.</p><div class="actions"><a class="btn" href="../Parent_resources/Homeschool_compass_index.html">Homeschool Compass</a><a class="btn" href="../Parent_resources/Transcript_generator_index.html">Transcript</a><a class="btn" href="../Parent_resources/Diploma_generator_index.html">Diploma</a><button class="btn gold" id="exportFamily" type="button">Download Verified Backup</button><button class="btn" id="restoreFamily" type="button">Verify / Restore Backup</button><button class="btn" id="undoFamilyRestore" type="button" disabled>Undo Last Restore</button><input id="restoreFamilyFile" type="file" accept="application/json,.json" hidden></div><p id="familyBackupStatus" class="notice" role="status" aria-live="polite" style="margin-top:12px">Backups stay on your device unless you choose where to save the downloaded file.</p></section>
     <section class="card"><h3>Invite Another Adult</h3><p>When invitations are available, choose the learners and level of family access for the person you want to invite.</p><div id="inviteBox"></div></section>
   </div>`;
   bind(f);
@@ -123,7 +123,6 @@ function bind(f){
     try{location.assign(href)}catch{location.href=href}
   });
   $("#addAdult")?.addEventListener("click",()=>{const name=prompt("Adult display name:");if(!name)return;const role=(prompt("Role: parent, guardian, caregiver, educator","parent")||"parent").trim();R.addAdultLocal({familyId:f.familyId,displayName:name,role,permissionPreset:"co-guardian",learnerIds:f.learners.map(l=>l.learnerId)});render()});
-  $("#exportFamily")?.addEventListener("click",()=>{const blob=new Blob([JSON.stringify(R.exportFamily(),null,2)],{type:"application/json"}),u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download="khaemenes-family-backup.json";a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)});
   renderInvite(f);
 }
 function renderInvite(f){
@@ -147,6 +146,7 @@ render();
 </script>
 <script src="../assets/khaemenes-learning-science.js"></script>
 <script src="../assets/khaemenes-parent-action-center.js"></script>
+<script src="../assets/khaemenes-family-backup-vault.js"></script>
 <script src="../assets/khaemenes-terminal04-readiness.js"></script>
 <script src="https://vervenveda.com/assets/vnv-beta-link.js" defer></script>
 <script src="../assets/khaemenes-account-connection-status.js"></script>
