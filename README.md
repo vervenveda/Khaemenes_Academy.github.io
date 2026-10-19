@@ -518,6 +518,101 @@ tests/learning-science-static.test.mjs
 
 ---
 
+# Parent Engagement Center
+
+The Academy Family Learning Center now includes two shared parent-support layers designed to make family engagement practical, personalized, and respectful of learner independence.
+
+## Parent Action Center & Weekly Family Brief
+
+The Parent Action Center reads only Academy continuation summaries for learners the active adult is permitted to view.
+
+It separates current course information into:
+
+- **Needs attention**
+- **Refresh needed**
+- **On track**
+- **Celebrate**
+- **Study review due**
+
+Parents can open a Weekly Family Brief that summarizes the same information, compare the current brief with the last reviewed brief, print it, or export a privacy-safe JSON copy.
+
+The parent brief excludes:
+
+- private learner reflections;
+- child Mentor conversations;
+- assessment responses;
+- answer keys.
+
+It is strictly read-only and cannot change grades, mastery, placement, or learner identity.
+
+Implementation:
+
+```text
+assets/khaemenes-parent-action-center.js
+```
+
+## Family Support Plan
+
+The Family Support Plan turns read-only progress information into one manageable family action per learner per week.
+
+An authorized adult can choose or adapt a weekly support focus such as:
+
+- positive learning conversation;
+- study routine and organization;
+- Smart Review / retrieval support;
+- corrections or mastery encouragement;
+- assessment preparation environment;
+- project, laboratory, or portfolio check-in;
+- breaks, movement, and learning readiness.
+
+The system can suggest a plan from the learner's current continuation summary, but the adult decides what to use.
+
+Each weekly plan may include:
+
+- one family support goal;
+- a check-in rhythm;
+- a supportive conversation prompt;
+- an optional private parent planning note;
+- a completion marker.
+
+The plan is browser-local and scoped to the active family + adult + learner.
+
+Storage key:
+
+```text
+khaemenes_parent_support_plan_v1
+```
+
+Authority boundary:
+
+```text
+Parent support
+  ├─ may organize
+  ├─ may encourage
+  ├─ may discuss
+  ├─ may plan a home routine
+  └─ may ask Archaemenes for guidance
+
+Parent support does NOT
+  ├─ award mastery
+  ├─ change grades
+  ├─ change placement
+  ├─ change assessment records
+  ├─ unlock curriculum
+  └─ replace the learner's formal work
+```
+
+Both parent features require the active adult to have the learner's **progress.view** permission.
+
+Regression protection:
+
+```text
+tests/parent-engagement-static.test.mjs
+.github/workflows/parent-engagement-validation.yml
+```
+
+---
+
 # Accessibility
 
 We strive to make learning accessible by providing:
