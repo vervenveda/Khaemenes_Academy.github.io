@@ -86,7 +86,7 @@
       "stage": "elementary",
       "repository": "vervenveda/Khaemenes_Elementary.github.io",
       "entry": "/grades/",
-      "knownCoverage": "Grades 2-5 have 36-week science subject directories. Grade 1 is being added in the current rollout."
+      "knownCoverage": "Grades 1-5 have 36-week science subject directories. Grade 1 initial release includes a course index, course map, 36 weekly instructional plans, safety notes, differentiated guidance, and formative evidence prompts. Full interaction, link, and standards validation remains in progress."
     },
     {
       "stage": "middle",
