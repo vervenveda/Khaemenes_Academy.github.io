@@ -6,7 +6,7 @@
 "use strict";
 const VERSION="1.3.0";
 const BAR_ID="khaemenesMyAcademyBar",DOCK_ID="khaemenesHomeUtilityDock",PROFILE_ID="khaemenesHomeProfileButton",SEARCH_ID="khaemenesHomeSearchButton",UPDATES_ID="khaemenesHomeUpdatesButton",UPDATES_DIALOG_ID="khaemenesHomeUpdatesDialog",MENTOR_ID="khaemenesHomeMentorButton",CONTRIBUTE_ID="khaemenesHomeContributeButton",STYLE_ID="khaemenesHomePersonalizationStyles",BETA_ID="vnvBetaProgramLink";
-const URLS=Object.freeze({student:"./student/",family:"./family/",enroll:"./family/enroll/",adult:"./adult/",mentor:"./mentor/",offline:"./offline/index.html",beta:"https://vervenveda.com/beta/",search:"https://vervenveda.github.io/PLERASearch.github.io/",contribute:"https://buy.stripe.com/aFa8wQ5xf9Scf65caT4AU0s"});
+const URLS=Object.freeze({student:"./student/",family:"./family/",enroll:"./family/enroll/",adult:"./adult/",mentor:"./mentor/",offline:"./offline/index.html",beta:"https://vervenveda.com/beta/",search:"https://vervenveda.com/PLERASearch.github.io/",contribute:"https://buy.stripe.com/aFa8wQ5xf9Scf65caT4AU0s"});
 const esc=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function registry(){return global.KhaemenesFamilyRegistry||null}
 function router(){return global.KhaemenesFrontDoorRouter||null}
