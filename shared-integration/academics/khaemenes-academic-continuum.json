@@ -19,13 +19,41 @@
     "archiveRule": "ARSHIF preserves dated historical snapshots and is not a live runtime dependency."
   },
   "learningStages": [
-    {"id": "pre-k", "label": "Pre-K / Creche", "order": 1},
-    {"id": "kindergarten", "label": "Kinder Garden", "order": 2},
-    {"id": "elementary", "label": "Elementary", "order": 3},
-    {"id": "middle", "label": "Middle School", "order": 4},
-    {"id": "high", "label": "High School", "order": 5},
-    {"id": "higher", "label": "Higher Learning", "order": 6},
-    {"id": "research", "label": "Advanced / Research", "order": 7}
+    {
+      "id": "pre-k",
+      "label": "Pre-K / Creche",
+      "order": 1
+    },
+    {
+      "id": "kindergarten",
+      "label": "Kinder Garden",
+      "order": 2
+    },
+    {
+      "id": "elementary",
+      "label": "Elementary",
+      "order": 3
+    },
+    {
+      "id": "middle",
+      "label": "Middle School",
+      "order": 4
+    },
+    {
+      "id": "high",
+      "label": "High School",
+      "order": 5
+    },
+    {
+      "id": "higher",
+      "label": "Higher Learning",
+      "order": 6
+    },
+    {
+      "id": "research",
+      "label": "Advanced / Research",
+      "order": 7
+    }
   ],
   "entryModes": [
     {
@@ -65,53 +93,203 @@
       "status": "candidate-live",
       "continuumId": "khaemenes.mathematics.continuum",
       "continuumPath": "/Khaemenes_Academy.github.io/shared-integration/mathematics/khaemenes-mathematics-continuum.json",
-      "spans": ["pre-k", "kindergarten", "elementary", "middle", "high", "higher", "research"],
+      "spans": [
+        "pre-k",
+        "kindergarten",
+        "elementary",
+        "middle",
+        "high",
+        "higher",
+        "research"
+      ],
       "referenceConsumer": "KH-HL-AGTGMP"
     },
-    {"subjectId": "science", "title": "Science", "status": "planned"},
-    {"subjectId": "language-arts", "title": "Language Arts & Literature", "status": "planned"},
-    {"subjectId": "social-studies", "title": "Social Studies, History & Civics", "status": "planned"},
-    {"subjectId": "computer-science", "title": "Computer Science & Computing", "status": "planned"},
-    {"subjectId": "engineering", "title": "Engineering & Design", "status": "planned"},
-    {"subjectId": "health-medicine", "title": "Health, Medicine & Human Sciences", "status": "planned"},
-    {"subjectId": "law-governance", "title": "Law, Governance & Public Institutions", "status": "planned"},
-    {"subjectId": "linguistics-languages", "title": "Linguistics & Languages", "status": "planned"},
-    {"subjectId": "visual-arts", "title": "Visual Arts & Design", "status": "planned"},
-    {"subjectId": "music", "title": "Music & Sound Studies", "status": "planned"},
-    {"subjectId": "philosophy", "title": "Philosophy, Logic & Ethics", "status": "planned"},
-    {"subjectId": "economics-finance", "title": "Economics, Finance & Enterprise", "status": "planned"},
-    {"subjectId": "education", "title": "Education & Learning Sciences", "status": "planned"},
-    {"subjectId": "interdisciplinary", "title": "Interdisciplinary & Independent Study", "status": "planned"}
+    {
+      "subjectId": "science",
+      "title": "Science",
+      "status": "candidate-live",
+      "continuumId": "khaemenes.science.continuum",
+      "continuumPath": "/Khaemenes_Academy.github.io/shared-integration/science/khaemenes-science-continuum.json",
+      "spans": [
+        "pre-k",
+        "kindergarten",
+        "elementary",
+        "middle",
+        "high"
+      ],
+      "coursePathways": [
+        {
+          "stage": "elementary",
+          "repository": "vervenveda/Khaemenes_Elementary.github.io",
+          "path": "/grades/"
+        },
+        {
+          "stage": "middle",
+          "repository": "vervenveda/Khaemenes_Middle.github.io",
+          "path": "/grades/"
+        },
+        {
+          "stage": "high",
+          "repository": "vervenveda/Khaemenes_High.github.io",
+          "path": "/courses/science/"
+        }
+      ],
+      "verificationNote": "Candidate-live means public science content exists in the linked grade repositories. It does not certify every lesson, link, standard mapping, assessment, or course as fully validated. Higher Learning and research science extensions remain to be explicitly mapped.",
+      "disciplinePractices": [
+        "asking questions and defining problems",
+        "developing and using models",
+        "planning and carrying out investigations",
+        "analyzing and interpreting data",
+        "using mathematics and computational thinking",
+        "constructing explanations and designing solutions",
+        "engaging in evidence-based argument",
+        "obtaining, evaluating, and communicating information"
+      ],
+      "evidencePrinciples": [
+        "distinguish observations, measurements, models, interpretations, and inferences",
+        "record methods, units, data, uncertainty, and limitations",
+        "preserve learner-authored explanations and cited sources",
+        "use safe supervised investigations or documented simulation/data alternatives",
+        "do not equate activity completion with verified mastery"
+      ],
+      "courseContract": {
+        "requiredFields": [
+          "courseId",
+          "subjectId",
+          "stage",
+          "title"
+        ],
+        "permanentIdRule": "Reuse a stable course identifier across lessons, assessments, lab evidence, exports, and resource discovery.",
+        "masteryHonesty": "Only award mastery supported by the assessed learning outcomes and the available evidence.",
+        "learnerVoice": "Separate learner work from mentor, tool, and source contributions."
+      }
+    },
+    {
+      "subjectId": "language-arts",
+      "title": "Language Arts & Literature",
+      "status": "planned"
+    },
+    {
+      "subjectId": "social-studies",
+      "title": "Social Studies, History & Civics",
+      "status": "planned"
+    },
+    {
+      "subjectId": "computer-science",
+      "title": "Computer Science & Computing",
+      "status": "planned"
+    },
+    {
+      "subjectId": "engineering",
+      "title": "Engineering & Design",
+      "status": "planned"
+    },
+    {
+      "subjectId": "health-medicine",
+      "title": "Health, Medicine & Human Sciences",
+      "status": "planned"
+    },
+    {
+      "subjectId": "law-governance",
+      "title": "Law, Governance & Public Institutions",
+      "status": "planned"
+    },
+    {
+      "subjectId": "linguistics-languages",
+      "title": "Linguistics & Languages",
+      "status": "planned"
+    },
+    {
+      "subjectId": "visual-arts",
+      "title": "Visual Arts & Design",
+      "status": "planned"
+    },
+    {
+      "subjectId": "music",
+      "title": "Music & Sound Studies",
+      "status": "planned"
+    },
+    {
+      "subjectId": "philosophy",
+      "title": "Philosophy, Logic & Ethics",
+      "status": "planned"
+    },
+    {
+      "subjectId": "economics-finance",
+      "title": "Economics, Finance & Enterprise",
+      "status": "planned"
+    },
+    {
+      "subjectId": "education",
+      "title": "Education & Learning Sciences",
+      "status": "planned"
+    },
+    {
+      "subjectId": "interdisciplinary",
+      "title": "Interdisciplinary & Independent Study",
+      "status": "planned"
+    }
   ],
   "sharedAcademicClouds": [
     {
       "id": "academic-context-cloud",
       "purpose": "Expose public-safe current learning context across subjects and stages.",
-      "mustNot": ["override course curriculum", "invent completion", "expose private implementation"]
+      "mustNot": [
+        "override course curriculum",
+        "invent completion",
+        "expose private implementation"
+      ]
     },
     {
       "id": "academic-resource-cloud",
       "purpose": "Match approved public learning resources to subject, stage, lesson, evidence mode, and accessibility needs.",
-      "mustNot": ["treat resource availability as academic endorsement without course context", "route learners into private implementation"]
+      "mustNot": [
+        "treat resource availability as academic endorsement without course context",
+        "route learners into private implementation"
+      ]
     },
     {
       "id": "academic-evidence-cloud",
       "purpose": "Preserve distinctions among scores, learner work, sources, observations, calculations, experiments, arguments, proofs, and reflections.",
-      "mustNot": ["auto-certify complex mastery", "merge unlike evidence types into a misleading status"]
+      "mustNot": [
+        "auto-certify complex mastery",
+        "merge unlike evidence types into a misleading status"
+      ]
     },
     {
       "id": "academic-continuity-cloud",
       "purpose": "Support learner progression and portable records across schools and subjects without replacing the central identity authority.",
-      "mustNot": ["silently rewrite historical records", "create a competing learner identity"]
+      "mustNot": [
+        "silently rewrite historical records",
+        "create a competing learner identity"
+      ]
     }
   ],
   "subjectContract": {
-    "requiredFields": ["subjectId", "continuumId", "stages", "disciplinePractices", "evidencePrinciples", "courseContract"],
-    "recommendedFields": ["strands", "publicTools", "miniClouds", "prerequisiteModel", "researchPractice"],
+    "requiredFields": [
+      "subjectId",
+      "continuumId",
+      "stages",
+      "disciplinePractices",
+      "evidencePrinciples",
+      "courseContract"
+    ],
+    "recommendedFields": [
+      "strands",
+      "publicTools",
+      "miniClouds",
+      "prerequisiteModel",
+      "researchPractice"
+    ],
     "gracefulFallback": "Courses remain usable when shared subject or academic metadata is unavailable."
   },
   "courseContract": {
-    "requiredFields": ["courseId", "subjectId", "stage", "title"],
+    "requiredFields": [
+      "courseId",
+      "subjectId",
+      "stage",
+      "title"
+    ],
     "permanentIdRule": "A course uses one permanent courseId across lessons, assessments, exports, labs, evidence records, and resource discovery.",
     "masteryHonesty": "A course may only certify the forms of mastery its evidence actually supports.",
     "learnerVoice": "Learner-created reasoning and work should remain distinguishable from mentor, tool, or source contributions."
