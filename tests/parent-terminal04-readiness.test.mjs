@@ -37,7 +37,18 @@ expect(parent.includes("answerKeysExcluded:true"),"Parent Action Center lost ans
 expect(parent.includes('"attention"')||parent.includes('level:"attention"'),"Parent Action Center lost attention categorization.");
 expect(parent.includes('"celebrate"')||parent.includes('level:"celebrate"'),"Parent Action Center lost celebration categorization.");
 expect(parent.includes("khaemenes-parent-weekly-brief-v1"),"Weekly family brief schema missing.");
+expect(parent.includes('level:"refresh"'),"Stale continuation summaries are no longer separated into Refresh needed.");
+expect(parent.includes("refreshNeeded"),"Parent Action Center lost refresh-needed counts.");
+expect(parent.includes("safeStepHref"),"Parent Action Center lost safe next-step URL validation.");
+expect(parent.includes("data-parent-open-step"),"Parent Action Center lost direct next-step actions.");
+expect(parent.includes("data-parent-profile"),"Parent Action Center lost learner portal handoff.");
+expect(parent.includes('REVIEW_KEY="khaemenes_parent_brief_review_v1"'),"Parent Action Center lost privacy-safe review-history storage.");
+expect(parent.includes("function aggregateBrief("),"Parent Action Center lost aggregate-only review snapshots.");
+expect(parent.includes("function markReviewed("),"Parent Action Center lost Mark Brief Reviewed.");
+expect(parent.includes("reviewHistoryAggregatesOnly:true"),"Parent review history privacy boundary is missing.");
+expect(!/categorized\.attention\.push\([\s\S]{0,500}?courseId:"study-support"/.test(parent),"Spaced review must not inflate formal Needs attention.");
 expect(!/localStorage\.setItem\([^\n]*(grade|mastery|placement)/i.test(parent),"Parent Action Center must not write grade/mastery/placement state.");
+expect(!/REVIEW_KEY[\s\S]{0,1200}?(privateReflections|childConversations|assessmentResponses|answerKeys)/.test(parent),"Parent review history must remain aggregate-only.");
 
 
 // Family Backup Vault preserves browser-local family identity without claiming course authority.
