@@ -48,7 +48,7 @@ test("utility dock includes Profile, Search, Updates, Archaemenes, Contribute, a
   assert.match(personalization,/profileDestination\(snapshot\)/);
   assert.match(personalization,/mentorDestination\(\)/);
   assert.match(personalization,/renderUpdates\(accountSnapshot\(\)\)/);
-  assert.match(personalization,/search:"https:\/\/vervenveda\.github\.io\/PLERASearch\.github\.io\//);
+  assert.match(personalization,/search:"https:\/\/vervenveda\.com\/PLERASearch\.github\.io\//);
   assert.match(personalization,/contribute:"https:\/\/buy\.stripe\.com\/aFa8wQ5xf9Scf65caT4AU0s"/);
   assert.match(personalization,/contribute\.target="_blank"/);
   assert.match(personalization,/contribute\.rel="noopener noreferrer"/);
