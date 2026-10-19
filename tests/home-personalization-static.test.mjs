@@ -133,3 +133,8 @@ test("account status changes cause the adaptive home to refresh",()=>{
   assert.match(personalization,/for\(const eventName of \["pageshow","khaemenes-family-ready","khaemenes-family-changed","khaemenes-learner-placement-changed","khaemenes-learning-continuation-changed","online","offline"\]/);
   assert.match(index,/\.\/assets\/khaemenes-account-connection-status\.js/);
 });
+
+
+test("Academy brand returns visitors to the Verve N Veda public gateway",()=>{
+  assert.match(index,/class="brand" href="https:\/\/vervenveda\.com\/" aria-label="Return to Verve N Veda home"/);
+});
