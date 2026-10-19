@@ -111,8 +111,6 @@
       "continuumId": "khaemenes.science.continuum",
       "continuumPath": "/Khaemenes_Academy.github.io/shared-integration/science/khaemenes-science-continuum.json",
       "spans": [
-        "pre-k",
-        "kindergarten",
         "elementary",
         "middle",
         "high"
@@ -121,20 +119,23 @@
         {
           "stage": "elementary",
           "repository": "vervenveda/Khaemenes_Elementary.github.io",
-          "path": "/grades/"
+          "entry": "/grades/grade-01/subjects/science/index.html",
+          "coverage": "Grade 1 has an initial 36-week pathway; Grades 2-5 have science subject directories."
         },
         {
           "stage": "middle",
           "repository": "vervenveda/Khaemenes_Middle.github.io",
-          "path": "/grades/"
+          "entry": "/grades/",
+          "coverage": "Grades 6-8 science subject directories."
         },
         {
           "stage": "high",
           "repository": "vervenveda/Khaemenes_High.github.io",
-          "path": "/courses/science/"
+          "entry": "/courses/science/",
+          "coverage": "Integrated Science 9, Biology 10, Chemistry 11, and Physics & Engineering 12."
         }
       ],
-      "verificationNote": "Candidate-live means public science content exists in the linked grade repositories. It does not certify every lesson, link, standard mapping, assessment, or course as fully validated. Higher Learning and research science extensions remain to be explicitly mapped.",
+      "verificationNote": "Candidate-live means public science course content exists at the linked grade repositories. Grade 1 is an initial release with full-week instructional plans; all lessons, standards mappings, assessment behavior, and links have not yet received complete end-to-end validation. Preschool science-adjacent applications exist, but a formal early-learning science scope and sequence is not yet mapped. Higher Learning and research science extensions remain to be explicitly mapped.",
       "disciplinePractices": [
         "asking questions and defining problems",
         "developing and using models",
