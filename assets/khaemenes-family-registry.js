@@ -1,7 +1,7 @@
 (function attachKhaemenesFamilyRegistry(global){
   "use strict";
 
-  const VERSION="1.3.1";
+  const VERSION="1.3.2";
   const ARCHAEMENES_ID="archaemenes";
   const KEYS=Object.freeze({
     registry:"khaemenes_family_registry_v1",
@@ -242,10 +242,141 @@
   }
 
   function exportFamily(familyId=activeIds().familyId){const registry=load(),family=registry.families[familyId];if(!family)throw new Error("family-not-found");const adultIds=family.adultIds||[],learnerIds=family.learnerIds||[];return {format:"khaemenes-family-export-v1.3",exportedAt:now(),family:clone(family),adults:adultIds.map(id=>registry.adults[id]).filter(Boolean).map(clone),learners:learnerIds.map(id=>registry.learners[id]).filter(Boolean).map(clone),access:Object.values(registry.learnerAdultAccess).filter(x=>adultIds.includes(x.adultId)&&learnerIds.includes(x.learnerId)).map(clone),note:"Local family/adult-learning backup. This file is not an authenticated cross-device account."}}
+
+  function validateFamilyExport(payload){
+    const errors=[];
+    if(!payload||typeof payload!=="object")errors.push("backup-not-object");
+    if(!/^khaemenes-family-export-v1\.[23]$/.test(String(payload?.format||"")))errors.push("unsupported-family-export-format");
+    const family=payload?.family,adults=Array.isArray(payload?.adults)?payload.adults:[],learners=Array.isArray(payload?.learners)?payload.learners:[],access=Array.isArray(payload?.access)?payload.access:[];
+    const familyId=clean(family?.familyId,180);
+    if(!familyId)errors.push("family-id-missing");
+    if(!family||typeof family!=="object")errors.push("family-record-missing");
+    if(adults.length>30)errors.push("too-many-adults");
+    if(learners.length>100)errors.push("too-many-learners");
+    if(access.length>500)errors.push("too-many-access-records");
+    const adultIds=new Set(),learnerIds=new Set();
+    for(const adult of adults){
+      const adultId=clean(adult?.adultId,180);
+      if(!adultId)errors.push("adult-id-missing");
+      else if(adultIds.has(adultId))errors.push("duplicate-adult-id");
+      else adultIds.add(adultId);
+      if(familyId&&Array.isArray(adult?.familyIds)&&adult.familyIds.length&&!adult.familyIds.includes(familyId))errors.push("adult-family-mismatch");
+    }
+    for(const learner of learners){
+      const learnerId=clean(learner?.learnerId,180);
+      if(!learnerId)errors.push("learner-id-missing");
+      else if(learnerIds.has(learnerId))errors.push("duplicate-learner-id");
+      else learnerIds.add(learnerId);
+      if(familyId&&clean(learner?.familyId,180)!==familyId)errors.push("learner-family-mismatch");
+      const placement=canonicalPlacement({stage:learner?.stage,grade:learner?.grade});
+      if(placement.stage==="higher"&&learner?.selfDirectedAdult!==true)errors.push("higher-learner-must-be-self-directed-adult");
+    }
+    const familyAdultIds=arr(family?.adultIds,100);
+    const familyLearnerIds=arr(family?.learnerIds,200);
+    for(const id of familyAdultIds)if(!adultIds.has(id))errors.push("family-adult-reference-missing");
+    for(const id of familyLearnerIds)if(!learnerIds.has(id))errors.push("family-learner-reference-missing");
+    for(const record of access){
+      if(clean(record?.familyId,180)!==familyId)errors.push("access-family-mismatch");
+      if(!adultIds.has(clean(record?.adultId,180)))errors.push("access-adult-reference-missing");
+      if(!learnerIds.has(clean(record?.learnerId,180)))errors.push("access-learner-reference-missing");
+    }
+    return Object.freeze({
+      ok:errors.length===0,
+      errors:Object.freeze([...new Set(errors)]),
+      summary:Object.freeze({
+        familyId,
+        displayName:clean(family?.displayName,80)||"Khaemenes Family",
+        adults:adultIds.size,
+        learners:learnerIds.size,
+        exportedAt:payload?.exportedAt||null
+      })
+    });
+  }
+
+  function restoreFamilyExport(payload){
+    const check=validateFamilyExport(payload);
+    if(!check.ok)throw new Error("invalid-family-backup:"+check.errors.join(","));
+    const familyId=check.summary.familyId,registry=load(),incomingAdultIds=new Set(payload.adults.map(a=>clean(a.adultId,180))),incomingLearnerIds=new Set(payload.learners.map(l=>clean(l.learnerId,180)));
+    for(const adultId of incomingAdultIds){
+      const existing=registry.adults[adultId];
+      if(existing&&Array.isArray(existing.familyIds)&&existing.familyIds.length&&!existing.familyIds.includes(familyId))throw new Error("adult-id-conflict");
+    }
+    for(const learnerId of incomingLearnerIds){
+      const existing=registry.learners[learnerId];
+      if(existing&&clean(existing.familyId,180)!==familyId)throw new Error("learner-id-conflict");
+    }
+
+    const priorFamily=registry.families[familyId]||null;
+    const priorAdultIds=new Set(priorFamily?.adultIds||[]);
+    const priorLearnerIds=new Set(priorFamily?.learnerIds||[]);
+    for(const key of Object.keys(registry.memberships||{})){
+      if(registry.memberships[key]?.familyId===familyId)delete registry.memberships[key];
+    }
+    for(const key of Object.keys(registry.learnerAdultAccess||{})){
+      if(registry.learnerAdultAccess[key]?.familyId===familyId)delete registry.learnerAdultAccess[key];
+    }
+    for(const id of priorLearnerIds)if(!incomingLearnerIds.has(id))delete registry.learners[id];
+    for(const id of priorAdultIds){
+      if(incomingAdultIds.has(id))continue;
+      const adult=registry.adults[id];
+      if(!adult)continue;
+      const remaining=(adult.familyIds||[]).filter(x=>x!==familyId);
+      if(remaining.length)registry.adults[id]={...adult,familyIds:remaining,updatedAt:now()};
+      else delete registry.adults[id];
+    }
+
+    const family={
+      familyId,
+      displayName:clean(payload.family.displayName,80)||"My Khaemenes Family",
+      adultIds:[...incomingAdultIds],
+      learnerIds:[...incomingLearnerIds],
+      createdAt:payload.family.createdAt||now(),
+      updatedAt:now()
+    };
+    registry.families[familyId]=family;
+    for(const raw of payload.adults){
+      const adultId=clean(raw.adultId,180),role=ADULT_ROLES.includes(raw.role)?raw.role:"other-authorized-adult";
+      registry.adults[adultId]={
+        ...clone(raw),
+        adultId,
+        displayName:clean(raw.displayName,80)||"Authorized Adult",
+        role,
+        familyIds:[...new Set([...(Array.isArray(raw.familyIds)?raw.familyIds:[]).filter(Boolean),familyId])],
+        familyGuidePreference:clean(raw.familyGuidePreference,80)||"supportive",
+        accountState:clean(raw.accountState,60)||"local-profile",
+        createdAt:raw.createdAt||now(),
+        updatedAt:now()
+      };
+      registry.memberships[`${familyId}:${adultId}`]={familyId,adultId,status:"active",role,joinedAt:raw.createdAt||now()};
+    }
+    for(const raw of payload.learners){
+      const normalized=normalizeLearner({...clone(raw),familyId});
+      registry.learners[normalized.learnerId]={...normalized,familyId,updatedAt:now()};
+    }
+    for(const raw of payload.access){
+      const adultId=clean(raw.adultId,180),learnerId=clean(raw.learnerId,180);
+      const preset=PERMISSION_PRESETS[raw.permissionPreset]||PERMISSION_PRESETS["progress-viewer"];
+      const permissions=Array.isArray(raw.permissions)?arr(raw.permissions,30):[...preset.permissions];
+      registry.learnerAdultAccess[`${learnerId}:${adultId}`]={
+        familyId,adultId,learnerId,
+        permissionPreset:PERMISSION_PRESETS[raw.permissionPreset]?raw.permissionPreset:"custom",
+        permissions,
+        status:raw.status==="revoked"?"revoked":"active",
+        grantedAt:raw.grantedAt||now(),
+        updatedAt:now(),
+        ...(raw.revokedAt?{revokedAt:raw.revokedAt}:{})
+      };
+    }
+    save(registry);
+    const adultId=payload.adults[0]?.adultId||null,learnerId=payload.learners.find(l=>!l.selfDirectedAdult)?.learnerId||payload.learners[0]?.learnerId||null;
+    setActive({familyId,adultId,learnerId});
+    audit("family.restored-from-backup",{familyId,adults:payload.adults.length,learners:payload.learners.length,format:payload.format});
+    return {restored:true,familyId,adultId,learnerId,summary:check.summary};
+  }
   function auditLog(){return clone(readJSON(KEYS.audit,[]))}
   function status(){const registry=load(),ids=activeIds();return {version:VERSION,origin:global.location?.origin||"",recommendedSharedOrigin:/^https:\/\/vervenveda\.com$/i.test(global.location?.origin||""),families:Object.keys(registry.families).length,adults:Object.keys(registry.adults).length,learners:Object.keys(registry.learners).length,active:ids,activeLearner:getLearner(ids.learnerId),activeAdult:getAdult(ids.adultId),adultLearner:getAdultLearner(ids.adultId),mentorAuthority:"academy-archaemenes"}}
 
-  global.KhaemenesFamilyRegistry=Object.freeze({version:VERSION,keys:KEYS,stages:STAGES,grades:GRADES,gradeMeta:GRADE_META,adultRoles:ADULT_ROLES,permissionPresets:PERMISSION_PRESETS,mentorId:ARCHAEMENES_ID,mentorAuthority:"academy-archaemenes",normalizeStage,normalizeGrade,stageForGrade,gradeAllowedForStage,canonicalPlacement,destinationFor,mentorExpression,load,save,status,activeIds,setActive,createFamily,addAdultLocal,registerLearner,registerAdultLearner,getAdultLearner,grantAdultAccess,revokeAdultAccess,canAdult,getFamily,getAdult,getLearner,adultAccessForLearner,migrateLegacyPreschool,updateLearnerStage,updateLearnerGrade,updateLearnerPlacement,learnerDestination,exportFamily,auditLog});
+  global.KhaemenesFamilyRegistry=Object.freeze({version:VERSION,keys:KEYS,stages:STAGES,grades:GRADES,gradeMeta:GRADE_META,adultRoles:ADULT_ROLES,permissionPresets:PERMISSION_PRESETS,mentorId:ARCHAEMENES_ID,mentorAuthority:"academy-archaemenes",normalizeStage,normalizeGrade,stageForGrade,gradeAllowedForStage,canonicalPlacement,destinationFor,mentorExpression,load,save,status,activeIds,setActive,createFamily,addAdultLocal,registerLearner,registerAdultLearner,getAdultLearner,grantAdultAccess,revokeAdultAccess,canAdult,getFamily,getAdult,getLearner,adultAccessForLearner,migrateLegacyPreschool,updateLearnerStage,updateLearnerGrade,updateLearnerPlacement,learnerDestination,exportFamily,validateFamilyExport,restoreFamilyExport,auditLog});
 
   try{
     const rawExisting=readJSON(KEYS.registry,null);
