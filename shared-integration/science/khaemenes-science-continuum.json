@@ -1,0 +1,151 @@
+{
+  "schemaVersion": "1.0.0",
+  "canonicalId": "khaemenes.science.continuum",
+  "title": "Khaemenes Science Continuum",
+  "status": "active-planning-contract",
+  "effectiveDate": "2026-10-19",
+  "description": "Shared public science-learning contract for early learning through high school. Course content remains owned by its source repository and must be independently reviewed before standards, credit, or mastery claims.",
+  "ownership": {
+    "subjectOwner": "Khaemenes Academy shared integration",
+    "courseAuthority": "Each course repository owns lessons, assessments, student records, and course-level mastery.",
+    "noSinglePointOfFailure": "A missing shared metadata file must not block access to a published course.",
+    "archiveRule": "Historical snapshots are not runtime dependencies."
+  },
+  "stages": [
+    {
+      "id": "pre-k",
+      "label": "Pre-K / Creche",
+      "evidence": [
+        "noticing and naming",
+        "oral prediction",
+        "drawing or sorting",
+        "guided observation"
+      ]
+    },
+    {
+      "id": "kindergarten",
+      "label": "Kinder Garden",
+      "evidence": [
+        "observation drawings",
+        "simple comparisons",
+        "oral explanation",
+        "guided model building"
+      ]
+    },
+    {
+      "id": "elementary",
+      "label": "Elementary",
+      "grades": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "evidence": [
+        "question and prediction",
+        "safe investigation",
+        "simple tables and graphs",
+        "claim with observation evidence"
+      ]
+    },
+    {
+      "id": "middle",
+      "label": "Middle School",
+      "grades": [
+        6,
+        7,
+        8
+      ],
+      "evidence": [
+        "controlled investigation",
+        "measurement and data analysis",
+        "model evaluation",
+        "evidence-based explanation"
+      ]
+    },
+    {
+      "id": "high",
+      "label": "High School",
+      "grades": [
+        9,
+        10,
+        11,
+        12
+      ],
+      "evidence": [
+        "quantitative modeling",
+        "lab or dataset analysis",
+        "uncertainty and limitations",
+        "CER or engineering defense"
+      ]
+    }
+  ],
+  "pathways": [
+    {
+      "stage": "elementary",
+      "repository": "vervenveda/Khaemenes_Elementary.github.io",
+      "entry": "/grades/",
+      "knownCoverage": "Grades 2-5 have 36-week science subject directories. Grade 1 is being added in the current rollout."
+    },
+    {
+      "stage": "middle",
+      "repository": "vervenveda/Khaemenes_Middle.github.io",
+      "entry": "/grades/",
+      "knownCoverage": "Grades 6-8 have 36-week science subject directories."
+    },
+    {
+      "stage": "high",
+      "repository": "vervenveda/Khaemenes_High.github.io",
+      "entry": "/courses/science/",
+      "knownCoverage": "Integrated Science 9, Biology 10, Chemistry 11, and Physics & Engineering 12 course pathways are present."
+    },
+    {
+      "stage": "pre-k",
+      "repository": "vervenveda/Khaemenes_Preschool.github.io",
+      "entry": "/apps/",
+      "knownCoverage": "Science-adjacent early-learning applications include weather and moon-phase exploration; a full formal scope and sequence remains to be mapped."
+    }
+  ],
+  "disciplinePractices": [
+    "asking questions and defining problems",
+    "developing and using models",
+    "planning and carrying out investigations",
+    "analyzing and interpreting data",
+    "using mathematics and computational thinking",
+    "constructing explanations and designing solutions",
+    "engaging in evidence-based argument",
+    "obtaining, evaluating, and communicating information"
+  ],
+  "evidencePrinciples": [
+    "distinguish direct observations from predictions, interpretations, models, and inferences",
+    "record measurement units and methods when measurements are used",
+    "require reasoning appropriate to the learner's developmental stage",
+    "use safe supervised investigations or a documented data/model alternative",
+    "preserve learner-authored work and identify source or mentor contributions",
+    "do not equate activity completion with verified mastery",
+    "provide accessible and printable alternatives wherever practical"
+  ],
+  "mastery": {
+    "targetPercent": 80,
+    "rule": "An essential outcome remains gated until the learner reaches the 80% mastery target or completes the course-approved correction and reassessment path.",
+    "authority": "The course assessment system, not shared metadata or a study-support tool, determines formal course mastery."
+  },
+  "standardsPolicy": {
+    "benchmark": "Use NGSS three-dimensional learning as a planning reference where appropriate.",
+    "honesty": "Do not claim jurisdictional compliance or external accreditation until exact standards and requirements are verified.",
+    "mappingRequired": "Course maps should identify taught objectives, practice, evidence, assessment, and verified standards where available."
+  },
+  "safetyPolicy": [
+    "Never taste unknown materials or living things.",
+    "Use adult supervision for cutting tools, heat, electricity, chemicals, field collection, and other hazards.",
+    "Do not mix household cleaners or unknown chemicals.",
+    "Offer observation, simulation, or supplied-data alternatives when materials or supervision are unavailable."
+  ],
+  "interoperation": {
+    "stableCourseIds": true,
+    "portableEvidence": true,
+    "sharedMetadataMayNotOverwriteCourseRecords": true,
+    "publicPagesMustNotExposePrivateImplementationDetails": true
+  }
+}
