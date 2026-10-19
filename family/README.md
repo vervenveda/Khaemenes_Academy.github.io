@@ -49,6 +49,34 @@ NAIB may route an active learner to the correct registered school surface. Routi
 
 The school bridge may warn about stage or grade mismatch without hard-redirecting a parent or educator who is previewing another campus.
 
+## Family Backup Vault
+
+The Family Portal includes a first-party browser-local backup and recovery path for the Academy family identity.
+
+A current backup is wrapped in the versioned schema:
+
+```text
+khaemenes-family-backup-v2
+```
+
+The envelope carries the current family export plus the privacy-safe Weekly Family Brief and is protected with a SHA-256 integrity digest before download.
+
+Restore behavior is intentionally bounded:
+
+- the file is parsed and structurally validated before any write;
+- verified v2 backups must pass their SHA-256 checksum;
+- legacy `khaemenes-family-export-v1.2/v1.3` files remain structurally reviewable for continuity;
+- the current family record is saved automatically as a browser-local rollback snapshot before restore;
+- restore replaces only the selected family scope while preserving unrelated families in the Academy registry;
+- ID collisions with another family stop the restore;
+- the last restore can be undone from the Family Portal.
+
+The Family Backup Vault restores Academy family identity, adult/learner membership, placement identity, and family permissions only. It does **not** restore or rewrite course grades, assessment attempts, private learner reflections, child conversations, or answer keys. Those remain under their respective course and privacy authorities.
+
+The backup/restore path works without continuous internet access. The downloaded file leaves the browser only when the user chooses where to save or copy it.
+
+---
+
 ## Public security boundary
 
 The current public family layer is browser-local unless an authorized family server is connected. It must not contain passwords, API keys, protected routes, private backend topology, or hidden administrative credentials.
