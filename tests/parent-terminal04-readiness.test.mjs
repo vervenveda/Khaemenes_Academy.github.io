@@ -7,17 +7,21 @@ const expect=(value,message)=>{if(!value)throw new Error(message)};
 
 const parentPath="assets/khaemenes-parent-action-center.js";
 const terminalPath="assets/khaemenes-terminal04-readiness.js";
+const backupPath="assets/khaemenes-family-backup-vault.js";
+const registryPath="assets/khaemenes-family-registry.js";
 const manifestPath="shared-integration/terminal-04-academy-readiness.json";
 
-for(const p of [parentPath,terminalPath,manifestPath,"index.html","family/index.html","student/index.html","adult/index.html","teacher-admin/index.html"]){
+for(const p of [parentPath,terminalPath,backupPath,registryPath,manifestPath,"index.html","family/index.html","student/index.html","adult/index.html","teacher-admin/index.html"]){
   expect(fs.existsSync(path.join(ROOT,p)),"Missing required Academy readiness file: "+p);
 }
 
 const parent=read(parentPath);
 const terminal=read(terminalPath);
+const backup=read(backupPath);
+const registry=read(registryPath);
 const manifest=JSON.parse(read(manifestPath));
 
-for(const [label,source] of [["Parent Action Center",parent],["Terminal 04 adapter",terminal]]){
+for(const [label,source] of [["Parent Action Center",parent],["Family Backup Vault",backup],["Family Registry",registry],["Terminal 04 adapter",terminal]]){
   try{new Function(source)}catch(error){throw new Error(label+" JavaScript syntax failed: "+error.message)}
 }
 
@@ -34,6 +38,29 @@ expect(parent.includes('"attention"')||parent.includes('level:"attention"'),"Par
 expect(parent.includes('"celebrate"')||parent.includes('level:"celebrate"'),"Parent Action Center lost celebration categorization.");
 expect(parent.includes("khaemenes-parent-weekly-brief-v1"),"Weekly family brief schema missing.");
 expect(!/localStorage\.setItem\([^\n]*(grade|mastery|placement)/i.test(parent),"Parent Action Center must not write grade/mastery/placement state.");
+
+
+// Family Backup Vault preserves browser-local family identity without claiming course authority.
+expect(backup.includes('const SCHEMA="khaemenes-family-backup-v2"'),"Family Backup Vault schema missing.");
+expect(backup.includes('algorithm:"SHA-256"'),"Family Backup Vault lost SHA-256 integrity checks.");
+expect(backup.includes('khaemenes_family_restore_rollback_v1'),"Family Backup Vault lost pre-restore rollback snapshots.");
+expect(backup.includes("verifyEnvelope"),"Family Backup Vault lost integrity verification.");
+expect(backup.includes("saveRollback"),"Family Backup Vault lost pre-restore snapshot.");
+expect(backup.includes("undoLastRestore"),"Family Backup Vault lost undo-last-restore support.");
+expect(backup.includes("restoresCourseGrades:false"),"Family Backup Vault crossed into course-grade authority.");
+expect(backup.includes("restoresAssessmentAttempts:false"),"Family Backup Vault crossed into assessment-attempt authority.");
+expect(backup.includes("restoresPrivateLearnerReflections:false"),"Family Backup Vault crossed private reflection boundary.");
+expect(backup.includes("restoresChildConversations:false"),"Family Backup Vault crossed child conversation boundary.");
+expect(backup.includes("restoresAnswerKeys:false"),"Family Backup Vault crossed answer-key boundary.");
+expect(registry.includes("function validateFamilyExport("),"Family Registry lost structural backup validation.");
+expect(registry.includes("function restoreFamilyExport("),"Family Registry lost family-scoped restore.");
+expect(registry.includes('audit("family.restored-from-backup"'),"Family restore audit entry missing.");
+expect(registry.includes('const VERSION="1.3.2"'),"Family Registry backup/restore version drifted.");
+const familyPage=read("family/index.html");
+expect(familyPage.includes("Download Verified Backup"),"Family Portal lost verified backup control.");
+expect(familyPage.includes("Verify / Restore Backup"),"Family Portal lost restore control.");
+expect(familyPage.includes("Undo Last Restore"),"Family Portal lost rollback control.");
+expect(familyPage.includes("khaemenes-family-backup-vault.js"),"Family Portal is not loading Family Backup Vault.");
 
 // Terminal 04 remains dormant and transport-free.
 expect(terminal.includes('const LIVE=false'),"Terminal 04 adapter is not explicitly dormant.");
@@ -81,6 +108,7 @@ expect((teacher.match(/href="https:\/\/vervenveda\.com\/beta\/" aria-label="Open
 console.log("Academy Parent + Terminal 04 readiness regression: PASS");
 console.log("  Parent Action Center: read-only");
 console.log("  Weekly Family Brief: privacy-safe");
+console.log("  Family Backup Vault: SHA-256 verified + rollback-safe");
 console.log("  Terminal 04: dormant / uncommissioned / no transport");
 console.log("  Academy account storage and STOS storage: separate");
 console.log("  Main account-bearing surfaces covered: 5");
