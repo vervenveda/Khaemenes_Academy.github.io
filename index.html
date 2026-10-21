@@ -324,8 +324,18 @@ footer{padding:38px 0;color:rgba(255,255,255,.67);background:var(--night);font-s
 @media(max-width:650px){
   .shell{width:min(calc(100% - 24px),var(--max))}
   .header-inner{grid-template-columns:1fr;justify-items:center;gap:10px;padding:12px 0}
-  .brand{justify-self:center;text-align:center}.head-actions{justify-self:center;justify-content:center}
-  .head-actions .secondary{display:none}
+  .brand{justify-self:center;text-align:center}
+  .head-actions{
+    justify-self:stretch;justify-content:stretch;
+    display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+    width:100%;gap:6px;
+  }
+  .head-actions .secondary{display:inline-flex}
+  .head-actions .head-btn{
+    min-width:0;width:100%;max-width:none;min-height:44px;
+    padding:7px 5px;white-space:normal;overflow-wrap:normal;
+    font-size:9px;line-height:1.25;letter-spacing:.02em;
+  }
   .hero{min-height:520px}.hero-inner{padding:60px 0 96px}
   .hero h1{font-size:clamp(3.4rem,16vw,4.6rem)}
   .frontdesk{margin-top:-44px}
@@ -336,7 +346,9 @@ footer{padding:38px 0;color:rgba(255,255,255,.67);background:var(--night);font-s
 }
 @media(max-width:460px){
   .brand strong{font-size:14px}.seal{width:40px;height:40px}
-  .btn,.head-btn{width:100%;max-width:300px}
+  .btn{width:100%;max-width:300px}
+  .head-actions{gap:4px}
+  .head-actions .head-btn{font-size:8.5px;padding:6px 3px}
 }
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 
