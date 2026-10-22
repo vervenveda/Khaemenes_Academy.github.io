@@ -12,9 +12,18 @@
 .hero .khae-page-subtitle{font:400 clamp(19px,2.8vw,25px)/1.35 var(--serif);color:#7b633f;letter-spacing:.035em;margin:10px 0 15px}
 @media(max-width:560px){.hero{padding:43px 0 27px}.hero h1{font-size:clamp(30px,8vw,39px)}}
 </style>
+<link rel="stylesheet" href="/Khaemenes_Academy.github.io/assets/khaemenes-global-header.css">
+<link rel="stylesheet" href="https://vervenveda.com/assets/vnv-ecosystem-menu.css">
 </head>
 <body data-i18n-no-online>
-<header class="top"><div class="shell"><div class="brand">Khaemenes Academy</div><div><a href="../../">Academy Home</a> <a href="../../family/enroll/">Family Enrollment</a></div></div></header>
+<header data-khae-header>
+  <div class="shell" data-khae-header-inner>
+    <a class="brand" data-khae-brand href="../../"><span class="mark" data-khae-brand-mark>KA</span><span><strong data-khae-brand-name>Khaemenes Academy</strong><small data-khae-brand-sub>Adult Learning Enrollment</small></span></a>
+    <nav data-khae-nav aria-label="Adult enrollment navigation"><a href="../../">Academy Home</a><a href="../../family/enroll/">Family Enrollment</a></nav>
+    <div data-khae-actions></div>
+    <div data-vnv-ecosystem-slot aria-label="Ecosystem menu"></div>
+  </div>
+</header>
 <section class="hero shell"><div class="eyebrow">Lifelong Learning</div><h1>Khaemenes Academy</h1><h2 class="khae-page-subtitle">Adult Learning Enrollment</h2><p>No artificial Grade 13. Adult learners receive a self-directed Academy learner identity and Scholar ID at the Higher Learning stage, then continue directly into the university-level campus.</p></section>
 <main class="shell"><section class="card"><div class="eyebrow">Adult Scholar Account</div><h2 id="title">Create your local learning identity</h2><div id="pane"></div><p class="fine">This public page creates a browser-local learning profile and a provisional Scholar ID. It is not secure authentication, does not verify identity, and does not store passwords or recovery credentials. A protected cross-device account service may later confirm or migrate the identifier without changing the scholar-facing pathway.</p></section></main>
 <script src="../../assets/khaemenes-family-registry.js"></script>
@@ -31,5 +40,7 @@ pane.innerHTML=`<div class="notice">An Academy adult profile already exists for 
 <script src="/assets/vnv-beta-link.js" defer></script>
 <script src="../../assets/vnv-language.js" defer></script>
 <script src="https://vervenveda.com/assets/vnv-support.js" defer></script>
+<script src="/Khaemenes_Academy.github.io/assets/khaemenes-global-header.js" defer></script>
+<script src="https://vervenveda.com/assets/vnv-ecosystem-menu.js" defer></script>
 </body>
 </html>
