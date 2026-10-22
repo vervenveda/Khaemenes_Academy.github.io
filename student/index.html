@@ -32,7 +32,7 @@ h1{margin:11px auto 0;font-size:clamp(3rem,8vw,6.3rem);line-height:.96}.hero p{m
 .section{padding:68px 0}.heading{max-width:790px;margin:0 auto 34px;text-align:center}.heading h2{margin:8px 0 0;color:var(--forest);font-size:clamp(2rem,5vw,3.6rem);line-height:1.04}.heading p{max-width:680px;margin:13px auto 0;color:var(--muted)}
 .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:15px}.card{grid-column:span 12;padding:25px;border:1px solid var(--line);border-radius:var(--r2);background:var(--panel);box-shadow:var(--shadow)}.col7{grid-column:span 7}.col5{grid-column:span 5}.col6{grid-column:span 6}
 .card h3{margin:0;color:var(--forest);font-size:1.65rem}.card p{color:var(--muted)}
-.profile-name{margin:7px 0 0;color:var(--forest);font:500 clamp(2.2rem,5vw,4.5rem)/1 var(--formal)}.placement{margin-top:12px;color:var(--muted)}
+.profile-entry{max-width:850px;margin:0 auto}.profile-entry .learner-row{gap:14px}.profile-entry .btn{font-size:13px}.profile-name{margin:7px 0 0;color:var(--forest);font:500 clamp(2.2rem,5vw,4.5rem)/1 var(--formal)}.placement{margin-top:12px;color:var(--muted)}
 .chips{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin-top:16px}.chip{display:inline-flex;padding:6px 9px;border:1px solid var(--line);border-radius:999px;background:var(--paper2);color:var(--forest);font-size:11px}
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.btn{min-height:44px;display:inline-flex;align-items:center;justify-content:center;padding:9px 14px;border:1px solid var(--forest);border-radius:var(--r);color:#fff;background:var(--forest);font-size:11px;font-weight:500;letter-spacing:.05em;text-transform:uppercase}.btn.secondary{color:var(--forest);background:#fff;border-color:var(--line)}.btn.gold{color:#2c2618;background:#ead6a4;border-color:#c8a861}
 .notice{padding:14px 16px;border-left:4px solid var(--gold);border-radius:var(--r);background:#fbf4df;color:#66502b}.notice.good{border-left-color:#4e755a;background:#eef7f0;color:#315f3c}
@@ -74,6 +74,7 @@ h1{margin:11px auto 0;font-size:clamp(3rem,8vw,6.3rem);line-height:.96}.hero p{m
   <div class="shell nav">
     <a class="brand" href="../"><span class="mark">K</span><span><strong>Khaemenes Academy</strong><small>Student Portal</small></span></a>
     <nav class="navlinks" aria-label="Academy navigation">
+      <a href="#profileStudio" id="studentProfileNavigation">My Profile</a>
       <a href="../family/">Family Hub</a>
       <a href="../family/enroll/">Enrollment</a>
       <a href="../">Academy Home</a>
@@ -94,7 +95,7 @@ h1{margin:11px auto 0;font-size:clamp(3rem,8vw,6.3rem);line-height:.96}.hero p{m
       <p>Your learner profile keeps school placement and course shortcuts together on this device.</p>
     </div>
     <p class="notice">This is a learner profile saved in this browser. On a tablet, create or select the learner here and use the same browser to continue. Export backups regularly. Protected account sign-in and cross-device sync are not connected yet.</p>
-    <div id="app"></div><div id="profileStudio" aria-label="Learner-owned profile studio"></div>
+    <div id="app"></div><div id="profileStudio" tabindex="-1" aria-label="Learner-owned profile studio"></div>
   </div>
 </main>
 
@@ -195,9 +196,22 @@ function render(){
     return;
   }
   const learner=R.getLearner?.()||null,family=R.getFamily?.()||null;
+  const profileNav=document.getElementById("studentProfileNavigation");if(profileNav){profileNav.hidden=!learner;profileNav.setAttribute("aria-hidden",learner?"false":"true")};
   if(learner?.selfDirectedAdult===true){location.replace("../adult/");return}
   if(!learner){
-    app.innerHTML=`<section class="card" style="background:#122c3b;color:#f7f0e2;border-radius:7px;padding:32px"><p class="eyebrow" style="color:#e4c98e">Khaemenes Academy · Learning Workspace</p><h3 style="color:#fff8eb;font-size:clamp(28px,4vw,42px);font-weight:400">Your learning journey starts here.</h3><p style="color:#e4e9e8;font-size:16px">No learner is selected in this browser. If you already have an account on another device or browser, do not create a duplicate profile. Find your existing learner or use a verified record backup to restore access.</p><div class="actions"><a class="btn" href="../family/#familyApp" style="background:#f0dfb7;color:#17392f;padding:14px 19px">Find Existing Learner →</a><a class="btn secondary" href="../family/enroll/" style="background:#f5f1e9;color:#282c2b;border:1px solid #d6bd83">Enroll New Learner</a></div></section><div class="grid" style="margin-top:18px"><section class="card col6"><p class="eyebrow">Profile &amp; Progress</p><h3>Make your space your own.</h3><p>Choose a learner to access your goals, reading preferences, evidence portfolio and progress.</p><a class="btn secondary" href="../family/">Open Learner Selection →</a></section><section class="card col6"><p class="eyebrow">Academy Courses</p><h3>Learn something remarkable.</h3><p>Browse mathematics, language arts, science, social studies and electives.</p><a class="btn secondary" href="../">Explore Courses →</a></section></div>`;
+    const candidates=Array.isArray(family?.learners)?family.learners.filter(l=>l&&!l.selfDirectedAdult):[];
+    if(candidates.length){
+      app.innerHTML=`<section class="card profile-entry" aria-labelledby="chooseProfileTitle"><p class="eyebrow">Existing learners on this browser</p><h3 id="chooseProfileTitle">Choose your student profile</h3><p>Select the person studying. This opens their existing dashboard and profile studio; it does not create a new account or change grades.</p><div class="learner-list">${candidates.map(l=>{const m=gradeLabel(l);return `<div class="learner-row"><span><strong>${esc(l.nickname||"Learner")}</strong><small>${esc(m.label)} · ${esc(m.school)}</small></span><button class="btn" type="button" data-select-existing="${esc(l.learnerId)}">Open Profile →</button></div>`}).join("")}</div></section>`;
+      app.querySelectorAll("[data-select-existing]").forEach(button=>button.addEventListener("click",()=>{
+        const next=R.getLearner?.(button.dataset.selectExisting);
+        if(!next)return;
+        R.setActive?.({familyId:next.familyId,learnerId:next.learnerId});
+        render();
+        document.getElementById("profileStudio")?.scrollIntoView({block:"start"});
+      }));
+    }else{
+      app.innerHTML=`<section class="card profile-entry" aria-labelledby="recoverProfileTitle"><p class="eyebrow">Returning learner</p><h3 id="recoverProfileTitle">Find your existing profile</h3><p>No family learner record is available to select in this browser. This is not a request to enroll again. If you have a verified family backup, use the recovery option below; otherwise open your original browser to export one.</p><div class="actions"><a class="btn" href="../family/#familyApp">Recover an existing family backup →</a><a class="btn secondary" href="../family/enroll/">I'm new · Enroll</a></div><p class="notice">Existing coursework and assessment data are not erased or reassigned by visiting this page.</p></section>`;
+    }
     return;
   }
   const m=gradeLabel(learner),route=F.routeForLearner?.(learner)||null;
