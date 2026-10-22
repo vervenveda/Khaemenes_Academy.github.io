@@ -85,6 +85,23 @@ h1{margin:11px auto 0;font-size:clamp(3rem,8vw,6.3rem);line-height:.96}.hero p{m
 const R=window.KhaemenesFamilyRegistry,F=window.KhaemenesFrontDoorRouter,C=window.KhaemenesLearningContinuation;
 const app=document.getElementById("app");
 const PIN_KEY="khaemenes_course_pins_v1";
+const HIGH_PIN_KEY="khaemenes-high-pinned-courses-v2";
+const HIGH_PIN_META=Object.freeze({
+  "pre-algebra":{title:"Pre-Algebra",subtitle:"Mathematics · Grade 09 pathway",href:"https://vervenveda.com/Khaemenes_High.github.io/courses/mathematics/pre-algebra/"},
+  "algebra-1":{title:"Algebra I",subtitle:"Mathematics · placement pathway",href:"https://vervenveda.com/Khaemenes_High.github.io/courses/mathematics/algebra-1/"},
+  "english-9":{title:"English 9",subtitle:"Language Arts · Grade 09",href:"https://vervenveda.com/Khaemenes_High.github.io/courses/language-arts/english-9/"},
+  "integrated-science-9":{title:"Integrated Science 9",subtitle:"Science · Grade 09",href:"https://vervenveda.com/Khaemenes_High.github.io/courses/science/integrated-science-9/"},
+  "global-studies-9":{title:"Global Studies Honors",subtitle:"Social Studies · Grade 09",href:"https://vervenveda.com/Khaemenes_High.github.io/courses/social-studies/grade-09/"},
+  "physical-education-9":{title:"Physical Education 9",subtitle:"Physical Education · Grade 09",href:"https://vervenveda.com/Khaemenes_High.github.io/courses/physical-education/"},
+  "psychology-101":{title:"Psychology 101",subtitle:"Elective · Grade 09",href:"https://vervenveda.com/Khaemenes_High.github.io/electives/grades/grade-09/psych-101/"},
+  "world-language-9-spanish":{title:"Spanish I",subtitle:"World Language · Grade 09",href:"https://vervenveda.com/Khaemenes_Linguistics.github.io/Halls/index.html"},
+  "world-language-9-french":{title:"French I",subtitle:"World Language · Grade 09",href:"https://vervenveda.com/Khaemenes_Linguistics.github.io/Halls/index.html"},
+  "world-language-9-german":{title:"German I",subtitle:"World Language · Grade 09",href:"https://vervenveda.com/Khaemenes_Linguistics.github.io/Halls/index.html"},
+  "world-language-9-mandarin":{title:"Mandarin Chinese I",subtitle:"World Language · Grade 09",href:"https://vervenveda.com/Khaemenes_Linguistics.github.io/Halls/index.html"},
+  "world-language-9-japanese":{title:"Japanese I",subtitle:"World Language · Grade 09",href:"https://vervenveda.com/Khaemenes_Linguistics.github.io/Halls/index.html"},
+  "world-language-9-arabic":{title:"Arabic · Exploration",subtitle:"World Language · exploration pathway",href:"https://vervenveda.com/Khaemenes_Linguistics.github.io/Halls/index.html"},
+  "world-language-9-russian":{title:"Russian · Exploration",subtitle:"World Language · exploration pathway",href:"https://vervenveda.com/Khaemenes_Linguistics.github.io/Halls/index.html"}
+});
 const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
 function readPins(){
@@ -94,8 +111,20 @@ function readPins(){
   }catch{return {version:1,learners:{}}}
 }
 function learnerPins(id){
-  const list=readPins().learners?.[id];
-  return Array.isArray(list)?list.filter(x=>x&&typeof x==="object").slice(0,24):[];
+  const canonical=readPins().learners?.[id];
+  const list=Array.isArray(canonical)?canonical.filter(x=>x&&typeof x==="object"):[];
+  let high=[];
+  try{
+    const raw=JSON.parse(localStorage.getItem(`${HIGH_PIN_KEY}:learner:${encodeURIComponent(id)}`)||"[]");
+    high=Array.isArray(raw)?raw.map(pin=>HIGH_PIN_META[pin]?{id:pin,courseId:pin,...HIGH_PIN_META[pin],source:"khaemenes-high"}:null).filter(Boolean):[];
+  }catch{}
+  const seen=new Set(),merged=[];
+  for(const pin of [...list,...high]){
+    const key=String(pin.id||pin.courseId||pin.href||pin.title||"");
+    if(!key||seen.has(key))continue;
+    seen.add(key);merged.push(pin);
+  }
+  return merged.slice(0,24);
 }
 function gradeLabel(l){
   const meta=l?.grade&&R?.gradeMeta?.[l.grade]?R.gradeMeta[l.grade]:null;
@@ -177,7 +206,7 @@ function render(){
   }));
 }
 window.addEventListener("khaemenes-family-changed",render);
-window.addEventListener("storage",e=>{if(e.key===PIN_KEY||e.key===C?.storageKey)render()});
+window.addEventListener("storage",e=>{if(e.key===PIN_KEY||e.key===C?.storageKey||String(e.key||"").startsWith(HIGH_PIN_KEY))render()});
 window.addEventListener("khaemenes-learning-continuation-changed",render);
 render();
 })();
