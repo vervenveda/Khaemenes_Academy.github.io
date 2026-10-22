@@ -348,11 +348,11 @@ footer{padding:38px 0;color:rgba(255,255,255,.67);background:var(--night);font-s
 }
 @media(max-width:650px){
   .shell{width:min(calc(100% - 24px),var(--max))}
-  .header-inner{grid-template-columns:1fr auto;justify-items:center;gap:10px;padding:12px 0}
-  .brand{grid-column:1 / -1}
-  .head-actions{grid-column:1}
-  .academy-ecosystem-slot{grid-column:2;grid-row:2}
-  .brand{justify-self:center;text-align:center}
+  .header-inner{grid-template-columns:minmax(0,1fr) 38px;justify-items:stretch;gap:10px;padding:12px 0}
+  .brand{grid-column:1;grid-row:1;justify-self:start;text-align:left}
+  .academy-ecosystem-slot{grid-column:2;grid-row:1;justify-self:end}
+  .head-actions{grid-column:1 / -1;grid-row:2}
+
   .head-actions{
     justify-self:stretch;justify-content:stretch;
     display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
