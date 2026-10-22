@@ -47,3 +47,39 @@ body[data-student-profile-reduced-motion="true"] *,@media(prefers-reduced-motion
 @media(max-width:820px){.profile-v2-col6,.profile-v2-col4,.profile-v2-col8{grid-column:span 12}}
 @media(max-width:560px){.profile-v2-two{grid-template-columns:1fr}.profile-v2-step,.profile-v2-evidence-row{grid-template-columns:1fr}.profile-v2-btn{width:100%}}
 @media print{#profileStudio .profile-v2-actions,#profileStudio button{display:none!important}.profile-v2-card{box-shadow:none;break-inside:avoid}}
+
+
+.profile-v2-stage-note{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin:12px 0 0}
+.profile-v2-stage-note span{display:inline-flex;align-items:center;min-height:28px;padding:4px 9px;border:1px solid var(--line);border-radius:999px;background:var(--paper2);color:var(--forest);font:500 10px/1.2 var(--formal);letter-spacing:.05em;text-transform:uppercase}
+
+#profileStudio[data-profile-mode="early"] .profile-v2-grid{gap:18px}
+#profileStudio[data-profile-mode="early"] .profile-v2-card{padding:26px;border-color:rgba(143,112,61,.28);background:linear-gradient(180deg,#fffdf7,#fbf7ec)}
+#profileStudio[data-profile-mode="early"] .profile-v2-card h3{font-size:1.62rem}
+#profileStudio[data-profile-mode="early"] .profile-v2-field label{font-size:12px;letter-spacing:.035em;text-transform:none}
+#profileStudio[data-profile-mode="early"] :is(.profile-v2-field input,.profile-v2-field textarea,.profile-v2-field select){min-height:48px;font-size:1rem}
+#profileStudio[data-profile-mode="early"] .profile-v2-btn{min-height:48px;font-size:11px}
+#profileStudio[data-profile-mode="early"] [data-profile-detail="advanced"]{display:none}
+#profileStudio[data-profile-mode="early"] .profile-v2-stage-note span:first-child{background:#fff4cf}
+#profileStudio[data-profile-mode="early"] .profile-v2-stage-note span:last-child{background:#eef7ed}
+
+#profileStudio[data-profile-mode="elementary"] .profile-v2-card{padding:22px}
+#profileStudio[data-profile-mode="elementary"] [data-profile-detail="advanced"]{display:none}
+#profileStudio[data-profile-mode="elementary"] .profile-v2-card h3{font-size:1.48rem}
+#profileStudio[data-profile-mode="elementary"] .profile-v2-btn{min-height:45px}
+
+#profileStudio[data-profile-mode="middle"] .profile-v2-card{padding:22px}
+#profileStudio[data-profile-mode="middle"] .profile-v2-stage-note span:first-child{background:#f5f0df}
+
+#profileStudio[data-profile-mode="high"] .profile-v2-stage-note span:first-child{background:#f3eee4}
+#profileStudio[data-profile-mode="high"] .profile-v2-stage-note span:last-child{background:#eef2ee}
+
+#profileStudio[data-profile-mode="scholar"] .profile-v2-card{padding:22px}
+#profileStudio[data-profile-mode="scholar"] .profile-v2-card h3{font-size:1.42rem;letter-spacing:.01em}
+#profileStudio[data-profile-mode="scholar"] .profile-v2-eyebrow{letter-spacing:.16em}
+#profileStudio[data-profile-mode="scholar"] .profile-v2-stage-note span:first-child{background:#edf1f4}
+#profileStudio[data-profile-mode="scholar"] .profile-v2-stage-note span:last-child{background:#f4f0e6}
+
+@media(max-width:560px){
+  #profileStudio[data-profile-mode="early"] .profile-v2-card{padding:20px}
+  #profileStudio[data-profile-mode="early"] .profile-v2-card h3{font-size:1.42rem}
+}
