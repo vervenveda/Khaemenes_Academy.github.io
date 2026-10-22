@@ -108,6 +108,7 @@
   function normalizeEvidence(value={}){
     const id=evidenceId(value);
     if(!id)return null;
+    const authority=value?.provenance?.authority==="course"?"course":"learner";
     return {
       id,
       title:clean(value.title||"Learning Evidence",140),
@@ -116,11 +117,19 @@
       school:clean(value.school,100),
       stage:clean(value.stage,40),
       status:allowed.evidenceStatus.has(value.status)?value.status:"developing",
-      sourceType:clean(value.sourceType||"learner",40),
-      sourceLabel:clean(value.sourceLabel||"Student work",120),
+      sourceType:authority==="course"?"course":"learner",
+      sourceLabel:clean(value.sourceLabel||(authority==="course"?"Course-published evidence":"Learner-added evidence"),120),
       evidenceHref:/^https?:\/\//i.test(String(value.evidenceHref||""))?String(value.evidenceHref).slice(0,500):"",
-      reviewState:allowed.reviewState.has(value.reviewState)?value.reviewState:"student",
+      reviewState:authority==="course"?"system":"student",
       summary:clean(value.summary,320),
+      provenance:{
+        authority,
+        sourceId:clean(value?.provenance?.sourceId||(authority==="course"?value.courseId||id:id),140),
+        sourceUpdatedAt:clean(value?.provenance?.sourceUpdatedAt||value.updatedAt,40),
+        lastSeenAt:clean(value?.provenance?.lastSeenAt,40)||now(),
+        archived:Boolean(value?.provenance?.archived),
+        archivedAt:clean(value?.provenance?.archivedAt,40)
+      },
       updatedAt:clean(value.updatedAt,40)||now()
     };
   }
@@ -212,23 +221,73 @@
     record[section]=section==="compass"?normalizeCompass(merged):section==="learningMap"?normalizeLearningMap(merged):normalizeWorkspace(merged);
     return saveRecord(record,id);
   }
-  function upsertEvidence(item,target){
+  function evidenceSame(a,b){
+    const scalar=["title","category","courseId","school","stage","status","sourceType","sourceLabel","evidenceHref","reviewState","summary"];
+    if(!scalar.every(key=>String(a?.[key]??"")===String(b?.[key]??"")))return false;
+    return String(a?.provenance?.authority||"")===String(b?.provenance?.authority||"")
+      &&String(a?.provenance?.sourceId||"")===String(b?.provenance?.sourceId||"")
+      &&String(a?.provenance?.sourceUpdatedAt||"")===String(b?.provenance?.sourceUpdatedAt||"")
+      &&Boolean(a?.provenance?.archived)===Boolean(b?.provenance?.archived);
+  }
+  function addLearnerEvidence(item,target){
     const id=learnerId(target);if(!id)return false;
-    const normalized=normalizeEvidence(item);if(!normalized)return false;
+    const nowStamp=now();
+    const normalized=normalizeEvidence({
+      ...item,status:"developing",sourceType:"learner",sourceLabel:"Learner-added evidence",reviewState:"student",
+      provenance:{authority:"learner",sourceId:evidenceId(item),sourceUpdatedAt:nowStamp,lastSeenAt:nowStamp,archived:false,archivedAt:""},
+      updatedAt:nowStamp
+    });
+    if(!normalized)return false;
     const record=read(id)||emptyRecord(id);
-    const existing=record.evidence.find(x=>x.id===normalized.id)||null;
-    if(existing){
-      const fields=["title","category","courseId","school","stage","status","sourceType","sourceLabel","evidenceHref","reviewState","summary"];
-      const unchanged=fields.every(key=>String(existing[key]??"")===String(normalized[key]??""));
-      if(unchanged)return true;
-    }
     const prior=record.evidence.filter(x=>x.id!==normalized.id);
     record.evidence=[normalized,...prior].slice(0,MAX_EVIDENCE);
+    return saveRecord(record,id);
+  }
+  function syncCourseEvidence(items,target){
+    const id=learnerId(target);if(!id||!Array.isArray(items))return false;
+    const record=read(id)||emptyRecord(id),stamp=now(),incoming=[],seen=new Set();
+    for(const item of items){
+      const courseId=clean(item?.courseId,100);if(!courseId)continue;
+      const sourceId=clean(item?.sourceId||courseId,140);
+      const normalized=normalizeEvidence({
+        ...item,
+        id:item.id||("course:"+sourceId),
+        sourceType:"course",
+        sourceLabel:clean(item.sourceLabel||"Course continuation record",120),
+        reviewState:"system",
+        provenance:{authority:"course",sourceId,sourceUpdatedAt:clean(item.updatedAt,40),lastSeenAt:stamp,archived:false,archivedAt:""}
+      });
+      if(!normalized)continue;
+      const existing=record.evidence.find(x=>x.id===normalized.id&&x?.provenance?.authority==="course")||null;
+      if(existing&&evidenceSame(existing,normalized)){
+        normalized.provenance.lastSeenAt=existing.provenance?.lastSeenAt||stamp;
+        normalized.updatedAt=existing.updatedAt||normalized.updatedAt;
+      }
+      incoming.push(normalized);seen.add(normalized.id);
+    }
+    let changed=false;
+    const preserved=record.evidence.filter(item=>{
+      if(item?.provenance?.authority!=="course")return true;
+      if(seen.has(item.id))return false;
+      if(!item.provenance?.archived){
+        item={...item,provenance:{...item.provenance,archived:true,archivedAt:stamp}};
+        incoming.push(item);changed=true;
+      }else incoming.push(item);
+      return false;
+    });
+    for(const item of incoming){
+      const existing=record.evidence.find(x=>x.id===item.id);
+      if(!existing||!evidenceSame(existing,item))changed=true;
+    }
+    if(!changed)return true;
+    record.evidence=[...incoming,...preserved].slice(0,MAX_EVIDENCE);
     return saveRecord(record,id);
   }
   function removeEvidence(idValue,target){
     const id=learnerId(target);if(!id)return false;
     const record=read(id)||emptyRecord(id),evidenceIdValue=evidenceId({id:idValue});
+    const existing=record.evidence.find(item=>item.id===evidenceIdValue);
+    if(existing?.provenance?.authority!=="learner")return false;
     record.evidence=record.evidence.filter(item=>item.id!==evidenceIdValue);
     return saveRecord(record,id);
   }
@@ -281,6 +340,6 @@
     activeLearner,read,updateCompass:(patch,target)=>updateSection("compass",patch,target),
     updateLearningMap:(patch,target)=>updateSection("learningMap",patch,target),
     updateWorkspace:(patch,target)=>updateSection("workspace",patch,target),
-    upsertEvidence,removeEvidence,classifyContinuations,exportPayload,clearPreferences,privacy
+    addLearnerEvidence,syncCourseEvidence,upsertEvidence:addLearnerEvidence,removeEvidence,classifyContinuations,exportPayload,clearPreferences,privacy
   });
 })(window);
