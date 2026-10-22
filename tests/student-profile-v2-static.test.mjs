@@ -77,16 +77,26 @@ test("writes cannot target a non-active learner",()=>{
   assert.equal(r.api.read("learner-b").evidence.length,0);
 });
 
-test("system evidence sync is idempotent and learner evidence remains labeled",()=>{
+test("Evidence Passport separates learner and course authority",()=>{
   const r=runtime();
-  const item={id:"continuation:math-9",title:"Mathematics 9",courseId:"math-9",status:"demonstrated",sourceType:"system",sourceLabel:"Course continuation record",reviewState:"system",summary:"Unit 1 evidence"};
-  assert.equal(r.api.upsertEvidence(item),true);
+  assert.equal(r.api.upsertEvidence({id:"manual",title:"My proof",status:"mastered",sourceType:"teacher",reviewState:"teacher"}),true);
+  const learnerItem=r.api.read().evidence[0];
+  assert.equal(learnerItem.status,"developing");
+  assert.equal(learnerItem.sourceType,"learner");
+  assert.equal(learnerItem.reviewState,"student");
+  assert.equal(learnerItem.provenance.authority,"learner");
+
+  const course={id:"continuation:math-9",sourceId:"math-9",title:"Mathematics 9",courseId:"math-9",status:"mastered",sourceLabel:"Course continuation record",summary:"Unit 1 evidence",updatedAt:"2026-10-22T12:00:00.000Z"};
+  assert.equal(r.api.syncCourseEvidence([course]),true);
   const key=r.api.storagePrefix+encodeURIComponent("learner-a");
   const before=r.map.get(key);
-  assert.equal(r.api.upsertEvidence(item),true);
+  assert.equal(r.api.syncCourseEvidence([course]),true);
   assert.equal(r.map.get(key),before);
-  assert.equal(r.api.read().evidence[0].sourceType,"system");
-  assert.equal(r.api.read().evidence[0].reviewState,"system");
+  const systemItem=r.api.read().evidence.find(x=>x.id==="continuation:math-9");
+  assert.equal(systemItem.sourceType,"course");
+  assert.equal(systemItem.reviewState,"system");
+  assert.equal(systemItem.provenance.authority,"course");
+  assert.equal(systemItem.provenance.archived,false);
 });
 
 test("continuation classifier separates Today Review and Next",()=>{
@@ -154,4 +164,15 @@ test("corrupt primary profile records recover from the last-known-good backup",(
   r.map.set(key,"{not valid json");
   const recovered=r.api.read();
   assert.equal(recovered.compass.weeklyGoal,"Version one");
+});
+
+
+test("course evidence that disappears is archived and cannot be learner-deleted",()=>{
+  const r=runtime();
+  const item={id:"continuation:science-9",sourceId:"science-9",title:"Science 9",courseId:"science-9",status:"demonstrated",updatedAt:"2026-10-22T12:00:00.000Z"};
+  assert.equal(r.api.syncCourseEvidence([item]),true);
+  assert.equal(r.api.syncCourseEvidence([]),true);
+  const archived=r.api.read().evidence.find(x=>x.id==="continuation:science-9");
+  assert.equal(archived.provenance.archived,true);
+  assert.equal(r.api.removeEvidence("continuation:science-9"),false);
 });
