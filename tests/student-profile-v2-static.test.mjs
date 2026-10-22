@@ -233,3 +233,21 @@ test("Profile Studio exposes previewed Merge or Replace restore controls",()=>{
   assert.match(ui,/P\.restoreProfile/);
   assert.match(ui,/different learner/i);
 });
+
+
+test("legacy v2 system evidence retains course authority during v3 migration",()=>{
+  const r=runtime();
+  r.map.set("khaemenes_student_profile_v2",JSON.stringify({
+    schema:"khaemenes.student-profile.v2",version:2,learners:{
+      "learner-a":{
+        learnerId:"learner-a",
+        evidence:[{id:"continuation:legacy-math",title:"Legacy Math",courseId:"legacy-math",status:"mastered",sourceType:"system",reviewState:"system"}]
+      }
+    }
+  }));
+  const item=r.api.read().evidence[0];
+  assert.equal(item.provenance.authority,"course");
+  assert.equal(item.sourceType,"course");
+  assert.equal(item.reviewState,"system");
+  assert.equal(r.api.removeEvidence(item.id),false);
+});
