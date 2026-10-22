@@ -381,26 +381,19 @@ footer{padding:38px 0;color:rgba(255,255,255,.67);background:var(--night);font-s
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 
 </style>
+<link rel="stylesheet" href="/Khaemenes_Academy.github.io/assets/khaemenes-global-header.css">
+<link rel="stylesheet" href="https://vervenveda.com/assets/vnv-ecosystem-menu.css">
 </head>
 <body id="top">
 <a class="skip" href="#main">Skip to main content</a>
 
-<div class="ribbon" aria-label="Academy quick navigation">
-  <strong>Khaemenes Academy</strong>
-  <a href="#frontdesk">Accounts</a>
-  <a href="#schools">Find My School</a>
-  <a href="#services">Academy Services</a>
-  <a href="#beta">Beta Program</a>
-  <a href="#help">Help Desk</a>
-</div>
-
-<header>
-  <div class="shell header-inner">
-    <a class="brand" href="https://vervenveda.com/" aria-label="Return to Verve N Veda home"><span class="seal">KA</span><span><strong>Khaemenes Academy</strong><small>Front Desk · Enrollment · Directory · Support</small></span></a>
-    <nav class="navlinks" aria-label="Academy navigation">
+<header data-khae-header>
+  <div class="shell header-inner" data-khae-header-inner>
+    <a class="brand" data-khae-brand href="https://vervenveda.com/" aria-label="Return to Verve N Veda home"><span class="seal" data-khae-brand-mark>KA</span><span><strong data-khae-brand-name>Khaemenes Academy</strong><small data-khae-brand-sub>Front Desk · Enrollment · Directory · Support</small></span></a>
+    <nav class="navlinks" data-khae-nav aria-label="Academy navigation">
       <a href="#frontdesk">Front Desk</a><a href="#schools">Schools</a><a href="#services">Services</a><a href="#beta">Beta</a><a href="#help">Help</a>
     </nav>
-    <div class="head-actions">
+    <div class="head-actions" data-khae-actions>
       <a class="head-btn secondary" href="./student/">Student Entry</a>
       <a class="head-btn primary" href="./family/">Create / Manage Account</a>
       <a class="head-btn" href="./adult/">Adult Scholar</a>
@@ -625,5 +618,7 @@ document.querySelectorAll(".academy-info-dialog").forEach(dialog=>{
 <script src="./assets/khaemenes-campus-phrases.js" defer></script>
 <script src="./assets/khaemenes-interlingual-core.js" defer></script>
 <script src="./assets/vnv-language.js" defer></script>
+<script src="/Khaemenes_Academy.github.io/assets/khaemenes-global-header.js" defer></script>
+<script src="https://vervenveda.com/assets/vnv-ecosystem-menu.js" defer></script>
 </body>
 </html>
