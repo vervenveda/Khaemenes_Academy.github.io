@@ -17,7 +17,7 @@ if(!document.getElementById(ID)){
     ["Open 333 →","https://vervenveda.github.io/333.github.io/","call"]
   ];
   const set=(hidden)=>'<div class="khae-network-ticker-set"'+(hidden?' aria-hidden="true"':'')+'><span class="khae-network-ticker-label">333 Network</span>'+links.map(([label,href,type])=>'<a class="khae-network-ticker-'+type+'" href="'+href+'"'+(hidden?' tabindex="-1"':'')+'>'+label+'</a>').join("")+'</div>';
-  ticker.innerHTML='<div class="khae-network-ticker-viewport"><div class="khae-network-ticker-track">'+set(false)+set(true)+'</div></div><button class="khae-ticker-control" type="button" aria-pressed="false" aria-label="Pause 333 Network ticker">Ⅱ</button>';
+  ticker.innerHTML='<div class="khae-network-ticker-viewport"><div class="khae-network-ticker-track">'+set(false)+set(true)+set(true)+'</div></div><button class="khae-ticker-control" type="button" aria-pressed="false" aria-label="Pause 333 Network ticker">Ⅱ</button>';
   const header=document.querySelector("[data-khae-header]");
   header.parentNode.insertBefore(ticker,header);
   const button=ticker.querySelector(".khae-ticker-control");
