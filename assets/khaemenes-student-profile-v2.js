@@ -174,6 +174,12 @@
     const id=learnerId(target);if(!id)return false;
     const normalized=normalizeEvidence(item);if(!normalized)return false;
     const record=read(id)||emptyRecord(id);
+    const existing=record.evidence.find(x=>x.id===normalized.id)||null;
+    if(existing){
+      const fields=["title","category","courseId","school","stage","status","sourceType","sourceLabel","evidenceHref","reviewState","summary"];
+      const unchanged=fields.every(key=>String(existing[key]??"")===String(normalized[key]??""));
+      if(unchanged)return true;
+    }
     const prior=record.evidence.filter(x=>x.id!==normalized.id);
     record.evidence=[normalized,...prior].slice(0,MAX_EVIDENCE);
     return saveRecord(record,id);
