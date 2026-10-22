@@ -129,18 +129,45 @@ main .heading p,.portal-intro p{font-size:19px}
 <link rel="stylesheet" href="../assets/khaemenes-student-profile-v2.css">
 <link rel="stylesheet" href="/Khaemenes_Academy.github.io/assets/khaemenes-global-header.css">
 <link rel="stylesheet" href="https://vervenveda.com/assets/vnv-ecosystem-menu.css">
+<style id="student-header-alignment">
+/* Scoped Student Portal header: no overlapping navigation or duplicate actions. */
+body [data-khae-header] [data-khae-header-inner]{
+  width:calc(100% - 24px)!important;max-width:1500px!important;
+  display:grid!important;grid-template-columns:minmax(190px,1fr) auto auto 44px!important;
+  column-gap:clamp(8px,1.4vw,24px)!important;row-gap:8px!important;
+  align-items:center!important;min-height:76px!important;padding:8px 0!important;
+}
+body [data-khae-header] [data-khae-brand]{max-width:100%;min-width:0!important}
+body [data-khae-header] [data-khae-brand] span:last-child{min-width:0}
+body [data-khae-header] [data-khae-brand-name]{font-size:clamp(12px,1.1vw,15px)!important;line-height:1.25!important}
+body [data-khae-header] [data-khae-nav]{display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:8px!important;flex-wrap:wrap!important;min-width:0!important}
+body [data-khae-header] [data-khae-nav] a,body [data-khae-header] [data-khae-actions] a{font-size:clamp(12px,1vw,15px)!important;line-height:1.3!important;white-space:nowrap!important;min-height:40px!important;padding:9px 12px!important}
+body [data-khae-header] [data-khae-actions]{display:flex!important;align-items:center!important;gap:0!important}
+body [data-khae-header] [data-vnv-ecosystem-slot]{justify-self:end!important;grid-column:4!important;min-width:40px!important}
+@media(max-width:860px){
+ body [data-khae-header] [data-khae-header-inner]{grid-template-columns:minmax(0,1fr) auto 44px!important}
+ body [data-khae-header] [data-khae-nav]{grid-column:1/-1!important;grid-row:2!important;justify-content:center!important;padding-bottom:4px!important}
+ body [data-khae-header] [data-khae-actions]{grid-column:2!important;grid-row:1!important}
+ body [data-khae-header] [data-vnv-ecosystem-slot]{grid-column:3!important;grid-row:1!important}
+}
+@media(max-width:520px){
+ body [data-khae-header] [data-khae-header-inner]{width:calc(100% - 16px)!important;column-gap:6px!important}
+ body [data-khae-header] [data-khae-nav]{gap:5px!important}
+ body [data-khae-header] [data-khae-nav] a{font-size:12px!important;padding:7px 8px!important}
+ body [data-khae-header] [data-khae-actions] a{font-size:12px!important;padding:8px!important}
+}
+</style>
 </head>
 <body data-i18n-no-online>
 <header data-khae-header>
   <div class="shell nav" data-khae-header-inner>
     <a class="brand" data-khae-brand href="../"><span class="mark" data-khae-brand-mark>KA</span><span><strong data-khae-brand-name>Khaemenes Academy</strong><small data-khae-brand-sub>Student Portal</small></span></a>
     <nav class="navlinks" data-khae-nav aria-label="Academy navigation">
-      <a href="profile.html" id="studentProfileNavigation">My Profile</a>
-      <a href="../family/">Family Hub</a>
-      <a href="../family/enroll/">Enrollment</a>
+      <a href="./">Student Portal</a>
       <a href="../">Academy Home</a>
+      <a href="../family/">Family Hub</a>
     </nav>
-    <div data-khae-actions><a data-khae-secondary href="profile.html">My Profile</a><a href="../family/">Family Hub</a></div>
+    <div data-khae-actions><a data-khae-secondary href="profile.html">My Profile</a></div>
     <div data-vnv-ecosystem-slot aria-label="Ecosystem menu"></div>
   </div>
 </header>
