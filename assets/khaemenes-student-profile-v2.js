@@ -108,7 +108,7 @@
   function normalizeEvidence(value={}){
     const id=evidenceId(value);
     if(!id)return null;
-    const authority=value?.provenance?.authority==="course"?"course":"learner";
+    const authority=value?.provenance?.authority==="course"||value?.sourceType==="system"||value?.sourceType==="course"||value?.reviewState==="system"?"course":"learner";
     return {
       id,
       title:clean(value.title||"Learning Evidence",140),
