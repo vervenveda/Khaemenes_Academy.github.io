@@ -1,14 +1,16 @@
 /*
-  Khaemenes Academy Student Profile Contract v2.0
+  Khaemenes Academy Student Profile Contract v3 storage / v2-compatible API
   Learner-authored preferences + evidence index only.
   This module never awards grades, changes placement, unlocks lessons, or authenticates a person.
 */
 (function attachKhaemenesStudentProfileV2(global){
   "use strict";
 
-  const VERSION="2.0.0";
-  const SCHEMA="khaemenes.student-profile.v2";
-  const STORE_KEY="khaemenes_student_profile_v2";
+  const VERSION="3.0.0";
+  const SCHEMA="khaemenes.student-profile.v3";
+  const LEGACY_SCHEMA="khaemenes.student-profile.v2";
+  const LEGACY_STORE_KEY="khaemenes_student_profile_v2";
+  const STORE_PREFIX="khaemenes.student-profile.v3:";
   const ACTIVE_KEY="khaemenes_active_learner_v1";
   const FAMILY_KEY="khaemenes_family_registry_v1";
   const MAX_EVIDENCE=120;
@@ -55,7 +57,7 @@
 
   function emptyRecord(id){
     return {
-      schema:SCHEMA,version:2,learnerId:id,
+      schema:SCHEMA,version:3,learnerId:id,revision:0,
       compass:{weekOf:"",weeklyGoal:"",whyMatters:"",strategy:"",helpNeeded:"",reflection:"",nextChange:""},
       learningMap:{strengths:[],learningPreferences:[],supports:[],focusReset:[],interests:[],growthSkills:[],collaboration:"flexible"},
       workspace:{theme:"academy",textSize:"standard",lineSpacing:"comfortable",readingWidth:"comfortable",contrast:"standard",reducedMotion:false,density:"comfortable",preferredLanguage:"",tts:false,simplifiedDashboard:false},
@@ -131,36 +133,76 @@
       learningMap:normalizeLearningMap(value?.learningMap),
       workspace:normalizeWorkspace(value?.workspace),
       evidence,
+      revision:Number.isInteger(Number(value?.revision))?Math.max(0,Number(value.revision)):0,
       updatedAt:clean(value?.updatedAt,40)||null
     };
   }
-  function readStore(){
-    const value=readJSON(STORE_KEY,null);
-    return value&&typeof value==="object"&&!Array.isArray(value)&&value.learners&&typeof value.learners==="object"
-      ? value
-      : {schema:SCHEMA,version:2,learners:{},updatedAt:null};
+  function recordKey(id){return STORE_PREFIX+encodeURIComponent(id)}
+  function backupKey(id){return recordKey(id)+":backup"}
+  function parseEnvelope(raw,id){
+    if(!raw)return null;
+    try{
+      const value=JSON.parse(raw);
+      if(!value||value.schema!==SCHEMA||Number(value.version)!==3||String(value.learnerId||"")!==String(id)||!value.record)return null;
+      return {
+        schema:SCHEMA,version:3,learnerId:id,
+        revision:Math.max(0,Number(value.revision)||0),
+        updatedAt:clean(value.updatedAt,40)||null,
+        record:normalizeRecord({...value.record,revision:Math.max(0,Number(value.revision)||0)},id)
+      };
+    }catch{return null}
   }
-  function writeStore(store,id){
-    store.schema=SCHEMA;store.version=2;store.updatedAt=now();
-    const ok=writeJSON(STORE_KEY,store);
-    if(ok&&typeof global.dispatchEvent==="function"&&typeof CustomEvent==="function"){
-      global.dispatchEvent(new CustomEvent("khaemenes-student-profile-changed",{detail:{learnerId:id,updatedAt:store.updatedAt}}));
+  function legacyRecord(id){
+    const value=readJSON(LEGACY_STORE_KEY,null);
+    if(!value||typeof value!=="object"||Array.isArray(value)||!value.learners||typeof value.learners!=="object")return null;
+    const prior=value.learners[id];
+    return prior?normalizeRecord(prior,id):null;
+  }
+  function readEnvelope(id,{migrate=true}={}){
+    const primary=parseEnvelope(global.localStorage.getItem(recordKey(id)),id);
+    if(primary)return primary;
+    const backup=parseEnvelope(global.localStorage.getItem(backupKey(id)),id);
+    if(backup)return backup;
+    const legacy=legacyRecord(id);
+    if(!legacy)return null;
+    const envelope={schema:SCHEMA,version:3,learnerId:id,revision:1,updatedAt:legacy.updatedAt||now(),record:{...legacy,revision:1}};
+    const active=activeLearner();
+    if(migrate&&active?.learnerId&&String(active.learnerId)===String(id)){
+      try{global.localStorage.setItem(recordKey(id),JSON.stringify(envelope))}catch{}
     }
-    return ok;
+    return envelope;
+  }
+  function emit(id,envelope){
+    if(typeof global.dispatchEvent==="function"&&typeof CustomEvent==="function"){
+      global.dispatchEvent(new CustomEvent("khaemenes-student-profile-changed",{detail:{learnerId:id,revision:envelope.revision,updatedAt:envelope.updatedAt}}));
+    }
+  }
+  function writeEnvelope(id,record,expectedRevision){
+    const current=readEnvelope(id,{migrate:false});
+    const currentRevision=current?.revision||0;
+    if(Number.isInteger(expectedRevision)&&currentRevision!==expectedRevision)return {ok:false,reason:"revision-conflict",currentRevision};
+    const normalized=normalizeRecord(record,id);
+    const revision=currentRevision+1,updatedAt=now();
+    normalized.revision=revision;normalized.updatedAt=updatedAt;
+    const envelope={schema:SCHEMA,version:3,learnerId:id,revision,updatedAt,record:normalized};
+    try{
+      if(current)global.localStorage.setItem(backupKey(id),JSON.stringify(current));
+      global.localStorage.setItem(recordKey(id),JSON.stringify(envelope));
+      emit(id,envelope);
+      return {ok:true,envelope};
+    }catch{return {ok:false,reason:"storage-failure",currentRevision}}
   }
   function read(target){
     const id=learnerId(target);if(!id)return null;
-    const store=readStore();
-    return normalizeRecord(store.learners?.[id],id);
+    const envelope=readEnvelope(id);
+    return envelope?normalizeRecord({...envelope.record,revision:envelope.revision},id):emptyRecord(id);
   }
   function saveRecord(record,target){
     const id=learnerId(target||record?.learnerId);if(!id)return false;
     const currentActive=activeLearner();
     if(!currentActive?.learnerId||String(currentActive.learnerId)!==String(id))return false;
-    const store=readStore();
-    const normalized=normalizeRecord(record,id);normalized.updatedAt=now();
-    store.learners={...(store.learners||{}),[id]:normalized};
-    return writeStore(store,id);
+    const expected=Number.isInteger(Number(record?.revision))?Number(record.revision):undefined;
+    return writeEnvelope(id,record,expected).ok;
   }
   function updateSection(section,patch,target){
     if(!["compass","learningMap","workspace"].includes(section))return false;
@@ -205,7 +247,7 @@
     const id=learnerId(target),record=id?read(id):null,learner=id?(registry()?.getLearner?.(id)||activeLearner()):null;
     if(!id||!record)return null;
     return {
-      format:"khaemenes-student-profile-export-v2",
+      format:"khaemenes-student-profile-export-v3",
       exportedAt:now(),
       learner:{learnerId:id,nickname:clean(learner?.nickname||learner?.displayName||"Learner",80),grade:clean(learner?.grade,20),stage:clean(learner?.stage,40)},
       profile:record,
@@ -235,7 +277,7 @@
   }
 
   global.KhaemenesStudentProfileV2=Object.freeze({
-    version:VERSION,schema:SCHEMA,storageKey:STORE_KEY,maxEvidence:MAX_EVIDENCE,
+    version:VERSION,schema:SCHEMA,storageKey:LEGACY_STORE_KEY,storagePrefix:STORE_PREFIX,legacyStorageKey:LEGACY_STORE_KEY,maxEvidence:MAX_EVIDENCE,
     activeLearner,read,updateCompass:(patch,target)=>updateSection("compass",patch,target),
     updateLearningMap:(patch,target)=>updateSection("learningMap",patch,target),
     updateWorkspace:(patch,target)=>updateSection("workspace",patch,target),
