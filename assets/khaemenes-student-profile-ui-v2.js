@@ -11,6 +11,34 @@ const split=value=>String(value||"").split(/[\n,]+/).map(x=>x.trim()).filter(Boo
 function learner(){return R?.getLearner?.()||P.activeLearner?.()||null}
 function record(){const l=learner();return l?.learnerId?P.read(l.learnerId):null}
 function continuations(){const l=learner();return l?.learnerId&&C?.readLearner?C.readLearner(l.learnerId)||[]:[]}
+function evidenceStatusFromContinuation(item){
+  const threshold=Number(item?.mastery?.threshold||80),best=Number(item?.mastery?.best);
+  if(item?.status==="complete"&&item?.mastery?.mastered===true)return "mastered";
+  if(Number.isFinite(best)&&best>=threshold)return "demonstrated";
+  if(Number(item?.progress?.completed||0)>0||Number(item?.progress?.percent||0)>0)return "demonstrated";
+  return "developing";
+}
+function syncContinuationEvidence(){
+  const l=learner();if(!l?.learnerId)return;
+  for(const item of continuations()){
+    const courseId=String(item?.courseId||"").trim();if(!courseId)continue;
+    P.upsertEvidence({
+      id:"continuation:"+courseId,
+      title:item.courseTitle||item.courseId||"Course progress",
+      category:item.subject||"Course Progress",
+      courseId,
+      school:item.school||"",
+      stage:item.stage||l.stage||"",
+      status:evidenceStatusFromContinuation(item),
+      sourceType:"system",
+      sourceLabel:"Course continuation record",
+      evidenceHref:safeHref(item.nextHref),
+      reviewState:"system",
+      summary:item.summary||item.nextTitle||"Course progress evidence published by the source course.",
+      updatedAt:item.updatedAt||""
+    },l.learnerId);
+  }
+}
 function statusLabel(value){return ({continue:"Today",practice:"Practice",corrections:"Review",mastery:"Mastery Review",assessment:"Assessment Next",complete:"Complete",paused:"Paused"})[value]||"Next"}
 function renderLane(title,items){
   if(!items.length)return `<div><h4>${esc(title)}</h4><div class="profile-v2-empty">Nothing is waiting here right now.</div></div>`;
@@ -33,6 +61,7 @@ function applyWorkspace(workspace){
 function render(){
   const l=learner();
   if(!l?.learnerId){host.innerHTML="";return}
+  syncContinuationEvidence();
   const rec=record(),lanes=P.classifyContinuations(continuations());
   applyWorkspace(rec.workspace);
   host.innerHTML=`<div class="heading"><p class="eyebrow">My Learning Profile</p><h2>Learn with purpose. Keep your evidence.</h2><p>This learner-owned studio sits beside your official course records. It helps you plan, reflect, personalize your workspace, and collect clearly labeled evidence without changing grades or mastery.</p></div>
