@@ -80,7 +80,7 @@ function render(){
     try{IDs?.ensureLearner?.(learner.learnerId);learner=R.getLearner(learner.learnerId)}catch{}
     R.setActive?.({familyId:family.familyId,learnerId:learner.learnerId});
     render();
-    setTimeout(()=>{if(confirm(`${learner.nickname} is registered for ${meta.label}.\n\nContinue to the Student Portal?`))location.href="../../student/"},30);
+    setTimeout(()=>{if(!confirm(`${learner.nickname} is registered for ${meta.label}.\n\nContinue to the learner profile?`))return;const route=window.KhaemenesFrontDoorRouter?.routeForLearner?.(learner);location.href=route?.destination||"../../student/"},30);
   });
 
   const adult=R.getAdult(),self=adult?R.getAdultLearner(adult.adultId):null;
