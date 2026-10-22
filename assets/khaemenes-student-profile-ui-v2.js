@@ -1,13 +1,14 @@
 (function attachKhaemenesStudentProfileUIV2(global){
 "use strict";
 const VERSION="2.0.0";
-const P=global.KhaemenesStudentProfileV2,R=global.KhaemenesFamilyRegistry,C=global.KhaemenesLearningContinuation;
+const P=global.KhaemenesStudentProfileV2,R=global.KhaemenesFamilyRegistry,C=global.KhaemenesLearningContinuation,Q=global.KhaemenesStudentQuickPinsV1;
 const host=document.getElementById("profileStudio");
 if(!P||!host)return;
 const esc=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const safeHref=value=>/^https?:\/\//i.test(String(value||""))?String(value):"";
 const lines=value=>Array.isArray(value)?value.join("\n"):"";
 const split=value=>String(value||"").split(/[\n,]+/).map(x=>x.trim()).filter(Boolean);
+let pendingImport=null;
 function learner(){return R?.getLearner?.()||P.activeLearner?.()||null}
 function record(){const l=learner();return l?.learnerId?P.read(l.learnerId):null}
 function continuations(){const l=learner();return l?.learnerId&&C?.readLearner?C.readLearner(l.learnerId)||[]:[]}
@@ -109,7 +110,10 @@ function render(){
       <label class="profile-v2-check"><input id="pv2Motion" type="checkbox" ${rec.workspace.reducedMotion?"checked":""}> Reduce nonessential motion</label>
       <label class="profile-v2-check"><input id="pv2TTS" type="checkbox" ${rec.workspace.tts?"checked":""}> Prefer text-to-speech controls when available</label>
       <label class="profile-v2-check"><input id="pv2Simple" type="checkbox" ${rec.workspace.simplifiedDashboard?"checked":""}> Prefer a simplified dashboard when supported</label>
-      <div class="profile-v2-actions"><button class="profile-v2-btn" type="button" id="pv2SaveWorkspace">Save Workspace</button><button class="profile-v2-btn secondary" type="button" id="pv2Export">Export My Profile</button><button class="profile-v2-btn secondary" type="button" id="pv2Reset">Reset Preferences</button></div><div class="profile-v2-status" id="pv2WorkspaceStatus" aria-live="polite"></div>
+      <div class="profile-v2-actions"><button class="profile-v2-btn" type="button" id="pv2SaveWorkspace">Save Workspace</button><button class="profile-v2-btn secondary" type="button" id="pv2Export">Export Profile Bundle</button><button class="profile-v2-btn secondary" type="button" id="pv2Reset">Reset Preferences</button></div>
+      <div class="profile-v2-field"><label for="pv2ImportFile">Restore from a profile bundle</label><input id="pv2ImportFile" type="file" accept=".json,application/json"></div>
+      <div class="profile-v2-two"><div class="profile-v2-field"><label for="pv2RestoreMode">Restore method</label><select id="pv2RestoreMode"><option value="merge">Merge with this learner</option><option value="replace">Replace learner preferences</option></select></div><div class="profile-v2-actions"><button class="profile-v2-btn secondary" type="button" id="pv2Restore" disabled>Restore Previewed Bundle</button></div></div>
+      <div class="profile-v2-status" id="pv2ImportStatus" aria-live="polite"></div><div class="profile-v2-status" id="pv2WorkspaceStatus" aria-live="polite"></div>
     </section>
     <section class="profile-v2-card profile-v2-col4" aria-labelledby="privacyTitle" data-khae-optional="true">
       <p class="profile-v2-eyebrow">Privacy Boundary</p><h3 id="privacyTitle">What this profile can and cannot do</h3>
@@ -129,7 +133,34 @@ function bind(){
   document.getElementById("pv2AddEvidence")?.addEventListener("click",()=>{const title=value("pv2EvidenceTitle").trim();if(!title){status("pv2EvidenceStatus","Add an evidence title first.");return}const ok=P.addLearnerEvidence({id:"learner-"+Date.now(),title,category:value("pv2EvidenceCategory")||"Learner Evidence",evidenceHref:value("pv2EvidenceHref"),summary:value("pv2EvidenceSummary")},l.learnerId);if(ok)render();else status("pv2EvidenceStatus","Could not save evidence on this device.")});
   host.querySelectorAll("[data-remove-evidence]").forEach(button=>button.addEventListener("click",()=>{P.removeEvidence(button.dataset.removeEvidence,l.learnerId);render()}));
   document.getElementById("pv2SaveWorkspace")?.addEventListener("click",()=>{const prefs={theme:value("pv2Theme"),textSize:value("pv2Text"),lineSpacing:value("pv2Line"),readingWidth:value("pv2Width"),contrast:value("pv2Contrast"),density:value("pv2Density"),preferredLanguage:value("pv2Language"),reducedMotion:document.getElementById("pv2Motion")?.checked,tts:document.getElementById("pv2TTS")?.checked,simplifiedDashboard:document.getElementById("pv2Simple")?.checked};const ok=P.updateWorkspace(prefs,l.learnerId);if(ok){applyWorkspace(P.read(l.learnerId).workspace);status("pv2WorkspaceStatus","Workspace preferences saved.")}else status("pv2WorkspaceStatus","Could not save on this device.")});
-  document.getElementById("pv2Export")?.addEventListener("click",()=>{const payload=P.exportPayload(l.learnerId);if(!payload)return;const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="khaemenes-student-profile-v2.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),800)});
+  document.getElementById("pv2Export")?.addEventListener("click",()=>{
+    const profile=P.exportPayload(l.learnerId);if(!profile)return;
+    const payload={format:"khaemenes-student-profile-bundle-v3",exportedAt:new Date().toISOString(),learner:profile.learner,profile:profile.profile,quickPins:(Q?.list?.()||[]).map(item=>item.id),authority:profile.authority,privacy:profile.privacy};
+    const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");
+    a.href=url;a.download="khaemenes-student-profile-bundle-v3.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),800);
+  });
+  document.getElementById("pv2ImportFile")?.addEventListener("change",async event=>{
+    pendingImport=null;const restore=document.getElementById("pv2Restore");if(restore)restore.disabled=true;
+    const file=event.target.files?.[0];if(!file){status("pv2ImportStatus","Choose a JSON profile bundle to preview.");return}
+    try{
+      const payload=JSON.parse(await file.text()),preview=P.previewImport(payload,l.learnerId);
+      if(!preview.ok){status("pv2ImportStatus",preview.reason==="learner-mismatch"?"This bundle belongs to a different learner. Nothing was changed.":"This file is not a supported Khaemenes learner-profile bundle. Nothing was changed.");return}
+      pendingImport={payload,preview};
+      status("pv2ImportStatus",`Preview: ${preview.learner.nickname||"Learner"} · ${preview.counts.learnerEvidence} learner evidence entr${preview.counts.learnerEvidence===1?"y":"ies"} · ${preview.counts.quickPins} Quick Pins · ${preview.counts.courseEvidenceIgnored} course-authority entr${preview.counts.courseEvidenceIgnored===1?"y":"ies"} will be ignored and rebuilt from live courses.`);
+      if(restore)restore.disabled=false;
+    }catch{status("pv2ImportStatus","The selected file could not be read as valid JSON. Nothing was changed.")}
+  });
+  document.getElementById("pv2Restore")?.addEventListener("click",()=>{
+    if(!pendingImport){status("pv2ImportStatus","Preview a profile bundle before restoring.");return}
+    const mode=value("pv2RestoreMode")==="replace"?"replace":"merge",result=P.restoreProfile(pendingImport.payload,{mode,target:l.learnerId});
+    if(!result.ok){status("pv2ImportStatus","Restore was blocked. Nothing was changed.");return}
+    const validQuick=(result.quickPins||[]).filter(id=>Q?.resources?.[id]);
+    if(Q){
+      if(mode==="replace")Q.clear();
+      validQuick.forEach(id=>Q.setPinned(id,true));
+    }
+    pendingImport=null;render();
+  });
   document.getElementById("pv2Reset")?.addEventListener("click",()=>{if(confirm("Reset this learner's Compass, Learning Map, and Workspace preferences? Evidence Passport entries will remain.")){P.clearPreferences(l.learnerId);render()}});
 }
 global.addEventListener("khaemenes-family-changed",render);
