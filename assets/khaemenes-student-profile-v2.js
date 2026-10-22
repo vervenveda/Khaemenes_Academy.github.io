@@ -156,7 +156,7 @@
   function saveRecord(record,target){
     const id=learnerId(target||record?.learnerId);if(!id)return false;
     const currentActive=activeLearner();
-    if(!target&&currentActive?.learnerId!==id)return false;
+    if(!currentActive?.learnerId||String(currentActive.learnerId)!==String(id))return false;
     const store=readStore();
     const normalized=normalizeRecord(record,id);normalized.updatedAt=now();
     store.learners={...(store.learners||{}),[id]:normalized};
