@@ -23,12 +23,19 @@ a{color:inherit;text-decoration:none}button,input,select{font:inherit}:focus-vis
 .actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}.btn{min-height:44px;border:1px solid var(--navy);border-radius:var(--r);padding:9px 14px;background:var(--navy);color:#fff;font:600 11px var(--sans);text-transform:uppercase;letter-spacing:.05em;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}.btn.green{background:var(--green);border-color:var(--green)}.btn.gold{background:#9a783a;border-color:#9a783a}.btn.secondary{background:#fff;color:var(--navy)}
 .notice{padding:12px 14px;border-radius:var(--r);background:#fff8e6;border-left:4px solid var(--gold);font-size:13px;margin:13px 0}.ok{background:#eef8f0;border-left-color:var(--green)}.learner{padding:13px 0;border-bottom:1px solid var(--line)}.learner:last-child{border-bottom:0}.learner small{display:block;color:var(--muted)}.row{display:flex;justify-content:space-between;align-items:center;gap:12px}.adult-card{border-top:5px solid var(--gold)}.wide{grid-column:1/-1}.wide p{margin:.45rem 0;color:var(--muted);font-size:13px}.id-chip{display:inline-flex;margin-top:6px;padding:4px 8px;border:1px solid var(--line);border-radius:999px;background:#f6f4ef;color:var(--navy);font:700 10px/1.3 var(--sans)}
 @media(max-width:760px){.grid{grid-template-columns:1fr}.wide{grid-column:auto}.top .shell{justify-content:center;text-align:center}.top nav{justify-content:center}.row{align-items:flex-start;flex-direction:column}.actions .btn{width:100%}}
+
+/* Academy-first heading hierarchy; consistent unobtrusive utility placement. */
+.hero h1{font-family:Cinzel,Georgia,serif;font-weight:400!important;font-size:clamp(39px,5vw,66px)!important;line-height:1.16!important}
+.academy-page-subtitle{font-family:Cinzel,Georgia,serif;font-weight:400!important;font-size:clamp(23px,3vw,33px)!important;line-height:1.3!important;margin:10px auto 0}
+#khaemenesLearnerUtilityToolbar{position:fixed!important;right:max(12px,env(safe-area-inset-right))!important;bottom:max(12px,env(safe-area-inset-bottom))!important;left:auto!important;top:auto!important}
+#vnvBetaProgramLink{position:fixed!important;right:max(12px,env(safe-area-inset-right))!important;bottom:max(12px,env(safe-area-inset-bottom))!important;left:auto!important;top:auto!important}
+@media print{#khaemenesLearnerUtilityToolbar,#vnvBetaProgramLink{display:none!important}}
 </style>
 </head>
 <body data-i18n-no-online>
 <header class="top"><div class="shell"><div class="brand">Khaemenes Academy</div><nav><a href="../../">Academy Home</a><a href="../">Family Hub</a><a href="../../student/">Student Portal</a><a href="../../adult/">Adult Learning</a></nav></div></header>
 
-<section class="hero shell"><div class="eyebrow">Enrollment & Placement</div><h1>Begin the right learning path.</h1><p>Create or open a family profile, register each K–12 learner with an exact grade, or begin an adult learning path through Khaemenes Higher Learning.</p></section>
+<section class="hero shell"><div class="eyebrow">Enrollment & Placement</div><h1>Khaemenes Academy</h1><h2 class="academy-page-subtitle">Enrollment &amp; Learning Pathways</h2><p>Begin the right learning path.</p><p>Create or open a family profile, register each K–12 learner with an exact grade, or begin an adult learning path through Khaemenes Higher Learning.</p></section>
 
 <main class="shell grid">
 <section class="card"><div class="eyebrow">Step 1</div><h2>Family Profile</h2><div id="familyPane"></div></section>
