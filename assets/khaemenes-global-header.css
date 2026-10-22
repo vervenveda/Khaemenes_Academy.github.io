@@ -37,7 +37,7 @@
   display:flex;
   align-items:center;
   white-space:nowrap;
-  animation:khaeNetworkTickerMove 26s linear infinite;
+  animation:khaeNetworkTickerMove 20s linear infinite;
   will-change:transform;
 }
 .khae-network-ticker:hover .khae-network-ticker-track,
@@ -47,7 +47,7 @@
   height:100%;
   display:flex;
   align-items:center;
-  gap:22px;
+  gap:14px;
   padding-inline:11px;
 }
 .khae-network-ticker-label{
@@ -86,7 +86,7 @@
   cursor:pointer;
 }
 .khae-ticker-control:hover{background:rgba(255,255,255,.09)}
-@keyframes khaeNetworkTickerMove{to{transform:translateX(-50%)}}
+@keyframes khaeNetworkTickerMove{to{transform:translateX(-33.333333%)}}
 
 [data-khae-header]{
   width:100%!important;
@@ -241,8 +241,8 @@
 @media(max-width:560px){
   :root{--khae-ticker-height:32px;--khae-header-height:64px}
   .khae-network-ticker{grid-template-columns:minmax(0,1fr) 36px}
-  .khae-network-ticker-track{animation-duration:24s}
-  .khae-network-ticker-set{gap:18px;padding-inline:9px}
+  .khae-network-ticker-track{animation-duration:18s}
+  .khae-network-ticker-set{gap:12px;padding-inline:7px}
   .khae-network-ticker-label{font-size:9px}
   .khae-network-ticker-app,.khae-network-ticker-call{font-size:9px!important}
   .khae-ticker-control{width:36px}
