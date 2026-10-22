@@ -16,7 +16,7 @@ const STAGE_PRESENTATION=Object.freeze({
     intro:"A trusted adult can help the learner choose small goals, notice what feels interesting, and save learning moments. Course records still remain separate and authoritative.",
     compassEyebrow:"Learning Together",compassTitle:"A small goal and what we noticed",
     goalLabel:"Something we want to try",whyLabel:"What interests the learner",strategyLabel:"How we can help",helpLabel:"What support feels good",reflectionLabel:"What the learner enjoyed or did well",nextChangeLabel:"Something we may try next",
-    nextEyebrow:"Today · Next",nextTitle:"What can we open together?",nextCopy:"These course steps come from the learner's school pathway. Adults may help open the next activity, but this profile never changes mastery or placement.",
+    nextEyebrow:"Today · Next",nextTitle:"What can we open together?",laneToday:"Today",laneReview:"Try Again",laneNext:"Next",nextCopy:"These course steps come from the learner's school pathway. Adults may help open the next activity, but this profile never changes mastery or placement.",
     mapTitle:"What helps this learner thrive",strengthsLabel:"Things the learner enjoys doing",preferencesLabel:"The learner responds well to",supportsLabel:"Helpful supports",resetLabel:"What helps the learner feel ready again",interestsLabel:"Things the learner is curious about",growthLabel:"Skills we are gently building",collaborationLabel:"Learning together usually works best as",
     evidenceEyebrow:"Learning Moments",evidenceTitle:"Things we can remember and celebrate",evidenceCopy:"Course-published evidence remains separate. A family-assisted note records a learning moment only; it cannot award mastery.",evidenceAddTitle:"Add a family-assisted learning moment",evidenceCategory:"Learning Moment",
     workspaceTitle:"Comfort & accessibility",workspaceCopy:"Choose a comfortable reading, motion, language, and display setup for this learner.",
@@ -28,7 +28,7 @@ const STAGE_PRESENTATION=Object.freeze({
     intro:"A trusted adult can help the learner set a simple goal, notice strengths, and save learning moments while official progress stays with each course.",
     compassEyebrow:"Learning Together",compassTitle:"Our goal and reflection",
     goalLabel:"Something I want to try",whyLabel:"Why this is interesting",strategyLabel:"How we will practice",helpLabel:"What help feels useful",reflectionLabel:"What went well",nextChangeLabel:"What we may try next",
-    nextEyebrow:"Today · Next",nextTitle:"What comes next?",nextCopy:"These steps come from the learner's courses. The profile helps the family navigate without changing scores, mastery, or placement.",
+    nextEyebrow:"Today · Next",nextTitle:"What comes next?",laneToday:"Today",laneReview:"Practice Again",laneNext:"Next",nextCopy:"These steps come from the learner's courses. The profile helps the family navigate without changing scores, mastery, or placement.",
     mapTitle:"How I learn best",strengthsLabel:"Things I am getting good at",preferencesLabel:"I learn well when",supportsLabel:"Helpful supports",resetLabel:"What helps me refocus",interestsLabel:"Things I want to explore",growthLabel:"Skills I am practicing",collaborationLabel:"I usually like learning",
     evidenceEyebrow:"Learning Moments",evidenceTitle:"Things I can show",evidenceCopy:"Course evidence stays clearly separate. Family-assisted notes are memories of learning, not grades or mastery.",evidenceAddTitle:"Add a learning moment",evidenceCategory:"Learning Moment",
     workspaceTitle:"My comfortable workspace",workspaceCopy:"Choose the reading, motion, language, and display settings that make learning comfortable.",
@@ -40,7 +40,7 @@ const STAGE_PRESENTATION=Object.freeze({
     intro:"Use a simple goal, notice your strengths, and save examples of your work. A family member can help, and your courses still control grades and mastery.",
     compassEyebrow:"My Weekly Compass",compassTitle:"My goal and what I noticed",
     goalLabel:"My goal this week",whyLabel:"Why I care about it",strategyLabel:"What I will try",helpLabel:"Help that would be useful",reflectionLabel:"What worked well",nextChangeLabel:"What I may change next",
-    nextEyebrow:"Today · Next · Review",nextTitle:"What should I work on?",nextCopy:"These steps come from your courses. Use them to find where to continue, practice, or review.",
+    nextEyebrow:"Today · Next · Review",nextTitle:"What should I work on?",laneToday:"Today",laneReview:"Practice Again",laneNext:"Next",nextCopy:"These steps come from your courses. Use them to find where to continue, practice, or review.",
     mapTitle:"My strengths and learning supports",strengthsLabel:"My strengths",preferencesLabel:"I learn well when",supportsLabel:"Helpful supports",resetLabel:"What helps me refocus",interestsLabel:"Things I want to explore",growthLabel:"Skills I want to grow",collaborationLabel:"I usually prefer",
     evidenceEyebrow:"Evidence Passport",evidenceTitle:"Work I am proud to show",evidenceCopy:"Course evidence and learner-added evidence stay clearly labeled. Adding your own work does not change a grade or mastery result.",evidenceAddTitle:"Add my own work",evidenceCategory:"Learner Work",
     workspaceTitle:"My Workspace Controls",workspaceCopy:"Choose reading and accessibility settings that help you learn comfortably.",
@@ -52,7 +52,7 @@ const STAGE_PRESENTATION=Object.freeze({
     intro:"Set goals, reflect on what works, organize supports, and keep clearly labeled evidence beside your official course records.",
     compassEyebrow:"Learning Compass",compassTitle:"My goal, strategy, and reflection",
     goalLabel:"My goal this week",whyLabel:"Why it matters to me",strategyLabel:"What I will try",helpLabel:"What support I need",reflectionLabel:"What worked",nextChangeLabel:"What I will adjust next",
-    nextEyebrow:"Today · Next · Review",nextTitle:"What needs my attention?",nextCopy:"These next steps are published by your courses. This profile helps you organize them without changing academic records.",
+    nextEyebrow:"Today · Next · Review",nextTitle:"What needs my attention?",laneToday:"Today",laneReview:"Review",laneNext:"Next",nextCopy:"These next steps are published by your courses. This profile helps you organize them without changing academic records.",
     mapTitle:"Strengths, preferences, and supports",strengthsLabel:"My strengths",preferencesLabel:"I learn well when",supportsLabel:"Helpful supports",resetLabel:"Things that help me regain focus",interestsLabel:"Ideas I want to explore",growthLabel:"Skills I want to strengthen",collaborationLabel:"I usually prefer",
     evidenceEyebrow:"Evidence Passport",evidenceTitle:"What I can show",evidenceCopy:"Course-published and learner-added evidence remain distinct. Learner evidence can document growth but cannot award mastery.",evidenceAddTitle:"Add learner evidence",evidenceCategory:"Learner Evidence",
     workspaceTitle:"My Workspace Controls",workspaceCopy:"Personalize reading, accessibility, language, and dashboard preferences without changing course rules.",
@@ -64,7 +64,7 @@ const STAGE_PRESENTATION=Object.freeze({
     intro:"This learner-owned studio sits beside your official course records. Plan, reflect, personalize your workspace, and collect clearly labeled evidence without changing grades or mastery.",
     compassEyebrow:"Learning Compass",compassTitle:"My goal and reflection",
     goalLabel:"My goal this week",whyLabel:"Why it matters to me",strategyLabel:"What I will try",helpLabel:"What help I need",reflectionLabel:"What worked",nextChangeLabel:"What I will change next",
-    nextEyebrow:"Today · Next · Review",nextTitle:"What needs my attention?",nextCopy:"These steps come from course continuation records. This profile does not invent scores or unlock work.",
+    nextEyebrow:"Today · Next · Review",nextTitle:"What needs my attention?",laneToday:"Today",laneReview:"Review",laneNext:"Next",nextCopy:"These steps come from course continuation records. This profile does not invent scores or unlock work.",
     mapTitle:"Strengths, preferences, and supports",strengthsLabel:"My strengths",preferencesLabel:"I learn well when",supportsLabel:"Helpful supports",resetLabel:"Things that help me regain focus",interestsLabel:"Subjects or ideas I want to explore",growthLabel:"Skills I want to strengthen",collaborationLabel:"I usually prefer",
     evidenceEyebrow:"Evidence Passport",evidenceTitle:"What I can show",evidenceCopy:"Course-published evidence remains clearly distinguished from learner-added evidence. A student-added item can never award mastery.",evidenceAddTitle:"Add learner evidence",evidenceCategory:"Learner Evidence",
     workspaceTitle:"My Workspace Controls",workspaceCopy:"Accessible, controlled personalization for reading, language, focus, and dashboard preferences.",
@@ -76,7 +76,7 @@ const STAGE_PRESENTATION=Object.freeze({
     intro:"Use this scholar-owned studio to organize goals, research interests, study conditions, and learner-authored evidence beside—not inside—official course and faculty records.",
     compassEyebrow:"Scholar Compass",compassTitle:"Current objective, method, and reflection",
     goalLabel:"Current study objective",whyLabel:"Why this inquiry matters",strategyLabel:"Method or study strategy",helpLabel:"Resources or support needed",reflectionLabel:"What the evidence suggests",nextChangeLabel:"Next refinement",
-    nextEyebrow:"Current · Next · Review",nextTitle:"What requires scholarly attention?",nextCopy:"These continuation records come from source courses. The profile organizes them without changing faculty, assessment, mastery, or certificate authority.",
+    nextEyebrow:"Current · Next · Review",nextTitle:"What requires scholarly attention?",laneToday:"Current",laneReview:"Review",laneNext:"Next",nextCopy:"These continuation records come from source courses. The profile organizes them without changing faculty, assessment, mastery, or certificate authority.",
     mapTitle:"Scholarly strengths, interests, and working preferences",strengthsLabel:"Scholarly strengths",preferencesLabel:"Productive study conditions",supportsLabel:"Useful supports or resources",resetLabel:"Ways I reset focus",interestsLabel:"Fields, questions, or ideas I want to investigate",growthLabel:"Methods or skills I want to strengthen",collaborationLabel:"My usual working mode",
     evidenceEyebrow:"Evidence Passport",evidenceTitle:"Scholar work and course-published evidence",evidenceCopy:"Learner-authored work and source-course evidence remain distinct. This Passport is an index, not a transcript or faculty record.",evidenceAddTitle:"Add scholar-authored evidence",evidenceCategory:"Scholar Evidence",
     workspaceTitle:"Scholar Workspace",workspaceCopy:"Set reading, accessibility, language, motion, and dashboard preferences for independent study.",
@@ -167,7 +167,7 @@ function render(){
     </section>
     <section class="profile-v2-card profile-v2-col6" aria-labelledby="nextTitle">
       <p class="profile-v2-eyebrow">${esc(cfg.nextEyebrow)}</p><h3 id="nextTitle">${esc(cfg.nextTitle)}</h3><p>${esc(cfg.nextCopy)}</p>
-      ${renderLane("Today",lanes.today)}${renderLane("Review",lanes.review)}${renderLane("Next",lanes.next)}
+      ${renderLane(cfg.laneToday||"Today",lanes.today)}${renderLane(cfg.laneReview||"Review",lanes.review)}${renderLane(cfg.laneNext||"Next",lanes.next)}
     </section>
     <section class="profile-v2-card profile-v2-col6" aria-labelledby="mapTitle">
       <p class="profile-v2-eyebrow">My Learning Map</p><h3 id="mapTitle">${esc(cfg.mapTitle)}</h3>
