@@ -43,24 +43,30 @@ a{color:inherit;text-decoration:none}button{font:inherit;cursor:pointer}:focus-v
 .hero .khae-page-subtitle{font:400 clamp(19px,2.8vw,25px)/1.35 var(--serif);letter-spacing:.035em;margin:10px auto 0;color:var(--gold2);text-align:center}
 @media(max-width:560px){.hero{padding:43px 0 34px}.hero h1{font-size:clamp(30px,8vw,39px)}}
 </style>
+<link rel="stylesheet" href="/Khaemenes_Academy.github.io/assets/khaemenes-global-header.css">
+<link rel="stylesheet" href="https://vervenveda.com/assets/vnv-ecosystem-menu.css">
 </head>
 <body data-i18n-no-online>
-<header class="top">
-  <div class="shell nav">
-    <a class="brand" href="../"><span class="mark">KA</span><span><strong>Khaemenes Academy</strong><small>Adult Learner Portal</small></span></a>
-    <nav class="navlinks">
+<header data-khae-header>
+  <div class="shell nav" data-khae-header-inner>
+    <a class="brand" data-khae-brand href="../"><span class="mark" data-khae-brand-mark>KA</span><span><strong data-khae-brand-name>Khaemenes Academy</strong><small data-khae-brand-sub>Adult Learner Portal</small></span></a>
+    <nav class="navlinks" data-khae-nav>
       <a href="../family/">Family / Parent</a>
       <a href="enroll/">Adult Enrollment</a>
       <a href="https://vervenveda.com/Khaemenes_Higher_Learning.github.io/start/">Higher Learning</a>
       <a href="../">Academy Home</a>
     </nav>
+    <div data-khae-actions></div>
+    <div data-vnv-ecosystem-slot aria-label="Ecosystem menu"></div>
   </div>
+</header>
+<div class="top">
   <section class="hero shell">
     <p class="eyebrow">Self-Directed Adult Scholar</p>
     <h1>Khaemenes Academy</h1><h2 class="khae-page-subtitle">Adult Learner Portal</h2>
     <p>Your own learning path stays separate from any parent or guardian role. Continue from your actual starting point — foundational study, GED, career development, languages, college-level coursework, or advanced independent scholarship.</p>
   </section>
-</header>
+</div>
 
 <main class="section">
   <div class="shell">
@@ -132,5 +138,7 @@ render();
 <script src="../assets/khaemenes-learning-science.js"></script>
 <script src="../assets/khaemenes-terminal04-readiness.js"></script>
 <script src="https://vervenveda.com/assets/vnv-beta-link.js" defer></script>
+<script src="/Khaemenes_Academy.github.io/assets/khaemenes-global-header.js" defer></script>
+<script src="https://vervenveda.com/assets/vnv-ecosystem-menu.js" defer></script>
 </body>
 </html>
