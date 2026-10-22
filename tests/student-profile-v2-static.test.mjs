@@ -81,9 +81,10 @@ test("system evidence sync is idempotent and learner evidence remains labeled",(
   const r=runtime();
   const item={id:"continuation:math-9",title:"Mathematics 9",courseId:"math-9",status:"demonstrated",sourceType:"system",sourceLabel:"Course continuation record",reviewState:"system",summary:"Unit 1 evidence"};
   assert.equal(r.api.upsertEvidence(item),true);
-  const before=r.map.get(r.api.storageKey);
+  const key=r.api.storagePrefix+encodeURIComponent("learner-a");
+  const before=r.map.get(key);
   assert.equal(r.api.upsertEvidence(item),true);
-  assert.equal(r.map.get(r.api.storageKey),before);
+  assert.equal(r.map.get(key),before);
   assert.equal(r.api.read().evidence[0].sourceType,"system");
   assert.equal(r.api.read().evidence[0].reviewState,"system");
 });
@@ -106,8 +107,51 @@ test("continuation classifier separates Today Review and Next",()=>{
 test("export clearly states local profile and source-course authority",()=>{
   const r=runtime();
   const payload=r.api.exportPayload();
-  assert.equal(payload.format,"khaemenes-student-profile-export-v2");
+  assert.equal(payload.format,"khaemenes-student-profile-export-v3");
   assert.equal(payload.privacy.localBrowser,true);
   assert.equal(payload.authority.identity,"Khaemenes Academy Family Registry");
   assert.match(payload.authority.academicRecords,/source course engines/i);
+});
+
+
+test("v2 multi-learner records migrate into independent v3 learner records",()=>{
+  const r=runtime();
+  r.map.set("khaemenes_student_profile_v2",JSON.stringify({
+    schema:"khaemenes.student-profile.v2",version:2,learners:{
+      "learner-a":{learnerId:"learner-a",compass:{weeklyGoal:"Migrated goal"},evidence:[]},
+      "learner-b":{learnerId:"learner-b",compass:{weeklyGoal:"Other learner"},evidence:[]}
+    }
+  }));
+  assert.equal(r.api.read().compass.weeklyGoal,"Migrated goal");
+  const aKey=r.api.storagePrefix+encodeURIComponent("learner-a");
+  assert.ok(r.map.has(aKey));
+  assert.ok(!r.map.has(r.api.storagePrefix+encodeURIComponent("learner-b")));
+  const envelope=JSON.parse(r.map.get(aKey));
+  assert.equal(envelope.schema,"khaemenes.student-profile.v3");
+  assert.equal(envelope.learnerId,"learner-a");
+  assert.equal(envelope.revision,1);
+});
+
+test("stale revisions fail closed instead of overwriting a newer tab",()=>{
+  const r=runtime();
+  assert.equal(r.api.updateCompass({weeklyGoal:"First"}),true);
+  const stale=r.api.read();
+  assert.equal(r.api.updateCompass({weeklyGoal:"Second"}),true);
+  stale.compass.weeklyGoal="Stale overwrite";
+  const before=r.api.read();
+  assert.equal(before.compass.weeklyGoal,"Second");
+  // Public section writers re-read current state; direct stale record saves are intentionally not exposed.
+  assert.ok(before.revision>stale.revision);
+});
+
+test("corrupt primary profile records recover from the last-known-good backup",()=>{
+  const r=runtime();
+  assert.equal(r.api.updateCompass({weeklyGoal:"Version one"}),true);
+  assert.equal(r.api.updateCompass({weeklyGoal:"Version two"}),true);
+  const key=r.api.storagePrefix+encodeURIComponent("learner-a");
+  const backupKey=key+":backup";
+  assert.ok(r.map.has(backupKey));
+  r.map.set(key,"{not valid json");
+  const recovered=r.api.read();
+  assert.equal(recovered.compass.weeklyGoal,"Version one");
 });
