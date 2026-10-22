@@ -66,6 +66,41 @@ h1{margin:11px auto 0;font-size:clamp(3rem,8vw,6.3rem);line-height:.96}.hero p{m
 #khaemenesLearnerUtilityToolbar{position:fixed!important;right:max(12px,env(safe-area-inset-right))!important;bottom:max(12px,env(safe-area-inset-bottom))!important;left:auto!important;top:auto!important}
 #vnvBetaProgramLink{position:fixed!important;right:max(12px,env(safe-area-inset-right))!important;bottom:max(12px,env(safe-area-inset-bottom))!important;left:auto!important;top:auto!important}
 @media print{#khaemenesLearnerUtilityToolbar,#vnvBetaProgramLink{display:none!important}}
+
+/* Student-first parchment dashboard: readable, symmetric, and calm. */
+:root{--paper:#f1eee6;--paper2:#f8f6f0;--panel:#fffdf8;--ink:#27302d;--forest:#243e38;--muted:#4c5b55;--line:rgba(39,48,45,.22);--shadow:0 7px 24px rgba(30,38,33,.06);--r2:7px;--max:1160px}
+body{font-size:16px;line-height:1.55;background:var(--paper)}
+main.section{padding:28px 0 64px}
+main .heading{margin:0 auto 22px;max-width:900px}
+main .heading h2{font-size:clamp(27px,3.2vw,40px);line-height:1.2;margin:7px 0}
+main .heading p{font-size:16px}
+main .heading .eyebrow{letter-spacing:.12em}
+.portal-intro{max-width:1160px;margin:0 auto 24px;padding:24px 28px;border:1px solid #46554e;border-radius:7px;background:#233831;color:#f9f6ec;display:flex;align-items:center;justify-content:space-between;gap:22px}
+.portal-intro h1{font:400 clamp(29px,3.2vw,42px)/1.18 var(--formal);margin:6px 0;color:#fffaf0}
+.portal-intro p{margin:8px 0 0;color:#e2e8e0;font-size:16px}
+.portal-intro .eyebrow{color:#ead6ac}
+.portal-intro a{flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:10px 16px;background:#ead6ac;border:1px solid #ead6ac;border-radius:7px;color:#25352f}
+.account-details{max-width:1160px;margin:0 auto 20px;padding:10px 15px;border:1px solid var(--line);border-radius:7px;background:#faf8f1;color:var(--ink)}
+.account-details summary{cursor:pointer;font-size:14px}
+.account-details p{margin:8px 0;font-size:14px}
+.card{padding:24px;border-radius:7px;box-shadow:var(--shadow)}
+.card h3{font-size:clamp(22px,2.3vw,29px)}
+.card p{font-size:15px;line-height:1.6}
+.profile-entry{max-width:100%;margin:0}
+.profile-entry .actions{align-items:stretch}
+.profile-entry .actions .btn{font-size:14px}
+.btn{font-size:13px;letter-spacing:0;line-height:1.35;text-transform:none;min-height:46px;padding:11px 16px}
+.navlinks a{font-size:13px;min-height:42px}
+.chip{font-size:13px}
+.notice{font-size:14px}
+.learner-row strong,.pin-row strong{font-weight:500}
+.portal-help{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0 0}
+.portal-help article{padding:18px;background:#fffdf8;border:1px solid var(--line);border-radius:7px}
+.portal-help h3{font:400 20px/1.3 var(--formal);margin:0 0 6px;color:var(--forest)}
+.portal-help p{margin:0;color:var(--muted);font-size:14px}
+.portal-help a{text-decoration:underline;text-underline-offset:3px}
+#profileStudio{scroll-margin-top:32px}
+@media(max-width:700px){.portal-intro{padding:20px;display:block}.portal-intro a{margin-top:15px}.portal-help{grid-template-columns:1fr}main.section{padding-top:18px}.card{padding:18px}}
 </style>
 <link rel="stylesheet" href="../assets/khaemenes-student-profile-v2.css">
 <link rel="stylesheet" href="/Khaemenes_Academy.github.io/assets/khaemenes-global-header.css">
@@ -87,15 +122,21 @@ h1{margin:11px auto 0;font-size:clamp(3rem,8vw,6.3rem);line-height:.96}.hero p{m
 </header>
 
 
-<main class="section"><aside aria-label="Academy account connection status" style="max-width:1040px;margin:14px auto;padding:14px 18px;background:#fff8e7;border:1px solid #bbad8e;border-radius:7px;color:#221f19"><strong style="font-weight:500">Account &amp; learner continuity</strong><p data-academy-account-status role="status" aria-live="polite">LOCAL PROFILE — Account Cloud connection is not verified.</p><p style="font-size:14px">This browser may keep learner work locally. Export important records and maintain another backup; cloud access must be verified through a protected authenticated session before being described as connected.</p></aside>
+<main class="section">
   <div class="shell">
-    <div class="heading">
-      <p class="eyebrow">Active learner</p>
-      <h2>Continue from your profile.</h2>
-      <p>Your learner profile keeps school placement and course shortcuts together on this device.</p>
-    </div>
-    <p class="notice">This is a learner profile saved in this browser. On a tablet, create or select the learner here and use the same browser to continue. Export backups regularly. Protected account sign-in and cross-device sync are not connected yet.</p>
-    <div id="app"></div><div id="profileStudio" tabindex="-1" aria-label="Learner-owned profile studio"></div>
+    <section class="portal-intro" aria-labelledby="academyStudentTitle">
+      <div><p class="eyebrow">Student learning dashboard</p><h1 id="academyStudentTitle">Khaemenes Academy</h1><p>Your learning home · Choose your profile, continue a class, and explore your tools.</p></div>
+      <a href="#studentCourseDoors">Explore classrooms →</a>
+    </section>
+    <div class="heading"><p class="eyebrow">My learning space</p><h2>Welcome to your Student Portal</h2><p>Start with your existing student profile. You can also explore classrooms while we locate your saved learner record.</p></div>
+    <div id="app"></div>
+    <div id="profileStudio" tabindex="-1" aria-label="Learner-owned profile studio"></div>
+    <section class="portal-help" aria-label="Student navigation help">
+      <article><h3>1 · My profile</h3><p>Choose your existing learner name to see your personal learning dashboard. Never enroll again just to find a saved profile.</p></article>
+      <article><h3>2 · My lessons</h3><p>Open a classroom or continue a pinned course. Your lessons keep their own progress and mastery checks.</p></article>
+      <article><h3>3 · My learning tools</h3><p>Use games, language tools, printables, goals, and evidence from your learner dashboard when your profile is selected.</p></article>
+    </section>
+    <details class="account-details"><summary>Account status, local storage, and backup information</summary><p data-academy-account-status role="status" aria-live="polite">LOCAL PROFILE — Cloud synchronization has not been verified.</p><p>Profiles and some learner work may be saved in this browser. Cloud sign-in is not confirmed. Keep backups of important work. Do not clear website data while locating an existing learner.</p></details>
   </div>
 </main>
 
@@ -205,7 +246,7 @@ function render(){
   const profileNav=document.getElementById("studentProfileNavigation");if(profileNav){profileNav.hidden=!learner;profileNav.setAttribute("aria-hidden",learner?"false":"true")};
   if(learner?.selfDirectedAdult===true){location.replace("../adult/");return}
   // Classroom doors never depend on family-record availability.
-  const classrooms='<section class="card" aria-label="Direct course entrances" style="margin:14px 0;border:1px solid #b49a67;border-radius:7px"><p class="eyebrow">Academy Classrooms</p><h3>Go directly to your courses</h3><p>These course directories remain available even when this browser cannot find a learner profile. Individual courses still enforce their own progression and mastery rules.</p><div class="actions"><a class="btn gold" href="https://vervenveda.com/Khaemenes_High.github.io/">High School Classes →</a><a class="btn secondary" href="https://vervenveda.com/Khaemenes_High.github.io/courses/mathematics/">Mathematics →</a><a class="btn secondary" href="https://vervenveda.com/Khaemenes_High.github.io/courses/mathematics/algebra-1/">Algebra I →</a><a class="btn secondary" href="https://vervenveda.com/Khaemenes_Middle.github.io/">Middle School →</a><a class="btn secondary" href="../">Academy Home →</a></div></section>';
+  const classrooms='<section class="card" id="studentCourseDoors" aria-label="Direct course entrances" style="margin:14px 0;border:1px solid #b49a67;border-radius:7px"><p class="eyebrow">Academy Classrooms</p><h3>Go directly to your courses</h3><p>These course directories remain available even when this browser cannot find a learner profile. Individual courses still enforce their own progression and mastery rules.</p><div class="actions"><a class="btn gold" href="https://vervenveda.com/Khaemenes_High.github.io/">High School Classes →</a><a class="btn secondary" href="https://vervenveda.com/Khaemenes_High.github.io/courses/mathematics/">Mathematics →</a><a class="btn secondary" href="https://vervenveda.com/Khaemenes_High.github.io/courses/mathematics/algebra-1/">Algebra I →</a><a class="btn secondary" href="https://vervenveda.com/Khaemenes_Middle.github.io/">Middle School →</a><a class="btn secondary" href="../">Academy Home →</a></div></section>';
   if(!learner){
     const candidates=(Array.isArray(family?.learners)?family.learners:Object.values(R.load?.().learners||{})).filter(l=>l&&!l.selfDirectedAdult);
     if(candidates.length){
@@ -219,7 +260,7 @@ function render(){
         // Course navigation remains an explicit student action.
       }));
     }else{
-      app.innerHTML=`<section class="card profile-entry" aria-labelledby="recoverProfileTitle"><p class="eyebrow">Already enrolled?</p><h3 id="recoverProfileTitle">Open your existing student profile</h3><p>We cannot find a student record in this browser at this website address. <strong>You do not need to enroll again.</strong> Your family profile may be saved in a different browser, device, or website address.</p><div class="actions"><a class="btn" href="../family/">Open Family Hub · Select Student →</a><a class="btn secondary" href="../family/#familyApp">Import an existing backup</a></div><p class="notice"><strong>Try this first:</strong> Open Family Hub and look for your existing student name. If it appears, select that student and return here. If it does not, try the same browser and website address where you originally created the profile. Only use Import if you already exported a backup file. Do not create a duplicate student.</p><details style="margin-top:14px"><summary>New to the Academy?</summary><p>Only families who have never created a profile need enrollment.</p><a class="btn secondary" href="../family/enroll/">Create a new family profile</a></details></section>`;
+      app.innerHTML=`<section class="card profile-entry" aria-labelledby="recoverProfileTitle"><p class="eyebrow">Already enrolled?</p><h3 id="recoverProfileTitle">Find your existing student profile</h3><p>No student record is visible in this Chrome profile at this website address. <strong>Please do not enroll again.</strong> Your existing record may be stored under another Chrome profile or an earlier Academy website address. You can still open classrooms below.</p><div class="actions"><a class="btn" href="../family/">Check Family Hub for existing learners →</a><a class="btn secondary" href="../family/#familyApp">I already have a backup file</a></div><p class="notice"><strong>Try this first:</strong> If the Family Hub also shows no learner, try the Chrome profile or website address you originally used. Import is only for an existing backup file. No profile or coursework is deleted by visiting this page.</p><details style="margin-top:14px"><summary>New to the Academy?</summary><p>Only families who have never created a profile need enrollment.</p><a class="btn secondary" href="../family/enroll/">Create a new family profile</a></details></section>`;
     }
     app.insertAdjacentHTML("beforeend",classrooms);
     return;
