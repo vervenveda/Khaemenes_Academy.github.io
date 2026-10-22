@@ -19,25 +19,25 @@ function evidenceStatusFromContinuation(item){
   return "developing";
 }
 function syncContinuationEvidence(){
-  const l=learner();if(!l?.learnerId)return;
-  for(const item of continuations()){
-    const courseId=String(item?.courseId||"").trim();if(!courseId)continue;
-    P.upsertEvidence({
+  const l=learner();if(!l?.learnerId||!C?.readLearner||!P.syncCourseEvidence)return;
+  const items=continuations().map(item=>{
+    const courseId=String(item?.courseId||"").trim();if(!courseId)return null;
+    return {
       id:"continuation:"+courseId,
+      sourceId:courseId,
       title:item.courseTitle||item.courseId||"Course progress",
       category:item.subject||"Course Progress",
       courseId,
       school:item.school||"",
       stage:item.stage||l.stage||"",
       status:evidenceStatusFromContinuation(item),
-      sourceType:"system",
       sourceLabel:"Course continuation record",
       evidenceHref:safeHref(item.nextHref),
-      reviewState:"system",
       summary:item.summary||item.nextTitle||"Course progress evidence published by the source course.",
       updatedAt:item.updatedAt||""
-    },l.learnerId);
-  }
+    };
+  }).filter(Boolean);
+  P.syncCourseEvidence(items,l.learnerId);
 }
 function statusLabel(value){return ({continue:"Today",practice:"Practice",corrections:"Review",mastery:"Mastery Review",assessment:"Assessment Next",complete:"Complete",paused:"Paused"})[value]||"Next"}
 function renderLane(title,items){
@@ -46,7 +46,7 @@ function renderLane(title,items){
 }
 function evidenceMarkup(rec){
   if(!rec.evidence.length)return '<div class="profile-v2-empty">No Evidence Passport entries yet. Course publishers can add verified evidence, and you can add a learner note below.</div>';
-  return `<div class="profile-v2-evidence">${rec.evidence.map(item=>`<div class="profile-v2-evidence-row"><span><strong>${esc(item.title)}</strong><small>${esc(item.summary||item.sourceLabel)}</small><div class="profile-v2-badges"><span class="profile-v2-badge">${esc(item.status)}</span><span class="profile-v2-badge">${esc(item.reviewState)}</span><span class="profile-v2-badge">${esc(item.category)}</span></div></span><span>${safeHref(item.evidenceHref)?`<a class="profile-v2-btn secondary" href="${esc(item.evidenceHref)}">Evidence</a>`:""}${item.sourceType==="learner"?`<button class="profile-v2-btn secondary" type="button" data-remove-evidence="${esc(item.id)}">Remove</button>`:""}</span></div>`).join("")}</div>`;
+  return `<div class="profile-v2-evidence">${rec.evidence.map(item=>`<div class="profile-v2-evidence-row"><span><strong>${esc(item.title)}</strong><small>${esc(item.summary||item.sourceLabel)}</small><div class="profile-v2-badges"><span class="profile-v2-badge">${esc(item.status)}</span><span class="profile-v2-badge">${esc(item.reviewState)}</span><span class="profile-v2-badge">${esc(item.category)}</span>${item.provenance?.archived?'<span class="profile-v2-badge">archived source</span>':""}</div></span><span>${safeHref(item.evidenceHref)?`<a class="profile-v2-btn secondary" href="${esc(item.evidenceHref)}">Evidence</a>`:""}${item.sourceType==="learner"?`<button class="profile-v2-btn secondary" type="button" data-remove-evidence="${esc(item.id)}">Remove</button>`:""}</span></div>`).join("")}</div>`;
 }
 function applyWorkspace(workspace){
   const b=document.body;if(!b)return;
@@ -126,7 +126,7 @@ function bind(){
   const l=learner();if(!l?.learnerId)return;
   document.getElementById("pv2SaveCompass")?.addEventListener("click",()=>{const ok=P.updateCompass({weekOf:value("pv2Week"),weeklyGoal:value("pv2Goal"),whyMatters:value("pv2Why"),strategy:value("pv2Strategy"),helpNeeded:value("pv2Help"),reflection:value("pv2Reflection"),nextChange:value("pv2NextChange")},l.learnerId);status("pv2CompassStatus",ok?"Learning Compass saved for this learner.":"Could not save on this device.")});
   document.getElementById("pv2SaveMap")?.addEventListener("click",()=>{const ok=P.updateLearningMap({strengths:split(value("pv2Strengths")),learningPreferences:split(value("pv2Preferences")),supports:split(value("pv2Supports")),focusReset:split(value("pv2Reset")),interests:split(value("pv2Interests")),growthSkills:split(value("pv2Growth")),collaboration:value("pv2Collaboration")},l.learnerId);status("pv2MapStatus",ok?"Learning Map saved for this learner.":"Could not save on this device.")});
-  document.getElementById("pv2AddEvidence")?.addEventListener("click",()=>{const title=value("pv2EvidenceTitle").trim();if(!title){status("pv2EvidenceStatus","Add an evidence title first.");return}const ok=P.upsertEvidence({id:"learner-"+Date.now(),title,category:value("pv2EvidenceCategory")||"Learner Evidence",status:"developing",sourceType:"learner",sourceLabel:"Learner-added evidence",evidenceHref:value("pv2EvidenceHref"),reviewState:"student",summary:value("pv2EvidenceSummary")},l.learnerId);if(ok)render();else status("pv2EvidenceStatus","Could not save evidence on this device.")});
+  document.getElementById("pv2AddEvidence")?.addEventListener("click",()=>{const title=value("pv2EvidenceTitle").trim();if(!title){status("pv2EvidenceStatus","Add an evidence title first.");return}const ok=P.addLearnerEvidence({id:"learner-"+Date.now(),title,category:value("pv2EvidenceCategory")||"Learner Evidence",evidenceHref:value("pv2EvidenceHref"),summary:value("pv2EvidenceSummary")},l.learnerId);if(ok)render();else status("pv2EvidenceStatus","Could not save evidence on this device.")});
   host.querySelectorAll("[data-remove-evidence]").forEach(button=>button.addEventListener("click",()=>{P.removeEvidence(button.dataset.removeEvidence,l.learnerId);render()}));
   document.getElementById("pv2SaveWorkspace")?.addEventListener("click",()=>{const prefs={theme:value("pv2Theme"),textSize:value("pv2Text"),lineSpacing:value("pv2Line"),readingWidth:value("pv2Width"),contrast:value("pv2Contrast"),density:value("pv2Density"),preferredLanguage:value("pv2Language"),reducedMotion:document.getElementById("pv2Motion")?.checked,tts:document.getElementById("pv2TTS")?.checked,simplifiedDashboard:document.getElementById("pv2Simple")?.checked};const ok=P.updateWorkspace(prefs,l.learnerId);if(ok){applyWorkspace(P.read(l.learnerId).workspace);status("pv2WorkspaceStatus","Workspace preferences saved.")}else status("pv2WorkspaceStatus","Could not save on this device.")});
   document.getElementById("pv2Export")?.addEventListener("click",()=>{const payload=P.exportPayload(l.learnerId);if(!payload)return;const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="khaemenes-student-profile-v2.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),800)});
