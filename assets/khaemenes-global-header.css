@@ -89,6 +89,9 @@
 @keyframes khaeNetworkTickerMove{to{transform:translateX(-50%)}}
 
 [data-khae-header]{
+  width:100%!important;
+  max-width:none!important;
+  margin:0!important;
   position:sticky!important;
   top:var(--khae-ticker-height)!important;
   z-index:2147480000!important;
