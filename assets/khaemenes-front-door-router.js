@@ -1,6 +1,6 @@
 (function attachKhaemenesFrontDoorRouter(global){
   "use strict";
-  const VERSION="1.4.0";
+  const VERSION="1.5.0";
   const ACADEMY_MENTOR="https://vervenveda.com/Khaemenes_Academy.github.io/mentor/";
   const FAMILY_PORTAL="https://vervenveda.com/Khaemenes_Academy.github.io/family/";
   const ARCHAEMENES_HOME="https://artist1970.github.io/Archaemenes.github.io/";
@@ -23,9 +23,9 @@
     if(stage!=="high")return null;
     const base="https://vervenveda.com/Khaemenes_High.github.io";
     if(grade==="09")return `${base}/grades/grade-09/student-profile/`;
-    if(grade==="10")return `${base}/grades/grade-10/`;
-    if(grade==="11")return `${base}/grades/grade-11/`;
-    if(grade==="12")return `${base}/grades/grade-12/`;
+    if(grade==="10")return `${base}/grades/grade-10/student-profile/`;
+    if(grade==="11")return `${base}/grades/grade-11/student-profile/`;
+    if(grade==="12")return `${base}/grades/grade-12/student-profile/`;
     return `${base}/`;
   }
 
