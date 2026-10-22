@@ -310,7 +310,9 @@ footer{padding:38px 0;color:rgba(255,255,255,.67);background:var(--night);font-s
 }
 
 @media(max-width:1160px){
-  .header-inner{grid-template-columns:1fr auto}.navlinks{display:none}
+  .header-inner{grid-template-columns:minmax(0,1fr) auto;gap:12px}.navlinks{display:none}
+  .head-actions{flex-wrap:nowrap;align-items:center;gap:6px}
+  .head-actions .head-btn{min-width:0;white-space:nowrap;padding:8px 10px}
   .quick-grid{grid-template-columns:repeat(2,1fr)}
   .school-grid{grid-template-columns:repeat(3,1fr)}
   .compass-grid{grid-template-columns:repeat(2,1fr)}
