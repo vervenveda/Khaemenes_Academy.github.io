@@ -81,10 +81,11 @@ h1{margin:11px auto 0;font-size:clamp(3rem,8vw,6.3rem);line-height:.96}.hero p{m
 <script src="../assets/khaemenes-front-door-router.js"></script>
 <script src="../assets/khaemenes-learning-continuation.js"></script>
 <script src="../assets/khaemenes-student-profile-v2.js"></script>
+<script src="../assets/khaemenes-student-quick-pins-v1.js"></script>
 <script>
 (() => {
 "use strict";
-const R=window.KhaemenesFamilyRegistry,F=window.KhaemenesFrontDoorRouter,C=window.KhaemenesLearningContinuation;
+const R=window.KhaemenesFamilyRegistry,F=window.KhaemenesFrontDoorRouter,C=window.KhaemenesLearningContinuation,Q=window.KhaemenesStudentQuickPinsV1;
 const app=document.getElementById("app");
 const PIN_KEY="khaemenes_course_pins_v1";
 const HIGH_PIN_KEY="khaemenes-high-pinned-courses-v2";
@@ -146,6 +147,13 @@ function renderPins(learner){
   if(!pins.length)return '<div class="empty">No courses are pinned yet. Open a course and choose “Pin to Profile” to place it here.</div>';
   return `<div class="pin-list">${pins.map(p=>`<a class="pin-row" href="${esc(p.href||"#")}"><span><strong>${esc(p.title||"Course")}</strong><small>${esc(p.subtitle||"Return to course")}</small></span><span class="pin-mark" aria-hidden="true">★</span></a>`).join("")}</div>`;
 }
+function renderQuickPins(learner){
+  const active=Q?.activeLearner?.();
+  if(!Q||!active?.learnerId||active.learnerId!==learner?.learnerId)return '<div class="empty">No personal shortcuts are available for this learner yet.</div>';
+  const list=Q.list?.()||[];
+  if(!list.length)return '<div class="empty">No Quick Pins yet. Games, tools, resources, and electives can be pinned without changing enrollment or grades.</div>';
+  return `<div class="pin-list">${list.map(item=>`<div class="pin-row"><a href="${esc(item.href||"#")}"><span><strong>${esc(item.title||"Quick Pin")}</strong><small>${esc(item.subtitle||item.category||"Personal shortcut")}</small></span></a><button class="btn secondary" type="button" data-quick-remove="${esc(item.id)}">Remove</button></div>`).join("")}</div>`;
+}
 function primaryLearningAction(learner){const next=bestContinuation(learner);if(next?.nextHref)return `<a class="btn gold" href="${esc(next.nextHref)}">${esc(next.nextLabel||"Continue Learning")}</a>`;return learner?.stage==="higher"?'<a class="btn gold" href="https://vervenveda.com/Khaemenes_Higher_Learning.github.io/start/">Open Higher Learning</a>':'<button class="btn" id="continueLearning" type="button">Continue Learning</button>'}
 function pinnedGuidance(learner){
   return learner?.stage==="higher"
@@ -191,6 +199,12 @@ function render(){
       <p>${esc(pinnedGuidance(learner))}</p>
       ${renderPins(learner)}
     </section>
+    <section class="card col6">
+      <p class="eyebrow">Quick Pins</p>
+      <h3>Games, tools &amp; resources.</h3>
+      <p>Personal shortcuts stay separate from enrollment, grades, mastery, and placement.</p>
+      ${renderQuickPins(learner)}
+    </section>
     <section class="card col6"><p class="eyebrow">Family connection</p><h3>Learning stays connected.</h3><p>Authorized adults with progress access can see the same next-step summaries in the Family Portal without changing your scores or unlocking lessons.</p><div class="actions"><a class="btn secondary" href="../family/">Open Family Portal</a></div></section>
     <section class="card col12">
       <p class="eyebrow">Family learners</p>
@@ -206,10 +220,14 @@ function render(){
     R.setActive?.({familyId:next.familyId,learnerId:next.learnerId});
     render();
   }));
+  app.querySelectorAll("[data-quick-remove]").forEach(b=>b.addEventListener("click",()=>{
+    if(Q?.setPinned?.(b.dataset.quickRemove,false))render();
+  }));
 }
 window.addEventListener("khaemenes-family-changed",render);
-window.addEventListener("storage",e=>{if(e.key===PIN_KEY||e.key===C?.storageKey||String(e.key||"").startsWith(HIGH_PIN_KEY))render()});
+window.addEventListener("storage",e=>{if(e.key===PIN_KEY||e.key===C?.storageKey||e.key===Q?.storageKey||String(e.key||"").startsWith(HIGH_PIN_KEY))render()});
 window.addEventListener("khaemenes-learning-continuation-changed",render);
+window.addEventListener("khaemenes-student-quick-pins-changed",render);
 render();
 })();
 </script>
