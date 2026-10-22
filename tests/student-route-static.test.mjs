@@ -39,3 +39,10 @@ test("enrollment continues a registered learner through the canonical profile ro
   assert.match(enroll,/KhaemenesFrontDoorRouter\?\.routeForLearner/);
   assert.match(enroll,/Continue to the learner profile\?/);
 });
+
+
+test("High School daily entry opens the grade profile before course continuation",()=>{
+  assert.match(portal,/learner\?\.stage==="high"&&route\?\.destination/);
+  assert.match(portal,/Open My Daily Profile/);
+  assert.match(portal,/Select Profile →/);
+});
