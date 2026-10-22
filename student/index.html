@@ -198,6 +198,8 @@ function render(){
   const learner=R.getLearner?.()||null,family=R.getFamily?.()||null;
   const profileNav=document.getElementById("studentProfileNavigation");if(profileNav){profileNav.hidden=!learner;profileNav.setAttribute("aria-hidden",learner?"false":"true")};
   if(learner?.selfDirectedAdult===true){location.replace("../adult/");return}
+  // Classroom doors never depend on family-record availability.
+  const classrooms='<section class="card" aria-label="Direct course entrances" style="margin:14px 0;border:1px solid #b49a67;border-radius:7px"><p class="eyebrow">Academy Classrooms</p><h3>Go directly to your courses</h3><p>These course directories remain available even when this browser cannot find a learner profile. Individual courses still enforce their own progression and mastery rules.</p><div class="actions"><a class="btn gold" href="https://vervenveda.com/Khaemenes_High.github.io/">High School Classes →</a><a class="btn secondary" href="https://vervenveda.com/Khaemenes_High.github.io/courses/mathematics/">Mathematics →</a><a class="btn secondary" href="https://vervenveda.com/Khaemenes_High.github.io/courses/mathematics/algebra-1/">Algebra I →</a><a class="btn secondary" href="https://vervenveda.com/Khaemenes_Middle.github.io/">Middle School →</a><a class="btn secondary" href="../">Academy Home →</a></div></section>';
   if(!learner){
     const candidates=Array.isArray(family?.learners)?family.learners.filter(l=>l&&!l.selfDirectedAdult):[];
     if(candidates.length){
@@ -212,6 +214,7 @@ function render(){
     }else{
       app.innerHTML=`<section class="card profile-entry" aria-labelledby="recoverProfileTitle"><p class="eyebrow">Returning learner</p><h3 id="recoverProfileTitle">Find your existing profile</h3><p>No family learner record is available to select in this browser. This is not a request to enroll again. If you have a verified family backup, use the recovery option below; otherwise open your original browser to export one.</p><div class="actions"><a class="btn" href="../family/#familyApp">Recover an existing family backup →</a><a class="btn secondary" href="../family/enroll/">I'm new · Enroll</a></div><p class="notice">Existing coursework and assessment data are not erased or reassigned by visiting this page.</p></section>`;
     }
+    app.insertAdjacentHTML("beforeend",classrooms);
     return;
   }
   const m=gradeLabel(learner),route=F.routeForLearner?.(learner)||null;
@@ -260,6 +263,7 @@ function render(){
       ${renderLearners(family,learner)}
     </section>
   </div>`;
+  app.insertAdjacentHTML("beforeend",classrooms);
   document.getElementById("continueLearning")?.addEventListener("click",()=>F.continueLearner?.(learner));
   app.querySelectorAll("[data-switch]").forEach(b=>b.addEventListener("click",()=>{
     const next=R.getLearner?.(b.dataset.switch);
