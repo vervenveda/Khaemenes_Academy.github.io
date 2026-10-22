@@ -290,11 +290,11 @@ function renderLearners(family,active){
 }
 function render(){
   if(!R||!F){
-    app.innerHTML='<div class="notice">The Student Portal could not open completely. Return to the Family Hub and try again.</div>';
+    app.innerHTML='<div class="notice">The learner registry or course router could not load. Your existing coursework has not been changed. You can still use the Academy subject directory after refreshing this page.</div>';
     return;
   }
   const learner=R.getLearner?.()||null,family=R.getFamily?.()||null;
-  const profileNav=document.getElementById("studentProfileNavigation");if(profileNav){profileNav.hidden=!learner;profileNav.setAttribute("aria-hidden",learner?"false":"true")};
+  // My Profile must remain reachable even before a learner is selected.
   if(learner?.selfDirectedAdult===true){location.replace("../adult/");return}
   // Classroom doors never depend on family-record availability.
   const classroomBase="https://vervenveda.com/Khaemenes_High.github.io/";
@@ -310,7 +310,7 @@ function render(){
   ];
   const classrooms='<section class="card academy-classrooms" id="studentCourseDoors" aria-labelledby="classroomHeading"><p class="eyebrow">Academy Classrooms</p><h3 id="classroomHeading">Go directly to your courses</h3><p>Choose a subject to enter its learning hall. Course access remains available even if a learner profile is not selected; individual lessons still enforce their own progress and mastery requirements.</p><nav class="classroom-grid" aria-label="Academy subject entrances">'+classroomItems.map(([name,description,url])=>'<a class="classroom-link'+(name==="Academy Home"?' academy-home':'')+'" href="'+esc(url)+'"><strong>'+esc(name)+' →</strong><span>'+esc(description)+'</span></a>').join("")+'</nav></section>';
   if(!learner){
-    const candidates=(Array.isArray(family?.learners)?family.learners:Object.values(R.load?.().learners||{})).filter(l=>l&&!l.selfDirectedAdult);
+    const candidates=Object.values(R.load?.().learners||{}).filter(l=>l?.learnerId&&!l.selfDirectedAdult);
     if(candidates.length){
       app.innerHTML=`<section class="card profile-entry" aria-labelledby="chooseProfileTitle"><p class="eyebrow">Existing learners on this browser</p><h3 id="chooseProfileTitle">Choose your student profile</h3><p>Select the person studying. The portal will open that learner's Academy view, where High School students can enter their grade-specific Daily Profile without creating another account.</p><div class="learner-list">${candidates.map(l=>{const m=gradeLabel(l);return `<div class="learner-row"><span><strong>${esc(l.nickname||"Learner")}</strong><small>${esc(m.label)} · ${esc(m.school)}</small></span><button class="btn" type="button" data-select-existing="${esc(l.learnerId)}">Select Profile →</button></div>`}).join("")}</div></section>`;
       app.querySelectorAll("[data-select-existing]").forEach(button=>button.addEventListener("click",()=>{
