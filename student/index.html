@@ -59,6 +59,13 @@ h1{margin:11px auto 0;font-size:clamp(3rem,8vw,6.3rem);line-height:.96}.hero p{m
 .schedule-actions{display:flex;gap:8px;flex-wrap:wrap}
 #studentCourses,#studentNext,#studentTools,#profileStudio{scroll-margin-top:24px}
 @media(max-width:650px){.student-command{padding:18px}.command-tabs a{flex:1 1 140px}.command-profile{width:100%;justify-content:center}}
+
+/* Academy-first heading hierarchy; consistent unobtrusive utility placement. */
+.hero h1{font-family:Cinzel,Georgia,serif;font-weight:400!important;font-size:clamp(39px,5vw,66px)!important;line-height:1.16!important}
+.academy-page-subtitle{font-family:Cinzel,Georgia,serif;font-weight:400!important;font-size:clamp(23px,3vw,33px)!important;line-height:1.3!important;margin:10px auto 0}
+#khaemenesLearnerUtilityToolbar{position:fixed!important;right:max(12px,env(safe-area-inset-right))!important;bottom:max(12px,env(safe-area-inset-bottom))!important;left:auto!important;top:auto!important}
+#vnvBetaProgramLink{position:fixed!important;right:max(12px,env(safe-area-inset-right))!important;bottom:max(12px,env(safe-area-inset-bottom))!important;left:auto!important;top:auto!important}
+@media print{#khaemenesLearnerUtilityToolbar,#vnvBetaProgramLink{display:none!important}}
 </style>
 <link rel="stylesheet" href="../assets/khaemenes-student-profile-v2.css">
 </head>
@@ -74,7 +81,7 @@ h1{margin:11px auto 0;font-size:clamp(3rem,8vw,6.3rem);line-height:.96}.hero p{m
   </div>
   <div class="shell hero">
     <p class="eyebrow">Your Learning Path</p>
-    <h1>Student Portal</h1>
+    <h1>Khaemenes Academy</h1><h2 class="academy-page-subtitle">Student Portal</h2>
     <p>Open your current learning path, switch between family learners, and return quickly to courses you have pinned for study.</p>
   </div>
 </header>
