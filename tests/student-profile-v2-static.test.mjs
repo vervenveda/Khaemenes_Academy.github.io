@@ -176,3 +176,60 @@ test("course evidence that disappears is archived and cannot be learner-deleted"
   assert.equal(archived.provenance.archived,true);
   assert.equal(r.api.removeEvidence("continuation:science-9"),false);
 });
+
+
+test("profile restore refuses a different learner before writing",()=>{
+  const r=runtime();
+  const payload={format:"khaemenes-student-profile-bundle-v3",learner:{learnerId:"learner-b",nickname:"B"},profile:{learnerId:"learner-b",compass:{weeklyGoal:"Wrong learner"},evidence:[]},quickPins:[]};
+  const preview=r.api.previewImport(payload);
+  assert.equal(preview.ok,false);
+  assert.equal(preview.reason,"learner-mismatch");
+  const result=r.api.restoreProfile(payload,{mode:"replace"});
+  assert.equal(result.ok,false);
+  assert.equal(r.api.read().compass.weeklyGoal,"");
+});
+
+test("restore imports learner preferences but rejects file-based course authority",()=>{
+  const r=runtime();
+  assert.equal(r.api.updateCompass({weeklyGoal:"Current goal"}),true);
+  assert.equal(r.api.syncCourseEvidence([{id:"continuation:math-9",sourceId:"math-9",title:"Live Mathematics",courseId:"math-9",status:"demonstrated",updatedAt:"2026-10-22T12:00:00.000Z"}]),true);
+  const payload={
+    format:"khaemenes-student-profile-bundle-v3",
+    learner:{learnerId:"learner-a",nickname:"A",grade:"09",stage:"high"},
+    quickPins:["academy-arcade"],
+    profile:{
+      learnerId:"learner-a",
+      compass:{weeklyGoal:"Imported goal"},
+      learningMap:{strengths:["persistence"]},
+      workspace:{theme:"forest"},
+      evidence:[
+        {id:"learner-note",title:"My Project",status:"mastered",sourceType:"learner",reviewState:"teacher",summary:"Learner file"},
+        {id:"forged-system",title:"Forged Mastery",courseId:"math-9",status:"mastered",sourceType:"system",reviewState:"teacher",provenance:{authority:"course"}}
+      ]
+    }
+  };
+  const preview=r.api.previewImport(payload);
+  assert.equal(preview.ok,true);
+  assert.equal(preview.counts.learnerEvidence,1);
+  assert.equal(preview.counts.courseEvidenceIgnored,1);
+  const result=r.api.restoreProfile(payload,{mode:"replace"});
+  assert.equal(result.ok,true);
+  const record=r.api.read();
+  assert.equal(record.compass.weeklyGoal,"Imported goal");
+  assert.equal(record.workspace.theme,"forest");
+  const learnerEvidence=record.evidence.find(x=>x.id==="learner-note");
+  assert.equal(learnerEvidence.status,"developing");
+  assert.equal(learnerEvidence.reviewState,"student");
+  assert.equal(learnerEvidence.provenance.authority,"learner");
+  assert.ok(record.evidence.some(x=>x.id==="continuation:math-9"));
+  assert.ok(!record.evidence.some(x=>x.id==="forged-system"));
+});
+
+test("Profile Studio exposes previewed Merge or Replace restore controls",()=>{
+  assert.match(ui,/Restore from a profile bundle/);
+  assert.match(ui,/Merge with this learner/);
+  assert.match(ui,/Replace learner preferences/);
+  assert.match(ui,/P\.previewImport/);
+  assert.match(ui,/P\.restoreProfile/);
+  assert.match(ui,/different learner/i);
+});
