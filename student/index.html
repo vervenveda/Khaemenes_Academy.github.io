@@ -68,24 +68,26 @@ h1{margin:11px auto 0;font-size:clamp(3rem,8vw,6.3rem);line-height:.96}.hero p{m
 @media print{#khaemenesLearnerUtilityToolbar,#vnvBetaProgramLink{display:none!important}}
 </style>
 <link rel="stylesheet" href="../assets/khaemenes-student-profile-v2.css">
+<link rel="stylesheet" href="/Khaemenes_Academy.github.io/assets/khaemenes-global-header.css">
+<link rel="stylesheet" href="https://vervenveda.com/assets/vnv-ecosystem-menu.css">
 </head>
 <body data-i18n-no-online>
-<header class="top">
-  <div class="shell nav">
-    <a class="brand" href="../"><span class="mark">K</span><span><strong>Khaemenes Academy</strong><small>Student Portal</small></span></a>
-    <nav class="navlinks" aria-label="Academy navigation">
+<header data-khae-header>
+  <div class="shell nav" data-khae-header-inner>
+    <a class="brand" data-khae-brand href="../"><span class="mark" data-khae-brand-mark>KA</span><span><strong data-khae-brand-name>Khaemenes Academy</strong><small data-khae-brand-sub>Student Portal</small></span></a>
+    <nav class="navlinks" data-khae-nav aria-label="Academy navigation">
       <a href="#profileStudio" id="studentProfileNavigation">My Profile</a>
       <a href="../family/">Family Hub</a>
       <a href="../family/enroll/">Enrollment</a>
       <a href="../">Academy Home</a>
     </nav>
-  </div>
-  <div class="shell hero">
-    <p class="eyebrow">Your Learning Path</p>
-    <h1>Khaemenes Academy</h1><h2 class="academy-page-subtitle">Student Portal</h2>
-    <p>Open your current learning path, switch between family learners, and return quickly to courses you have pinned for study.</p>
+    <div data-khae-actions><a data-khae-secondary href="#profileStudio">My Profile</a><a href="../family/">Family Hub</a></div>
+    <div data-vnv-ecosystem-slot aria-label="Ecosystem menu"></div>
   </div>
 </header>
+<div class="top">
+  undefined
+</div>
 
 <main class="section"><aside aria-label="Academy account connection status" style="max-width:1040px;margin:14px auto;padding:14px 18px;background:#fff8e7;border:1px solid #bbad8e;border-radius:7px;color:#221f19"><strong style="font-weight:500">Account &amp; learner continuity</strong><p data-academy-account-status role="status" aria-live="polite">LOCAL PROFILE — Account Cloud connection is not verified.</p><p style="font-size:14px">This browser may keep learner work locally. Export important records and maintain another backup; cloud access must be verified through a protected authenticated session before being described as connected.</p></aside>
   <div class="shell">
@@ -295,5 +297,7 @@ render();
 <script src="https://vervenveda.com/assets/vnv-beta-link.js" defer></script>
 <script src="../assets/khaemenes-account-connection-status.js"></script>
 <script src="../assets/vnv-language.js" defer></script>
+<script src="/Khaemenes_Academy.github.io/assets/khaemenes-global-header.js" defer></script>
+<script src="https://vervenveda.com/assets/vnv-ecosystem-menu.js" defer></script>
 </body>
 </html>
