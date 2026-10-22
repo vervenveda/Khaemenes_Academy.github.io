@@ -69,6 +69,14 @@ test("learner-authored profile data stays isolated by learnerId",()=>{
   assert.deepEqual([...r.api.read().learningMap.strengths],[]);
 });
 
+test("writes cannot target a non-active learner",()=>{
+  const r=runtime();
+  assert.equal(r.api.updateCompass({weeklyGoal:"Do not leak"},"learner-b"),false);
+  assert.equal(r.api.read("learner-b").compass.weeklyGoal,"");
+  assert.equal(r.api.upsertEvidence({id:"x",title:"Wrong owner"},"learner-b"),false);
+  assert.equal(r.api.read("learner-b").evidence.length,0);
+});
+
 test("system evidence sync is idempotent and learner evidence remains labeled",()=>{
   const r=runtime();
   const item={id:"continuation:math-9",title:"Mathematics 9",courseId:"math-9",status:"demonstrated",sourceType:"system",sourceLabel:"Course continuation record",reviewState:"system",summary:"Unit 1 evidence"};
