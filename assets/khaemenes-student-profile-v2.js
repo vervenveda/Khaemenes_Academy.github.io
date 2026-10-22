@@ -314,6 +314,85 @@
       privacy:{localBrowser:true,advertiserAccess:false,containsCredentials:false}
     };
   }
+  function importSource(payload){
+    if(!payload||typeof payload!=="object")return null;
+    const format=clean(payload.format,80);
+    if(!["khaemenes-student-profile-export-v3","khaemenes-student-profile-bundle-v3","khaemenes-student-profile-export-v2"].includes(format))return null;
+    const learner=payload.learner&&typeof payload.learner==="object"?payload.learner:{};
+    const profile=payload.profile&&typeof payload.profile==="object"?payload.profile:null;
+    if(!profile)return null;
+    return {format,learner,profile,quickPins:Array.isArray(payload.quickPins)?payload.quickPins:[]};
+  }
+  function importedLearnerEvidence(profile){
+    const list=Array.isArray(profile?.evidence)?profile.evidence:[];
+    return list.filter(item=>item?.sourceType==="learner"||item?.provenance?.authority==="learner").map(item=>{
+      const stamp=now();
+      return normalizeEvidence({
+        ...item,status:"developing",sourceType:"learner",sourceLabel:"Learner-added evidence",reviewState:"student",
+        provenance:{authority:"learner",sourceId:evidenceId(item),sourceUpdatedAt:clean(item?.updatedAt,40),lastSeenAt:stamp,archived:false,archivedAt:""},
+        updatedAt:clean(item?.updatedAt,40)||stamp
+      });
+    }).filter(Boolean).slice(0,MAX_EVIDENCE);
+  }
+  function previewImport(payload,target){
+    const id=learnerId(target),source=importSource(payload),active=activeLearner();
+    if(!id||!active?.learnerId||String(active.learnerId)!==String(id))return {ok:false,reason:"active-learner-required"};
+    if(!source)return {ok:false,reason:"unsupported-profile-file"};
+    const sourceId=clean(source.learner?.learnerId||source.profile?.learnerId,120);
+    if(!sourceId||sourceId!==id)return {ok:false,reason:"learner-mismatch",expectedLearnerId:id,sourceLearnerId:sourceId||null};
+    const imported=normalizeRecord(source.profile,id),learnerEvidence=importedLearnerEvidence(source.profile);
+    return {
+      ok:true,format:source.format,learnerId:id,
+      learner:{nickname:clean(source.learner?.nickname||active.nickname||active.displayName||"Learner",80),grade:clean(source.learner?.grade,20),stage:clean(source.learner?.stage,40)},
+      counts:{learnerEvidence:learnerEvidence.length,courseEvidenceIgnored:Math.max(0,(Array.isArray(source.profile?.evidence)?source.profile.evidence.length:0)-learnerEvidence.length),quickPins:source.quickPins.length},
+      quickPins:source.quickPins.map(item=>clean(typeof item==="string"?item:item?.id,100)).filter(Boolean),
+      profile:{compass:imported.compass,learningMap:imported.learningMap,workspace:imported.workspace}
+    };
+  }
+  function mergeCompass(current,incoming){
+    const out={...current};
+    for(const key of Object.keys(out)){const value=incoming?.[key];if(String(value||"").trim())out[key]=value}
+    return normalizeCompass(out);
+  }
+  function mergeLearningMap(current,incoming){
+    const union=(a,b)=>cleanArray([...(Array.isArray(a)?a:[]),...(Array.isArray(b)?b:[])]);
+    return normalizeLearningMap({
+      strengths:union(current?.strengths,incoming?.strengths),
+      learningPreferences:union(current?.learningPreferences,incoming?.learningPreferences),
+      supports:union(current?.supports,incoming?.supports),
+      focusReset:union(current?.focusReset,incoming?.focusReset),
+      interests:union(current?.interests,incoming?.interests),
+      growthSkills:union(current?.growthSkills,incoming?.growthSkills),
+      collaboration:incoming?.collaboration&&incoming.collaboration!=="flexible"?incoming.collaboration:current?.collaboration
+    });
+  }
+  function restoreProfile(payload,{mode="merge",target}={}){
+    const id=learnerId(target),preview=previewImport(payload,id);
+    if(!preview.ok)return preview;
+    if(!["merge","replace"].includes(mode))return {ok:false,reason:"invalid-restore-mode"};
+    const source=importSource(payload),imported=normalizeRecord(source.profile,id),current=read(id)||emptyRecord(id);
+    const currentCourse=current.evidence.filter(item=>item?.provenance?.authority==="course");
+    const currentLearner=current.evidence.filter(item=>item?.provenance?.authority!=="course");
+    const incomingLearner=importedLearnerEvidence(source.profile);
+    let learnerEvidence;
+    if(mode==="replace")learnerEvidence=incomingLearner;
+    else{
+      const byId=new Map(currentLearner.map(item=>[item.id,item]));
+      for(const item of incomingLearner)byId.set(item.id,item);
+      learnerEvidence=[...byId.values()];
+    }
+    const next={
+      ...current,
+      compass:mode==="replace"?normalizeCompass(imported.compass):mergeCompass(current.compass,imported.compass),
+      learningMap:mode==="replace"?normalizeLearningMap(imported.learningMap):mergeLearningMap(current.learningMap,imported.learningMap),
+      workspace:normalizeWorkspace(imported.workspace),
+      evidence:[...currentCourse,...learnerEvidence].slice(0,MAX_EVIDENCE),
+      revision:current.revision
+    };
+    const ok=saveRecord(next,id);
+    return {ok,reason:ok?null:"save-failed",mode,learnerId:id,importedEvidence:incomingLearner.length,ignoredCourseEvidence:preview.counts.courseEvidenceIgnored,quickPins:preview.quickPins};
+  }
+
   function clearPreferences(target){
     const id=learnerId(target);if(!id)return false;
     const record=read(id)||emptyRecord(id);
@@ -340,6 +419,6 @@
     activeLearner,read,updateCompass:(patch,target)=>updateSection("compass",patch,target),
     updateLearningMap:(patch,target)=>updateSection("learningMap",patch,target),
     updateWorkspace:(patch,target)=>updateSection("workspace",patch,target),
-    addLearnerEvidence,syncCourseEvidence,upsertEvidence:addLearnerEvidence,removeEvidence,classifyContinuations,exportPayload,clearPreferences,privacy
+    addLearnerEvidence,syncCourseEvidence,upsertEvidence:addLearnerEvidence,removeEvidence,classifyContinuations,exportPayload,previewImport,restoreProfile,clearPreferences,privacy
   });
 })(window);
