@@ -31,9 +31,18 @@ a{color:inherit;text-decoration:none}button,input,select{font:inherit}:focus-vis
 #vnvBetaProgramLink{position:fixed!important;right:max(12px,env(safe-area-inset-right))!important;bottom:max(12px,env(safe-area-inset-bottom))!important;left:auto!important;top:auto!important}
 @media print{#khaemenesLearnerUtilityToolbar,#vnvBetaProgramLink{display:none!important}}
 </style>
+<link rel="stylesheet" href="/Khaemenes_Academy.github.io/assets/khaemenes-global-header.css">
+<link rel="stylesheet" href="https://vervenveda.com/assets/vnv-ecosystem-menu.css">
 </head>
 <body data-i18n-no-online>
-<header class="top"><div class="shell"><div class="brand">Khaemenes Academy</div><nav><a href="../../">Academy Home</a><a href="../">Family Hub</a><a href="../../student/">Student Portal</a><a href="../../adult/">Adult Learning</a></nav></div></header>
+<header data-khae-header>
+  <div class="shell" data-khae-header-inner>
+    <a class="brand" data-khae-brand href="../../"><span class="mark" data-khae-brand-mark>KA</span><span><strong data-khae-brand-name>Khaemenes Academy</strong><small data-khae-brand-sub>Family Enrollment</small></span></a>
+    <nav data-khae-nav aria-label="Family enrollment navigation"><a href="../../">Academy Home</a><a href="../">Family Hub</a><a href="../../student/">Student Portal</a><a href="../../adult/">Adult Learning</a></nav>
+    <div data-khae-actions></div>
+    <div data-vnv-ecosystem-slot aria-label="Ecosystem menu"></div>
+  </div>
+</header>
 
 <section class="hero shell"><div class="eyebrow">Enrollment & Placement</div><h1>Khaemenes Academy</h1><h2 class="academy-page-subtitle">Enrollment &amp; Learning Pathways</h2><p>Begin the right learning path.</p><p>Create or open a family profile, register each K–12 learner with an exact grade, or begin an adult learning path through Khaemenes Higher Learning.</p></section>
 
@@ -106,5 +115,7 @@ render();
 </script>
 <script src="https://vervenveda.com/assets/vnv-beta-link.js" defer></script>
 <script src="../../assets/vnv-language.js" defer></script>
+<script src="/Khaemenes_Academy.github.io/assets/khaemenes-global-header.js" defer></script>
+<script src="https://vervenveda.com/assets/vnv-ecosystem-menu.js" defer></script>
 </body>
 </html>
