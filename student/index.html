@@ -85,9 +85,7 @@ h1{margin:11px auto 0;font-size:clamp(3rem,8vw,6.3rem);line-height:.96}.hero p{m
     <div data-vnv-ecosystem-slot aria-label="Ecosystem menu"></div>
   </div>
 </header>
-<div class="top">
-  undefined
-</div>
+
 
 <main class="section"><aside aria-label="Academy account connection status" style="max-width:1040px;margin:14px auto;padding:14px 18px;background:#fff8e7;border:1px solid #bbad8e;border-radius:7px;color:#221f19"><strong style="font-weight:500">Account &amp; learner continuity</strong><p data-academy-account-status role="status" aria-live="polite">LOCAL PROFILE — Account Cloud connection is not verified.</p><p style="font-size:14px">This browser may keep learner work locally. Export important records and maintain another backup; cloud access must be verified through a protected authenticated session before being described as connected.</p></aside>
   <div class="shell">
@@ -284,6 +282,27 @@ function render(){
     if(Q?.setPinned?.(b.dataset.quickRemove,false))render();
   }));
 }
+// Profile links must open the actual learner profile, not an empty anchor.
+function openProfile(event){
+  const target=document.getElementById("profileStudio");
+  if(!target)return;
+  const learner=R?.getLearner?.();
+  if(!learner?.learnerId){
+    event.preventDefault();
+    const entry=document.querySelector(".profile-entry");
+    if(entry){
+      entry.setAttribute("tabindex","-1");
+      entry.scrollIntoView({behavior:"smooth",block:"start"});
+      entry.focus({preventScroll:true});
+    }
+    return;
+  }
+  event.preventDefault();
+  target.scrollIntoView({behavior:"smooth",block:"start"});
+  target.focus({preventScroll:true});
+  if(location.hash!=="#profileStudio")history.replaceState(null,"","#profileStudio");
+}
+document.querySelectorAll('a[href="#profileStudio"]').forEach(link=>link.addEventListener("click",openProfile));
 window.addEventListener("khaemenes-family-changed",render);
 window.addEventListener("storage",e=>{if(e.key===PIN_KEY||e.key===C?.storageKey||e.key===Q?.storageKey||String(e.key||"").startsWith(HIGH_PIN_KEY))render()});
 window.addEventListener("khaemenes-learning-continuation-changed",render);
