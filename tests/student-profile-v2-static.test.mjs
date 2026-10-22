@@ -251,3 +251,34 @@ test("legacy v2 system evidence retains course authority during v3 migration",()
   assert.equal(item.reviewState,"system");
   assert.equal(r.api.removeEvidence(item.id),false);
 });
+
+
+test("Profile Studio composes six canonical developmental stages from one shared record",()=>{
+  for(const stage of ["preschool","kindergarten","elementary","middle","high","higher"]){
+    assert.match(ui,new RegExp(stage+":Object\\.freeze"));
+  }
+  assert.match(ui,/function stagePresentation/);
+  assert.match(ui,/R\?\.normalizeStage/);
+  assert.match(ui,/data\.profileStage|dataset\.profileStage/);
+  assert.match(ui,/family-assisted/i);
+  assert.match(ui,/scholar-directed/i);
+  assert.match(ui,/Learner-led with support/i);
+  assert.match(ui,/global\.KhaemenesStudentProfileUIV2=Object\.freeze\(\{version:VERSION,render,applyWorkspace,stagePresentation,normalizedStage\}\)/);
+});
+
+test("developmental modes simplify presentation without deleting stored fields",()=>{
+  assert.match(ui,/data-profile-detail="advanced"/);
+  assert.match(css,/#profileStudio\[data-profile-mode="early"\] \[data-profile-detail="advanced"\]\{display:none\}/);
+  assert.match(css,/#profileStudio\[data-profile-mode="elementary"\] \[data-profile-detail="advanced"\]\{display:none\}/);
+  for(const id of ["pv2Strategy","pv2NextChange","pv2Reset","pv2Growth","pv2Collaboration","pv2EvidenceCategory","pv2EvidenceHref"]){
+    assert.ok(ui.includes(`id="${id}"`),`simplified stages must retain ${id} in the DOM so saved values survive stage changes`);
+  }
+});
+
+test("stage-aware copy keeps academic authority separate at every age",()=>{
+  assert.match(ui,/profile never changes mastery or placement/i);
+  assert.match(ui,/without changing scores, mastery, or placement/i);
+  assert.match(ui,/does not change a grade or mastery result/i);
+  assert.match(ui,/cannot award mastery/i);
+  assert.match(ui,/not a transcript or faculty record/i);
+});
