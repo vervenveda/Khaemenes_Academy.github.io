@@ -8,7 +8,9 @@ on:
       - 'assets/khaemenes-student-profile-v2.js'
       - 'assets/khaemenes-student-profile-ui-v2.js'
       - 'assets/khaemenes-student-profile-v2.css'
+      - 'assets/khaemenes-student-quick-pins-v1.js'
       - 'tests/student-profile-v2-static.test.mjs'
+      - 'tests/student-quick-pins-v1-static.test.mjs'
       - 'tests/student-route-static.test.mjs'
       - '.github/workflows/student-route-validation.yml'
   push:
@@ -19,7 +21,9 @@ on:
       - 'assets/khaemenes-student-profile-v2.js'
       - 'assets/khaemenes-student-profile-ui-v2.js'
       - 'assets/khaemenes-student-profile-v2.css'
+      - 'assets/khaemenes-student-quick-pins-v1.js'
       - 'tests/student-profile-v2-static.test.mjs'
+      - 'tests/student-quick-pins-v1-static.test.mjs'
       - 'tests/student-route-static.test.mjs'
       - '.github/workflows/student-route-validation.yml'
 
@@ -38,7 +42,11 @@ jobs:
         run: |
           node --check assets/khaemenes-student-profile-v2.js
           node --check assets/khaemenes-student-profile-ui-v2.js
+      - name: Check student Quick Pins syntax
+        run: node --check assets/khaemenes-student-quick-pins-v1.js
       - name: Validate student routes
         run: node tests/student-route-static.test.mjs
       - name: Validate student profile v2
         run: node --test tests/student-profile-v2-static.test.mjs
+      - name: Validate student Quick Pins
+        run: node --test tests/student-quick-pins-v1-static.test.mjs
