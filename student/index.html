@@ -179,7 +179,13 @@ function renderQuickPins(learner){
   if(!list.length)return '<div class="empty">No Quick Pins yet. Games, tools, resources, and electives can be pinned without changing enrollment or grades.</div>';
   return `<div class="pin-list">${list.map(item=>`<div class="pin-row"><a href="${esc(item.href||"#")}"><span><strong>${esc(item.title||"Quick Pin")}</strong><small>${esc(item.subtitle||item.category||"Personal shortcut")}</small></span></a><button class="btn secondary" type="button" data-quick-remove="${esc(item.id)}">Remove</button></div>`).join("")}</div>`;
 }
-function primaryLearningAction(learner){const next=bestContinuation(learner);if(next?.nextHref)return `<a class="btn gold" href="${esc(next.nextHref)}">${esc(next.nextLabel||"Continue Learning")}</a>`;return learner?.stage==="higher"?'<a class="btn gold" href="https://vervenveda.com/Khaemenes_Higher_Learning.github.io/start/">Open Higher Learning</a>':'<button class="btn" id="continueLearning" type="button">Continue Learning</button>'}
+function primaryLearningAction(learner){
+  const route=F?.routeForLearner?.(learner)||null;
+  if(learner?.stage==="high"&&route?.destination)return `<a class="btn gold" href="${esc(route.destination)}">Open My Daily Profile</a>`;
+  const next=bestContinuation(learner);
+  if(next?.nextHref)return `<a class="btn gold" href="${esc(next.nextHref)}">${esc(next.nextLabel||"Continue Learning")}</a>`;
+  return learner?.stage==="higher"?'<a class="btn gold" href="https://vervenveda.com/Khaemenes_Higher_Learning.github.io/start/">Open Higher Learning</a>':'<button class="btn" id="continueLearning" type="button">Continue Learning</button>';
+}
 function pinnedGuidance(learner){
   return learner?.stage==="higher"
     ? "Higher Learning course pins and scholar preferences remain tied to this Academy learner on the shared Verve N Veda origin."
@@ -203,7 +209,7 @@ function render(){
   if(!learner){
     const candidates=(Array.isArray(family?.learners)?family.learners:Object.values(R.load?.().learners||{})).filter(l=>l&&!l.selfDirectedAdult);
     if(candidates.length){
-      app.innerHTML=`<section class="card profile-entry" aria-labelledby="chooseProfileTitle"><p class="eyebrow">Existing learners on this browser</p><h3 id="chooseProfileTitle">Choose your student profile</h3><p>Select the person studying to enter their existing class pathway. Their profile remains accessible from the Student Portal toolbar; no new account is created.</p><div class="learner-list">${candidates.map(l=>{const m=gradeLabel(l);return `<div class="learner-row"><span><strong>${esc(l.nickname||"Learner")}</strong><small>${esc(m.label)} · ${esc(m.school)}</small></span><button class="btn" type="button" data-select-existing="${esc(l.learnerId)}">Enter Classes →</button></div>`}).join("")}</div></section>`;
+      app.innerHTML=`<section class="card profile-entry" aria-labelledby="chooseProfileTitle"><p class="eyebrow">Existing learners on this browser</p><h3 id="chooseProfileTitle">Choose your student profile</h3><p>Select the person studying. The portal will open that learner's Academy view, where High School students can enter their grade-specific Daily Profile without creating another account.</p><div class="learner-list">${candidates.map(l=>{const m=gradeLabel(l);return `<div class="learner-row"><span><strong>${esc(l.nickname||"Learner")}</strong><small>${esc(m.label)} · ${esc(m.school)}</small></span><button class="btn" type="button" data-select-existing="${esc(l.learnerId)}">Select Profile →</button></div>`}).join("")}</div></section>`;
       app.querySelectorAll("[data-select-existing]").forEach(button=>button.addEventListener("click",()=>{
         const next=R.getLearner?.(button.dataset.selectExisting);
         if(!next)return;
