@@ -111,7 +111,7 @@ function render(){
       <label class="profile-v2-check"><input id="pv2Simple" type="checkbox" ${rec.workspace.simplifiedDashboard?"checked":""}> Prefer a simplified dashboard when supported</label>
       <div class="profile-v2-actions"><button class="profile-v2-btn" type="button" id="pv2SaveWorkspace">Save Workspace</button><button class="profile-v2-btn secondary" type="button" id="pv2Export">Export My Profile</button><button class="profile-v2-btn secondary" type="button" id="pv2Reset">Reset Preferences</button></div><div class="profile-v2-status" id="pv2WorkspaceStatus" aria-live="polite"></div>
     </section>
-    <section class="profile-v2-card profile-v2-col4" aria-labelledby="privacyTitle">
+    <section class="profile-v2-card profile-v2-col4" aria-labelledby="privacyTitle" data-khae-optional="true">
       <p class="profile-v2-eyebrow">Privacy Boundary</p><h3 id="privacyTitle">What this profile can and cannot do</h3>
       <div class="profile-v2-privacy"><div>Saved locally in this browser unless a future protected account service is explicitly connected.</div><div>Does not store passwords or credentials.</div><div>Cannot change placement, grades, mastery, certificates, or prerequisite gates.</div><div>Official academic records remain owned by their source courses and assessment engines.</div></div>
     </section>
@@ -135,7 +135,7 @@ function bind(){
 global.addEventListener("khaemenes-family-changed",render);
 global.addEventListener("khaemenes-learning-continuation-changed",render);
 global.addEventListener("khaemenes-student-profile-changed",event=>{if(event.detail?.learnerId===learner()?.learnerId)render()});
-global.addEventListener("storage",event=>{if(event.key===P.storageKey||event.key===C?.storageKey)render()});
+global.addEventListener("storage",event=>{const key=String(event.key||"");if(key===P.storageKey||key.startsWith(P.storagePrefix||"khaemenes.student-profile.v3:")||key===C?.storageKey)render()});
 render();
 global.KhaemenesStudentProfileUIV2=Object.freeze({version:VERSION,render,applyWorkspace});
 })(window);
