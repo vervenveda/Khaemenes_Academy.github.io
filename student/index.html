@@ -209,8 +209,8 @@ function render(){
         if(!next)return;
         R.setActive?.({familyId:next.familyId,learnerId:next.learnerId});
         render();
-        const route=F.routeForLearner?.(next);
-        if(route?.destination&&/^https:\/\//.test(route.destination))location.assign(route.destination);
+        // Stay on the Student Portal after selecting an existing learner.
+        // Course navigation remains an explicit student action.
       }));
     }else{
       app.innerHTML=`<section class="card profile-entry" aria-labelledby="recoverProfileTitle"><p class="eyebrow">Returning learner</p><h3 id="recoverProfileTitle">Find your existing profile</h3><p>No family learner record is available to select in this browser. This is not a request to enroll again. If you have a verified family backup, use the recovery option below; otherwise open your original browser to export one.</p><div class="actions"><a class="btn" href="../family/#familyApp">Recover an existing family backup →</a><a class="btn secondary" href="../family/enroll/">I'm new · Enroll</a></div><p class="notice">Existing coursework and assessment data are not erased or reassigned by visiting this page.</p></section>`;
