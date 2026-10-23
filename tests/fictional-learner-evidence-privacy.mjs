@@ -1,0 +1,30 @@
+#!/usr/bin/env node
+// Fictional-only privacy contract regression. No browser data or real learner identities.
+import assert from "node:assert/strict";
+const A="fictional-learner-A",B="fictional-learner-B",teacher="fictional-teacher";
+const records=new Map([[A,{schema:"academy-evidence",version:1,learnerId:A,body:"Alpha lesson"}],[B,{schema:"academy-evidence",version:1,learnerId:B,body:"Beta lesson"}]]);
+const grants=new Map([[A,{status:"active",permissions:["evidence.view","evidence.review"]}],[B,{status:"active",permissions:["evidence.view"]}]]);
+let activeLearner=A;
+let verifiedSession=null;
+const authorize=(id,action)=>Boolean(verifiedSession?.principal===teacher&&verifiedSession.authenticated===true&&activeLearner===id&&grants.get(id)?.status==="active"&&grants.get(id)?.permissions.includes(action));
+const view=id=>authorize(id,"evidence.view")?records.get(id):null;
+const restore=(id,payload)=>{if(!authorize(id,"evidence.restore")||payload.learnerId!==id||payload.schema!=="academy-evidence"||payload.version!==1)return false;records.set(id,structuredClone(payload));return true};
+const review=id=>authorize(id,"evidence.review");
+let tests=0;const check=(name,fn)=>{fn();tests++;console.log("PASS "+name)};
+check("No authenticated session means no evidence",()=>assert.equal(view(A),null));
+verifiedSession={principal:teacher,authenticated:true};
+check("Fictional learner A view permitted",()=>assert.equal(view(A)?.body,"Alpha lesson"));
+check("Other learner B inaccessible when A active",()=>assert.equal(view(B),null));
+activeLearner=B;
+check("Switching profile hides learner A",()=>assert.equal(view(A),null));
+check("Learner B view works only with B active",()=>assert.equal(view(B)?.body,"Beta lesson"));
+check("Teacher cannot review B without review grant",()=>assert.equal(review(B),false));
+check("Cross-learner restore rejected",()=>assert.equal(restore(B,records.get(A)),false));
+check("Restore denied without explicit restore permission",()=>assert.equal(restore(B,records.get(B)),false));
+grants.get(B).status="revoked";
+check("Revocation immediately denies B",()=>assert.equal(view(B),null));
+check("Revocation also prevents review",()=>assert.equal(review(B),false));
+verifiedSession=null;activeLearner=A;
+check("Switching back without reauthentication denies A",()=>assert.equal(view(A),null));
+check("Original fictional records remain unchanged",()=>{assert.equal(records.get(A).body,"Alpha lesson");assert.equal(records.get(B).body,"Beta lesson")});
+console.log(JSON.stringify({result:"PASS",tests,liveIntegration:false,realRecordsTouched:0}));
