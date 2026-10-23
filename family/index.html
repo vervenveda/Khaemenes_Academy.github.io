@@ -135,8 +135,8 @@ function renderFamily(f){
   bind(f);
 }
 function bind(f){
-  $("[data-active]").forEach(b=>b.onclick=()=>{R.setActive({learnerId:b.dataset.active});render()});
-  $("[data-open-next]").forEach(b=>b.onclick=()=>{
+  $$("[data-active]").forEach(b=>b.onclick=()=>{R.setActive({learnerId:b.dataset.active});render()});
+  $$("[data-open-next]").forEach(b=>b.onclick=()=>{
     const learnerId=b.dataset.learnerId,href=b.dataset.openNext;
     if(!learnerId||!href)return;
     if(!activeAdult||!R.canAdult?.(activeAdult.adultId,learnerId,"progress.view"))return;
