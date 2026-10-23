@@ -89,7 +89,18 @@ function render(){
     try{IDs?.ensureLearner?.(learner.learnerId);learner=R.getLearner(learner.learnerId)}catch{}
     R.setActive?.({familyId:family.familyId,learnerId:learner.learnerId});
     render();
-    setTimeout(()=>{if(!confirm(`${learner.nickname} is registered for ${meta.label}.\n\nContinue to the learner profile?`))return;const route=window.KhaemenesFrontDoorRouter?.routeForLearner?.(learner);location.href=route?.destination||"../../student/"},30);
+    const pane=document.getElementById("learnerPane");
+    if(pane){
+      const notice=document.createElement("section");notice.id="learnerAddedNotice";notice.className="notice ok";notice.setAttribute("role","status");notice.setAttribute("aria-live","polite");
+      const heading=document.createElement("strong");heading.textContent=learner.nickname+" is registered for "+meta.label+".";
+      const detail=document.createElement("p");detail.textContent="This learner is now selected. Add another learner to this family, or finish and open the selected learner's pathway.";
+      const actions=document.createElement("div");actions.className="actions";
+      const addAnother=document.createElement("button");addAnother.type="button";addAnother.className="btn secondary";addAnother.textContent="Add Another Learner";
+      addAnother.addEventListener("click",()=>{const input=document.getElementById("nickname");input?.focus();input?.scrollIntoView({behavior:"smooth",block:"center"})});
+      const finish=document.createElement("button");finish.type="button";finish.className="btn green";finish.textContent="Finish & Open Selected Learner →";
+      finish.addEventListener("click",()=>{const route=window.KhaemenesFrontDoorRouter?.routeForLearner?.(learner);location.href=route?.destination||"../../student/"});
+      actions.append(addAnother,finish);notice.append(heading,detail,actions);pane.prepend(notice);
+    }
   });
 
   const adult=R.getAdult(),self=adult?R.getAdultLearner(adult.adultId):null;
