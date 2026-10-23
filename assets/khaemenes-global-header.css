@@ -275,3 +275,28 @@
 [data-khae-header] [data-khae-actions] [data-khae-secondary]{
   color:#203e32!important;background:#fffdf8!important;font-size:11px!important
 }
+
+/* Academy learner toolbar v1: shared cross-repository readable labels.
+   Scoped to the learner toolbar ID; never applies to lesson navigation. */
+body #khaemenesLearnerUtilityToolbar{
+  box-sizing:border-box!important;
+  max-width:calc(100vw - 20px)!important;
+  gap:5px!important;
+}
+body #khaemenesLearnerUtilityToolbar > :is(a,button){
+  box-sizing:border-box!important;
+  flex:0 1 auto!important;
+  width:auto!important;min-width:87px!important;max-width:140px!important;
+  height:auto!important;min-height:46px!important;max-height:none!important;
+  padding:7px 8px!important;
+  font-size:11px!important;font-weight:500!important;line-height:1.25!important;
+  white-space:normal!important;overflow:visible!important;text-overflow:clip!important;
+  overflow-wrap:anywhere!important;text-align:center!important;
+}
+@media(max-width:580px){
+  body #khaemenesLearnerUtilityToolbar{width:calc(100vw - 16px)!important;gap:3px!important}
+  body #khaemenesLearnerUtilityToolbar > :is(a,button){
+    flex:1 1 0!important;width:0!important;min-width:0!important;max-width:none!important;
+    font-size:10px!important;padding:6px 3px!important
+  }
+}
