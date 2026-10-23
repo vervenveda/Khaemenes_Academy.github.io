@@ -3,7 +3,7 @@
    page-specific navigation and actions. */
 :root{
   --khae-ticker-height:33px;
-  --khae-header-height:72px;
+  --khae-header-height:88px;
   --khae-sticky-stack:calc(var(--khae-ticker-height) + var(--khae-header-height));
   --khae-paper:#f4f0e7;
   --khae-paper-bright:#fbf9f4;
@@ -104,13 +104,13 @@
   overflow:visible!important;
 }
 [data-khae-header] [data-khae-header-inner]{
-  width:min(calc(100% - 48px),1222px);
+  width:min(calc(100% - 56px),1222px);
   min-height:var(--khae-header-height);
   margin-inline:auto;
   display:grid!important;
-  grid-template-columns:minmax(190px,250px) minmax(0,1fr) auto auto!important;
+  grid-template-columns:minmax(230px,280px) minmax(0,1fr) auto auto!important;
   align-items:center!important;
-  gap:12px!important;
+  gap:18px!important;
   padding:0!important;
 }
 [data-khae-header] [data-khae-brand]{
@@ -118,15 +118,15 @@
   justify-self:start;
   display:flex!important;
   align-items:center!important;
-  gap:10px!important;
+  gap:14px!important;
   color:var(--khae-ink)!important;
   text-decoration:none!important;
   text-align:left!important;
 }
 [data-khae-header] [data-khae-brand-mark]{
-  width:40px!important;
-  height:40px!important;
-  flex:0 0 40px!important;
+  width:52px!important;
+  height:52px!important;
+  flex:0 0 52px!important;
   display:grid!important;
   place-items:center!important;
   border:1px solid var(--khae-ink)!important;
@@ -134,22 +134,22 @@
   color:#fff!important;
   background:var(--khae-ink)!important;
   box-shadow:none!important;
-  font:500 11px/1 var(--khae-serif)!important;
-  letter-spacing:.06em!important;
+  font:600 14px/1 var(--khae-serif)!important;
+  letter-spacing:.05em!important;
 }
 [data-khae-header] [data-khae-brand-name]{
   display:block!important;
   color:var(--khae-ink)!important;
-  font:500 14px/1.1 var(--khae-serif)!important;
-  letter-spacing:.055em!important;
+  font:600 15.5px/1.14 var(--khae-serif)!important;
+  letter-spacing:.045em!important;
   text-transform:uppercase!important;
 }
 [data-khae-header] [data-khae-brand-sub]{
   display:block!important;
-  margin-top:4px!important;
+  margin-top:5px!important;
   color:#65706a!important;
-  font:400 8px/1.25 var(--khae-sans)!important;
-  letter-spacing:.1em!important;
+  font:400 8.5px/1.3 var(--khae-sans)!important;
+  letter-spacing:.085em!important;
   text-transform:uppercase!important;
 }
 [data-khae-header] [data-khae-nav]{
@@ -162,11 +162,11 @@
 }
 [data-khae-header] [data-khae-nav] a,
 [data-khae-header] [data-khae-nav] button{
-  min-height:34px!important;
+  min-height:38px!important;
   display:inline-flex!important;
   align-items:center!important;
   justify-content:center!important;
-  padding:6px 9px!important;
+  padding:8px 10px!important;
   border:1px solid rgba(17,25,21,.22)!important;
   border-radius:var(--khae-radius)!important;
   color:#2c3933!important;
@@ -187,7 +187,7 @@
   display:flex!important;
   align-items:center!important;
   justify-content:flex-end!important;
-  gap:7px!important;
+  gap:9px!important;
   flex-wrap:nowrap!important;
 }
 [data-khae-header] [data-khae-actions] a,
@@ -202,8 +202,8 @@
   color:#fff!important;
   background:var(--khae-navy)!important;
   box-shadow:none!important;
-  font:400 9px/1.15 var(--khae-sans)!important;
-  letter-spacing:.05em!important;
+  font:500 9.5px/1.15 var(--khae-sans)!important;
+  letter-spacing:.04em!important;
   text-transform:uppercase!important;
   text-decoration:none!important;
   white-space:nowrap!important;
@@ -232,14 +232,16 @@
 
 @media(max-width:1230px){
   [data-khae-header] [data-khae-nav]{display:none!important}
-  [data-khae-header] [data-khae-header-inner]{grid-template-columns:minmax(190px,1fr) auto 39px!important}
+  [data-khae-header] [data-khae-actions] a:nth-child(n+4),
+  [data-khae-header] [data-khae-actions] button:nth-child(n+4){display:none!important}
+  [data-khae-header] [data-khae-header-inner]{grid-template-columns:minmax(230px,1fr) auto 39px!important;gap:16px!important}
 }
 @media(max-width:760px){
   [data-khae-header] [data-khae-actions] a:nth-child(n+3),
   [data-khae-header] [data-khae-actions] button:nth-child(n+3){display:none!important}
 }
 @media(max-width:560px){
-  :root{--khae-ticker-height:32px;--khae-header-height:64px}
+   :root{--khae-ticker-height:32px;--khae-header-height:72px}
   .khae-network-ticker{grid-template-columns:minmax(0,1fr) 36px}
   .khae-network-ticker-track{animation-duration:18s}
   .khae-network-ticker-set{gap:12px;padding-inline:7px}
@@ -251,8 +253,8 @@
     grid-template-columns:minmax(0,1fr) auto 39px!important;
     gap:8px!important;
   }
-  [data-khae-header] [data-khae-brand-mark]{width:38px!important;height:38px!important;flex-basis:38px!important}
-  [data-khae-header] [data-khae-brand-name]{font-size:12px!important}
+  [data-khae-header] [data-khae-brand-mark]{width:44px!important;height:44px!important;flex-basis:44px!important;font-size:12px!important}
+  [data-khae-header] [data-khae-brand-name]{font-size:13px!important}
   [data-khae-header] [data-khae-brand-sub]{display:none!important}
   [data-khae-header] [data-khae-actions] a:nth-child(n+2),
   [data-khae-header] [data-khae-actions] button:nth-child(n+2){display:none!important}
