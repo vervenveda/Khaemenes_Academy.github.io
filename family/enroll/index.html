@@ -97,8 +97,13 @@ function render(){
       const actions=document.createElement("div");actions.className="actions";
       const addAnother=document.createElement("button");addAnother.type="button";addAnother.className="btn secondary";addAnother.textContent="Add Another Learner";
       addAnother.addEventListener("click",()=>{const input=document.getElementById("nickname");input?.focus();input?.scrollIntoView({behavior:"smooth",block:"center"})});
-      const finish=document.createElement("button");finish.type="button";finish.className="btn green";finish.textContent="Finish & Open Selected Learner →";
-      finish.addEventListener("click",()=>{const route=window.KhaemenesFrontDoorRouter?.routeForLearner?.(learner);location.href=route?.destination||"../../student/"});
+      let pendingPinHandoff=null;try{pendingPinHandoff=JSON.parse(sessionStorage.getItem("khaemenes_kindergarten_pin_handoff_v1")||"null")}catch{}
+      const continueToPin=pendingPinHandoff?.intent==="pin-kindergarten"&&learner.stage==="kindergarten";
+      const finish=document.createElement("button");finish.type="button";finish.className="btn green";finish.textContent=continueToPin?"Continue to Kinder Garden & Pin Class →":"Finish & Open Selected Learner →";
+      finish.addEventListener("click",()=>{
+        if(continueToPin){location.href="https://vervenveda.com/Khaemenes_KinderGarden.github.io/?from=family-profile&pinClass=kindergarten";return}
+        const route=window.KhaemenesFrontDoorRouter?.routeForLearner?.(learner);location.href=route?.destination||"../../student/";
+      });
       actions.append(addAnother,finish);notice.append(heading,detail,actions);pane.prepend(notice);
     }
   });
