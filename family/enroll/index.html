@@ -124,7 +124,7 @@ function editPlacement(id){
   const learner=R.getLearner(id);if(!learner||learner.selfDirectedAdult)return;
   const choice=prompt(`Enter grade for ${learner.nickname}: pre-k, k, or 01 through 12`,learner.grade||"01");if(choice===null)return;
   const g=R.normalizeGrade(choice);if(!g){alert("Please enter pre-k, k, or a grade from 01 through 12.");return}
-  R.updateLearnerGrade(id,g);R.setActive({familyId:learner.familyId,learnerId:id});render();
+  R.updateLearnerGrade(id,g);R.setActive({familyId:learner.familyId,learnerId:id});render();if(g==="k"){const pane=document.getElementById("learnerPane");const box=document.createElement("div");box.className="notice ok";const a=document.createElement("a");a.href="https://vervenveda.com/Khaemenes_KinderGarden.github.io/family/guardian-release/";a.textContent="Continue: review Kindergarten guardian release for this existing learner →";box.append("Kindergarten placement saved. Formal lessons still require separate guardian authorization. ",a);pane?.prepend(box); }
 }
 render();
 })();
