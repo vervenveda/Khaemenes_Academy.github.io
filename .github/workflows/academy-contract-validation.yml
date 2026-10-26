@@ -6,6 +6,10 @@ on:
       - 'ACADEMY_MASTERY_ACCESS_CONTRACT_V1.md'
       - 'assets/khaemenes-naib-mentor-router.js'
       - 'tests/lifelong-mentor-contract-static.test.mjs'
+      - 'assets/khaemenes-archaemenes-conversation-v2.js'
+      - 'assets/khaemenes-archaemenes-visitor-local-v1.js'
+      - 'mentor/index.html'
+      - 'tests/archaemenes-curriculum-continuity.test.mjs'
       - '.github/workflows/academy-contract-validation.yml'
   push:
     branches: [ main ]
@@ -13,6 +17,10 @@ on:
       - 'ACADEMY_MASTERY_ACCESS_CONTRACT_V1.md'
       - 'assets/khaemenes-naib-mentor-router.js'
       - 'tests/lifelong-mentor-contract-static.test.mjs'
+      - 'assets/khaemenes-archaemenes-conversation-v2.js'
+      - 'assets/khaemenes-archaemenes-visitor-local-v1.js'
+      - 'mentor/index.html'
+      - 'tests/archaemenes-curriculum-continuity.test.mjs'
       - '.github/workflows/academy-contract-validation.yml'
 
 permissions:
@@ -32,3 +40,7 @@ jobs:
         run: node --check assets/khaemenes-naib-mentor-router.js
       - name: Validate lifelong mentor and mastery contract
         run: node tests/lifelong-mentor-contract-static.test.mjs
+      - name: Check contextual curriculum engine syntax
+        run: node --check assets/khaemenes-archaemenes-conversation-v2.js
+      - name: Validate fictional cross-subject mentor journey and boundaries
+        run: node tests/archaemenes-curriculum-continuity.test.mjs
