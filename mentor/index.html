@@ -203,6 +203,7 @@ const KINDERGARTEN_CONTEXT_KEY='khaemenes_kindergarten_mentor_context_v1';
 const ELEMENTARY_CONTEXT_KEY='khaemenes_elementary_mentor_context_v1';
 const MIDDLE_CONTEXT_KEY='khaemenes_middle_mentor_context_v1';
 const HIGH_CONTEXT_KEY='khaemenes_high_mentor_context_v1';
+const HIGHER_CONTEXT_KEY='khaemenes_higher_mentor_context_v1';
 const $=id=>document.getElementById(id);
 let registry=null,family=null,adult=null,learner=null,mode='Academy Mentor';
 let mentorViewEpoch=0;
@@ -271,7 +272,12 @@ function highContext(){
   if(!context||context.learnerId!==learner.learnerId||context.stage!=='high')return null;
   return context;
 }
-function activeLearnerContext(){return highContext()||middleContext()||elementaryContext()||kindergartenContext()||preschoolContext()}
+function higherContext(){
+  if(!learner||learnerStage(learner)!=='higher')return null;
+  const context=readLocalJSON(HIGHER_CONTEXT_KEY,null);
+  return context?.learnerId===learner.learnerId&&context?.stage==='higher'?context:null;
+}
+function activeLearnerContext(){return higherContext()||highContext()||middleContext()||elementaryContext()||kindergartenContext()||preschoolContext()}
 function activeYoungContext(){return kindergartenContext()||preschoolContext()}
 function preschoolCatalog(){return window.KhaemenesPreschoolCatalog||null}
 function preschoolActivity(id){const catalog=preschoolCatalog();return catalog?.byId?.(id)||catalog?.byMentorId?.(id)||null}
