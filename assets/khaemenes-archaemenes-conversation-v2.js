@@ -190,7 +190,7 @@
       const task=choose(kind);
       if(!task)return 'Tell me which step you would like to examine.';
       state.detail=kind;
-      state.subject='mathematics';
+      state.subject=SUBJECT_TITLES[kind]||'mathematics';
       state.phase='practice';
       state.q=task.q;
       state.accepted=task.a;
