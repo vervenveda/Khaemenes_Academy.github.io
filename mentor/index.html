@@ -139,10 +139,19 @@ let registry=null,family=null,adult=null,learner=null,mode='Academy Mentor';
 
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function loadHistory(){try{return JSON.parse(localStorage.getItem(HISTORY_KEY)||'{}')}catch{return {}}}
-function saveHistory(all){try{localStorage.setItem(HISTORY_KEY,JSON.stringify(all))}catch{}}
+function saveHistory(all){
+  try{
+    localStorage.setItem(HISTORY_KEY,JSON.stringify(all));
+    return true;
+  }catch{
+    const notice=$('conversationNote');
+    if(notice) notice.textContent='This browser could not save the Mentor conversation. Copy any important text before leaving this page.';
+    return false;
+  }
+}
 function learnerHistory(){if(!learner)return[];const all=loadHistory();return Array.isArray(all[learner.learnerId])?all[learner.learnerId]:[]}
-function pushHistory(role,text){if(!learner)return;const all=loadHistory();const list=Array.isArray(all[learner.learnerId])?all[learner.learnerId]:[];list.push({role,text:String(text).slice(0,1200),at:new Date().toISOString()});all[learner.learnerId]=list.slice(-60);saveHistory(all)}
-function clearHistory(){if(!learner)return;const all=loadHistory();delete all[learner.learnerId];saveHistory(all);renderConversation(true)}
+function pushHistory(role,text){if(!learner)return;const all=loadHistory();const list=Array.isArray(all[learner.learnerId])?all[learner.learnerId]:[];list.push({role,text:String(text).slice(0,1200),at:new Date().toISOString()});all[learner.learnerId]=list.slice(-60);return saveHistory(all)}
+function clearHistory(){if(!learner)return;const all=loadHistory();delete all[learner.learnerId];if(saveHistory(all))renderConversation(true)}
 function readLocalJSON(key,fallback=null){try{const raw=localStorage.getItem(key);return raw?JSON.parse(raw):fallback}catch{return fallback}}
 function learnerStage(l=learner){return registry?.normalizeStage?.(l?.stage)||l?.stage||''}
 function preschoolContext(){
