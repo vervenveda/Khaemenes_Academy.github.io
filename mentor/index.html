@@ -492,7 +492,25 @@ function responseFor(text){
 
 function addMessage(role,text,store=false){const box=$('messages');const div=document.createElement('div');div.className=`msg ${role}`;div.innerHTML=`<strong>${role==='mentor'?'Archaemenes':'You'}</strong>${esc(text)}`;box.appendChild(div);box.scrollTop=box.scrollHeight;if(store)pushHistory(role,text)}
 function renderConversation(reset=false){const box=$('messages');box.innerHTML='';if(!learner)return;const history=reset?[]:learnerHistory();if(history.length){history.forEach(m=>addMessage(m.role==='user'?'user':'mentor',m.text,false))}else{addMessage('mentor',greeting(),true)}}
-function ask(text){if(!learner)return;const clean=String(text||'').trim();if(!clean)return;addMessage('user',clean,true);setTimeout(()=>addMessage('mentor',responseFor(clean),true),120)}
+function ask(text){
+  if(!learner||!family)return;
+  const clean=String(text||'').trim();
+  if(!clean)return;
+  const requestedLearnerId=learner.learnerId;
+  const requestedFamilyId=family.familyId;
+  // Resolve while the requesting learner's context is active.
+  const reply=responseFor(clean);
+  addMessage('user',clean,true);
+  setTimeout(()=>{
+    const active=registry?.activeIds?.()||{};
+    if(!learner||!family||
+       learner.learnerId!==requestedLearnerId||
+       family.familyId!==requestedFamilyId||
+       active.learnerId!==requestedLearnerId||
+       active.familyId!==requestedFamilyId) return;
+    addMessage('mentor',reply,true);
+  },120);
+}
 
 function renderQuickPrompts(){const box=$('quickPrompts');box.innerHTML='';const prompts=isYoung(learner)?['What should we do next?','Give me a clue','I want something different','I need a break']:['Help me get started','Give me a hint','What should I work on?','I feel stuck','Help me study'];prompts.forEach(p=>{const b=document.createElement('button');b.type='button';b.textContent=p;b.addEventListener('click',()=>ask(p));box.appendChild(b)})}
 
