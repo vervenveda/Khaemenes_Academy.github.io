@@ -95,6 +95,39 @@ const unsupportedReply=unsupported.respond("Help me with my lesson");
 assert.match(unsupportedReply,/do not yet have a verified concept-matched practice/i);
 assert.notEqual(unsupported.snapshot().phase,"practice");
 
+// Exact released Mathematics pilot: each stage must match its own authored
+// lesson objective and independently created, ungraded practice bank.
+const mathLessonCases=[
+  ["elementary","02","elementary-grade-02-mathematics","week-01",1,"Scholar Routines and Reading Stamina","12"],
+  ["middle","07","middle-grade-07-mathematics","week-05",5,"Operations with Rational Numbers","3"],
+  ["high","09","math-algebra1-integrated1","u01-l01",null,"Algebraic Habits, Notation & Mathematical Argument","a"],
+  ["higher","","higher-learning-linear-algebra","u01-l01",null,"Vectors and Coordinates in Rⁿ","c"]
+];
+for(const [stage,grade,courseId,lessonId,week,title,expected] of mathLessonCases){
+  const s=api.createSession({});
+  s.setReleasedContext({stage,grade,currentLessonContext:{
+    subject:"mathematics",courseId,lessonId,week,title,
+    objective:"published lesson objective",answerKey:"FAKE_PRIVATE_KEY"
+  },recentAssessments:[{verified:true,reviewSkills:["released concept"],answerKey:"FAKE_PRIVATE_KEY"}]});
+  const answer=s.respond("Help me with my lesson");
+  assert.match(answer,/Now try this one:/,"published Mathematics lesson needs fresh formative practice");
+  assert.match(answer,/published lesson objective/);
+  assert.doesNotMatch(answer,/FAKE_PRIVATE_KEY|answerKey/,"teacher key must never cross");
+  assert.match(s.respond(expected),/correct/);
+  assert.equal(s.snapshot().successes,1);
+}
+// Unknown or mismatched lesson metadata is NOT an authorization to invent
+// an exact mapping or expose any official assessment content.
+const unverifiedMath=api.createSession({});
+unverifiedMath.setReleasedContext({stage:"high",currentLessonContext:{
+  courseId:"math-algebra1-integrated1",lessonId:"u03-l06",
+  title:"Unknown lesson",objective:"unspecified objective",answerKey:"SECRET"
+}});
+const fallback=unverifiedMath.respond("Help me with my lesson");
+assert.match(fallback,/do not yet have reviewed, lesson-specific practice/);
+assert.equal(unverifiedMath.snapshot().phase,"");
+assert.doesNotMatch(fallback,/SECRET/);
+
 // Cross-learner boundaries and clearing coaching state.
 const other=api.forLearner("fictional-family-A","fictional-learner-B");
 assert.equal(other.snapshot().subject,"");
