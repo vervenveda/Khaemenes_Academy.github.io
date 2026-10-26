@@ -3,12 +3,12 @@
    NAIB administers routing; Noema is Chancellor; Archaemenes mentors. */
 (function(global){"use strict";
 const stages={
- preschool:["Wise Owl","Hello, explorer! Look closely. What is one thing you notice today?"],
- kindergarten:["Wise Owl","Hello, curious learner! What shall we discover together?"],
- elementary:["Academy Mentor","Welcome! Tell me what you understand, and we will find one useful clue."],
+ preschool:["Wise Owl","Hello explorer! Look closely. What is one thing you notice today?"],
+ kindergarten:["Wise Owl","Hello curious learner! What shall we discover together?"],
+ elementary:["Academy Mentor","Welcome! Tell me what you understand. We will find one useful clue."],
  middle:["Academy Mentor","Let us examine the idea together. What evidence supports your thinking?"],
- high:["Academy Mentor","We can start from the principle, review the evidence, and test your reasoning."],
- higher:["Scholar","Let us distinguish evidence from inference and investigate the strongest explanation."]
+ high:["Academy Mentor","We can start with the principle. Then review the evidence and test your reasoning."],
+ higher:["Scholar","Let us distinguish evidence from inference. Then investigate the strongest explanation."]
 };
 const KEY="khaemenes_archaemenes_british_voice_v1";
 let mode="preschool",voiceList=[],selected="";
