@@ -62,7 +62,7 @@ header[data-khae-header] [data-khae-actions]{display:none!important}
 header[data-khae-header] [data-vnv-ecosystem-slot]{min-width:36px}
 @media(max-width:850px){header[data-khae-header] .shell[data-khae-header-inner]{grid-template-columns:1fr auto!important}header[data-khae-header] [data-khae-nav]{grid-column:1/-1;justify-content:center!important}header[data-khae-header] [data-vnv-ecosystem-slot]{grid-column:2;grid-row:1}}
 @media(max-width:480px){header[data-khae-header] [data-khae-nav] a{font-size:.68rem!important;padding:7px 8px!important}}
-</style>
+</style><style id="archaemenes-chat-access-v1">.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.chat .empty{padding:32px 22px}.chat .empty h3{font-size:1.3rem;margin:0 0 10px}.chat .empty p{line-height:1.65}.composer input{flex:1;min-width:0}.composer button{min-width:118px}.chat .messages{min-height:320px}</style>
 <script defer src="https://vervenveda.com/Khaemenes_Preschool.github.io/assets/preschool-catalog.js"></script>
 <script defer src="../assets/khaemenes-family-registry.js"></script>
 <link rel="stylesheet" href="/Khaemenes_Academy.github.io/assets/khaemenes-global-header.css">
@@ -132,11 +132,11 @@ header[data-khae-header] [data-vnv-ecosystem-slot]{flex:0 0 auto}
       <h2 id="conversationTitle">Mentor Conversation</h2>
       <p class="small" id="conversationNote">Loading the active learner from the Khaemenes Family Registry…</p>
     </div>
-    <div class="messages" id="messages" aria-live="polite"></div>
+    <div class="messages" id="messages" aria-live="polite"><div class="empty"><h3>Ready to meet Archaemenes?</h3><p>Select a learner in the Family Registry to begin. Older students can type questions and receive guided responses. Preschool and Kindergarten learners use safe prompt buttons.</p><p><a class="btn" href="../family/">Select a learner</a></p></div></div>
     <div class="quick" id="quickPrompts" aria-label="Mentor prompts"></div>
     <form class="composer" id="composer" autocomplete="off">
-      <input id="mentorInput" maxlength="500" aria-label="Message Archaemenes" placeholder="Ask about a lesson, idea, problem, or study plan…">
-      <button type="submit">Ask</button>
+      <label for="mentorInput" class="sr-only">Type your message to Archaemenes</label><input id="mentorInput" maxlength="500" aria-label="Type a question for Archaemenes" placeholder="Type your question here. For example: Can you help me understand fractions?">
+      <button type="submit">Send message</button>
     </form>
   </section>
 
@@ -602,7 +602,7 @@ function renderFamily(){
 
 function renderLearner(){
   const state=$('learnerState'),composer=$('composer'),note=$('conversationNote'),badges=$('identityBadges');badges.innerHTML='';
-  if(!learner){window.KhaemenesArchaemenesLivingBridge?.stop();state.innerHTML='<div class="notice"><strong>Select a learner.</strong><br>Archaemenes personalizes his expression to the active learner while remaining the same Mentor.</div>';composer.hidden=true;note.textContent='Choose an active learner from the Family Registry.';$('messages').innerHTML='';$('quickPrompts').innerHTML='';renderPreschoolContext();return}
+  if(!learner){window.KhaemenesArchaemenesLivingBridge?.stop();state.innerHTML='<div class="notice"><strong>Select a learner.</strong><br>Archaemenes personalizes his expression to the active learner while remaining the same Mentor.</div>';composer.hidden=true;note.textContent='Select an active learner to start the conversation. The Mentor does not access or change course grades.';$('messages').innerHTML='<div class="empty"><h3>Start a conversation</h3><p>Choose a learner through the Academy Family Profile. Then Archaemenes can respond to written questions with study guidance and clues.</p><div class="actions" style="justify-content:center"><a class="btn primary" href="../family/">Choose learner</a><a class="btn" href="../student/">Student portal</a></div></div>';$('quickPrompts').innerHTML='';renderPreschoolContext();return}
   mode=mentorMode(learner);window.KhaemenesArchaemenesLivingBridge?.update(learnerStage(learner));const dest=registry?.learnerDestination?.(learner)||{url:STUDENT_URL,label:'Student Portal'};
   const context=activeLearnerContext();const style=context?.communicationStyle?String(context.communicationStyle).replace(/[-_]/g,' '):'';const elementaryMode=elementaryContext()?.developmentalMode||'',middleMode=middleContext()?.developmentalMode||'';badges.innerHTML=`<span class="badge">${esc(learner.nickname||'Learner')}</span><span class="badge">${esc(stageLabel(learner))}</span><span class="badge">Archaemenes · ${esc(mode)}</span>${isYoung(learner)&&style?`<span class="badge">Encouragement · ${esc(style)}</span>`:''}${elementaryMode?`<span class="badge">${esc(elementaryMode)}</span>`:''}${middleMode?`<span class="badge">${esc(middleMode)}</span>`:''}`;
   state.innerHTML=`<div class="kv"><span>Name</span><span>${esc(learner.nickname||'Learner')}</span></div><div class="kv"><span>Placement</span><span>${esc(stageLabel(learner))}</span></div><div class="kv"><span>Mentor expression</span><span>${esc(mode)}</span></div>`;
