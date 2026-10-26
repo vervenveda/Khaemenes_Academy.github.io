@@ -50,6 +50,19 @@ footer{padding:30px 0 42px;border-top:1px solid var(--line);color:#737a74;font-s
 .context-note{margin-top:10px;padding:10px;border-radius:10px;color:#5c5139;background:#fff8e7;font-size:.76rem}
 
 </style>
+<style id="archaemenes-header-simplify-v2">
+/* Mentor-specific compact header. No changes to shared ecosystem navigation logic. */
+header[data-khae-header] .shell[data-khae-header-inner]{display:grid!important;grid-template-columns:minmax(180px,1fr) auto auto!important;align-items:center!important;gap:12px 22px!important;padding:13px 0!important;text-align:left!important}
+header[data-khae-header] [data-khae-brand]{min-width:0!important;max-width:270px;flex:none!important;gap:11px!important}
+header[data-khae-header] [data-khae-brand] strong{font-size:.86rem!important;line-height:1.25!important;letter-spacing:.02em!important;white-space:normal!important}
+header[data-khae-header] [data-khae-brand] small{font-size:.68rem!important;line-height:1.2!important;margin-top:2px!important;white-space:normal!important}
+header[data-khae-header] [data-khae-nav]{flex:none!important;max-width:none!important;display:flex!important;flex-wrap:wrap!important;justify-content:flex-end!important;gap:8px!important}
+header[data-khae-header] [data-khae-nav] a{font-size:.73rem!important;padding:8px 11px!important;white-space:nowrap!important;min-height:35px!important}
+header[data-khae-header] [data-khae-actions]{display:none!important}
+header[data-khae-header] [data-vnv-ecosystem-slot]{min-width:36px}
+@media(max-width:850px){header[data-khae-header] .shell[data-khae-header-inner]{grid-template-columns:1fr auto!important}header[data-khae-header] [data-khae-nav]{grid-column:1/-1;justify-content:center!important}header[data-khae-header] [data-vnv-ecosystem-slot]{grid-column:2;grid-row:1}}
+@media(max-width:480px){header[data-khae-header] [data-khae-nav] a{font-size:.68rem!important;padding:7px 8px!important}}
+</style>
 <script defer src="https://vervenveda.com/Khaemenes_Preschool.github.io/assets/preschool-catalog.js"></script>
 <script defer src="../assets/khaemenes-family-registry.js"></script>
 <link rel="stylesheet" href="/Khaemenes_Academy.github.io/assets/khaemenes-global-header.css">
@@ -78,13 +91,13 @@ header[data-khae-header] [data-vnv-ecosystem-slot]{flex:0 0 auto}
 <div class="topline">Khaemenes Academy · One Mentor · Family-linked learner continuity</div>
 <header class="header" data-khae-header>
   <div class="shell nav" data-khae-header-inner>
-    <a class="brand" data-khae-brand href="./" aria-label="Archaemenes Mentor home"><span class="seal" data-khae-brand-mark>A</span><span><strong data-khae-brand-name>Khaemenes Academy</strong><small data-khae-brand-sub>Archaemenes · Scholar & Educational Mentor</small></span></a>
+    <a class="brand" data-khae-brand href="./" aria-label="Archaemenes Mentor home"><span class="seal" data-khae-brand-mark>A</span><span><strong data-khae-brand-name>Khaemenes Academy</strong><small data-khae-brand-sub>Mentor</small></span></a>
     <nav class="navlinks" data-khae-nav aria-label="Mentor navigation">
       <a href="../family/">Family Profile</a>
       <a href="../student/">Student Portal</a>
       <a href="https://artist1970.github.io/Archaemenes.github.io/">About Archaemenes</a>
     </nav>
-    <div data-khae-actions><a data-khae-secondary href="../student/">Student</a><a href="../family/">Family</a></div>
+    <div data-khae-actions hidden aria-hidden="true"></div>
     <div data-vnv-ecosystem-slot aria-label="Ecosystem menu"></div>
   </div>
 </header>
