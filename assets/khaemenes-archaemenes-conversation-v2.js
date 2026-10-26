@@ -33,6 +33,10 @@
   /* Student-release curriculum coverage. These are NEW formative examples,
      not copied exam questions or educator keys. The course engine still grades. */
   Object.assign(B,{
+    energy:[
+      {example:'Heat can transfer by conduction when particles interact through direct contact. A metal spoon warming in hot soup is a common example.',q:'Which is conduction? A: Sunlight warming a wall. B: A metal spoon warming by contact with hot soup. C: Warm air circulating through a room.',a:['b'],hint:'Look for heat transfer through direct contact.'},
+      {example:'Convection is heat transfer by movement of a fluid, such as air or water.',q:'Which best illustrates convection? A: Warm air rises while cooler air descends. B: Light travels from a star. C: Two touching blocks exchange heat.',a:['a'],hint:'Find the moving liquid or gas carrying thermal energy.'}
+    ],
     psychology:[
       {example:'A psychological hypothesis is a testable proposal about cognition or behavior, not a diagnosis of a person.',q:'Which claim can be investigated with a defined study? A: Everybody thinks the same way. B: Memory performance varies with sleep duration. C: Feelings never change.',a:['b'],hint:'Look for a measurable relationship that could be tested.'},
       {example:'Correlation by itself does not prove that one variable caused another.',q:'Which reasoning is most careful? A: Two variables move together, so one definitely caused the other. B: Ignore alternative causes. C: Investigate possible confounding factors before claiming causation.',a:['c'],hint:'Think about what other factors might explain the observed pattern.'}
@@ -91,7 +95,7 @@
     return SUBJECT_CUES.find(s=>s.pattern.test(q))?.name||'';
   }
   const SUBJECT_TITLES=Object.freeze({
-    english:'English and Language Arts',science:'Science',psychology:'Psychology',social:'Social Studies',
+    english:'English and Language Arts',science:'Science',energy:'Science · Energy Transfer',psychology:'Psychology',social:'Social Studies',
     languages:'World Languages',technology:'Technology',arts:'Arts',
     health:'Health and Physical Education',research:'Research',life:'Life Skills'
   });
@@ -161,23 +165,31 @@
     function contextReply(q){
       if(!releaseContext)return '';
       const c=releaseContext;
-      const kind=subjectFrom(c.subject+' '+c.courseId)||'';
-      const challenge=/\b(?:help|practic|explain|review|lesson|study|next step|topic|quiz|test|assessment)\b/i.test(q);
-      if(!challenge)return '';
+      const lessonScoped=/\b(?:(?:my|this|the|today'?s|current)\s+(?:lesson|topic|quiz|test|assessment)|help (?:me )?with (?:a |my |this |the )?lesson|review my skills|practice my lesson)\b/i.test(q);
+      if(!lessonScoped)return '';
       if(/\b(?:quiz|test|assessment)\b/i.test(q)){
-        const score=c.verified&&c.score!=null?' The last verified score shared with me is '+c.score+'%.':'';
+        const score=c.verified&&c.score!=null?' Your last verified score summary is '+c.score+'%.':'';
         return 'I cannot retrieve locked questions or official answers.'+score+
-          (c.skills.length?' The released review skills are '+c.skills.join(', ')+'.':'')+
-          ' Let us practise the underlying concept with a new example. Which skill shall we try?';
+          (c.skills.length?' Your released review skills are '+c.skills.join(', ')+'.':'')+
+          ' Let us practise the underlying concept with a NEW example. Which skill shall we try?';
       }
-      if(kind&&B[kind]&&/^(?:help me|what should|let'?s|can we|please|i need|review|practice|practise)/i.test(q))
-        return exercise(kind,'Your current course context points toward '+(SUBJECT_TITLES[kind]||c.subject)+'.');
+      const combined=(c.skills.join(' ')+' '+c.focus+' '+c.subject+' '+c.courseId).toLowerCase();
+      let aligned='';
+      if(/(?:energy transfer|heat transfer|thermal energy|conduction|convection)/.test(combined))aligned='energy';
+      else if(/(?:linear equations?|solving equations?|one-step equations?|two-step equations?|algebraic equations?)/.test(combined))aligned='equations';
+      else if(/(?:fraction addition|adding fractions?|same denominators?)/.test(combined))aligned='add';
+      else if(/(?:fraction multiplication|multiplying fractions?)/.test(combined))aligned='multiply';
+      else if(/(?:textual evidence|supporting (?:a )?claim|claim and evidence|thesis statement)/.test(combined))aligned='english';
+      else if(/(?:primary sources?|historical evidence|source credibility)/.test(combined))aligned='social';
+      else if(/(?:observations? and inferences?|experimental variables?|controlled experiments?)/.test(combined))aligned='science';
+      else if(/(?:programming loops?|loops? and conditionals?|coding basics)/.test(combined))aligned='technology';
       const position=c.subject||c.courseId||'your current learning pathway';
-      return 'Your released course summary points to '+position+
+      const scope='Your released summary identifies '+position+
         (c.week?' (week '+c.week+')':'')+'.'+
         (c.focus?' The recent lesson focus is '+c.focus+'.':'')+
-        (c.skills.length?' Suggested review areas: '+c.skills.join(', ')+'.':'')+
-        ' Tell me the specific idea you want to practise. This does not change your course grades.';
+        (c.skills.length?' Review skills: '+c.skills.join(', ')+'.':'');
+      if(aligned)return scope+' '+exercise(aligned,'Here is NEW practice aligned to that concept, separate from the Academy quiz.');
+      return scope+' I do not yet have a verified concept-matched practice bank for this exact lesson. Tell me which step is difficult, and we can work from your explanation. I will not substitute unrelated examples or disclose assessment keys.';
     }
     function choose(kind){
       const items=B[kind]||[];
@@ -286,14 +298,14 @@
       if(/\b(?:equations?|algebra)\b/.test(q))return exercise('equations','Let us solve one equation by doing the same operation to both sides.');
       // Curriculum-aware support uses authored practice and a released summary,
       // never the question bank or teacher marking guidance.
+      const academic=contextReply(raw);
+      if(academic)return academic;
       const explicit=subjectFrom(raw);
       if(explicit&&B[explicit])return exercise(explicit,'We can study '+SUBJECT_TITLES[explicit]+' together.');
       if(state.detail&&B[state.detail]&&/^(?:another example|another|again|one more|more practice|harder|practice|practise)[.!?\s]*$/i.test(q))
         return exercise(state.detail,'Here is another independent practice question.');
       if(state.detail&&B[state.detail]&&/^(?:hint|clue|give me a hint|give me a clue)[.!?\s]*$/i.test(q)&&state.phase==='practice')
         return 'Here is a clue: '+state.hint+' Try again: '+state.q;
-      const academic=contextReply(raw);
-      if(academic)return academic;
 
       if(/\b(?:math|mathematics|numbers?)\b/.test(q)){
         state.subject='mathematics';state.phase='choose';save();
