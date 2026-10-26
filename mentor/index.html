@@ -80,6 +80,12 @@ header[data-khae-header] [data-vnv-ecosystem-slot]{flex:0 0 auto}
 @media(max-width:560px){header[data-khae-header] [data-khae-nav] a{font-size:.69rem;padding:8px}.hero{padding-top:26px}}
 </style>
 
+<style id="archaemenes-visitor-elegant-v1">
+body,.small,.notice,.kv,.route-card,.chat,.visitor-section{font-weight:400}
+.brand strong,.panel h2,.panel h3,.empty h2,.chat .empty h3,.visitor-heading h2{font-weight:400!important}
+.btn,.navlinks a,header[data-khae-header] a,.learner-btn strong,.route-card strong,.notice strong,.msg strong,.quick button,.badge,.composer button{font-weight:450!important;text-shadow:none!important;-webkit-text-stroke:0!important}
+.visitor-section{padding:0 0 54px}.visitor-panel{border-radius:7px;overflow:hidden}.visitor-heading{display:flex;align-items:start;justify-content:space-between;gap:18px;border-bottom:1px solid var(--line);background:#f1e9dc}.visitor-heading h2{margin:5px 0;color:var(--forest);font:400 clamp(1.5rem,3vw,2rem)/1.2 Georgia,serif}.visitor-heading .small{margin:8px 0 0;max-width:680px}.visitor-messages{min-height:220px;max-height:410px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:20px 23px;background:#fffdf9}.visitor-reply,.visitor-user{max-width:85%;padding:12px 15px;margin:0;border-radius:7px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere}.visitor-reply{align-self:flex-start;background:#f7f0e5;border:1px solid #e3d7c3}.visitor-user{align-self:flex-end;background:#e8eee8;border:1px solid #d1dbd2}.visitor-reply span{display:block;color:#6b4f2d;font:400 .8rem Georgia,serif;margin-bottom:5px}.visitor-suggestions{display:flex;gap:8px;flex-wrap:wrap;padding:0 23px 15px}.visitor-suggestions button{padding:8px 11px;border:1px solid #d7c8ac;border-radius:7px;background:#fffdf7;color:#3a4b3c;font-weight:400}.visitor-form{padding:0 23px}.visitor-form label{font-size:.87rem;color:var(--forest)}.visitor-entry{display:flex;gap:10px;margin-top:7px}.visitor-entry input{flex:1;min-width:0;min-height:45px;padding:11px;border:1px solid #c8bca6;border-radius:7px;background:white;color:var(--ink)}.visitor-entry button{min-width:84px}.visitor-privacy{margin:13px 23px}.visitor-clear{margin:0 23px 20px;min-height:34px;font-size:.78rem}@media(max-width:700px){.visitor-heading{flex-direction:column}.visitor-messages{padding:15px}.visitor-suggestions{padding-left:15px}.visitor-form{padding:0 15px}.visitor-privacy{margin:13px 15px}.visitor-clear{margin-left:15px}}
+</style>
 </head>
 <body data-i18n-no-online>
 <div class="topline">Khaemenes Academy · One Mentor · Family-linked learner continuity</div>
@@ -157,6 +163,12 @@ header[data-khae-header] [data-vnv-ecosystem-slot]{flex:0 0 auto}
     </section>
   </aside>
 </section>
+<section class="shell visitor-section" id="visitorConversation" aria-labelledby="visitorTitle"><div class="panel visitor-panel">
+<div class="panel-pad visitor-heading"><div><p class="eyebrow">Open learning · everyone welcome</p><h2 id="visitorTitle">Chat with Archaemenes</h2><p class="small">Ask a question or explore a creative idea without registering. Registered learner conversations remain separate above.</p></div><p class="small">Local introductory guidance · Creative Spark / AIP not connected</p></div>
+<div class="visitor-messages" id="visitorMessages" role="log" aria-live="polite" aria-label="Visitor conversation"><p class="visitor-reply"><span>Archaemenes</span>Welcome. Tell me what you would like to learn or create. We can begin with one thoughtful step.</p></div>
+<div class="visitor-suggestions"><button type="button" data-visitor-example="How can I begin learning algebra?">Explore mathematics</button><button type="button" data-visitor-example="Help me plan a creative story.">Create a story</button><button type="button" data-visitor-example="What can I explore at Khaemenes Academy?">Discover the Academy</button></div>
+<form id="visitorForm" class="visitor-form" autocomplete="off"><label for="visitorInput">Your message</label><div class="visitor-entry"><input id="visitorInput" maxlength="400" required placeholder="Type a question or share an idea…" aria-describedby="visitorPrivacy"><button type="submit" class="btn primary">Send</button></div></form>
+<p class="small visitor-privacy" id="visitorPrivacy">This is a scripted local preview. Do not enter personal information. Visitor messages are not saved or sent to Creative Spark or AIP and are not linked to student records.</p><button type="button" id="visitorClear" class="btn visitor-clear">Clear visitor chat</button></div></section>
 </main>
 <footer><div class="shell">Archaemenes is the single Khaemenes Academy Mentor surface. Family identity and learner selection are owned by the Academy Family Registry.</div></footer>
 
@@ -635,5 +647,6 @@ window.addEventListener('DOMContentLoaded',()=>setTimeout(boot,0));
 <script src="/Khaemenes_Academy.github.io/assets/khaemenes-global-header.js" defer></script>
 <script src="https://vervenveda.com/assets/vnv-ecosystem-menu.js" defer></script>
 <script src="../assets/khaemenes-archaemenes-living-bridge-v1.js" defer></script>
+<script src="../assets/khaemenes-archaemenes-visitor-local-v1.js" defer></script>
 </body>
 </html>
