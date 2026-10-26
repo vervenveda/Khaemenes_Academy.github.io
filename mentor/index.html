@@ -50,42 +50,36 @@ footer{padding:30px 0 42px;border-top:1px solid var(--line);color:#737a74;font-s
 .context-note{margin-top:10px;padding:10px;border-radius:10px;color:#5c5139;background:#fff8e7;font-size:.76rem}
 
 </style>
-<style id="archaemenes-header-simplify-v2">
-/* Mentor-specific compact header. No changes to shared ecosystem navigation logic. */
-header[data-khae-header] .shell[data-khae-header-inner]{display:grid!important;grid-template-columns:minmax(180px,1fr) auto auto!important;align-items:center!important;gap:12px 22px!important;padding:13px 0!important;text-align:left!important}
-header[data-khae-header] [data-khae-brand]{min-width:0!important;max-width:270px;flex:none!important;gap:11px!important}
-header[data-khae-header] [data-khae-brand] strong{font-size:.86rem!important;line-height:1.25!important;letter-spacing:.02em!important;white-space:normal!important}
-header[data-khae-header] [data-khae-brand] small{font-size:.68rem!important;line-height:1.2!important;margin-top:2px!important;white-space:normal!important}
-header[data-khae-header] [data-khae-nav]{flex:none!important;max-width:none!important;display:flex!important;flex-wrap:wrap!important;justify-content:flex-end!important;gap:8px!important}
-header[data-khae-header] [data-khae-nav] a{font-size:.73rem!important;padding:8px 11px!important;white-space:nowrap!important;min-height:35px!important}
-header[data-khae-header] [data-khae-actions]{display:none!important}
-header[data-khae-header] [data-vnv-ecosystem-slot]{min-width:36px}
-@media(max-width:850px){header[data-khae-header] .shell[data-khae-header-inner]{grid-template-columns:1fr auto!important}header[data-khae-header] [data-khae-nav]{grid-column:1/-1;justify-content:center!important}header[data-khae-header] [data-vnv-ecosystem-slot]{grid-column:2;grid-row:1}}
-@media(max-width:480px){header[data-khae-header] [data-khae-nav] a{font-size:.68rem!important;padding:7px 8px!important}}
-</style><style id="archaemenes-chat-access-v1">.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.chat .empty{padding:32px 22px}.chat .empty h3{font-size:1.3rem;margin:0 0 10px}.chat .empty p{line-height:1.65}.composer input{flex:1;min-width:0}.composer button{min-width:118px}.chat .messages{min-height:320px}</style>
+<style id="archaemenes-chat-access-v1">.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.chat .empty{padding:32px 22px}.chat .empty h3{font-size:1.3rem;margin:0 0 10px}.chat .empty p{line-height:1.65}.composer input{flex:1;min-width:0}.composer button{min-width:118px}.chat .messages{min-height:320px}</style>
 <script defer src="https://vervenveda.com/Khaemenes_Preschool.github.io/assets/preschool-catalog.js"></script>
 <script defer src="../assets/khaemenes-family-registry.js"></script>
 <link rel="stylesheet" href="/Khaemenes_Academy.github.io/assets/khaemenes-global-header.css">
 <link rel="stylesheet" href="https://vervenveda.com/assets/vnv-ecosystem-menu.css">
-<style id="archaemenes-header-breathing-v1">
-/* Small layout correction; scoped to the Mentor page. Loaded after shared header styles. */
-header[data-khae-header] .shell[data-khae-header-inner]{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;column-gap:22px;row-gap:16px;padding-block:18px;min-height:unset}
-header[data-khae-header] [data-khae-brand]{display:flex;align-items:center;flex:0 1 300px;min-width:205px;gap:14px;line-height:1.35;text-decoration:none}
-header[data-khae-header] [data-khae-brand] strong,header[data-khae-header] [data-khae-brand] small{line-height:1.45;letter-spacing:.025em;overflow-wrap:normal;word-break:normal}
-header[data-khae-header] [data-khae-nav]{display:flex;flex:1 1 300px;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:9px 12px;max-width:none}
-header[data-khae-header] [data-khae-nav] a{white-space:normal;min-height:38px;padding:9px 12px;letter-spacing:.015em;line-height:1.3;font-weight:400}
-header[data-khae-header] [data-khae-actions]{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+<style id="archaemenes-landing-certified-layout-v1">
+/* Consolidated landing layout: scoped, minimal, responsive. Shared navigation scripts remain authoritative. */
+header[data-khae-header] .shell[data-khae-header-inner]{display:flex;flex-wrap:wrap;align-items:center;gap:12px 24px;padding:14px 0;min-height:unset}
+header[data-khae-header] [data-khae-brand]{display:inline-flex;align-items:center;gap:11px;flex:0 0 auto;min-width:0;max-width:245px;text-decoration:none}
+header[data-khae-header] [data-khae-brand] strong{font-size:.88rem;line-height:1.25;letter-spacing:.03em;white-space:normal}
+header[data-khae-header] [data-khae-brand] small{margin-top:3px;font-size:.7rem;line-height:1.25}
+header[data-khae-header] [data-khae-nav]{display:flex;flex:1 1 310px;max-width:none;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+header[data-khae-header] [data-khae-nav] a{min-height:36px;display:inline-flex;align-items:center;white-space:nowrap;font-size:.72rem;font-weight:450;padding:7px 10px;letter-spacing:0}
+header[data-khae-header] [data-khae-actions]{display:none!important}
 header[data-khae-header] [data-vnv-ecosystem-slot]{flex:0 0 auto}
+.hero{padding:38px 0 32px}.hero-grid{grid-template-columns:minmax(230px,270px) minmax(0,1fr);gap:28px 44px}
 .archaemenes-living{display:flex;flex-direction:column;align-items:center;gap:9px;text-align:center}
-.archaemenes-living .owl{margin-bottom:4px}
-.archaemenes-living .small{margin:0;line-height:1.5;max-width:260px}
-.archaemenes-living #archaemenesVoiceChoice{margin:0 auto!important;max-width:260px}
-.archaemenes-living .actions{margin:5px 0 0;gap:10px!important}
+.archaemenes-living .small{margin:0;max-width:250px;line-height:1.5}
+.archaemenes-living .owl{margin-bottom:5px}
+.archaemenes-living #archaemenesVoiceChoice{max-width:250px;margin:0 auto!important}
+.archaemenes-living .actions{margin-top:5px;gap:8px!important}
 .archaemenes-living .btn{font-weight:450;border-radius:7px}
-.hero-grid{column-gap:54px;row-gap:30px}
-@media(max-width:900px){header[data-khae-header] .shell[data-khae-header-inner]{justify-content:center;text-align:center}header[data-khae-header] [data-khae-brand]{flex:0 1 auto}header[data-khae-header] [data-khae-nav]{justify-content:center;flex:1 1 100%}.hero-grid{gap:30px}}
-@media(max-width:620px){header[data-khae-header] .shell[data-khae-header-inner]{padding-block:16px;gap:12px}header[data-khae-header] [data-khae-nav] a{padding:8px 10px;font-size:.72rem}.hero{padding-top:30px}}
+.chat .messages{min-height:310px;height:auto;max-height:480px}
+.chat .empty{max-width:650px;margin:0 auto;text-align:center;padding:38px 20px}
+.chat .empty h3{font-size:1.32rem;margin:0 0 12px}
+.chat .empty p{line-height:1.65}
+@media(max-width:900px){header[data-khae-header] .shell[data-khae-header-inner]{justify-content:center}header[data-khae-header] [data-khae-nav]{flex:1 1 100%;justify-content:center}.hero-grid{grid-template-columns:1fr;text-align:center;gap:30px}.hero .lede{margin-left:auto;margin-right:auto}.identity{justify-content:center}}
+@media(max-width:560px){header[data-khae-header] [data-khae-nav] a{font-size:.69rem;padding:8px}.hero{padding-top:26px}}
 </style>
+
 </head>
 <body data-i18n-no-online>
 <div class="topline">Khaemenes Academy · One Mentor · Family-linked learner continuity</div>
@@ -594,7 +588,7 @@ function renderQuickPrompts(){const box=$('quickPrompts');box.innerHTML='';const
 
 function renderFamily(){
   const state=$('familyState');
-  if(!registry){state.innerHTML=`<div class="notice"><strong>Family Registry unavailable.</strong><br>Open the Family Profile and try again.</div><div class="actions"><a class="btn primary" href="${FAMILY_URL}">Open Family Profile</a></div>`;return}
+  if(!registry){state.innerHTML=`<div class="notice"><strong>Family Registry unavailable.</strong><br>This browser could not load the learner identity service. Refresh this page or use the Family Profile.</div><div class="actions"><a class="btn primary" href="${FAMILY_URL}">Open Family Profile</a><button class="btn" type="button" id="retryMentorRegistry">Retry connection</button></div>`;state.querySelector('#retryMentorRegistry')?.addEventListener('click',()=>{registryAttempts=0;boot()});return}
   if(!family){state.innerHTML=`<div class="notice"><strong>No family session is active in this browser.</strong><br>Archaemenes uses the Academy Family Registry so there is only one learner identity and one Mentor doorway.</div><div class="actions"><a class="btn primary" href="${FAMILY_URL}">Open Family Profile</a></div>`;return}
   state.innerHTML=`<div class="kv"><span>Family</span><span>${esc(family.displayName||'Khaemenes Family')}</span></div><div class="kv"><span>Adult</span><span>${esc(adult?.displayName||'Family session')}</span></div>`;
   if(!learner&&family.learners?.length){const wrap=document.createElement('div');wrap.className='learner-picker';family.learners.forEach(item=>{const b=document.createElement('button');b.type='button';b.className='learner-btn';b.innerHTML=`<span><strong>${esc(item.nickname||'Learner')}</strong><br><small>${esc(stageLabel(item))}</small></span><span>Choose →</span>`;b.addEventListener('click',()=>{registry.setActive({familyId:family.familyId,learnerId:item.learnerId});boot()});wrap.appendChild(b)});state.appendChild(wrap)}
@@ -612,10 +606,18 @@ function renderLearner(){
   composer.hidden=isYoung(learner);renderQuickPrompts();renderConversation(false);renderPreschoolContext()
 }
 
+let registryAttempts=0;
 function boot(){
   mentorViewEpoch++;
   registry=window.KhaemenesFamilyRegistry||null;
-  if(!registry){setTimeout(boot,80);return}
+  if(!registry){
+    if(++registryAttempts<=75){setTimeout(boot,120);return}
+    family=null;adult=null;learner=null;
+    renderFamily();renderLearner();
+    $('conversationNote').textContent='The Academy Family Registry could not be loaded. You can open the Family Profile and try again.';
+    return;
+  }
+  registryAttempts=0;
   family=registry.getFamily?.()||null;adult=registry.getAdult?.()||null;learner=registry.getLearner?.()||null;
   if(learner&&family&&!family.learners?.some(l=>l.learnerId===learner.learnerId))learner=null;
   renderFamily();renderLearner()
