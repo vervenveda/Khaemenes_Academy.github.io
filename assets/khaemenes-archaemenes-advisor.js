@@ -1,7 +1,8 @@
 (() => {
   "use strict";
 
-  const VERSION = "1.1.0";
+  const VERSION = "1.2.0";
+  const MAX_EXPORT_BYTES = 350000;
   const REVIEW_KEY = "khaemenes.evidence-review-holds.v1";
   const WORKFLOW_KEY = "khaemenes.teacher-advisory-workflow.v1";
   const MAX_RECORDS = 100;
@@ -45,12 +46,13 @@
   }
 
   function safeWrite(key, records) {
+    if (!Array.isArray(records) || records.length > MAX_RECORDS) return false;
     try {
-      localStorage.setItem(key, JSON.stringify(records.slice(-MAX_RECORDS)));
-      return true;
-    } catch {
-      return false;
-    }
+      const serialized = JSON.stringify(records);
+      if (serialized.length > MAX_EXPORT_BYTES) return false;
+      localStorage.setItem(key, serialized);
+      return localStorage.getItem(key) === serialized;
+    } catch { return false; }
   }
 
   function safeReadQueue() {
@@ -163,8 +165,11 @@
       finalAuthority: "course-or-academy-owner"
     };
     const records = safeRead(WORKFLOW_KEY);
+    record.localRevision = 0;
+    record.localHistory = [];
+    record.authorityStatus = "unverified-browser-local-draft";
     records.push(record);
-    safeWrite(WORKFLOW_KEY, records);
+    if (!safeWrite(WORKFLOW_KEY, records)) return null;
     window.dispatchEvent(new CustomEvent("khaemenes:teacher-workflow-created", { detail: Object.freeze({ ...record }) }));
     return Object.freeze({ ...record });
   }
@@ -195,28 +200,59 @@
         mentor: IDENTITY.name
       }
     };
-    safeWrite(WORKFLOW_KEY, records);
+    if (!safeWrite(WORKFLOW_KEY, records)) return null;
     window.dispatchEvent(new CustomEvent("khaemenes:archaemenes-workflow-advice", { detail: Object.freeze({ ...records[index] }) }));
     return Object.freeze({ ...records[index] });
   }
 
+  // A static browser page cannot authenticate teachers or approve official grades.
+  // Keep proposals separate from verified Academy decisions.
   function recordTeacherDecision(workflowId, decision = "reviewed", note = "") {
+    return false;
+  }
+
+  function appendLocalReviewNote(workflowId, note = "") {
     const records = safeRead(WORKFLOW_KEY);
-    const index = records.findIndex(record => record.workflowId === workflowId);
-    if (index < 0) return false;
-    records[index] = {
-      ...records[index],
-      stage: "course-or-academy-decision",
-      teacher: {
-        status: "reviewed",
-        decision: clean(decision, 160),
-        note: clean(note, 1200),
-        reviewedAt: new Date().toISOString()
-      }
-    };
+    const index = records.findIndex(r => r.workflowId === workflowId);
+    if (index < 0 || !clean(note, 1200)) return false;
+    const record = records[index];
+    const history = Array.isArray(record.localHistory) ? record.localHistory.slice(-19) : [];
+    history.push({ revision: Number(record.localRevision || 0) + 1, at: new Date().toISOString(), type: "unverified-advisory-note", note: clean(note, 1200) });
+    records[index] = { ...record, localHistory: history, localRevision: history[history.length - 1].revision, updatedAt: new Date().toISOString(), authorityStatus: "unverified-browser-local-draft" };
     const ok = safeWrite(WORKFLOW_KEY, records);
-    if (ok) window.dispatchEvent(new CustomEvent("khaemenes:teacher-workflow-reviewed", { detail: Object.freeze({ ...records[index] }) }));
+    if (ok) window.dispatchEvent(new CustomEvent("khaemenes:teacher-advisory-note-saved", { detail: Object.freeze({ workflowId, revision: records[index].localRevision }) }));
     return ok;
+  }
+
+  function exportLocalWorkflows() {
+    const records = safeRead(WORKFLOW_KEY);
+    const data = { schema: "khaemenes.teacher-advisory-recovery", version: 1, exportedAt: new Date().toISOString(),
+      classification: "unverified-browser-local-advisory-drafts-not-official-records", records };
+    const json = JSON.stringify(data, null, 2);
+    return json.length <= MAX_EXPORT_BYTES ? json : null;
+  }
+
+  function importLocalWorkflows(json, confirmReplace = false) {
+    if (confirmReplace !== true || typeof json !== "string" || json.length > MAX_EXPORT_BYTES) return false;
+    let source;
+    try { source = JSON.parse(json); } catch { return false; }
+    if (source?.schema !== "khaemenes.teacher-advisory-recovery" || source.version !== 1 ||
+        !Array.isArray(source.records) || source.records.length > MAX_RECORDS) return false;
+    if (source.records.some(r => !r || r.contract !== "khaemenes.teacher-advisory-workflow" ||
+        typeof r.workflowId !== "string" || r.workflowId.length > 120 || !r.workflowId ||
+        typeof r !== "object")) return false;
+    // Imported browser records are always advisory drafts, never restored approvals.
+    const records = source.records.map(r => ({
+      workflowId: clean(r.workflowId, 120), contract: "khaemenes.teacher-advisory-workflow", contractVersion: 1,
+      stage: "teacher-review", createdAt: clean(r.createdAt, 60),
+      noema: normalizeNoemaEnvelope(r.noema || {}),
+      naib: routeThroughNAIB(normalizeNoemaEnvelope(r.noema || {})),
+      teacher: { status: "pending-review", decision: "", note: "" },
+      archaemenes: null, finalAuthority: "course-or-academy-owner",
+      localRevision: 0, localHistory: [], authorityStatus: "unverified-imported-advisory-draft"
+    }));
+    if (new Set(records.map(r => r.workflowId)).size !== records.length) return false;
+    return safeWrite(WORKFLOW_KEY, records);
   }
 
   function status() {
@@ -248,7 +284,10 @@
     createTeacherWorkflow,
     listTeacherWorkflows,
     adviseWorkflow,
-    recordTeacherDecision
+    recordTeacherDecision,
+    appendLocalReviewNote,
+    exportLocalWorkflows,
+    importLocalWorkflows
   });
 
   window.addEventListener("khaemenes:noema-evidence-ready", event => {
