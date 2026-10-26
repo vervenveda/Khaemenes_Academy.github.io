@@ -139,7 +139,12 @@ let registry=null,family=null,adult=null,learner=null,mode='Academy Mentor';
 let mentorViewEpoch=0;
 
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function loadHistory(){try{return JSON.parse(localStorage.getItem(HISTORY_KEY)||'{}')}catch{return {}}}
+function loadHistory(){
+  try{
+    const value=JSON.parse(localStorage.getItem(HISTORY_KEY)||'{}');
+    return value&&typeof value==='object'&&!Array.isArray(value)?value:{};
+  }catch{return {}}
+}
 function saveHistory(all){
   try{
     localStorage.setItem(HISTORY_KEY,JSON.stringify(all));
@@ -150,8 +155,20 @@ function saveHistory(all){
     return false;
   }
 }
-function learnerHistory(){if(!learner)return[];const all=loadHistory();return Array.isArray(all[learner.learnerId])?all[learner.learnerId]:[]}
-function pushHistory(role,text){if(!learner)return;const all=loadHistory();const list=Array.isArray(all[learner.learnerId])?all[learner.learnerId]:[];list.push({role,text:String(text).slice(0,1200),at:new Date().toISOString()});all[learner.learnerId]=list.slice(-60);return saveHistory(all)}
+function learnerHistory(){
+  if(!learner)return[];
+  const entries=loadHistory()[learner.learnerId];
+  return Array.isArray(entries)?entries.filter(m=>m&&typeof m==='object'&&
+    (m.role==='user'||m.role==='mentor')&&typeof m.text==='string').slice(-60):[];
+}
+function pushHistory(role,text){
+  if(!learner||!family||!['user','mentor'].includes(role))return false;
+  const all=loadHistory();
+  const list=learnerHistory();
+  list.push({role,text:String(text).slice(0,1200),at:new Date().toISOString()});
+  all[learner.learnerId]=list.slice(-60);
+  return saveHistory(all);
+}
 function clearHistory(){if(!learner)return;mentorViewEpoch++;const all=loadHistory();delete all[learner.learnerId];if(saveHistory(all))renderConversation(true)}
 function readLocalJSON(key,fallback=null){try{const raw=localStorage.getItem(key);return raw?JSON.parse(raw):fallback}catch{return fallback}}
 function learnerStage(l=learner){return registry?.normalizeStage?.(l?.stage)||l?.stage||''}
@@ -500,18 +517,25 @@ function responseFor(text){
   return `Let’s work from first principles. Tell me what you already know about that, what you have tried, and the exact point where you want help.`;
 }
 
-function addMessage(role,text,store=false){const box=$('messages');const div=document.createElement('div');div.className=`msg ${role}`;div.innerHTML=`<strong>${role==='mentor'?'Archaemenes':'You'}</strong>${esc(text)}`;box.appendChild(div);box.scrollTop=box.scrollHeight;if(store)pushHistory(role,text)}
-function renderConversation(reset=false){const box=$('messages');box.innerHTML='';if(!learner)return;const history=reset?[]:learnerHistory();if(history.length){history.forEach(m=>addMessage(m.role==='user'?'user':'mentor',m.text,false))}else{addMessage('mentor',greeting(),true)}}
+function addMessage(role,text,store=false){
+  if(store&&!pushHistory(role,text))return false;
+  const box=$('messages'),div=document.createElement('div');
+  div.className=`msg ${role}`;
+  div.innerHTML=`<strong>${role==='mentor'?'Archaemenes':'You'}</strong>${esc(text)}`;
+  box.appendChild(div);box.scrollTop=box.scrollHeight;
+  return true;
+}
+function renderConversation(reset=false){const box=$('messages');box.innerHTML='';if(!learner)return;const history=reset?[]:learnerHistory();if(history.length){history.forEach(m=>addMessage(m.role,m.text,false))}else{addMessage('mentor',greeting(),false)}}
 function ask(text){
   if(!learner||!family)return;
-  const clean=String(text||'').trim();
+  const clean=String(text||'').trim().slice(0,500);
   if(!clean)return;
   const requestedLearnerId=learner.learnerId;
   const requestedFamilyId=family.familyId;
   const requestedEpoch=mentorViewEpoch;
   // Resolve while the requesting learner's context is active.
   const reply=responseFor(clean);
-  addMessage('user',clean,true);
+  if(!addMessage('user',clean,true))return;
   setTimeout(()=>{
     const active=registry?.activeIds?.()||{};
     if(requestedEpoch!==mentorViewEpoch||!learner||!family||
@@ -557,7 +581,7 @@ function boot(){
 $('composer').addEventListener('submit',e=>{e.preventDefault();const input=$('mentorInput');ask(input.value);input.value='';input.focus()});
 $('clearConversation').addEventListener('click',()=>clearHistory());
 window.addEventListener('khaemenes-family-changed',()=>boot());
-window.addEventListener('storage',e=>{if(['khaemenes_family_registry_v1','khaemenes_active_family_v1','khaemenes_active_adult_v1','khaemenes_active_learner_v1',PRESCHOOL_CONTEXT_KEY,KINDERGARTEN_CONTEXT_KEY,ELEMENTARY_CONTEXT_KEY].includes(e.key))boot()});
+window.addEventListener('storage',e=>{if(e.key===HISTORY_KEY){mentorViewEpoch++;renderConversation(false);return}if(['khaemenes_family_registry_v1','khaemenes_active_family_v1','khaemenes_active_adult_v1','khaemenes_active_learner_v1',PRESCHOOL_CONTEXT_KEY,KINDERGARTEN_CONTEXT_KEY,ELEMENTARY_CONTEXT_KEY].includes(e.key))boot()});
 window.addEventListener('DOMContentLoaded',()=>setTimeout(boot,0));
 })();
 </script>
