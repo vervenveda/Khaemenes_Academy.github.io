@@ -136,13 +136,13 @@
 
   function fresh(){
     return {subject:'',detail:'',phase:'',q:'',accepted:[],hint:'',
-      tries:0,used:[],method:'worked',helped:{worked:0,visual:0},
+      tries:0,used:[],method:'worked',helped:{worked:0,visual:0},scope:'',
       successes:0,examplesTried:0};
   }
   function safeState(raw){
     const s=fresh();
     if(!raw||typeof raw!=='object')return s;
-    for(const k of ['subject','detail','phase','q','hint','method']) if(typeof raw[k]==='string')s[k]=raw[k].slice(0,180);
+    for(const k of ['subject','detail','phase','q','hint','method','scope']) if(typeof raw[k]==='string')s[k]=raw[k].slice(0,180);
     for(const k of ['tries','successes','examplesTried'])if(Number.isInteger(raw[k]))s[k]=Math.max(0,Math.min(raw[k],500));
     if(Array.isArray(raw.accepted))s.accepted=raw.accepted.filter(x=>typeof x==='string').slice(0,4);
     if(Array.isArray(raw.used))s.used=raw.used.filter(x=>typeof x==='string').slice(-25);
@@ -173,19 +173,29 @@
     function setReleasedContext(raw){
       // Deliberately refuse raw course objects. Copy ONLY an allowlist of
       // already-published, learner-scoped, post-assessment summary fields.
-      if(!raw||typeof raw!=='object'){releaseContext=null;return;}
       const str=(x,n=100)=>typeof x==='string'?x.trim().slice(0,n):'';
+      const published=raw&&typeof raw==='object'&&raw.currentLessonContext&&typeof raw.currentLessonContext==='object'?raw.currentLessonContext:{};
+      const scope=raw&&typeof raw==='object'&&published.courseId&&published.lessonId?
+        [str(raw.stage,25),str(raw.grade,12),str(published.courseId,80),str(published.lessonId,24)].join('|'):'';
+      if(scope!==state.scope&&(state.scope||scope)){
+        state.phase='';state.q='';state.accepted=[];state.hint='';state.detail='';
+        state.subject='';state.tries=0;state.scope=scope;save();
+      }
+      if(!raw||typeof raw!=='object'){releaseContext=null;return;}
       const current=raw.currentFocus&&typeof raw.currentFocus==='object'?raw.currentFocus:{};
-      const published=raw.currentLessonContext&&typeof raw.currentLessonContext==='object'?raw.currentLessonContext:{};
       const formative=raw.latestFormative&&typeof raw.latestFormative==='object'?raw.latestFormative:{};
       const assessments=Array.isArray(raw.recentAssessmentAttempts)?raw.recentAssessmentAttempts:
         Array.isArray(raw.recentAssessments)?raw.recentAssessments:[];
       const last=raw.latestAssessment||assessments[assessments.length-1]||{};
       const lesson=Array.isArray(raw.recentLessonEvidence)?raw.recentLessonEvidence.slice(-1)[0]||{}:{};
-      const subject=str(published.subject||current.subject||formative.department||lesson.subject||formative.courseId||last.courseId||'',80);
-      const suggested=Array.isArray(last.reviewSkills)?last.reviewSkills:[],
-        formativeSkills=Array.isArray(formative.reviewSkills)?formative.reviewSkills:[],
-        courseId=str(published.courseId||formative.courseId||last.courseId||'',80);
+      const publishedCourse=str(published.courseId,80);
+      const matchesCourse=entry=>!publishedCourse||str(entry?.courseId,80)===publishedCourse;
+      const lastMatched=matchesCourse(last)?last:{};
+      const formativeMatched=matchesCourse(formative)?formative:{};
+      const subject=str(published.subject||current.subject||formativeMatched.department||lesson.subject||formativeMatched.courseId||lastMatched.courseId||'',80);
+      const suggested=Array.isArray(lastMatched.reviewSkills)?lastMatched.reviewSkills:[],
+        formativeSkills=Array.isArray(formativeMatched.reviewSkills)?formativeMatched.reviewSkills:[],
+        courseId=str(published.courseId||formativeMatched.courseId||lastMatched.courseId||'',80);
       releaseContext={
         stage:str(raw.stage,25),grade:str(raw.grade,12),
         subject,courseId,
@@ -194,15 +204,15 @@
         focus:str(published.focus||lesson.focus||formative.focus||current.text||'',140),
         skills:[...new Set([...suggested,...formativeSkills].filter(x=>typeof x==='string')
           .map(x=>x.trim().slice(0,65)).filter(Boolean))].slice(0,4),
-        score:Number.isFinite(Number(last.score))&&last.score!=null?Math.max(0,Math.min(100,Number(last.score))):null,
-        verified:last.verified===true||Boolean(raw.latestAssessment?.formative===false)
+        score:Number.isFinite(Number(lastMatched.score))&&lastMatched.score!=null?Math.max(0,Math.min(100,Number(lastMatched.score))):null,
+        verified:lastMatched.verified===true||(lastMatched.schema==='khaemenes-high-learning-event-v1'&&lastMatched.formative===false&&lastMatched.affectsGrade===true)
       };
     }
     function contextReply(q){
       if(!releaseContext)return '';
       const c=releaseContext;
       const lessonScoped=/\b(?:(?:my|this|the|today'?s|current)\s+(?:lesson|topic|quiz|test|assessment)|help (?:me )?with (?:a |my |this |the )?lesson|review my skills|practice my lesson)\b/i.test(q);
-      if(!lessonScoped)return '';
+      if(!lessonScoped&&!(/\b(?:help|explain|practice|practise|review|study)\b/i.test(q)&&/\blesson\b/i.test(q)))return '';
       if(/\b(?:quiz|test|assessment)\b/i.test(q)){
         const score=c.verified&&c.score!=null?' Your last verified score summary is '+c.score+'%.':'';
         return 'I cannot retrieve locked questions or official answers.'+score+
@@ -269,11 +279,21 @@
     }
     function practiceAnswer(q){
       if(state.phase!=='practice'||!state.accepted.length)return null;
-      const compact=q.replace(/\s+/g,'').toLowerCase();
-      const isAnswer=/^-?\d+(?:\/\d+)?$/.test(compact)||/^(?:x\s*(?:=|is)\s*)-?\d+(?:\/\d+)?$/i.test(q)||/^(?:option)?[abc]$/.test(compact);
+      const compact=q.replace(/[−–]/g,'-').replace(/\s+/g,'').toLowerCase();
+      const isAnswer=/^-?\d+(?:(?:\/\d+)|(?:\.\d{1,4}))?$/.test(compact)||/^(?:x\s*(?:=|is)\s*)-?\d+(?:(?:\/\d+)|(?:\.\d{1,4}))?$/i.test(q)||/^(?:option)?[abc]$/.test(compact);
       if(!isAnswer)return null;
       const value=compact.replace(/^x(?:=|is)/,'').replace(/^option/,'');
-      if(state.accepted.includes(value)){
+      const rational=t=>{
+        if(!/^-?\d+(?:\/\d+|\.\d{1,4})?$/.test(t))return null;
+        const [a,b]=t.split('/');
+        const n=Number(a),d=b===undefined?1:Number(b);
+        const v=n/d;return Number.isFinite(v)&&d>0&&d<=1000000&&Math.abs(n)<=1000000?v:null;
+      };
+      const correct=state.accepted.includes(value)||state.accepted.some(a=>{
+        const av=rational(a),uv=rational(value);
+        return av!==null&&uv!==null&&Math.abs(av-uv)<1e-10;
+      });
+      if(correct){
         state.successes++;
         state.helped[state.method]=(state.helped[state.method]||0)+1;
         state.phase='reflect';state.accepted=[];save();
@@ -324,6 +344,9 @@
       if(/(?:i don'?t understand|still confused|another way|show me visually|picture it)/.test(q)&&state.phase==='practice')return visual();
       if(/^(?:hint|clue|give me a hint|give me a clue)[!?.\s]*$/.test(q)&&state.phase==='practice')return 'Here is a clue: '+state.hint+' Try '+state.q+' once more.';
       if(/^(?:another|again|another example|harder|more practice|one more)[!?.\s]*$/.test(q)&&state.detail&&B[state.detail])return exercise(state.detail,'Certainly.');
+      // Released lesson intent precedes generic fraction/algebra routing.
+      const academic=contextReply(raw);
+      if(academic)return academic;
       // Specific requests are evaluated before the broad fractions topic.
       if((/\b(?:adding|addition|add)\b/.test(q)&&state.detail==='fractions')||/\b(?:adding fractions|fraction addition)\b/.test(q))return exercise('add','For fractions with the same denominator, the pieces are the same size.');
       if((/\b(?:multiplying|multiply|multiplication)\b/.test(q)&&state.detail==='fractions')||/\b(?:multiplying fractions|fraction multiplication)\b/.test(q))return exercise('multiply','Multiplication asks for a part of a part.');
@@ -338,10 +361,6 @@
         state.successes++;save();return 'Exactly. Two of four equal pieces make 2/4, which is also 1/2. Would you like to explore adding or multiplying now?';
       }
       if(/\b(?:equations?|algebra)\b/.test(q))return exercise('equations','Let us solve one equation by doing the same operation to both sides.');
-      // Curriculum-aware support uses authored practice and a released summary,
-      // never the question bank or teacher marking guidance.
-      const academic=contextReply(raw);
-      if(academic)return academic;
       const explicit=subjectFrom(raw);
       if(explicit&&B[explicit])return exercise(explicit,'We can study '+SUBJECT_TITLES[explicit]+' together.');
       if(state.detail&&B[state.detail]&&/^(?:another example|another|again|one more|more practice|harder|practice|practise)[.!?\s]*$/i.test(q))
