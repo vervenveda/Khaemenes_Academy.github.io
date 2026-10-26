@@ -78,6 +78,38 @@
       {example:'A budget compares available income with planned spending.',q:'Which is a useful first budgeting step? A: Ignore recurring costs. B: List income and essential expenses. C: Assume every purchase is affordable.',a:['b'],hint:'Start with what comes in and what must go out.'}
     ]
   });
+
+  /* Audited, student-released Mathematics micro-pilot, bound to authored
+     lesson identities. Original formative items; NEVER formal assessment keys. */
+  Object.assign(B,{
+    math_elem_add:[
+      {example:'Count on four from nine: 10, 11, 12, 13. So 9 + 4 = 13.',q:'What is 7 + 5?',a:['12'],hint:'Start with seven and count five more.'},
+      {example:'Six counters with eight more make fourteen.',q:'What is 8 + 3?',a:['11'],hint:'Make ten, then count the one remaining.'}
+    ],
+    math_mid_signed:[
+      {example:'On a number line, −4 + 7 = 3: start at −4 and move seven places right.',q:'Calculate −6 + 9.',a:['3'],hint:'Start at negative six; move nine places to the right.'},
+      {example:'Subtracting a negative is adding its opposite: 3 − (−5) = 8.',q:'Calculate −2 − (−7).',a:['5'],hint:'Replace subtracting negative seven with adding seven.'}
+    ],
+    math_high_argument:[
+      {example:'To justify a proposed equation solution, substitute it into the ORIGINAL equation.',q:'Which justifies x = 4 as a solution of 3x + 2 = 14? A: 3(4)+2=14. B: Move the 2 without an operation. C: Substitute into a different equation.',a:['a'],hint:'Check the proposed x by substitution into the original equation.'},
+      {example:'One counterexample disproves an always-claim. Six is even but not a multiple of four.',q:'Which disproves the claim that every perfect square is even? A: 4 B: 9 C: 16',a:['b'],hint:'Find an odd perfect square.'}
+    ],
+    math_higher_vectors:[
+      {example:'A displacement of 5 east and 2 north is the vector (5,2) when axes are (east,north).',q:'Using (east,north) coordinates, 7 east and 4 north is which vector? A: (4,7) B: (11,0) C: (7,4)',a:['c'],hint:'The east component comes first; north second.'},
+      {example:'From point (1,2) to (4,6), subtract start from end to get displacement (3,4).',q:'From (2,1) to (5,7), what is the displacement? A: (3,6) B: (7,8) C: (−3,−6)',a:['a'],hint:'Subtract initial coordinates from final coordinates.'}
+    ]
+  });
+  const RELEASED_MATH=Object.freeze([
+    {stage:'elementary',grade:'02',courseId:'elementary-grade-02-mathematics',lessonId:'week-01',week:1,title:'Scholar Routines and Reading Stamina',objective:'number habits and strategy talk',bank:'math_elem_add'},
+    {stage:'middle',grade:'07',courseId:'middle-grade-07-mathematics',lessonId:'week-05',week:5,title:'Operations with Rational Numbers',objective:'How do rational numbers extend what we can model and explain?',bank:'math_mid_signed'},
+    {stage:'high',courseId:'math-algebra1-integrated1',lessonId:'u01-l01',title:'Algebraic Habits, Notation & Mathematical Argument',objective:'Distinguish a mathematical claim from its justification.',bank:'math_high_argument'},
+    {stage:'higher',courseId:'higher-learning-linear-algebra',lessonId:'u01-l01',title:'Vectors and Coordinates in Rⁿ',objective:'interpreting vectors as directed quantities, coordinate lists, and data objects',bank:'math_higher_vectors'}
+  ]);
+  function exactReleasedMath(c){
+    if(!c||!c.courseId||!c.lessonId)return null;
+    return RELEASED_MATH.find(x=>x.stage===c.stage&&x.courseId===c.courseId&&x.lessonId===c.lessonId&&x.title===c.title&&
+      (!x.grade||x.grade===c.grade)&&(!x.week||x.week===c.week))||null;
+  }
   const SUBJECT_CUES=[
     {name:'psychology',pattern:/\b(?:psychology|cognitive science|behavioral science|human behavior|psychological research)\b/i},
     {name:'english',pattern:/\b(?:english|language arts|reading comprehension|essay|literature|grammar|writing|poetry|narrative|vocabulary)\b/i},
@@ -97,7 +129,9 @@
   const SUBJECT_TITLES=Object.freeze({
     english:'English and Language Arts',science:'Science',energy:'Science · Energy Transfer',psychology:'Psychology',social:'Social Studies',
     languages:'World Languages',technology:'Technology',arts:'Arts',
-    health:'Health and Physical Education',research:'Research',life:'Life Skills'
+    health:'Health and Physical Education',research:'Research',life:'Life Skills',
+    math_elem_add:'Mathematics · Elementary',math_mid_signed:'Mathematics · Middle',
+    math_high_argument:'Mathematics · Algebra I',math_higher_vectors:'Mathematics · Linear Algebra'
   });
 
   function fresh(){
@@ -142,20 +176,22 @@
       if(!raw||typeof raw!=='object'){releaseContext=null;return;}
       const str=(x,n=100)=>typeof x==='string'?x.trim().slice(0,n):'';
       const current=raw.currentFocus&&typeof raw.currentFocus==='object'?raw.currentFocus:{};
+      const published=raw.currentLessonContext&&typeof raw.currentLessonContext==='object'?raw.currentLessonContext:{};
       const formative=raw.latestFormative&&typeof raw.latestFormative==='object'?raw.latestFormative:{};
       const assessments=Array.isArray(raw.recentAssessmentAttempts)?raw.recentAssessmentAttempts:
         Array.isArray(raw.recentAssessments)?raw.recentAssessments:[];
       const last=raw.latestAssessment||assessments[assessments.length-1]||{};
       const lesson=Array.isArray(raw.recentLessonEvidence)?raw.recentLessonEvidence.slice(-1)[0]||{}:{};
-      const subject=str(current.subject||formative.department||lesson.subject||formative.courseId||last.courseId||'',80);
+      const subject=str(published.subject||current.subject||formative.department||lesson.subject||formative.courseId||last.courseId||'',80);
       const suggested=Array.isArray(last.reviewSkills)?last.reviewSkills:[],
         formativeSkills=Array.isArray(formative.reviewSkills)?formative.reviewSkills:[],
-        courseId=str(formative.courseId||last.courseId||'',80);
+        courseId=str(published.courseId||formative.courseId||last.courseId||'',80);
       releaseContext={
         stage:str(raw.stage,25),grade:str(raw.grade,12),
         subject,courseId,
-        week:Number.isInteger(Number(current.week))?Math.max(0,Math.min(52,Number(current.week))):null,
-        focus:str(lesson.focus||formative.focus||current.text||'',140),
+        lessonId:str(published.lessonId,24),title:str(published.title,140),objective:str(published.objective,200),
+        week:(published.week??current.week)==null?null:Math.max(0,Math.min(52,Number(published.week??current.week)||0)),
+        focus:str(published.focus||lesson.focus||formative.focus||current.text||'',140),
         skills:[...new Set([...suggested,...formativeSkills].filter(x=>typeof x==='string')
           .map(x=>x.trim().slice(0,65)).filter(Boolean))].slice(0,4),
         score:Number.isFinite(Number(last.score))&&last.score!=null?Math.max(0,Math.min(100,Number(last.score))):null,
@@ -173,6 +209,12 @@
           (c.skills.length?' Your released review skills are '+c.skills.join(', ')+'.':'')+
           ' Let us practise the underlying concept with a NEW example. Which skill shall we try?';
       }
+      const match=exactReleasedMath(c);
+      if(match)return 'Your released '+match.title+' lesson focuses on '+match.objective+'. '+
+        exercise(match.bank,'Here is new, ungraded formative practice for this exact lesson, not an Academy quiz.');
+      if(c.lessonId)return 'I can see the released lesson '+(c.title||c.lessonId)+
+        '. I do not yet have reviewed, lesson-specific practice for this objective. '+
+        'Tell me which step is difficult; I will not substitute unrelated practice or reveal marking keys.';
       const combined=(c.skills.join(' ')+' '+c.focus+' '+c.subject+' '+c.courseId).toLowerCase();
       let aligned='';
       if(/(?:energy transfer|heat transfer|thermal energy|conduction|convection)/.test(combined))aligned='energy';
