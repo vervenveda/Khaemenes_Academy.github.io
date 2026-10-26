@@ -136,6 +136,7 @@ const MIDDLE_CONTEXT_KEY='khaemenes_middle_mentor_context_v1';
 const HIGH_CONTEXT_KEY='khaemenes_high_mentor_context_v1';
 const $=id=>document.getElementById(id);
 let registry=null,family=null,adult=null,learner=null,mode='Academy Mentor';
+let mentorViewEpoch=0;
 
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function loadHistory(){try{return JSON.parse(localStorage.getItem(HISTORY_KEY)||'{}')}catch{return {}}}
@@ -151,7 +152,7 @@ function saveHistory(all){
 }
 function learnerHistory(){if(!learner)return[];const all=loadHistory();return Array.isArray(all[learner.learnerId])?all[learner.learnerId]:[]}
 function pushHistory(role,text){if(!learner)return;const all=loadHistory();const list=Array.isArray(all[learner.learnerId])?all[learner.learnerId]:[];list.push({role,text:String(text).slice(0,1200),at:new Date().toISOString()});all[learner.learnerId]=list.slice(-60);return saveHistory(all)}
-function clearHistory(){if(!learner)return;const all=loadHistory();delete all[learner.learnerId];if(saveHistory(all))renderConversation(true)}
+function clearHistory(){if(!learner)return;mentorViewEpoch++;const all=loadHistory();delete all[learner.learnerId];if(saveHistory(all))renderConversation(true)}
 function readLocalJSON(key,fallback=null){try{const raw=localStorage.getItem(key);return raw?JSON.parse(raw):fallback}catch{return fallback}}
 function learnerStage(l=learner){return registry?.normalizeStage?.(l?.stage)||l?.stage||''}
 function preschoolContext(){
@@ -507,12 +508,13 @@ function ask(text){
   if(!clean)return;
   const requestedLearnerId=learner.learnerId;
   const requestedFamilyId=family.familyId;
+  const requestedEpoch=mentorViewEpoch;
   // Resolve while the requesting learner's context is active.
   const reply=responseFor(clean);
   addMessage('user',clean,true);
   setTimeout(()=>{
     const active=registry?.activeIds?.()||{};
-    if(!learner||!family||
+    if(requestedEpoch!==mentorViewEpoch||!learner||!family||
        learner.learnerId!==requestedLearnerId||
        family.familyId!==requestedFamilyId||
        active.learnerId!==requestedLearnerId||
@@ -544,6 +546,7 @@ function renderLearner(){
 }
 
 function boot(){
+  mentorViewEpoch++;
   registry=window.KhaemenesFamilyRegistry||null;
   if(!registry){setTimeout(boot,80);return}
   family=registry.getFamily?.()||null;adult=registry.getAdult?.()||null;learner=registry.getLearner?.()||null;
