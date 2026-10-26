@@ -238,7 +238,7 @@ function pushHistory(role,text){
   all[learner.learnerId]=list.slice(-60);
   return saveHistory(all);
 }
-function clearHistory(){if(!learner)return;mentorViewEpoch++;const all=loadHistory();delete all[learner.learnerId];if(saveHistory(all))renderConversation(true)}
+function clearHistory(){if(!learner)return;mentorViewEpoch++;const all=loadHistory();delete all[learner.learnerId];if(saveHistory(all)){window.KhaemenesArchaemenesConversation?.clearLearner?.(family?.familyId,learner.learnerId);renderConversation(true)}}
 function readLocalJSON(key,fallback=null){try{const raw=localStorage.getItem(key);return raw?JSON.parse(raw):fallback}catch{return fallback}}
 function learnerStage(l=learner){return registry?.normalizeStage?.(l?.stage)||l?.stage||''}
 function preschoolContext(){
@@ -470,6 +470,17 @@ function greeting(){
 function responseFor(text){
   const raw=String(text||'').trim();const q=raw.toLowerCase();const name=learner?.nickname||'learner';
   if(!raw)return `What would you like to investigate, ${name}?`;
+  // Delegate only conversational mathematics turns. Keep existing academic
+  // progress, early-learning, identity and mastery guidance authoritative.
+  if(!isYoung(learner)){
+    const coach=window.KhaemenesArchaemenesConversation?.forLearner?.(family?.familyId,learner?.learnerId);
+    const topic=coach?.snapshot?.()||{};
+    const explicitlyMath=/\b(?:math|mathematics|fractions?|algebra|equations?|geometry)\b/i.test(raw);
+    const shortFollowup=topic.subject==='mathematics'&&/^(?:add|adding|multiply|multiplying|another|again|one more|another example|harder|hint|clue|give me a hint|give me a clue|thanks|thank you|i (?:get it|don't understand)|that helped|show me visually|picture it|what (?:they|fractions)|understand|parts of|[0-9-]+(?:\/[0-9]+)?|x\s*(?:=|is))\b/i.test(q);
+    const greeting=/^(?:hi|hello|hey|good morning|good afternoon|good evening|greetings|thank you|thanks)[.!?\s]*$/i.test(q);
+    const formal=/(?:what should|work on|this week|progress|how am i doing|verified|my grade|my course|mastery|assessment|what did i miss|where did i struggle|what should i review|review skills?)/i.test(q);
+    if(coach&&!formal&&(explicitlyMath||shortFollowup||greeting))return coach.respond(raw);
+  }
   const high=highContext();
   if(high&&/(what should|work on|start|today|do next|help me get started)/.test(q)){
     const latest=high.latestAssessment||high.recentAssessments?.slice(-1)[0]||null;
@@ -594,7 +605,7 @@ function addMessage(role,text,store=false){
   box.appendChild(div);box.scrollTop=box.scrollHeight;
   return true;
 }
-function renderConversation(reset=false){const box=$('messages');box.innerHTML='';if(!learner)return;const history=reset?[]:learnerHistory();if(history.length){history.forEach(m=>addMessage(m.role,m.text,false))}else{addMessage('mentor',greeting(),false)}}
+function renderConversation(reset=false){const box=$('messages');box.innerHTML='';if(!learner)return;const history=reset?[]:learnerHistory();if(history.length){window.KhaemenesArchaemenesConversation?.forLearner?.(family?.familyId,learner?.learnerId)?.resumeTopic?.(history);history.forEach(m=>addMessage(m.role,m.text,false))}else{addMessage('mentor',greeting(),false)}}
 function ask(text){
   if(!learner||!family)return;
   const clean=String(text||'').trim().slice(0,500);
@@ -669,6 +680,7 @@ window.addEventListener('DOMContentLoaded',()=>setTimeout(boot,0));
 <script src="/Khaemenes_Academy.github.io/assets/khaemenes-global-header.js" defer></script>
 <script src="https://vervenveda.com/assets/vnv-ecosystem-menu.js" defer></script>
 <script src="../assets/khaemenes-archaemenes-living-bridge-v1.js" defer></script>
+<script src="../assets/khaemenes-archaemenes-conversation-v2.js" defer></script>
 <script src="../assets/khaemenes-archaemenes-visitor-local-v1.js" defer></script>
 </body>
 </html>
