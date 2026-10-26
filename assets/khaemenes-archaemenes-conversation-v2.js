@@ -33,6 +33,10 @@
   /* Student-release curriculum coverage. These are NEW formative examples,
      not copied exam questions or educator keys. The course engine still grades. */
   Object.assign(B,{
+    psychology:[
+      {example:'A psychological hypothesis is a testable proposal about cognition or behavior, not a diagnosis of a person.',q:'Which claim can be investigated with a defined study? A: Everybody thinks the same way. B: Memory performance varies with sleep duration. C: Feelings never change.',a:['b'],hint:'Look for a measurable relationship that could be tested.'},
+      {example:'Correlation by itself does not prove that one variable caused another.',q:'Which reasoning is most careful? A: Two variables move together, so one definitely caused the other. B: Ignore alternative causes. C: Investigate possible confounding factors before claiming causation.',a:['c'],hint:'Think about what other factors might explain the observed pattern.'}
+    ],
     english:[
       {example:'A supported interpretation includes a claim and a detail from the text.',q:'Which is evidence for a claim about a character? A: The character is interesting. B: In the story, the character shares food with a stranger. C: This story is the best.',a:['b'],hint:'Choose the statement that describes an observable event in the text.'},
       {example:'A thesis states a defensible idea; evidence helps readers evaluate it.',q:'Which is the strongest thesis? A: My essay will discuss rivers. B: Rivers are nice. C: River access shaped where early towns developed.',a:['c'],hint:'Choose the specific claim that could be supported with historical or geographic evidence.'}
@@ -71,22 +75,23 @@
     ]
   });
   const SUBJECT_CUES=[
+    {name:'psychology',pattern:/\b(?:psychology|cognitive science|behavioral science|human behavior|psychological research)\b/i},
     {name:'english',pattern:/\b(?:english|language arts|reading comprehension|essay|literature|grammar|writing|poetry|narrative|vocabulary)\b/i},
     {name:'science',pattern:/\b(?:science|biology|chemistry|physics|earth science|laboratory|experiment|ecosystem)\b/i},
     {name:'social',pattern:/\b(?:social studies|history|civics|government|geography|economics|citizenship)\b/i},
     {name:'languages',pattern:/\b(?:world languages|linguistics|spanish|french|german|arabic|mandarin|japanese|translation)\b/i},
-    {name:'technology',pattern:/\b(?:technology|coding|programming|computer science|digital literacy)\b/i},
+    {name:'technology',pattern:/\b(?:technology|coding|programming|computer science|digital literacy|engineering|robotics)\b/i},
     {name:'arts',pattern:/\b(?:art|music|drawing|painting|design|visual arts|composition)\b/i},
     {name:'health',pattern:/\b(?:health|wellness|nutrition|physical education|fitness|exercise|\bpe\b)\b/i},
     {name:'research',pattern:/\b(?:research|sources|citation|evidence evaluation|scholarship|academic writing)\b/i},
-    {name:'life',pattern:/\b(?:life skills|home management|budgeting|culinary|personal finance|gardening)\b/i}
+    {name:'life',pattern:/\b(?:life skills|home management|budgeting|culinary|personal finance|gardening|entrepreneurship|business planning|food safety)\b/i}
   ];
   function subjectFrom(text){
     const q=String(text||'');
     return SUBJECT_CUES.find(s=>s.pattern.test(q))?.name||'';
   }
   const SUBJECT_TITLES=Object.freeze({
-    english:'English and Language Arts',science:'Science',social:'Social Studies',
+    english:'English and Language Arts',science:'Science',psychology:'Psychology',social:'Social Studies',
     languages:'World Languages',technology:'Technology',arts:'Arts',
     health:'Health and Physical Education',research:'Research',life:'Life Skills'
   });
