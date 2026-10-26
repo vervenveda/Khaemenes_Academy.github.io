@@ -4,6 +4,8 @@
    No network, grades, test items, or automatic permission escalation. */
 (function(global){
   'use strict';
+  // Applies ArchaemenesCore v3.2.0: clue-first teaching, learner dignity,
+  // demonstrated understanding, and no independent academic authority.
   const ROOT='khaemenes_archaemenes_coaching_v2';
   const sessions=new Map();
   const byId=id=>document.getElementById(id);
@@ -116,6 +118,24 @@
       }
       return 'Not quite for this example. '+state.hint+' Try again: '+state.q+'. You may explain your steps.';
     }
+    function resumeTopic(history){
+      // Reuse existing Academy history, not a second transcript.
+      if(state.subject||!Array.isArray(history))return;
+      const latest=history.filter(m=>m&&m.role==='user'&&typeof m.text==='string').slice(-12);
+      for(let i=latest.length-1;i>=0;i--){
+        const q=norm(latest[i].text);
+        if(/\b(?:history|civics|government)\b/.test(q)){state.subject='history';break;}
+        if(/\b(?:science|biology|chemistry|physics)\b/.test(q)){state.subject='science';break;}
+        if(/\b(?:essay|writing|poem|reading|literature)\b/.test(q)){state.subject='writing';break;}
+        if(/\b(?:geometry|triangle|angles?)\b/.test(q)){state.subject='geometry';break;}
+        if(/\b(?:math|mathematics|fractions?|algebra|equations?)\b/.test(q)){
+          state.subject='mathematics';
+          if(/\bfractions?\b/.test(q))state.detail='fractions';
+          else if(/\b(?:algebra|equations?)\b/.test(q))state.detail='equations';
+          break;
+        }
+      }
+    }
     function respond(message){
       const raw=clean(message),q=norm(raw);
       if(!raw)return 'What would you like to investigate?';
@@ -129,18 +149,19 @@
       const response=practiceAnswer(q);
       if(response)return response;
       if(/(?:that helped|i get it|makes sense|i understand now)/.test(q)){
-        state.helped[state.method]=(state.helped[state.method]||0)+1;save();
+        // Self-reported confidence is not demonstrated understanding.
         return 'I’m glad that approach was useful. Could you explain the key idea in your own words, or would you like another example to test it?';
       }
       if(/(?:i don'?t understand|still confused|another way|show me visually|picture it)/.test(q)&&state.phase==='practice')return visual();
       if(/^(?:hint|clue|give me a hint|give me a clue)[!?.\s]*$/.test(q)&&state.phase==='practice')return 'Here is a clue: '+state.hint+' Try '+state.q+' once more.';
       if(/^(?:another|again|another example|harder|more practice|one more)[!?.\s]*$/.test(q)&&state.detail&&B[state.detail])return exercise(state.detail,'Certainly.');
+      // Specific requests are evaluated before the broad fractions topic.
+      if((/\b(?:adding|addition|add)\b/.test(q)&&state.detail==='fractions')||/\b(?:adding fractions|fraction addition)\b/.test(q))return exercise('add','For fractions with the same denominator, the pieces are the same size.');
+      if((/\b(?:multiplying|multiply|multiplication)\b/.test(q)&&state.detail==='fractions')||/\b(?:multiplying fractions|fraction multiplication)\b/.test(q))return exercise('multiply','Multiplication asks for a part of a part.');
       if(/\bfractions?\b/.test(q)){
         state.subject='mathematics';state.detail='fractions';state.phase='choose';save();
         return 'Fractions are parts of a whole. Are you adding fractions, multiplying them, or trying to understand what they represent?';
       }
-      if((/\b(?:adding|addition|add)\b/.test(q)&&state.detail==='fractions')||/\b(?:adding fractions|fraction addition)\b/.test(q))return exercise('add','For fractions with the same denominator, the pieces are the same size.');
-      if((/\b(?:multiplying|multiply|multiplication)\b/.test(q)&&state.detail==='fractions')||/\b(?:multiplying fractions|fraction multiplication)\b/.test(q))return exercise('multiply','Multiplication asks for a part of a part.');
       if(/(?:what (?:they|fractions) (?:mean|represent)|understand fractions|parts of a whole)/.test(q)&&state.detail==='fractions'){
         state.phase='concept';save();return 'Imagine a pizza divided into 4 equal slices. One slice is 1/4 and three slices are 3/4. What would two slices represent?';
       }
@@ -173,7 +194,7 @@
       if(state.subject)return 'We were exploring '+state.subject+'. Tell me one example, question, or attempt so that I can respond more precisely.';
       return 'I can help you investigate a question, examine evidence, or work through a small example. Which subject or idea shall we begin with?';
     }
-    return Object.freeze({respond,reset,remember,remembering:()=>memoryEnabled,snapshot:()=>safeState(state)});
+    return Object.freeze({respond,reset,remember,resumeTopic,remembering:()=>memoryEnabled,snapshot:()=>safeState(state)});
   }
   function forLearner(familyId,learnerId){
     if(!familyId||!learnerId)return null;
@@ -183,7 +204,7 @@
   }
   function clearLearner(familyId,learnerId){
     const s=forLearner(familyId,learnerId);
-    if(s)s.reset();
+    if(s){s.reset();s.remember(false);}
   }
   // Speech is explicitly user initiated. Device voices may not be available.
   function speak(text){
