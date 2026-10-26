@@ -72,7 +72,15 @@ footer{padding:30px 0 42px;border-top:1px solid var(--line);color:#737a74;font-s
 <main>
 <section class="hero">
   <div class="shell hero-grid">
-    <div class="owl" aria-label="Wise Owl">🦉</div>
+    <div class="archaemenes-living" aria-label="Archaemenes voice welcome">
+      <div class="owl" aria-label="Archaemenes">🦉</div>
+      <p id="archaemenesLivingStage" class="small">Wise Owl</p>
+      <div class="actions" style="justify-content:center;gap:7px">
+        <button type="button" id="archaemenesLivingSpeak" class="btn">▶ Hear welcome</button>
+        <button type="button" id="archaemenesLivingStop" class="btn">■ Stop</button>
+      </div>
+      <p id="archaemenesLivingStatus" class="small" role="status" aria-live="polite">Voice starts only when you choose to listen.</p>
+    </div>
     <div>
       <p class="eyebrow">One continuous mentor · adapted to the learner</p>
       <h1>Archaemenes</h1>
@@ -559,8 +567,8 @@ function renderFamily(){
 
 function renderLearner(){
   const state=$('learnerState'),composer=$('composer'),note=$('conversationNote'),badges=$('identityBadges');badges.innerHTML='';
-  if(!learner){state.innerHTML='<div class="notice"><strong>Select a learner.</strong><br>Archaemenes personalizes his expression to the active learner while remaining the same Mentor.</div>';composer.hidden=true;note.textContent='Choose an active learner from the Family Registry.';$('messages').innerHTML='';$('quickPrompts').innerHTML='';renderPreschoolContext();return}
-  mode=mentorMode(learner);const dest=registry?.learnerDestination?.(learner)||{url:STUDENT_URL,label:'Student Portal'};
+  if(!learner){window.KhaemenesArchaemenesLivingBridge?.stop();state.innerHTML='<div class="notice"><strong>Select a learner.</strong><br>Archaemenes personalizes his expression to the active learner while remaining the same Mentor.</div>';composer.hidden=true;note.textContent='Choose an active learner from the Family Registry.';$('messages').innerHTML='';$('quickPrompts').innerHTML='';renderPreschoolContext();return}
+  mode=mentorMode(learner);window.KhaemenesArchaemenesLivingBridge?.update(learnerStage(learner));const dest=registry?.learnerDestination?.(learner)||{url:STUDENT_URL,label:'Student Portal'};
   const context=activeLearnerContext();const style=context?.communicationStyle?String(context.communicationStyle).replace(/[-_]/g,' '):'';const elementaryMode=elementaryContext()?.developmentalMode||'',middleMode=middleContext()?.developmentalMode||'';badges.innerHTML=`<span class="badge">${esc(learner.nickname||'Learner')}</span><span class="badge">${esc(stageLabel(learner))}</span><span class="badge">Archaemenes · ${esc(mode)}</span>${isYoung(learner)&&style?`<span class="badge">Encouragement · ${esc(style)}</span>`:''}${elementaryMode?`<span class="badge">${esc(elementaryMode)}</span>`:''}${middleMode?`<span class="badge">${esc(middleMode)}</span>`:''}`;
   state.innerHTML=`<div class="kv"><span>Name</span><span>${esc(learner.nickname||'Learner')}</span></div><div class="kv"><span>Placement</span><span>${esc(stageLabel(learner))}</span></div><div class="kv"><span>Mentor expression</span><span>${esc(mode)}</span></div>`;
   $('campusLink').href=dest.url||STUDENT_URL;$('campusLink').querySelector('strong').textContent=`Continue to ${dest.label||stageLabel(learner)}`;
@@ -589,5 +597,6 @@ window.addEventListener('DOMContentLoaded',()=>setTimeout(boot,0));
 <script src="../assets/vnv-language.js" defer></script>
 <script src="/Khaemenes_Academy.github.io/assets/khaemenes-global-header.js" defer></script>
 <script src="https://vervenveda.com/assets/vnv-ecosystem-menu.js" defer></script>
+<script src="../assets/khaemenes-archaemenes-living-bridge-v1.js" defer></script>
 </body>
 </html>
