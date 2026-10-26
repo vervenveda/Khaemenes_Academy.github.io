@@ -17,7 +17,7 @@ function status(message){if(el("archaemenesLivingStatus"))el("archaemenesLivingS
 function stop(){try{global.speechSynthesis?.cancel()}catch{}}
 function update(stage){mode=Object.prototype.hasOwnProperty.call(stages,stage)?stage:"preschool";if(el("archaemenesLivingStage"))el("archaemenesLivingStage").textContent=stages[mode][0];stop()}
 function key(v){return [v.voiceURI,v.name,v.lang].join("|")}
-function preferred(v){return /^(Daniel|Oliver|Arthur|George|Thomas|James|Edward|William|Brian|Graham)\b/i.test(v.name)?0:1}
+function preferred(v){if(/google uk english male/i.test(v.name))return 0;return /^(Daniel|Oliver|Arthur|George|Thomas|James|Edward|William|Brian|Graham)\b/i.test(v.name)?1:2}
 function refresh(){
  const select=el("archaemenesVoiceChoice");if(!select)return;
  try{voiceList=("speechSynthesis" in global?global.speechSynthesis.getVoices():[]).filter(v=>/^en[-_]GB$/i.test(v.lang)&&!/whisper/i.test(v.name)).sort((a,b)=>preferred(a)-preferred(b)||a.name.localeCompare(b.name))}catch{voiceList=[]}
