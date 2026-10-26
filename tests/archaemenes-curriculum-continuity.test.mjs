@@ -80,11 +80,20 @@ learner.setReleasedContext({
   }]
 });
 const mentorReply=learner.respond("Help me with my lesson");
-assert.match(mentorReply,/Science|observation/i);
+assert.match(mentorReply,/Science|conduction/i);
 assert.doesNotMatch(mentorReply,/SECRET|UNRELEASED/i);
+assert.match(mentorReply,/energy transfer/i,"practice should be aligned to released review skill");
 assert.match(mentorReply,/Now try this one:/);
-assert.match(learner.respond("a"),/correct/i);
+assert.match(learner.respond("b"),/correct/i);
 assert.equal(learner.snapshot().successes,1);
+
+
+// A released topic without a matching practice bank must not be mislabeled.
+const unsupported=api.createSession({});
+unsupported.setReleasedContext({stage:"high",grade:"11",currentFocus:{subject:"science",text:"plate tectonics"},recentAssessments:[{verified:true,score:60,reviewSkills:["plate boundaries"]}]});
+const unsupportedReply=unsupported.respond("Help me with my lesson");
+assert.match(unsupportedReply,/do not yet have a verified concept-matched practice/i);
+assert.notEqual(unsupported.snapshot().phase,"practice");
 
 // Cross-learner boundaries and clearing coaching state.
 const other=api.forLearner("fictional-family-A","fictional-learner-B");
