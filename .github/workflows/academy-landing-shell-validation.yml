@@ -5,6 +5,7 @@ on:
     paths:
       - 'assets/khaemenes-landing-standard.css'
       - 'assets/khaemenes-landing-toolbar.css'
+      - 'assets/khaemenes-hall-typography.css'
       - 'assets/khaemenes-landing-toolbar.js'
       - 'index.html'
       - 'student/index.html'
