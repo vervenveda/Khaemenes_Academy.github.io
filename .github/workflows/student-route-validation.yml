@@ -5,6 +5,7 @@ on:
     paths:
       - 'assets/khaemenes-front-door-router.js'
       - 'student/index.html'
+      - 'student/profile.html'
       - 'assets/khaemenes-student-profile-v2.js'
       - 'assets/khaemenes-student-profile-ui-v2.js'
       - 'assets/khaemenes-student-profile-v2.css'
@@ -19,6 +20,7 @@ on:
     paths:
       - 'assets/khaemenes-front-door-router.js'
       - 'student/index.html'
+      - 'student/profile.html'
       - 'assets/khaemenes-student-profile-v2.js'
       - 'assets/khaemenes-student-profile-ui-v2.js'
       - 'assets/khaemenes-student-profile-v2.css'
