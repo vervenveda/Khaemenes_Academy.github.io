@@ -493,6 +493,30 @@ header[data-khae-header] #vnvEcosystemMenuButton{
  header[data-khae-header] [data-khae-brand-sub]{display:none!important}
  header[data-khae-header] [data-khae-nav]{justify-content:flex-start!important}
 }
+
+/* Front Desk polish: smaller regular-weight account navigation. */
+header[data-khae-header] [data-khae-actions]{
+  gap:5px!important;align-items:center!important
+}
+header[data-khae-header] [data-khae-actions] a,
+header[data-khae-header] [data-khae-actions] a:not([data-khae-secondary]){
+  min-height:30px!important;max-height:none!important;
+  padding:5px 9px!important;
+  font:400 10px/1.22 "Brandon Grotesque","Avenir Next","Segoe UI",Arial,sans-serif!important;
+  letter-spacing:0!important;text-transform:none!important;
+  border:1px solid rgba(16,43,67,.29)!important;
+  border-radius:7px!important;
+  background:#fffdf8!important;color:#233e34!important;
+  box-shadow:none!important;white-space:nowrap!important
+}
+header[data-khae-header] [data-khae-actions] a:hover,
+header[data-khae-header] [data-khae-actions] a:focus-visible{
+  background:#f0ede4!important;border-color:#6d8374!important;
+  color:#172b24!important
+}
+@media(max-width:1150px){
+  header[data-khae-header] [data-khae-actions] a{font-size:9px!important;padding:5px 6px!important}
+}
 </style>
 </head>
 <body id="top">
