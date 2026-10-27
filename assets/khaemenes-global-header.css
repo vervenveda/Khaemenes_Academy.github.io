@@ -371,7 +371,7 @@ body:not(#top) header[data-khae-header] [data-vnv-ecosystem-slot]{
   display:grid!important;place-items:center!important;width:40px!important;
   min-width:40px!important;height:40px!important
 }
-body:not(#top) #vnvBetaProgramLink:not(#khaemenesHomeUtilityDock #vnvBetaProgramLink){
+body:not(#top) #vnvBetaProgramLink:not(#khaemenesHomeUtilityDock #vnvBetaProgramLink):not(#khaemenesLearnerUtilityToolbar #vnvBetaProgramLink){
   min-height:32px!important;padding:6px 10px!important;
   font:400 10px/1.25 var(--khae-sans)!important;
   letter-spacing:0!important;border-radius:7px!important;box-shadow:0 4px 12px rgba(0,0,0,.12)!important
@@ -398,4 +398,49 @@ body:not(#top) #vnvBetaProgramLink:not(#khaemenesHomeUtilityDock #vnvBetaProgram
   body:not(#top) header[data-khae-header] [data-khae-brand-name]{font-size:12px!important}
   body:not(#top) header[data-khae-header] [data-khae-brand-sub]{font-size:8px!important}
   body:not(#top) header[data-khae-header] [data-khae-actions] :is(a,button){font-size:9px!important;padding:5px!important}
+}
+
+/* Compact learner utility toolbar · October 27, 2026
+   No grade, enrollment, student data, or lesson controls are affected. */
+body #khaemenesLearnerUtilityToolbar{
+  display:flex!important;flex-wrap:nowrap!important;align-items:center!important;
+  justify-content:flex-end!important;width:max-content!important;
+  max-width:calc(100vw - 16px)!important;box-sizing:border-box!important;
+  gap:3px!important;padding:3px!important;border-radius:7px!important
+}
+body #khaemenesLearnerUtilityToolbar > :is(a,button){
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  box-sizing:border-box!important;flex:0 0 auto!important;
+  width:auto!important;min-width:0!important;max-width:none!important;
+  height:32px!important;min-height:32px!important;max-height:32px!important;
+  padding:4px 6px!important;gap:4px!important;border-radius:7px!important;
+  font:400 9px/1.15 "Brandon Grotesque","Avenir Next","Segoe UI",Arial,sans-serif!important;
+  letter-spacing:0!important;text-transform:none!important;white-space:nowrap!important;
+  overflow:visible!important;overflow-wrap:normal!important;word-break:keep-all!important;
+  text-overflow:clip!important;text-align:center!important
+}
+body #khaemenesLearnerUtilityToolbar > #vnvBetaProgramLink .vnv-beta-mark{
+  font-size:12px!important;line-height:1!important;flex:0 0 auto!important
+}
+/* Two compact rows on narrow phones: whole words stay intact, not clipped. */
+@media(max-width:540px){
+  body #khaemenesLearnerUtilityToolbar{
+    display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    width:min(315px,calc(100vw - 16px))!important;max-width:calc(100vw - 16px)!important;
+    right:max(8px,env(safe-area-inset-right))!important;
+    bottom:max(8px,env(safe-area-inset-bottom))!important;
+    gap:3px!important;padding:3px!important
+  }
+  body #khaemenesLearnerUtilityToolbar > :is(a,button){
+    flex:1 1 auto!important;width:100%!important;min-width:0!important;max-width:100%!important;
+    height:auto!important;min-height:34px!important;max-height:none!important;
+    padding:4px 3px!important;gap:3px!important;font-size:9px!important;
+    line-height:1.2!important;white-space:normal!important;
+    overflow-wrap:normal!important;word-break:keep-all!important;overflow:visible!important
+  }
+}
+@media(max-width:320px){
+  body #khaemenesLearnerUtilityToolbar > :is(a,button){
+    font-size:8.5px!important;padding:4px 2px!important
+  }
 }
