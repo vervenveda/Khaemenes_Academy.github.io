@@ -7,6 +7,7 @@ const home=read("index.html");
 const head=read("assets/khaemenes-landing-standard.css");
 const toolbar=read("assets/khaemenes-landing-toolbar.js");
 const dockCss=read("assets/khaemenes-landing-toolbar.css");
+const hallType=read("assets/khaemenes-hall-typography.css");
 
 assert.match(home,/academy-frontdesk-header-gateway-standard-20261027/);
 assert.match(head,/academy-frontdesk-header-gateway-standard-20261027|Homepage only\. Match Verve N Veda/);
@@ -31,6 +32,15 @@ assert.match(toolbar,/URLS\.mentor/);
 assert.match(toolbar,/URLS\.contribute/);
 assert.match(toolbar,/URLS\.beta/);
 assert.doesNotMatch(toolbar,/localStorage\.setItem|sessionStorage\.setItem/,"Landing utilities must never write learner data");
+assert.match(hallType,/data-khae-hall-landing="true"/,"Hall styling is opt-in");
+assert.match(hallType,/#khaemenesLearnerUtilityToolbar/,"Public hall suppresses legacy learner rail");
+assert.match(hallType,/#vnvBetaProgramLink/,"Public hall prevents second fixed Beta control");
+assert.match(hallType,/khae-hall-display/,"Halls have a scholarly offline-safe display font");
+assert.match(hallType,/khae-hall-body/,"Halls retain offline-first body font fallbacks");
+assert.match(toolbar,/khaeHallLanding/,"Public halls get a separate dock instead of reparenting learner controls");
+assert.match(toolbar,/original\.click\(\)/,"Hall Beta button preserves original Beta action");
+assert.match(dockCss,/grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/,"Narrow-screen hall buttons use responsive rows");
+
 
 for(const file of ["student/index.html","family/index.html","adult/index.html","teacher-admin/index.html","offline/index.html"]){
  const html=read(file);
