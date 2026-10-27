@@ -38,7 +38,7 @@ test("student portal continues through the front-door router",()=>{
 
 test("enrollment continues a registered learner through the canonical profile route",()=>{
   assert.match(enroll,/KhaemenesFrontDoorRouter\?\.routeForLearner/);
-  assert.match(enroll,/Continue to the learner profile\?/);
+  assert.match(enroll,/Finish & Open Selected Learner/);
 });
 
 
