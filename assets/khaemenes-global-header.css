@@ -302,3 +302,100 @@ body #khaemenesLearnerUtilityToolbar > :is(a,button){
     font-size:10px!important;padding:6px 3px!important
   }
 }
+
+
+/* Shared Academy portal header · gateway-aligned, October 27, 2026.
+   Scoped off the front desk, which has its own approved layout.
+   Leaves all existing page-specific links, navigation and handlers intact. */
+body:not(#top) header[data-khae-header]{
+  min-height:58px!important;height:auto!important;
+  position:sticky!important;top:var(--khae-ticker-height,33px)!important;
+  overflow:visible!important
+}
+body:not(#top) header[data-khae-header] [data-khae-header-inner]{
+  display:grid!important;
+  grid-template-columns:minmax(170px,auto) minmax(0,1fr) minmax(0,auto) 42px!important;
+  grid-template-rows:minmax(58px,auto)!important;
+  width:calc(100% - 24px)!important;max-width:none!important;
+  min-height:58px!important;margin:0 12px!important;
+  padding:4px 0!important;gap:8px!important;align-items:center!important
+}
+body:not(#top) header[data-khae-header] [data-khae-brand]{
+  grid-column:1!important;grid-row:1!important;
+  display:flex!important;align-items:center!important;gap:9px!important;
+  justify-self:start!important;min-width:0!important
+}
+body:not(#top) header[data-khae-header] [data-khae-brand-mark]{
+  width:34px!important;height:34px!important;flex:0 0 34px!important;
+  font:400 11px/1 var(--khae-serif)!important
+}
+body:not(#top) header[data-khae-header] [data-khae-brand-name]{
+  font:400 14px/1.18 var(--khae-serif)!important;
+  letter-spacing:.025em!important;white-space:nowrap!important
+}
+body:not(#top) header[data-khae-header] [data-khae-brand-sub]{
+  display:block!important;margin-top:2px!important;
+  font:400 9px/1.2 var(--khae-sans)!important;
+  letter-spacing:0!important;text-transform:none!important
+}
+body:not(#top) header[data-khae-header] [data-khae-nav]{
+  grid-column:2!important;grid-row:1!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  flex-wrap:nowrap!important;min-width:0!important;width:100%!important;
+  gap:5px!important;padding:0!important;overflow-x:auto!important;overflow-y:hidden!important;
+  scrollbar-width:thin
+}
+body:not(#top) header[data-khae-header] [data-khae-nav] a{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  flex:0 0 auto!important;min-height:30px!important;
+  padding:5px 8px!important;font:400 10px/1.2 var(--khae-sans)!important;
+  letter-spacing:.015em!important;text-transform:none!important;
+  white-space:nowrap!important;border:0!important;background:transparent!important;
+  box-shadow:none!important
+}
+body:not(#top) header[data-khae-header] [data-khae-actions]{
+  grid-column:3!important;grid-row:1!important;justify-self:end!important;
+  display:flex!important;align-items:center!important;justify-content:flex-end!important;
+  gap:5px!important;flex-wrap:nowrap!important;width:auto!important;min-width:0!important
+}
+body:not(#top) header[data-khae-header] [data-khae-actions][hidden]{display:none!important}
+body:not(#top) header[data-khae-header] [data-khae-actions] :is(a,button){
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  flex:0 0 auto!important;min-height:30px!important;
+  padding:5px 8px!important;font:400 10px/1.2 var(--khae-sans)!important;
+  text-transform:none!important;letter-spacing:0!important;
+  border-radius:7px!important;white-space:nowrap!important;box-shadow:none!important
+}
+body:not(#top) header[data-khae-header] [data-vnv-ecosystem-slot]{
+  grid-column:4!important;grid-row:1!important;justify-self:end!important;
+  display:grid!important;place-items:center!important;width:40px!important;
+  min-width:40px!important;height:40px!important
+}
+body:not(#top) #vnvBetaProgramLink:not(#khaemenesHomeUtilityDock #vnvBetaProgramLink){
+  min-height:32px!important;padding:6px 10px!important;
+  font:400 10px/1.25 var(--khae-sans)!important;
+  letter-spacing:0!important;border-radius:7px!important;box-shadow:0 4px 12px rgba(0,0,0,.12)!important
+}
+@media(max-width:980px){
+  body:not(#top) header[data-khae-header] [data-khae-header-inner]{
+    grid-template-columns:minmax(0,1fr) minmax(0,auto) 40px!important;
+    grid-template-rows:49px minmax(34px,auto)!important;gap:0 6px!important
+  }
+  body:not(#top) header[data-khae-header] [data-khae-brand]{grid-column:1!important;grid-row:1!important}
+  body:not(#top) header[data-khae-header] [data-vnv-ecosystem-slot]{grid-column:3!important;grid-row:1!important}
+  body:not(#top) header[data-khae-header] [data-khae-actions]{
+    grid-column:2!important;grid-row:1!important;max-width:min(48vw,320px)!important;overflow-x:auto!important
+  }
+  body:not(#top) header[data-khae-header] [data-khae-nav]{
+    grid-column:1/-1!important;grid-row:2!important;justify-content:flex-start!important;
+    border-top:1px solid var(--khae-line)!important;padding:3px 0!important
+  }
+}
+@media(max-width:500px){
+  body:not(#top) header[data-khae-header] [data-khae-header-inner]{
+    width:calc(100% - 16px)!important;margin:0 8px!important
+  }
+  body:not(#top) header[data-khae-header] [data-khae-brand-name]{font-size:12px!important}
+  body:not(#top) header[data-khae-header] [data-khae-brand-sub]{font-size:8px!important}
+  body:not(#top) header[data-khae-header] [data-khae-actions] :is(a,button){font-size:9px!important;padding:5px!important}
+}
