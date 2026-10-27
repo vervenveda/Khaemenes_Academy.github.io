@@ -6,7 +6,7 @@ const A="https://vervenveda.com/Khaemenes_Academy.github.io/";
 const V="https://vervenveda.com/";
 const URLS=Object.freeze({
  search:V+"PLERASearch.github.io/",mentor:A+"mentor/",
- contribute:V+"#support",student:A+"student/",family:A+"family/",
+ contribute:"https://buy.stripe.com/aFa8wQ5xf9Scf65caT4AU0s",student:A+"student/",family:A+"family/",
  help:A+"#help",beta:V+"beta/"
 });
 const DOCK="khaeLandingUtilityDock",DIALOG="khaeLandingUpdatesDialog";
