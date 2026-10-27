@@ -47,7 +47,8 @@ function addLink(dock,kind,label,href,mark){
 function init(){
  if(document.getElementById("khaemenesHomeUtilityDock")||document.getElementById(DOCK)||!document.body)return;
  document.body.dataset.khaeCampusLanding="true";
- const learner=document.getElementById(LEARNER_DOCK);
+ const hall=document.body.dataset.khaeHallLanding==="true";
+ const learner=hall?null:document.getElementById(LEARNER_DOCK);
  const dock=learner||make("nav",{id:DOCK,"aria-label":"Academy campus quick utilities"});
  if(!learner)document.body.append(dock);
  const exists=selector=>!!dock.querySelector(selector);
@@ -74,8 +75,25 @@ function init(){
  }
  if(!exists("#khaemenesStudentContributeButton, [data-landing-tool='contribute']"))addLink(dock,"contribute","Contribute",URLS.contribute,"♡");
  const beta=document.getElementById("vnvBetaProgramLink");
- if(beta&&beta.parentElement!==dock)dock.append(beta);
- if(!beta&&!exists("[data-landing-tool='beta']"))addLink(dock,"beta","β Beta Program",URLS.beta,"β");
+ if(hall){
+  // Public halls use one five-control dock; the original beta widget remains
+  // untouched and hidden, so its profile/lesson MutationObserver cannot steal
+  // a button from the landing dock or create a duplicate.
+  if(!exists("[data-landing-tool='beta']")){
+   const openBeta=make("button",{type:"button","data-landing-tool":"beta","aria-label":"Open Beta Program"});
+   openBeta.append(make("span",{className:"khae-dock-mark","aria-hidden":"true"},"β"),make("span",{},"Beta Program"));
+   openBeta.addEventListener("click",()=>{
+    const original=document.getElementById("vnvBetaProgramLink");
+    if(original&&typeof original.click==="function"){original.click();return}
+    const intended=window.VNVBetaProgram?.href?.()||URLS.beta;
+    try{window.location.assign(intended)}catch{window.location.href=intended}
+   });
+   dock.append(openBeta);
+  }
+ }else{
+  if(beta&&beta.parentElement!==dock)dock.append(beta);
+  if(!beta&&!exists("[data-landing-tool='beta']"))addLink(dock,"beta","β Beta Program",URLS.beta,"β");
+ }
  // Existing learner Profile control stays accessible on High School campus landings.
  // Never duplicate the student toolbar on lesson/quiz routes: only root index loads this file.
 }
