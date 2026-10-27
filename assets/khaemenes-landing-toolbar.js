@@ -51,14 +51,27 @@ function init(){
  const dock=learner||make("nav",{id:DOCK,"aria-label":"Academy campus quick utilities"});
  if(!learner)document.body.append(dock);
  const exists=selector=>!!dock.querySelector(selector);
- if(!exists("#khaemenesStudentSearchButton, [data-landing-tool='search']"))addLink(dock,"search","Search",URLS.search,"S");
+ const highFrontDesk=document.body.dataset.khaeCampusFrontDesk==="true";
+ if(!exists("#khaemenesStudentSearchButton, [data-landing-tool='search']")){
+  const search=addLink(dock,"search","Search",URLS.search,"S");
+  // Match the existing High School student Search action; keep PLERA Search as fallback.
+  if(highFrontDesk)search.addEventListener("click",event=>{
+   const open=window.VNVBetaProgram?.openStudentSearch;
+   if(typeof open==="function"){event.preventDefault();open()}
+  });
+ }
  if(!exists("[data-landing-tool='updates']")){
   const up=make("button",{type:"button","data-landing-tool":"updates","aria-haspopup":"dialog","aria-controls":DIALOG,"aria-label":"Open Academy updates and help"});
   up.append(make("span",{className:"khae-dock-mark","aria-hidden":"true"},"U"),make("span",{},"Updates"));
   up.addEventListener("click",()=>{const dialog=updates();if(!dialog.open)dialog.showModal()});
   dock.append(up);
  }
- if(!exists("#khaemenesStudentMentorButton, [data-landing-tool='mentor']"))addLink(dock,"mentor","Archaemenes",URLS.mentor,"A");
+ if(!exists("#khaemenesStudentMentorButton, [data-landing-tool='mentor']")){
+  const mentorUrl=highFrontDesk
+   ?"https://vervenveda.com/Khaemenes_High.github.io/mentor/?stage=high&subject=general&source=student-utility-rail"
+   :URLS.mentor;
+  addLink(dock,"mentor","Archaemenes",mentorUrl,"A");
+ }
  if(!exists("#khaemenesStudentContributeButton, [data-landing-tool='contribute']"))addLink(dock,"contribute","Contribute",URLS.contribute,"♡");
  const beta=document.getElementById("vnvBetaProgramLink");
  if(beta&&beta.parentElement!==dock)dock.append(beta);
