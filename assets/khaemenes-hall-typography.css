@@ -1,0 +1,54 @@
+/* Khaemenes Academy · Major Hall Typography v1
+   Apply only to explicitly marked public department / subject landing pages.
+   Offline-first font stacks: Cinzel / Nunito when locally present; system fallbacks otherwise.
+   Does not alter grading controls, student cards, quiz text, or course-page themes. */
+body[data-khae-hall-landing="true"] {
+  --khae-hall-display: "Cinzel", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  --khae-hall-body: "Nunito", "Brandon Grotesque", "Avenir Next", "Segoe UI", Arial, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+body[data-khae-hall-landing="true"] :is(main, [role="main"]) :is(h1, h2, h3) {
+  font-family: var(--khae-hall-display);
+  font-weight: 400;
+  letter-spacing: .012em;
+  line-height: 1.3;
+  overflow-wrap: break-word;
+}
+body[data-khae-hall-landing="true"] :is(main, [role="main"]) h1 {
+  font-size: clamp(29px, 3.4vw, 47px);
+}
+body[data-khae-hall-landing="true"] :is(main, [role="main"]) h2 {
+  font-size: clamp(22px, 2.2vw, 31px);
+}
+body[data-khae-hall-landing="true"] :is(main, [role="main"]) :is(p, li, label) {
+  line-height: 1.62;
+  overflow-wrap: break-word;
+}
+body[data-khae-hall-landing="true"] :is(main, [role="main"]) :is(button, a) {
+  text-underline-offset: 3px;
+}
+body[data-khae-hall-landing="true"] :is(main, [role="main"]) :is(button, a):focus-visible {
+  outline: 3px solid #b48b45;
+  outline-offset: 2px;
+}
+body[data-khae-hall-landing="true"] :is(main, [role="main"]) :is(input, textarea, select) {
+  max-width: 100%;
+}
+body[data-khae-hall-landing="true"] :is(main, [role="main"]) :is(img, svg, video) {
+  max-width: 100%;
+}
+body[data-khae-hall-landing="true"] #khaemenesLearnerUtilityToolbar,
+body[data-khae-hall-landing="true"] #vnvBetaProgramLink {
+  display:none!important; /* public hall gets the independent five-control dock */
+}
+@media(max-width:500px){
+  body[data-khae-hall-landing="true"] :is(main, [role="main"]) h1 {
+    font-size: clamp(25px, 8vw, 34px);
+  }
+  body[data-khae-hall-landing="true"] :is(main, [role="main"]) h2 {
+    font-size: clamp(20px, 6.5vw, 26px);
+  }
+}
+@media print {
+  body[data-khae-hall-landing="true"] #khaeLandingUtilityDock {display:none!important}
+}
