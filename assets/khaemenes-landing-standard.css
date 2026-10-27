@@ -1,0 +1,152 @@
+/* Khaemenes Academy · campus landing standard · derived verbatim from Academy Home.
+   Campus-specific hero, body, curriculum and student-grade lessons remain unchanged. */
+
+/* Homepage only. Match Verve N Veda's compact ticker -> identity/nav/menu -> tools.
+   Overrides legacy grid CSS; keeps all original links and menu authority. */
+:root{--khae-header-height:60px!important;--khae-sticky-stack:calc(var(--khae-ticker-height) + var(--khae-header-height))}
+header[data-khae-header]{
+ min-height:60px!important;height:auto!important;padding:0!important;
+ position:sticky!important;top:var(--khae-ticker-height)!important;
+ z-index:2147480000!important
+}
+header[data-khae-header] [data-khae-header-inner]{
+ display:grid!important;
+ grid-template-columns:minmax(185px,auto) minmax(0,1fr) minmax(0,auto) 42px!important;
+ grid-template-rows:minmax(60px,auto)!important;
+ width:calc(100% - 24px)!important;max-width:none!important;margin:0 12px!important;
+ min-height:60px!important;padding:4px 0!important;gap:8px!important;
+ align-items:center!important
+}
+header[data-khae-header] [data-khae-brand]{
+ grid-column:1!important;grid-row:1!important;justify-self:start!important;
+ display:flex!important;align-items:center!important;gap:8px!important;
+ min-width:0!important;max-width:100%!important
+}
+header[data-khae-header] [data-khae-brand-mark]{
+ width:32px!important;height:32px!important;flex:0 0 32px!important;
+ font:400 11px/1 var(--khae-serif)!important
+}
+header[data-khae-header] [data-khae-brand-name]{
+ font:400 clamp(12px,1.12vw,16px)/1.15 var(--khae-serif)!important;
+ letter-spacing:.025em!important;white-space:nowrap!important
+}
+header[data-khae-header] [data-khae-brand-sub]{
+ display:block!important;margin-top:2px!important;
+ font:400 8px/1.15 var(--khae-sans)!important;
+ letter-spacing:0!important;text-transform:none!important;
+ white-space:nowrap!important
+}
+header[data-khae-header] [data-khae-nav]{
+ grid-column:2!important;grid-row:1!important;justify-self:center!important;
+ display:flex!important;flex-wrap:nowrap!important;align-items:center!important;
+ gap:4px!important;width:100%!important;min-width:0!important;
+ padding:0!important;border:0!important;
+ overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:thin
+}
+header[data-khae-header] [data-khae-nav] a{
+ display:inline-flex!important;flex:0 0 auto!important;
+ min-height:32px!important;padding:6px 8px!important;
+ font:400 10px/1.15 var(--khae-sans)!important;
+ letter-spacing:.025em!important;white-space:nowrap!important;
+ border:0!important;border-radius:7px!important;background:transparent!important;
+ text-transform:uppercase!important
+}
+header[data-khae-header] [data-khae-actions]{
+ grid-column:3!important;grid-row:1!important;justify-self:end!important;
+ display:flex!important;flex-wrap:nowrap!important;
+ align-items:center!important;gap:5px!important;width:auto!important;
+ min-width:0!important;padding:0!important
+}
+header[data-khae-header] [data-khae-actions] a{
+ display:inline-flex!important;flex:0 0 auto!important;
+ width:auto!important;min-width:0!important;min-height:32px!important;
+ padding:7px 8px!important;font:400 9.5px/1.2 var(--khae-sans)!important;
+ letter-spacing:.015em!important;white-space:nowrap!important;
+ overflow-wrap:normal!important;border-radius:7px!important
+}
+header[data-khae-header] [data-vnv-ecosystem-slot]{
+ grid-column:4!important;grid-row:1!important;justify-self:end!important;
+ align-self:center!important;width:40px!important;min-width:40px!important;height:40px!important;
+ display:grid!important;place-items:center!important
+}
+header[data-khae-header] #vnvEcosystemMenuButton{
+ width:38px!important;height:38px!important;min-width:38px!important;min-height:38px!important;
+ padding:0!important;display:grid!important;place-items:center!important
+}
+@media(max-width:1150px){
+ header[data-khae-header] [data-khae-header-inner]{
+  grid-template-columns:minmax(176px,auto) minmax(0,1fr) minmax(0,auto) 42px!important
+ }
+ header[data-khae-header] [data-khae-actions] a{font-size:9px!important;padding:6px!important}
+}
+@media(max-width:900px){
+ header[data-khae-header] [data-khae-header-inner]{
+  grid-template-columns:minmax(0,1fr) auto 42px!important;
+  grid-template-rows:50px auto!important;gap:0 7px!important
+ }
+ header[data-khae-header] [data-khae-brand]{grid-column:1!important;grid-row:1!important}
+ header[data-khae-header] [data-vnv-ecosystem-slot]{grid-column:3!important;grid-row:1!important}
+ header[data-khae-header] [data-khae-nav]{
+  grid-column:1/-1!important;grid-row:2!important;
+  justify-content:center!important;min-height:34px!important;
+  border-top:1px solid var(--khae-line)!important
+ }
+ header[data-khae-header] [data-khae-actions]{
+  grid-column:2!important;grid-row:1!important;justify-self:end!important
+ }
+ header[data-khae-header] [data-khae-actions] a{display:none!important}
+ header[data-khae-header] [data-khae-actions] a:first-child{display:inline-flex!important}
+}
+@media(max-width:520px){
+ header[data-khae-header] [data-khae-header-inner]{
+  width:calc(100% - 16px)!important;margin:0 8px!important;
+  grid-template-columns:minmax(0,1fr) auto 40px!important
+ }
+ header[data-khae-header] [data-khae-brand-mark]{
+  width:30px!important;height:30px!important;flex-basis:30px!important
+ }
+ header[data-khae-header] [data-khae-brand-name]{font-size:11px!important}
+ header[data-khae-header] [data-khae-brand-sub]{display:none!important}
+ header[data-khae-header] [data-khae-nav]{justify-content:flex-start!important}
+}
+
+/* Front Desk polish: smaller regular-weight account navigation. */
+header[data-khae-header] [data-khae-actions]{
+  gap:5px!important;align-items:center!important
+}
+header[data-khae-header] [data-khae-actions] a,
+header[data-khae-header] [data-khae-actions] a:not([data-khae-secondary]){
+  min-height:30px!important;max-height:none!important;
+  padding:5px 9px!important;
+  font:400 10px/1.22 "Brandon Grotesque","Avenir Next","Segoe UI",Arial,sans-serif!important;
+  letter-spacing:0!important;text-transform:none!important;
+  border:1px solid rgba(16,43,67,.29)!important;
+  border-radius:7px!important;
+  background:#fffdf8!important;color:#233e34!important;
+  box-shadow:none!important;white-space:nowrap!important
+}
+header[data-khae-header] [data-khae-actions] a:hover,
+header[data-khae-header] [data-khae-actions] a:focus-visible{
+  background:#f0ede4!important;border-color:#6d8374!important;
+  color:#172b24!important
+}
+@media(max-width:1150px){
+  header[data-khae-header] [data-khae-actions] a{font-size:9px!important;padding:5px 6px!important}
+}
+
+/* Existing High School directory button stays available while the Academy's
+   single far-right hamburger belongs to the ecosystem menu. */
+header[data-khae-header].site-header [data-khae-nav] #menuButton {
+ display:inline-flex!important; width:auto!important; min-width:0!important; height:auto!important;
+ min-height:32px!important; padding:6px 8px!important; white-space:nowrap!important;
+ font:400 10px/1.15 var(--khae-sans)!important; color:#2c3933!important;
+ background:transparent!important; border:0!important; border-radius:7px!important;
+ text-transform:uppercase!important; letter-spacing:.025em!important
+}
+header[data-khae-header].site-header [data-khae-nav] #menuButton .menu-lines {display:none!important}
+header[data-khae-header].site-header [data-khae-actions] #installButton:disabled,
+header[data-khae-header].site-header [data-khae-actions] #installButton[hidden]{display:none!important}
+/* Do not allow old campus header declarations to shrink or hide the Academy identity. */
+header[data-khae-header] [data-khae-brand-name] strong,
+header[data-khae-header] [data-khae-brand-name]{font-weight:400!important}
+@media print{header[data-khae-header]{position:static!important}}
