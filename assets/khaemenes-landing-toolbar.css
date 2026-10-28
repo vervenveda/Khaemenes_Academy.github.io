@@ -1,5 +1,5 @@
 /* Khaemenes Academy · canonical shared utility toolbar
-   Six concise controls: Search / Updates / Mentor / Give / Profile / Beta.
+   Nine one-word controls: Home / Academy / Search / Updates / Mentor / Give / Profile / Parents / Beta.
    One stylesheet owns geometry so campus pages do not need local toolbar overrides. */
 body[data-khae-campus-landing="true"] :is(#khaeLandingUtilityDock,#khaemenesLearnerUtilityToolbar){
   position:fixed!important;
@@ -60,13 +60,16 @@ body[data-khae-campus-landing="true"] :is(#khaeLandingUtilityDock,#khaemenesLear
 }
 body[data-khae-campus-landing="true"] :is(#khaeLandingUtilityDock,#khaemenesLearnerUtilityToolbar) .khae-dock-mark,
 body[data-khae-campus-landing="true"] :is(#khaeLandingUtilityDock,#khaemenesLearnerUtilityToolbar) .vnv-beta-mark{display:none!important}
-body[data-khae-campus-landing="true"] :is(#khaeLandingUtilityDock,#khaemenesLearnerUtilityToolbar) > [data-landing-tool="search"]{order:10!important}
-body[data-khae-campus-landing="true"] :is(#khaeLandingUtilityDock,#khaemenesLearnerUtilityToolbar) > [data-landing-tool="updates"]{order:20!important}
-body[data-khae-campus-landing="true"] :is(#khaeLandingUtilityDock,#khaemenesLearnerUtilityToolbar) > [data-landing-tool="mentor"]{order:30!important}
-body[data-khae-campus-landing="true"] :is(#khaeLandingUtilityDock,#khaemenesLearnerUtilityToolbar) > [data-landing-tool="contribute"]{order:40!important;background:#e5eee7!important}
-body[data-khae-campus-landing="true"] :is(#khaeLandingUtilityDock,#khaemenesLearnerUtilityToolbar) > [data-landing-tool="profile"]{order:50!important}
+body[data-khae-campus-landing="true"] :is(#khaeLandingUtilityDock,#khaemenesLearnerUtilityToolbar) > [data-landing-tool="home"]{order:10!important}
+body[data-khae-campus-landing="true"] :is(#khaeLandingUtilityDock,#khaemenesLearnerUtilityToolbar) > [data-landing-tool="academy"]{order:20!important}
+body[data-khae-campus-landing="true"] :is(#khaeLandingUtilityDock,#khaemenesLearnerUtilityToolbar) > [data-landing-tool="search"]{order:30!important}
+body[data-khae-campus-landing="true"] :is(#khaeLandingUtilityDock,#khaemenesLearnerUtilityToolbar) > [data-landing-tool="updates"]{order:40!important}
+body[data-khae-campus-landing="true"] :is(#khaeLandingUtilityDock,#khaemenesLearnerUtilityToolbar) > [data-landing-tool="mentor"]{order:50!important}
+body[data-khae-campus-landing="true"] :is(#khaeLandingUtilityDock,#khaemenesLearnerUtilityToolbar) > [data-landing-tool="contribute"]{order:60!important}
+body[data-khae-campus-landing="true"] :is(#khaeLandingUtilityDock,#khaemenesLearnerUtilityToolbar) > [data-landing-tool="profile"]{order:70!important}
+body[data-khae-campus-landing="true"] :is(#khaeLandingUtilityDock,#khaemenesLearnerUtilityToolbar) > [data-landing-tool="parents"]{order:80!important}
 body[data-khae-campus-landing="true"] :is(#khaeLandingUtilityDock,#khaemenesLearnerUtilityToolbar) > :is(#vnvBetaProgramLink,[data-landing-tool="beta"]){
-  order:60!important;background:#15283a!important;color:#fff9ed!important;border-color:#977a46!important;
+  order:90!important;background:#15283a!important;color:#fff9ed!important;border-color:#977a46!important;
 }
 body[data-khae-campus-landing="true"] :is(#khaeLandingUtilityDock,#khaemenesLearnerUtilityToolbar) > :is(a,button):hover{filter:brightness(.96)}
 body[data-khae-campus-landing="true"] :is(#khaeLandingUtilityDock,#khaemenesLearnerUtilityToolbar) > :is(a,button):focus-visible{outline:3px solid #ad7c2b!important;outline-offset:2px!important}
@@ -98,7 +101,7 @@ body[data-khae-campus-landing="true"] :is(#khaeLandingUtilityDock,#khaemenesLear
 #khaeLandingUpdatesDialog .khae-dialog-head{
   display:flex;justify-content:space-between;align-items:flex-start;gap:14px
 }
-/* Six one-word controls remain readable on narrow screens. */
+/* Nine one-word controls remain equal; very narrow screens use two columns. */
 @media(max-width:380px){
   body[data-khae-campus-landing="true"] :is(#khaeLandingUtilityDock,#khaemenesLearnerUtilityToolbar){
     grid-template-columns:repeat(2,minmax(96px,1fr))!important;
