@@ -1,5 +1,5 @@
 /* Academy campus landing tools · no learner-state reads, writes or grading changes.
-   Mirrors Academy Front Desk: Search / Updates / Archaemenes / Contribute / Beta. */
+   Canonical Academy utilities: Search / Updates / Mentor / Give / Profile / Beta. */
 (()=>{
 "use strict";
 const A="https://vervenveda.com/Khaemenes_Academy.github.io/";
@@ -38,9 +38,9 @@ function updates(){
  document.body.append(dialog);
  return dialog;
 }
-function addLink(dock,kind,label,href,mark){
+function addLink(dock,kind,label,href){
  const control=make("a",{href,"data-landing-tool":kind,"aria-label":label});
- control.append(make("span",{className:"khae-dock-mark","aria-hidden":"true"},mark),make("span",{},label));
+ control.append(make("span",{},label));
  dock.append(control);
  return control;
 }
@@ -54,7 +54,7 @@ function init(){
  const exists=selector=>!!dock.querySelector(selector);
  const highFrontDesk=document.body.dataset.khaeCampusFrontDesk==="true";
  if(!exists("#khaemenesStudentSearchButton, [data-landing-tool='search']")){
-  const search=addLink(dock,"search","Search",URLS.search,"S");
+  const search=addLink(dock,"search","Search",URLS.search);
   // Match the existing High School student Search action; keep PLERA Search as fallback.
   if(highFrontDesk)search.addEventListener("click",event=>{
    const open=window.VNVBetaProgram?.openStudentSearch;
@@ -63,7 +63,7 @@ function init(){
  }
  if(!exists("[data-landing-tool='updates']")){
   const up=make("button",{type:"button","data-landing-tool":"updates","aria-haspopup":"dialog","aria-controls":DIALOG,"aria-label":"Open Academy updates and help"});
-  up.append(make("span",{className:"khae-dock-mark","aria-hidden":"true"},"U"),make("span",{},"Updates"));
+  up.append(make("span",{},"Updates"));
   up.addEventListener("click",()=>{const dialog=updates();if(!dialog.open)dialog.showModal()});
   dock.append(up);
  }
@@ -71,9 +71,15 @@ function init(){
   const mentorUrl=highFrontDesk
    ?"https://vervenveda.com/Khaemenes_High.github.io/mentor/?stage=high&subject=general&source=student-utility-rail"
    :URLS.mentor;
-  addLink(dock,"mentor","Archaemenes",mentorUrl,"A");
+  addLink(dock,"mentor","Mentor",mentorUrl);
  }
- if(!exists("#khaemenesStudentContributeButton, [data-landing-tool='contribute']"))addLink(dock,"contribute","Contribute",URLS.contribute,"♡");
+ if(!exists("#khaemenesStudentContributeButton, [data-landing-tool='contribute']"))addLink(dock,"contribute","Give",URLS.contribute);
+ const profile=hall?null:dock.querySelector("#khaemenesStudentProfileButton,[data-landing-tool='profile'],a[href*='/student-profile/'],a[href*='/student/']");
+ if(profile){
+  profile.dataset.landingTool="profile";
+  profile.setAttribute("aria-label","Student Profile");
+  profile.replaceChildren(make("span",{},"Profile"));
+ }
  const beta=document.getElementById("vnvBetaProgramLink");
  if(hall){
   // Public halls use one five-control dock; the original beta widget remains
@@ -81,7 +87,7 @@ function init(){
   // a button from the landing dock or create a duplicate.
   if(!exists("[data-landing-tool='beta']")){
    const openBeta=make("button",{type:"button","data-landing-tool":"beta","aria-label":"Open Beta Program"});
-   openBeta.append(make("span",{className:"khae-dock-mark","aria-hidden":"true"},"β"),make("span",{},"Beta Program"));
+   openBeta.append(make("span",{},"Beta"));
    openBeta.addEventListener("click",()=>{
     const original=document.getElementById("vnvBetaProgramLink");
     if(original&&typeof original.click==="function"){original.click();return}
@@ -91,8 +97,13 @@ function init(){
    dock.append(openBeta);
   }
  }else{
-  if(beta&&beta.parentElement!==dock)dock.append(beta);
-  if(!beta&&!exists("[data-landing-tool='beta']"))addLink(dock,"beta","β Beta Program",URLS.beta,"β");
+  if(beta){
+   beta.dataset.landingTool="beta";
+   beta.setAttribute("aria-label","Beta Program");
+   beta.replaceChildren(make("span",{},"Beta"));
+   if(beta.parentElement!==dock)dock.append(beta);
+  }
+  if(!beta&&!exists("[data-landing-tool='beta']"))addLink(dock,"beta","Beta",URLS.beta);
  }
  // Existing learner Profile control stays accessible on High School campus landings.
  // Never duplicate the student toolbar on lesson/quiz routes: only root index loads this file.
