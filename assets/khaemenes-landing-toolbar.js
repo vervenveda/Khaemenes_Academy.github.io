@@ -123,38 +123,5 @@ function init(){
  // Existing learner Profile control stays accessible on High School campus landings.
  // Never duplicate the student toolbar on lesson/quiz routes: only root index loads this file.
 }
-function normalizeLearnerLabels(){
- const dock=document.getElementById(LEARNER_DOCK)||document.getElementById(DOCK);
- if(!dock)return;
- const controls=[...dock.querySelectorAll("a,button")];
- const profile=controls.find(control=>{
-  const label=(control.getAttribute("aria-label")||control.textContent||"").trim().toLowerCase();
-  const href=(control.getAttribute("href")||"").toLowerCase();
-  return control.id==="khaemenesStudentProfileButton"||control.dataset.landingTool==="profile"||label==="student profile"||label==="profile"||href.includes("student-profile");
- });
- if(profile){
-  profile.dataset.landingTool="profile";
-  profile.setAttribute("aria-label","Student Profile");
-  profile.replaceChildren(make("span",{},"Profile"));
- }
- const parents=controls.find(control=>{
-  if(control===profile)return false;
-  const label=(control.getAttribute("aria-label")||control.textContent||"").trim().toLowerCase();
-  const href=(control.getAttribute("href")||"").toLowerCase();
-  return control.dataset.landingTool==="parents"||label==="grown-ups"||label==="grown ups"||label==="family"||label==="parents"||href.includes("/family/");
- });
- if(parents){
-  parents.dataset.landingTool="parents";
-  parents.setAttribute("aria-label","Parents");
-  parents.replaceChildren(make("span",{},"Parents"));
- }
-}
-function start(){
- init();
- // Other deferred Academy/learner scripts may append Profile and guardian controls
- // later in the same page startup. One bounded reconciliation keeps labels canonical
- // without a MutationObserver or continuous DOM rewriting.
- setTimeout(normalizeLearnerLabels,250);
-}
-if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();
 })();
