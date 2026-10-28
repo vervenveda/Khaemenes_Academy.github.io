@@ -80,6 +80,19 @@ function init(){
   profile.setAttribute("aria-label","Student Profile");
   profile.replaceChildren(make("span",{},"Profile"));
  }
+ // Learner rails may also contribute a guardian/family control. Keep its action,
+ // but normalize the visible label so it fits the shared compact dock.
+ const parents=hall?null:[...dock.querySelectorAll("a,button")].find(control=>{
+  if(control===profile)return false;
+  const label=(control.getAttribute("aria-label")||control.textContent||"").trim().toLowerCase();
+  const href=(control.getAttribute("href")||"").toLowerCase();
+  return label==="grown-ups"||label==="grown ups"||label==="family"||label==="parents"||href.includes("/family/");
+ });
+ if(parents){
+  parents.dataset.landingTool="parents";
+  parents.setAttribute("aria-label","Parents");
+  parents.replaceChildren(make("span",{},"Parents"));
+ }
  const beta=document.getElementById("vnvBetaProgramLink");
  if(hall){
   // Public halls use one five-control dock; the original beta widget remains
