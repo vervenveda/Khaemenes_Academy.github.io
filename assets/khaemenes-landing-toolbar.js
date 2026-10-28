@@ -1,5 +1,5 @@
 /* Academy campus landing tools · no learner-state reads, writes or grading changes.
-   Canonical Academy utilities: Search / Updates / Mentor / Give / Profile / Beta. */
+   Canonical Academy utilities: Home / Academy / Search / Updates / Mentor / Give / Profile / Parents / Beta. */
 (()=>{
 "use strict";
 const A="https://vervenveda.com/Khaemenes_Academy.github.io/";
@@ -53,6 +53,8 @@ function init(){
  if(!learner)document.body.append(dock);
  const exists=selector=>!!dock.querySelector(selector);
  const highFrontDesk=document.body.dataset.khaeCampusFrontDesk==="true";
+ if(!exists("[data-landing-tool='home']"))addLink(dock,"home","Home",V);
+ if(!exists("[data-landing-tool='academy']"))addLink(dock,"academy","Academy",A);
  if(!exists("#khaemenesStudentSearchButton, [data-landing-tool='search']")){
   const search=addLink(dock,"search","Search",URLS.search);
   // Match the existing High School student Search action; keep PLERA Search as fallback.
