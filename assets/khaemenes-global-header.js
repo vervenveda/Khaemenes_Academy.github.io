@@ -80,14 +80,20 @@ function context(){
     }
     return {label:"High School Quick Links",links:[
       app("High School Home",H+"/"),
-      app("Grades 9–12",H+"/#grades"),
+      app("Grade 9",H+"/grades/grade-09/"),
+      app("Grade 10",H+"/grades/grade-10/"),
+      app("Grade 11",H+"/grades/grade-11/"),
+      app("Grade 12",H+"/grades/grade-12/"),
       app("Mathematics",H+"/courses/mathematics/"),
-      app("Language Arts",H+"/courses/language-arts/"),
+      app("English",H+"/courses/language-arts/"),
       app("Science",H+"/courses/science/"),
       app("Social Studies",H+"/courses/social-studies/"),
       app("Physical Education",H+"/courses/physical-education/"),
-      app("Offline Learning",H+"/offline/"),
-      call("Student Profile →",A+"/student/")
+      app("Languages",L+"/"),
+      app("Psychology",H+"/electives/grades/grade-09/psych-101/"),
+      app("Student Portal",A+"/student/"),
+      app("Family",A+"/family/"),
+      call("Higher Learning →",HL+"/")
     ]};
   }
   if(host.includes("khaemenes_higher_learning")||path.includes("/khaemenes_higher_learning.github.io/")){
