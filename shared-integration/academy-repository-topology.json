@@ -1,0 +1,56 @@
+{
+  "schema": "khaemenes-academy-repository-topology-v1",
+  "version": 1,
+  "repository": "vervenveda/Khaemenes_Academy.github.io",
+  "role": "academy-front-desk-and-continuity-nexus",
+  "terminal": {
+    "primary": "03",
+    "exclusive": true,
+    "terminal04AcademyAuthority": false
+  },
+  "surfaces": {
+    "academyHome": "index.html",
+    "studentPortal": "student/index.html",
+    "studentProfile": "student/profile.html",
+    "familyPortal": "family/index.html",
+    "familyEnrollment": "family/enroll/index.html",
+    "familyAcceptance": "family/accept/index.html",
+    "adultPortal": "adult/index.html",
+    "adultEnrollment": "adult/enroll/index.html",
+    "teacherAdmin": "teacher-admin/index.html",
+    "mentor": "mentor/index.html",
+    "offline": "offline/index.html",
+    "diagnostics": "diagnostics/front-door/index.html",
+    "verification": "verify/index.html"
+  },
+  "sharedAuthorities": {
+    "accountClient": "assets/khaemenes-account-client.js",
+    "familyRegistry": "assets/khaemenes-family-registry.js",
+    "learnerContext": "assets/khaemenes-learner-context.js",
+    "learningContinuation": "assets/khaemenes-learning-continuation.js",
+    "studentProfile": "assets/khaemenes-student-profile-v2.js",
+    "globalHeader": "assets/khaemenes-global-header.js",
+    "globalNavigation": "assets/khaemenes-global-navigation.js",
+    "terminal03Readiness": "assets/khaemenes-terminal03-readiness.js",
+    "language": "assets/vnv-language.js",
+    "toolbarLoader": "assets/khaemenes-landing-toolbar.js"
+  },
+  "externalAcademyRepositories": [
+    "Khaemenes_Preschool.github.io",
+    "Khaemenes_KinderGarden.github.io",
+    "Khaemenes_Elementary.github.io",
+    "Khaemenes_Middle.github.io",
+    "Khaemenes_High.github.io",
+    "Khaemenes_Higher_Learning.github.io",
+    "Khaemenes_Linguistics.github.io",
+    "Khaemenes_Academy_Life_Skills.github.io"
+  ],
+  "invariants": [
+    "course repositories own course-specific mastery",
+    "Academy owns family and learner continuity surfaces",
+    "Archaemenes is advisory and does not award mastery",
+    "Terminal03 readiness does not commission or activate STOS",
+    "Terminal04 has no Khaemenes Academy authority",
+    "canonical ecosystem toolbar geometry is owned by Verve N Veda"
+  ]
+}
