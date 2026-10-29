@@ -1,0 +1,59 @@
+{
+  "schema": "khaemenes-academy-terminal03-readiness-manifest-v1",
+  "version": 1,
+  "terminalId": "03",
+  "designation": "primary-and-exclusive-academy-terminal",
+  "state": "primary-academy-terminal-readiness-hold",
+  "live": false,
+  "commissioned": false,
+  "transport": "unconfigured",
+  "academyTerminalPrimary": true,
+  "academyTerminalExclusive": true,
+  "terminal04AcademyAuthority": false,
+  "academy": {
+    "role": "learning-and-family-continuity",
+    "accountStorageOwner": "Khaemenes Academy",
+    "storageNamespace": "academy",
+    "stosStorageSeparate": true
+  },
+  "adapter": "assets/khaemenes-terminal03-readiness.js",
+  "handoffSchema": "khaemenes-academy-terminal03-readiness-v1",
+  "permittedSummary": [
+    "stable family and learner IDs at runtime",
+    "placement summary",
+    "course continuation summary",
+    "mastery summary",
+    "family-attention flag",
+    "stale-record flag"
+  ],
+  "excluded": [
+    "passwords",
+    "emails",
+    "private learner reflections",
+    "child conversations",
+    "assessment responses",
+    "answer keys",
+    "raw browser storage",
+    "STOS secrets",
+    "network endpoints"
+  ],
+  "authority": {
+    "changesGrades": false,
+    "awardsMastery": false,
+    "changesPlacement": false,
+    "changesLearnerIdentity": false,
+    "changesFamilyPermissions": false,
+    "activatesTerminal": false,
+    "commissionsTerminal": false
+  },
+  "cutoverGates": [
+    "current GitHub Academy repository crossover-certified",
+    "exact certified Academy tree migrated into STOS",
+    "GitHub to STOS tree parity proven",
+    "protected authenticated transport configured outside public repository",
+    "Academy account storage and STOS storage boundaries certified",
+    "family and learner permissions revalidated at handoff",
+    "Academy regression workflows green",
+    "rollback path verified"
+  ]
+}
