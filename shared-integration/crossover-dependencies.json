@@ -1,0 +1,53 @@
+{
+  "schema": "khaemenes-academy-crossover-dependency-inventory-v1",
+  "version": 1,
+  "categories": {
+    "LOCAL_ACADEMY": {
+      "description": "Files shipped inside this repository and expected to migrate with it.",
+      "examples": [
+        "assets/khaemenes-family-registry.js",
+        "assets/khaemenes-learning-continuation.js",
+        "assets/khaemenes-terminal03-readiness.js",
+        "student/index.html",
+        "family/index.html"
+      ]
+    },
+    "ACADEMY_REPOSITORY": {
+      "description": "Intentional links into separate Khaemenes curriculum or school repositories.",
+      "migrationRule": "Preserve route identity; resolve to STOS-native repository after that repository is separately migrated and certified."
+    },
+    "VERVE_SHARED": {
+      "description": "Canonical ecosystem services currently hosted by Verve N Veda.",
+      "examples": [
+        "https://vervenveda.com/assets/vnv-ecosystem-toolbar.js",
+        "https://vervenveda.com/assets/vnv-ecosystem-menu.js",
+        "https://vervenveda.com/assets/vnv-beta-link.js"
+      ],
+      "migrationRule": "Preserve during GitHub production; do not silently clone or fork without a separate STOS shared-service authority decision."
+    },
+    "OPTIONAL_EXTERNAL": {
+      "description": "Non-authoritative optional services.",
+      "examples": [
+        "optional online translation fallback"
+      ],
+      "migrationRule": "Must never become required for core Academy operation."
+    },
+    "PAYMENT_EXTERNAL": {
+      "description": "External contribution/payment route.",
+      "migrationRule": "Remain external unless separately replaced by an approved payment authority."
+    },
+    "BROWSER_COMPATIBILITY_STORAGE": {
+      "description": "Browser-local continuity used by current GitHub deployment.",
+      "migrationRule": "Preserve for live GitHub behavior; later map through an explicit storage adapter rather than deleting or relabeling as STOS storage."
+    }
+  },
+  "forbiddenInMigrationAuthority": [
+    "secrets",
+    "passwords",
+    "STOS private keys",
+    "Mac user-specific absolute paths",
+    "runtime PIDs",
+    "live terminal state files",
+    "compiled STOS binaries"
+  ]
+}
