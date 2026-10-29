@@ -24,7 +24,7 @@ on:
       - 'tools/**'
       - 'index.html'
       - 'README.md'
-      - 'VALIDATION.json'
+      - 'VALIDATION.json'\n      - 'scripts/**'
   workflow_dispatch:
 
 permissions:
