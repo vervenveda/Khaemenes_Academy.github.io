@@ -9,7 +9,7 @@ const parentPath="assets/khaemenes-parent-action-center.js";
 const terminalPath="assets/khaemenes-terminal03-readiness.js";
 const backupPath="assets/khaemenes-family-backup-vault.js";
 const registryPath="assets/khaemenes-family-registry.js";
-const manifestPath="shared-integration/terminal-04-academy-readiness.json";
+const manifestPath="shared-integration/terminal-03-academy-readiness.json";
 
 for(const p of [parentPath,terminalPath,backupPath,registryPath,manifestPath,"index.html","family/index.html","student/index.html","adult/index.html","teacher-admin/index.html"]){
   expect(fs.existsSync(path.join(ROOT,p)),"Missing required Academy readiness file: "+p);
