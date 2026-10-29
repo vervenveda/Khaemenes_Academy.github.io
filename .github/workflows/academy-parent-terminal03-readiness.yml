@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - academy-t03-primary-crossover
     paths:
       - 'index.html'
       - 'family/index.html'
