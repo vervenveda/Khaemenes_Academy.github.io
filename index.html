@@ -237,6 +237,13 @@ header{
 .dark .service a,.forest .service a{color:var(--gold2)}
 .dark .service-mark,.forest .service-mark{background:rgba(234,217,184,.15);color:var(--gold2);border:1px solid rgba(234,217,184,.24)}
 
+/* Academy Services: equal-height cards with symmetrical action buttons. */
+#services .service-grid{justify-content:center;align-items:stretch}
+#services .service{display:flex;flex-direction:column;height:100%;min-width:0}
+#services .service a{box-sizing:border-box;display:flex;align-items:center;justify-content:center;width:100%;min-height:48px;height:48px;margin-top:auto;padding:8px 10px;border:1px solid rgba(234,217,184,.48);border-radius:7px;background:rgba(255,253,248,.095);color:#f3e4c8;font:400 9px/1.25 "Brandon Grotesque","Avenir Next",Arial,sans-serif;letter-spacing:.04em;text-transform:uppercase;text-align:center;text-decoration:none}
+#services .service p{margin-bottom:16px}
+#services .service a:hover,#services .service a:focus-visible{background:rgba(255,253,248,.18);border-color:#ead9b8}
+
 .beta-card{max-width:1000px;margin:auto;padding:32px;border:1px solid rgba(255,255,255,.15);border-radius:var(--r2);background:rgba(255,255,255,.05)}
 .beta-card h3{margin:8px 0 0;font:400 clamp(34px,4vw,50px)/1.06 var(--display)}
 .beta-card p{max-width:740px;margin:13px auto 0;color:rgba(255,255,255,.68);font-size:12px;line-height:1.65}
