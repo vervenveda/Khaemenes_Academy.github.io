@@ -1,0 +1,42 @@
+{
+  "schema": "khaemenes-academy-stos-crossover-v1",
+  "version": 1,
+  "sourceAuthority": {
+    "type": "github",
+    "repository": "vervenveda/Khaemenes_Academy.github.io",
+    "branch": "main",
+    "preparedFromCommit": "9c749ba3d279fc8fe64a9149f1963fb671e1e156",
+    "freezeCommit": "record-at-final-freeze"
+  },
+  "stosTarget": {
+    "repositoryId": "repo_khaemenes_academy_mthbvndg",
+    "terminalId": "03",
+    "terminalDesignation": "primary-and-exclusive-academy-terminal",
+    "terminal04AcademyAuthority": false,
+    "canonicalPath": "/Khaemenes_Academy",
+    "migrationMode": "replace-stale-body-preserve-repository-identity"
+  },
+  "liveProtection": {
+    "githubRemainsProductionAuthorityUntilParityCertified": true,
+    "doNotOverwriteNewerGithubFromStos": true,
+    "studentRoutesMustRemainStable": true,
+    "curriculumAuthorityRemainsInCourseRepositories": true,
+    "accountAndProfileAuthorityRemainsAcademyOwnedUntilSeparatelyCommissioned": true
+  },
+  "readiness": {
+    "state": "PREPARED_NOT_MIGRATED",
+    "terminal03Commissioned": false,
+    "stosParityCertified": false,
+    "migrationPackageFrozen": false
+  },
+  "requiredGates": [
+    "all Academy regression workflows green",
+    "no symlinks",
+    "no private secrets",
+    "no absolute user-specific filesystem paths",
+    "topology manifest validates",
+    "dependency inventory validates",
+    "fresh GitHub archive produced from frozen main",
+    "GitHub-to-STOS tree parity proven before terminal cutover"
+  ]
+}
