@@ -215,6 +215,11 @@ header{
   color:#fff;background:var(--accent);font-size:9px;font-weight:400;letter-spacing:.07em;text-transform:uppercase;text-align:center;padding:8px 10px;
 }
 
+/* School directory symmetry: equal card geometry and equal action buttons. */
+#schools .school-grid{justify-content:center;justify-items:stretch;align-items:stretch}
+#schools .school{width:100%;min-width:0;height:100%;display:flex;flex-direction:column}
+#schools .school a{box-sizing:border-box;width:100%;height:48px;min-height:48px;max-height:48px;flex:0 0 48px;margin-top:auto;padding:6px 8px;line-height:1.25;font-size:9px;overflow-wrap:normal}
+
 .service-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
 .service{
   min-height:240px;padding:22px;border:1px solid var(--line);border-radius:var(--r2);background:#fff;text-align:left;box-shadow:var(--shadow2)
