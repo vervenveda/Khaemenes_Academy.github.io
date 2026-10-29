@@ -1,0 +1,43 @@
+name: STOS Crossover Validation
+
+on:
+  push:
+    branches:
+      - main
+      - academy-stos-crossover-prep
+    paths:
+      - 'STOS-CROSSOVER.json'
+      - 'STOS-CROSSOVER.md'
+      - 'assets/README.md'
+      - 'shared-integration/academy-repository-topology.json'
+      - 'shared-integration/crossover-dependencies.json'
+      - 'shared-integration/terminal-03-academy-readiness.json'
+      - 'assets/khaemenes-terminal03-readiness.js'
+      - 'scripts/audit-stos-crossover.mjs'
+      - '.github/workflows/stos-crossover-validation.yml'
+      - '**/*.html'
+      - '**/*.js'
+  pull_request:
+    paths:
+      - 'STOS-CROSSOVER.json'
+      - 'STOS-CROSSOVER.md'
+      - 'assets/README.md'
+      - 'shared-integration/academy-repository-topology.json'
+      - 'shared-integration/crossover-dependencies.json'
+      - 'scripts/audit-stos-crossover.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      - name: Validate Academy STOS crossover topology
+        run: node scripts/audit-stos-crossover.mjs
