@@ -172,6 +172,11 @@ body [data-khae-header] [data-vnv-ecosystem-slot]{justify-self:end!important;gri
 </style>
 <link rel="stylesheet" href="./../assets/khaemenes-landing-standard.css">
 <link rel="stylesheet" href="./../assets/khaemenes-landing-toolbar.css">
+<style id="academy-course-unpin-v1">
+.pin-row .pin-course-link{display:flex;flex-direction:column;gap:4px;min-width:0;text-decoration:none}
+.pin-row [data-course-unpin]{min-height:40px;min-width:76px;border-radius:7px;white-space:nowrap}
+.pin-row [data-course-unpin]:focus-visible{outline:3px solid #b48b45;outline-offset:3px}
+</style>
 </head>
 <body data-i18n-no-online>
 <header data-khae-header>
@@ -277,7 +282,42 @@ function bestContinuation(learner){
 function renderPins(learner){
   const pins=learnerPins(learner.learnerId);
   if(!pins.length)return '<div class="empty">No courses are pinned yet. Open a course and choose “Pin to Profile” to place it here.</div>';
-  return `<div class="pin-list">${pins.map(p=>`<a class="pin-row" href="${esc(p.href||"#")}"><span><strong>${esc(p.title||"Course")}</strong><small>${esc(p.subtitle||"Return to course")}</small></span><span class="pin-mark" aria-hidden="true">★</span></a>`).join("")}</div>`;
+  return `<div class="pin-list">${pins.map(p=>`<div class="pin-row"><a href="${esc(p.href||"#")}" class="pin-course-link"><strong>${esc(p.title||"Course")}</strong><small>${esc(p.subtitle||"Return to course")}</small></a><button class="btn secondary" type="button" data-course-unpin="${esc(p.id||p.courseId||"")}" aria-label="Unpin ${esc(p.title||"course")}">Unpin</button></div>`).join("")}</div>`;
+}
+/* Removing a pin changes shortcuts only. Progress, enrollment, and assessments are never touched. */
+function unpinCourse(learner,id){
+  const learnerId=learner?.learnerId;
+  if(!learnerId||!id||!/^[a-z0-9][a-z0-9-]{0,95}$/.test(id))return false;
+  if(R?.getLearner?.(learnerId)?.learnerId!==learnerId)return false;
+  const academy=readPins(),before=academy.learners[learnerId];
+  const list=Array.isArray(before)?before:[];
+  const itemId=x=>typeof x==="string"?x:String(x?.id||x?.courseId||"");
+  const updated=list.filter(x=>itemId(x)!==id);
+  const isHigh=Object.prototype.hasOwnProperty.call(HIGH_PIN_META,id);
+  const highKey=`${HIGH_PIN_KEY}:learner:${encodeURIComponent(learnerId)}`;
+  const priorAcademy=localStorage.getItem(PIN_KEY);
+  const priorHigh=isHigh?localStorage.getItem(highKey):null;
+  try{
+    academy.learners[learnerId]=updated;
+    localStorage.setItem(PIN_KEY,JSON.stringify(academy));
+    if(isHigh){
+      const raw=JSON.parse(priorHigh||"[]");
+      const high=Array.isArray(raw)?raw:[];
+      localStorage.setItem(highKey,JSON.stringify(high.filter(x=>x!==id)));
+    }
+    window.dispatchEvent(new CustomEvent("khaemenes-course-pins-changed",{detail:{learnerId}}));
+    return true;
+  }catch(error){
+    try{
+      if(priorAcademy===null)localStorage.removeItem(PIN_KEY);
+      else localStorage.setItem(PIN_KEY,priorAcademy);
+      if(isHigh){
+        if(priorHigh===null)localStorage.removeItem(highKey);
+        else localStorage.setItem(highKey,priorHigh);
+      }
+    }catch{}
+    return false;
+  }
 }
 function renderQuickPins(learner){
   const active=Q?.activeLearner?.();
@@ -395,6 +435,11 @@ function render(){
     if(!next)return;
     R.setActive?.({familyId:next.familyId,learnerId:next.learnerId});
     render();
+  }));
+  app.querySelectorAll("[data-course-unpin]").forEach(b=>b.addEventListener("click",()=>{
+    const id=b.dataset.courseUnpin;
+    if(unpinCourse(learner,id))render();
+    else alert("Could not unpin this course. Please check your selected learner and browser storage.");
   }));
   app.querySelectorAll("[data-quick-remove]").forEach(b=>b.addEventListener("click",()=>{
     if(Q?.setPinned?.(b.dataset.quickRemove,false))render();
