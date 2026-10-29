@@ -2,7 +2,7 @@ name: Academy Home Personalization Validation
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, academy-t03-primary-crossover ]
     paths:
       - 'index.html'
       - 'assets/khaemenes-home-personalization.js'
