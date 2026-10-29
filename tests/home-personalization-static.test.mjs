@@ -138,5 +138,5 @@ test("account status changes cause the adaptive home to refresh",()=>{
 
 
 test("Academy brand returns visitors to the Verve N Veda public gateway",()=>{
-  assert.match(index,/class="brand" href="https:\/\/vervenveda\.com\/" aria-label="Return to Verve N Veda home"/);
+  assert.match(index,/class="brand"[^>]*data-khae-brand[^>]*href="https:\/\/vervenveda\.com\/"[^>]*aria-label="Return to Verve N Veda home"/);
 });
