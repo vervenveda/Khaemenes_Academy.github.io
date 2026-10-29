@@ -1,0 +1,70 @@
+name: STOS Crossover Package Freeze
+
+on:
+  push:
+    branches:
+      - academy-stos-package-freeze
+      - main
+    paths:
+      - '.github/workflows/stos-crossover-package.yml'
+      - 'STOS-CROSSOVER.json'
+      - 'STOS-CROSSOVER.md'
+      - 'assets/**'
+      - 'shared-integration/**'
+      - 'student/**'
+      - 'family/**'
+      - 'adult/**'
+      - 'teacher-admin/**'
+      - 'mentor/**'
+      - 'offline/**'
+      - 'diagnostics/**'
+      - 'verify/**'
+      - 'Health_learning/**'
+      - 'Parent_resources/**'
+      - 'tools/**'
+      - 'index.html'
+      - 'README.md'
+      - 'VALIDATION.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v5
+      - name: Verify exact source commit
+        run: |
+          echo "COMMIT=$GITHUB_SHA"
+          test -f STOS-CROSSOVER.json
+          test -f shared-integration/academy-repository-topology.json
+          test -f assets/khaemenes-terminal03-readiness.js
+          test ! -e assets/khaemenes-terminal04-readiness.js
+      - name: Build deterministic crossover package
+        run: |
+          set -euo pipefail
+          ROOT="Khaemenes_Academy.github.io-$GITHUB_SHA"
+          mkdir -p "$ROOT"
+          rsync -a --exclude '.git' --exclude "$ROOT" ./ "$ROOT"/
+          if find "$ROOT" -type l -print -quit | grep -q .; then
+            echo "Symlink found"
+            exit 1
+          fi
+          find "$ROOT" -type f -print0 | sort -z | xargs -0 sha256sum > "Khaemenes_Academy_$GITHUB_SHA.sha256"
+          zip -X -r "Khaemenes_Academy_STOS_Crossover_$GITHUB_SHA.zip" "$ROOT" >/dev/null
+          sha256sum "Khaemenes_Academy_STOS_Crossover_$GITHUB_SHA.zip" > "Khaemenes_Academy_STOS_Crossover_$GITHUB_SHA.zip.sha256"
+          printf 'source_commit=%s\nrepository_id=%s\nterminal_id=%s\n'             "$GITHUB_SHA"             "repo_khaemenes_academy_mthbvndg"             "03" > "Khaemenes_Academy_STOS_Crossover_$GITHUB_SHA.receipt.txt"
+      - name: Upload crossover package
+        uses: actions/upload-artifact@v4
+        with:
+          name: khaemenes-academy-stos-crossover-${{ github.sha }}
+          path: |
+            Khaemenes_Academy_STOS_Crossover_${{ github.sha }}.zip
+            Khaemenes_Academy_STOS_Crossover_${{ github.sha }}.zip.sha256
+            Khaemenes_Academy_${{ github.sha }}.sha256
+            Khaemenes_Academy_STOS_Crossover_${{ github.sha }}.receipt.txt
+          if-no-files-found: error
+          retention-days: 30
