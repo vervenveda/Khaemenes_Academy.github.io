@@ -49,7 +49,18 @@ const textFiles=files.filter(p=>/\.(?:html?|js|mjs|cjs|json|md|css|yml|yaml|py|t
 for(const rel of textFiles){
   const s=read(rel);
   if(/\/Users\/[A-Za-z0-9._-]+\//.test(s))fail("User-specific absolute path in "+rel);
-  if(/khaemenes-terminal04-readiness|terminal-04-academy-readiness/i.test(s))fail("Retired Academy Terminal04 readiness reference in "+rel);
+}
+
+/* Governance documents may state that Terminal04 has no Academy authority.
+   What is forbidden is the retired Academy T04 readiness implementation/path. */
+for(const rel of files){
+  if(/(?:^|\/)khaemenes-terminal04-readiness\.js$/i.test(rel))fail("Retired Academy Terminal04 adapter present: "+rel);
+  if(/(?:^|\/)terminal-04-academy-readiness\.json$/i.test(rel))fail("Retired Academy Terminal04 manifest present: "+rel);
+}
+for(const rel of files.filter(p=>/\.(?:html?|js|mjs|cjs|yml|yaml)$/i.test(p))){
+  const s=read(rel);
+  if(/khaemenes-terminal04-readiness\.js/i.test(s))fail("Retired Academy Terminal04 runtime reference in "+rel);
+  if(/terminal-04-academy-readiness\.json/i.test(s))fail("Retired Academy Terminal04 manifest reference in "+rel);
 }
 
 for(const surface of Object.values(topology.surfaces)){
