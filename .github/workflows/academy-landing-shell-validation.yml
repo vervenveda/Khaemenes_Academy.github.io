@@ -1,7 +1,7 @@
 name: Academy Landing Shell Validation
 on:
   push:
-    branches: [main]
+    branches: [main, academy-t03-primary-crossover]
     paths:
       - 'assets/khaemenes-landing-standard.css'
       - 'assets/khaemenes-landing-toolbar.css'
