@@ -125,6 +125,19 @@ main .heading p,.portal-intro p{font-size:19px}
 .academy-classrooms .classroom-link.academy-home strong,.academy-classrooms .classroom-link.academy-home span{color:#fff8e9}
 @media(max-width:800px){.academy-classrooms .classroom-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:530px){.academy-classrooms .classroom-grid{grid-template-columns:1fr}.academy-classrooms{padding:18px!important}}
+
+/* Front Desk visual standard — portal-wide presentation only. */
+body{font-family:"Brandon Grotesque","Avenir Next",Arial,sans-serif}
+body :is(.card,.panel){box-sizing:border-box;min-width:0;border-radius:7px;background:#fffdf8;border:1px solid rgba(20,31,26,.15);box-shadow:0 8px 22px rgba(19,31,25,.055)}
+body :is(.card,.panel) :is(h2,h3){font-family:Cinzel,Georgia,serif;font-weight:400;line-height:1.22;color:#233e34}
+body :is(.card,.panel) p{font-weight:400;line-height:1.62}
+body :is(.btn,.card a.btn,.card button.btn){box-sizing:border-box;min-height:44px;border-radius:7px;font:400 10px/1.25 "Brandon Grotesque","Avenir Next",Arial,sans-serif;letter-spacing:.025em;text-align:center;white-space:normal;overflow-wrap:break-word}
+body :is(.grid,.cols2){justify-content:center;align-items:stretch}
+body :is(.eyebrow,.kicker){font-weight:400}
+body :is(.hero h1,.heading h2){font-weight:400;text-align:center}
+body .actions{justify-content:center;align-items:stretch}
+body .actions > :is(a.btn,button.btn){display:inline-flex;align-items:center;justify-content:center}
+@media print{body :is(.card,.panel){box-shadow:none}}
 </style>
 <link rel="stylesheet" href="../assets/khaemenes-student-profile-v2.css">
 <link rel="stylesheet" href="/Khaemenes_Academy.github.io/assets/khaemenes-global-header.css">
