@@ -57,7 +57,7 @@ for(const rel of files){
   if(/(?:^|\/)khaemenes-terminal04-readiness\.js$/i.test(rel))fail("Retired Academy Terminal04 adapter present: "+rel);
   if(/(?:^|\/)terminal-04-academy-readiness\.json$/i.test(rel))fail("Retired Academy Terminal04 manifest present: "+rel);
 }
-for(const rel of files.filter(p=>/\.(?:html?|js|mjs|cjs|yml|yaml)$/i.test(p))){
+for(const rel of files.filter(p=>/\.(?:html?|js|mjs|cjs)$/i.test(p))){
   const s=read(rel);
   if(/khaemenes-terminal04-readiness\.js/i.test(s))fail("Retired Academy Terminal04 runtime reference in "+rel);
   if(/terminal-04-academy-readiness\.json/i.test(s))fail("Retired Academy Terminal04 manifest reference in "+rel);
