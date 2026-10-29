@@ -29,8 +29,10 @@ test("an actively selected child learner wins over adult-scholar fallback",()=>{
   assert.match(personalization,/learner:mode==="adult"\?scholar:learner/);
 });
 
-test("profile utility is absent before account creation",()=>{
-  assert.match(personalization,/if\(!snapshot\.hasIdentity\)\{profile\?\.remove\(\);return\}/);
+test("profile utility remains a safe recovery doorway before account creation",()=>{
+  assert.match(personalization,/Keep Profile available as the sixth tool, including to first-time visitors/);
+  assert.match(personalization,/profile\.href=profileDestination\(snapshot\)\|\|URLS\.student/);
+  assert.match(personalization,/!snapshot\.hasIdentity\?"Find your existing student profile"/);
 });
 
 test("utility dock reuses the universal Beta button instead of creating another",()=>{
