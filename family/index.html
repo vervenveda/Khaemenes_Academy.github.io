@@ -96,6 +96,20 @@ body main .notice{font-size:13px;line-height:1.55}
 #family-continuum .heading h2{color:#fff9ef!important}#family-continuum .heading .kicker{color:#e9ce99!important}
 #family-continuum .step{background:#fffdf8!important;border-radius:7px!important}
 @media(max-width:760px){.family-hero-actions{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:350px){.family-hero-actions{grid-template-columns:1fr}}
+
+/* Family Workspace: correct title hierarchy and equal status/card widths. */
+#workspace .family-workspace-heading{max-width:760px;margin:0 auto 28px;text-align:center}
+#workspace .family-workspace-heading h2{font:400 clamp(33px,4vw,48px)/1.14 Cinzel,Georgia,serif;color:#17392f;margin:0 auto}
+#workspace .family-workspace-heading .family-workspace-eyebrow{color:#7e6035;font:400 15px/1.5 "Brandon Grotesque","Avenir Next",Arial,sans-serif;margin:10px auto;letter-spacing:.01em}
+#workspace .family-workspace-stack{width:min(100%,600px);margin:auto}
+#workspace .family-workspace-stack>:is(#familyStatus,#familyApp){width:100%;min-width:0;box-sizing:border-box}
+#workspace #familyStatus .notice{width:100%;box-sizing:border-box;margin:0 0 15px;border-radius:7px;font-size:13px}
+#workspace #familyApp>.card{width:100%;max-width:none;box-sizing:border-box}
+#workspace #familyApp .actions{gap:9px;justify-content:center}
+#workspace #familyApp .actions :is(a,button){flex:1 1 180px;min-width:0;max-width:100%;font-size:11px;font-weight:400;line-height:1.35;text-transform:none;white-space:normal}
+#workspace #familyApp #findExistingFamily{background:#f6f2e8;color:#17392f;border-color:#81968b}
+#workspace #familyApp #createFamily{background:#315c49;color:#fff;border-color:#315c49}
+@media(max-width:540px){#workspace .family-workspace-stack{width:100%}#workspace #familyApp .actions :is(a,button){flex-basis:100%}}
 </style>
 <link rel="stylesheet" href="/Khaemenes_Academy.github.io/assets/khaemenes-global-header.css">
 <link rel="stylesheet" href="https://vervenveda.com/assets/vnv-ecosystem-menu.css">
@@ -125,9 +139,8 @@ body main .notice{font-size:13px;line-height:1.55}
 </section>
 <section class="section" id="workspace">
   <div class="shell">
-    <div class="heading"><p class="kicker">Family Workspace</p><h2>One family, many individual learning paths.</h2><p>Each learner keeps a separate school placement and academic path while families can move easily between students, records, and learning resources.</p></div>
-    <div id="familyStatus"></div>
-    <div id="familyApp"></div>
+    <div class="heading family-workspace-heading"><h2>Family Workspace</h2><p class="family-workspace-eyebrow">One family, many individual learning paths.</p><p>Each learner keeps a separate school placement and academic path while families can move easily between students, records, and learning resources.</p></div>
+    <div class="family-workspace-stack"><div id="familyStatus"></div><div id="familyApp"></div></div>
   </div>
 </section>
 
@@ -216,7 +229,7 @@ function renderInvite(f){
 function render(){
   status();if(!R)return;
   const f=family();
-  if(!f){$("#familyApp").innerHTML='<section class="card" style="max-width:760px;margin:auto;text-align:center"><h3>Find or create a family profile</h3><p>Already enrolled? This browser has not identified an existing family profile. Do not create a duplicate. Select an existing verified family backup to restore your family identity here. Course grades remain separately managed.</p><div class="actions"><button class="btn" id="findExistingFamily" type="button">Restore Existing Family Backup</button><input id="existingFamilyBackupFile" type="file" accept=".json,application/json" hidden></div><p id="existingFamilyRestoreStatus" role="status" aria-live="polite">If your original profile is in another browser or device and you have no backup, return to that browser to export the family record. Cloud sign-in is not currently verified.</p><p>New to the Academy? Create a family profile below.</p><div class="actions"><button class="btn primary" id="createFamily" type="button">Create Family Profile</button><a class="btn" href="../adult/enroll/">I Am an Adult Learning for Myself</a></div></section>';$("#createFamily").onclick=createFamily;const picker=$("#existingFamilyBackupFile");$("#findExistingFamily").onclick=()=>picker?.click();picker?.addEventListener("change",async()=>{const file=picker.files?.[0];picker.value="";if(!file)return;const status=$("#existingFamilyRestoreStatus");if(!window.KhaemenesFamilyBackupVault?.restoreFile){status.textContent="The backup tool is unavailable. Refresh and try again.";return}status.textContent="Validating existing family backup…";try{await window.KhaemenesFamilyBackupVault.restoreFile(file);status.textContent="Backup restored. Select your learner profile.";render()}catch(error){status.textContent="Restore could not complete: "+String(error?.message||error)}});return}
+  if(!f){$("#familyApp").innerHTML='<section class="card" style="width:100%;margin:auto;text-align:center"><h3>Find or create a family profile</h3><p>Already enrolled? This browser has not identified an existing family profile. Do not create a duplicate. Select an existing verified family backup to restore your family identity here. Course grades remain separately managed.</p><div class="actions"><button class="btn" id="findExistingFamily" type="button">Restore Existing Family Backup</button><input id="existingFamilyBackupFile" type="file" accept=".json,application/json" hidden></div><p id="existingFamilyRestoreStatus" role="status" aria-live="polite">If your original profile is in another browser or device and you have no backup, return to that browser to export the family record. Cloud sign-in is not currently verified.</p><p>New to the Academy? Create a family profile below.</p><div class="actions"><button class="btn primary" id="createFamily" type="button">Create Family Profile</button><a class="btn" href="../adult/enroll/">Adult Learner Entry</a></div></section>';$("#createFamily").onclick=createFamily;const picker=$("#existingFamilyBackupFile");$("#findExistingFamily").onclick=()=>picker?.click();picker?.addEventListener("change",async()=>{const file=picker.files?.[0];picker.value="";if(!file)return;const status=$("#existingFamilyRestoreStatus");if(!window.KhaemenesFamilyBackupVault?.restoreFile){status.textContent="The backup tool is unavailable. Refresh and try again.";return}status.textContent="Validating existing family backup…";try{await window.KhaemenesFamilyBackupVault.restoreFile(file);status.textContent="Backup restored. Select your learner profile.";render()}catch(error){status.textContent="Restore could not complete: "+String(error?.message||error)}});return}
   renderFamily(f);
 }
 window.addEventListener("khaemenes-family-changed",render);
@@ -238,6 +251,6 @@ render();
 <script src="https://vervenveda.com/assets/vnv-ecosystem-toolbar.js" defer data-vnv-ecosystem-toolbar="1"></script>
 
 <!-- Verve N Veda Beta Program -->
-<script src="https://vervenveda.com/assets/vnv-beta-link.js" defer></script>
+
 </body>
 </html>
