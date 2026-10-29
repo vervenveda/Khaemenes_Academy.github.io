@@ -75,6 +75,7 @@ function buildEnvelope(){
     schema:SCHEMA,
     adapterVersion:VERSION,
     terminalId:TERMINAL_ID,
+    adapterVersion:VERSION,
     academyTerminalPrimary:true,
     academyTerminalExclusive:true,
     terminal04AcademyAuthority:false,
