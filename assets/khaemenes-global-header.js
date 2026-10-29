@@ -79,21 +79,25 @@ function context(){
       ]};
     }
     return {label:"High School Quick Links",links:[
-      app("High School Home",H+"/"),
+      app("Student Profile",H+"/grades/grade-09/student-profile/"),
+      app("Family Portal",A+"/family/"),
+      app("Beta","https://vervenveda.com/beta/"),
+      app("Search","https://vervenveda.com/PLERASearch.github.io/"),
+      app("Arcade","https://vervenveda.com/arcade.github.io/"),
+      app("ProReSources","https://vervenveda.com/proresource_hub.github.io/"),
+      app("Academy Home",A+"/"),
+      app("Preschool",P+"/"),
+      app("Kindergarten",K+"/"),
+      app("Elementary",E+"/"),
+      app("Middle School",M+"/"),
+      app("High School",H+"/"),
+      app("Higher Learning",HL+"/"),
+      app("Linguistics",L+"/"),
       app("Grade 9",H+"/grades/grade-09/"),
       app("Grade 10",H+"/grades/grade-10/"),
       app("Grade 11",H+"/grades/grade-11/"),
       app("Grade 12",H+"/grades/grade-12/"),
-      app("Mathematics",H+"/courses/mathematics/"),
-      app("English",H+"/courses/language-arts/"),
-      app("Science",H+"/courses/science/"),
-      app("Social Studies",H+"/courses/social-studies/"),
-      app("Physical Education",H+"/courses/physical-education/"),
-      app("Languages",L+"/"),
-      app("Psychology",H+"/electives/grades/grade-09/psych-101/"),
-      app("Student Portal",A+"/student/"),
-      app("Family",A+"/family/"),
-      call("Higher Learning →",HL+"/")
+      call("Contribute →","https://vervenveda.com/#support")
     ]};
   }
   if(host.includes("khaemenes_higher_learning")||path.includes("/khaemenes_higher_learning.github.io/")){
