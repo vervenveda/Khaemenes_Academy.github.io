@@ -1,0 +1,56 @@
+name: Academy Parent and Terminal03 Readiness
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'index.html'
+      - 'family/index.html'
+      - 'student/index.html'
+      - 'adult/index.html'
+      - 'teacher-admin/index.html'
+      - 'assets/khaemenes-home-personalization.js'
+      - 'assets/khaemenes-parent-action-center.js'
+      - 'assets/khaemenes-family-backup-vault.js'
+      - 'assets/khaemenes-family-registry.js'
+      - 'assets/khaemenes-terminal03-readiness.js'
+      - 'shared-integration/terminal-03-academy-readiness.json'
+      - 'tests/parent-terminal03-readiness.test.mjs'
+      - '.github/workflows/academy-parent-terminal03-readiness.yml'
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'family/index.html'
+      - 'student/index.html'
+      - 'adult/index.html'
+      - 'teacher-admin/index.html'
+      - 'assets/khaemenes-home-personalization.js'
+      - 'assets/khaemenes-parent-action-center.js'
+      - 'assets/khaemenes-family-backup-vault.js'
+      - 'assets/khaemenes-family-registry.js'
+      - 'assets/khaemenes-terminal03-readiness.js'
+      - 'shared-integration/terminal-03-academy-readiness.json'
+      - 'tests/parent-terminal03-readiness.test.mjs'
+      - '.github/workflows/academy-parent-terminal03-readiness.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: academy-parent-terminal03-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      - name: Validate parent experience and Terminal 03 readiness
+        run: node tests/parent-terminal03-readiness.test.mjs
