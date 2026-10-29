@@ -57,6 +57,30 @@ body :is(.hero h1,.heading h2){font-weight:400;text-align:center}
 body .actions{justify-content:center;align-items:stretch}
 body .actions > :is(a.btn,button.btn){display:inline-flex;align-items:center;justify-content:center}
 @media print{body :is(.card,.panel){box-shadow:none}}
+
+/* Family Front Desk: isolated visual parity, no changes to registry or backup controls. */
+body{background:#f0f2ec;color:#24332d}
+body main{background:#f2efe7}
+body main .section{padding:clamp(42px,5vw,70px) 18px}
+body main #workspace{background:#f4f0e7;color:#17251f}
+body main #workspace>.shell{width:min(calc(100% - 32px),1180px);margin:auto}
+body main #workspace .heading h2{color:#183c31;font-weight:400}
+body main #workspace .heading p{color:#42584f;font-size:14px}
+body main .section.alt{background:linear-gradient(135deg,#293941,#1b2a32);color:#fff8eb;border-color:#4e6366}
+body main .section.alt .heading h2{color:#fff8eb;font-weight:400}
+body main .section.alt .heading .kicker{color:#e8ca93}
+body main .section.alt .heading p{color:#e3e7df}
+body main .section.alt .step{background:#fffdf8;border-color:#c8d0c8;border-radius:7px;color:#20352d;min-height:84px}
+body main .section.alt .step strong{color:#17392f}
+body main .section.alt .step span{color:#425b4f;font-size:11px}
+body main :is(.card,.learner,.snapshot-learner){min-width:0;border-radius:7px;border-color:#bac7bc;background:#fffdf8;box-shadow:0 8px 22px rgba(14,35,30,.11)}
+body main .card :is(h2,h3),body main .learner h3{font-weight:400;color:#183c31}
+body main .card p,body main .learner small{color:#43584e}
+body main :is(.btn,.actions a,.actions button){box-sizing:border-box;min-width:0;min-height:42px;height:auto;padding:9px 12px;border-radius:7px;font:400 11px/1.35 "Brandon Grotesque","Avenir Next",Arial,sans-serif;letter-spacing:0;white-space:normal;text-align:center}
+body main .btn:not(.primary):not(.gold):not(.dark){color:#17392f;background:#f6f3e9;border-color:#78988a}
+body main .btn.primary{color:#fff;background:#315c49;border-color:#315c49}
+body main .notice{font-size:13px;line-height:1.55}
+@media(max-width:480px){body main .section{padding:36px 12px}body main #workspace>.shell{width:100%}body main .continuum{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 <link rel="stylesheet" href="/Khaemenes_Academy.github.io/assets/khaemenes-global-header.css">
 <link rel="stylesheet" href="https://vervenveda.com/assets/vnv-ecosystem-menu.css">
