@@ -1,7 +1,9 @@
 /* Khaemenes Academy major landing-shell static contract.
-   No student or learner records, curriculum or browser storage touched. */
+   Protects the live Academy shell while VNV owns the canonical ecosystem toolbar.
+   No student records, curriculum, account state or browser storage are touched. */
 import assert from "node:assert/strict";
 import fs from "node:fs";
+
 const read=p=>fs.readFileSync(p,"utf8");
 const home=read("index.html");
 const head=read("assets/khaemenes-landing-standard.css");
@@ -15,40 +17,66 @@ assert.match(head,/data-khae-header/);
 assert.match(head,/grid-template-columns:minmax\(185px,auto\)/);
 assert.match(head,/data-vnv-ecosystem-slot/);
 assert.match(head,/font-weight:400/);
-assert.match(dockCss,/max-width:calc\(100vw - 20px\)/);
-assert.match(dockCss,/@media\(max-width:610px\)/);
-assert.match(dockCss,/@media\(max-width:300px\)/);
+
+/* The Academy no longer owns ecosystem-toolbar geometry. */
+assert.match(dockCss,/Compatibility stylesheet/);
+assert.match(dockCss,/#vnvEcosystemUtilityDock/);
 assert.match(dockCss,/#khaeLandingUtilityDock/);
-assert.match(dockCss,/height:32px!important/);
-assert.match(dockCss,/white-space:nowrap!important/);
-assert.match(dockCss,/grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
-assert.doesNotMatch(dockCss,/#khaemenesLearnerUtilityToolbar/,"Campus toolbar must not restyle learner-only controls");
-assert.match(toolbar,/khaemenesHomeUtilityDock/);
-assert.match(toolbar,/khaeLandingUtilityDock/);
-assert.match(toolbar,/khaeLandingUpdatesDialog/);
-assert.match(toolbar,/vnvBetaProgramLink/);
-assert.match(toolbar,/URLS\.search/);
-assert.match(toolbar,/URLS\.mentor/);
-assert.match(toolbar,/URLS\.contribute/);
-assert.match(toolbar,/URLS\.beta/);
-assert.doesNotMatch(toolbar,/localStorage\.setItem|sessionStorage\.setItem/,"Landing utilities must never write learner data");
-assert.match(hallType,/data-khae-hall-landing="true"/,"Hall styling is opt-in");
-assert.match(hallType,/#khaemenesLearnerUtilityToolbar/,"Public hall suppresses legacy learner rail");
-assert.match(hallType,/#vnvBetaProgramLink/,"Public hall prevents second fixed Beta control");
-assert.match(hallType,/khae-hall-display/,"Halls have a scholarly offline-safe display font");
-assert.match(hallType,/khae-hall-body/,"Halls retain offline-first body font fallbacks");
-assert.match(toolbar,/khaeHallLanding/,"Public halls get a separate dock instead of reparenting learner controls");
-assert.match(toolbar,/original\.click\(\)/,"Hall Beta button preserves original Beta action");
-assert.match(dockCss,/grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/,"Narrow-screen hall buttons use responsive rows");
+assert.match(dockCss,/#khaemenesLearnerUtilityToolbar/);
+assert.match(dockCss,/#vnvBetaProgramLink/);
+assert.match(dockCss,/@media print/);
+assert.doesNotMatch(
+  dockCss,
+  /grid-template-columns|min-width|max-width:calc|position:fixed/,
+  "Academy compatibility CSS must not own VNV toolbar geometry"
+);
 
+assert.match(toolbar,/Compatibility loader/);
+assert.match(toolbar,/data-vnv-ecosystem-toolbar/);
+assert.match(
+  toolbar,
+  /https:\/\/vervenveda\.com\/assets\/vnv-ecosystem-toolbar\.js/
+);
+assert.doesNotMatch(
+  toolbar,
+  /khaemenesHomeUtilityDock|khaeLandingUpdatesDialog|URLS\.search|URLS\.mentor|URLS\.contribute/,
+  "Academy loader must delegate toolbar behavior to VNV"
+);
+assert.doesNotMatch(
+  toolbar,
+  /localStorage\.setItem|sessionStorage\.setItem/,
+  "Landing toolbar compatibility layer must never write learner data"
+);
 
-for(const file of ["student/index.html","family/index.html","adult/index.html","teacher-admin/index.html","offline/index.html"]){
- const html=read(file);
- assert.match(html,/data-khae-header/,"Main portal must preserve campus header: "+file);
- assert.match(html,/khaemenes-landing-standard\.css/,"Missing shared Home header in "+file);
- assert.match(html,/khaemenes-landing-toolbar\.css/,"Missing shared toolbar CSS in "+file);
- assert.match(html,/khaemenes-landing-toolbar\.js/,"Missing landing toolbar script in "+file);
- assert.match(html,/vnv-beta-link\.js/,"Existing beta functionality must stay in "+file);
- assert.match(html,/khaemenes-global-header\.js/,"Ticker and Academy menu must stay in "+file);
+/* Public hall typography remains opt-in and must not seize page layout. */
+assert.match(hallType,/data-khae-hall-landing="true"/);
+assert.match(hallType,/#khaemenesLearnerUtilityToolbar/);
+assert.match(hallType,/#vnvBetaProgramLink/);
+assert.match(hallType,/khae-hall-display/);
+assert.match(hallType,/khae-hall-body/);
+
+for(const file of [
+  "student/index.html",
+  "family/index.html",
+  "adult/index.html",
+  "teacher-admin/index.html",
+  "offline/index.html"
+]){
+  const html=read(file);
+  assert.match(html,/data-khae-header/,"Main portal must preserve campus header: "+file);
+  assert.match(html,/khaemenes-landing-standard\.css/,"Missing shared Home header in "+file);
+  assert.match(html,/khaemenes-landing-toolbar\.css/,"Missing toolbar compatibility CSS in "+file);
+  assert.match(html,/khaemenes-landing-toolbar\.js/,"Missing canonical toolbar compatibility loader in "+file);
+  assert.match(html,/vnv-beta-link\.js/,"Existing Beta functionality must stay in "+file);
+  assert.match(html,/khaemenes-global-header\.js/,"Ticker and Academy menu must stay in "+file);
 }
-console.log("PASS Academy Home header parity, 5-control dock, mobile sizing, and 5 major portal entrances.");
+
+assert.match(
+  home,
+  /vnv-ecosystem-toolbar\.js" defer data-vnv-ecosystem-toolbar="1"/,
+  "Academy Home must load the canonical VNV ecosystem toolbar"
+);
+
+console.log(
+  "PASS Academy header parity, centralized VNV toolbar delegation, and 5 major portal entrances."
+);
