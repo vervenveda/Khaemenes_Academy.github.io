@@ -23,6 +23,9 @@ const links=Object.freeze([
   ["High School","https://vervenveda.com/Khaemenes_High.github.io/"],
   ["Higher Learning","https://vervenveda.com/Khaemenes_Higher_Learning.github.io/"],
   ["Linguistics","https://vervenveda.com/Khaemenes_Linguistics.github.io/"],
+  ["Life Skills","https://vervenveda.com/Khaemenes_Academy_Life_Skills.github.io/"],
+  ["Arcade","https://vervenveda.com/arcade.github.io/"],
+  ["ProReSources","https://vervenveda.com/proresource_hub.github.io/"],
   ["Search","https://vervenveda.com/PLERASearch.github.io/"],
   ["Beta","https://vervenveda.com/beta/"],
   ["Help",A+"#help"]
