@@ -24,6 +24,9 @@ const required=[
   ["High School","Khaemenes_High.github.io/"],
   ["Higher Learning","Khaemenes_Higher_Learning.github.io/"],
   ["Linguistics","Khaemenes_Linguistics.github.io/"],
+  ["Life Skills","Khaemenes_Academy_Life_Skills.github.io/"],
+  ["Arcade","arcade.github.io/"],
+  ["ProReSources","proresource_hub.github.io/"],
   ["Search","PLERASearch.github.io/"],
   ["Beta","/beta/"],
   ["Help","#help"]
