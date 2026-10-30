@@ -615,7 +615,7 @@ header[data-khae-header] [data-khae-actions] a:focus-visible{
     <p class="hero-lead">Think of this page as the Academy front desk. Create or resume an account, find the right school or grade, enter student and family portals, reach teacher administration, join the beta program, or simply explore the Academy.</p>
     <div class="hero-actions">
       <a class="btn primary" href="#frontdesk">Start at the Front Desk</a>
-      <a class="btn gold" href="#schools">Find a Grade or School</a>
+      <a class="btn gold" href="?explore=1#schools">Explore the Campus</a>
       <a class="btn" href="#beta">Join the Beta Program</a>
     </div>
   </div>
@@ -736,6 +736,7 @@ header[data-khae-header] [data-khae-actions] a:focus-visible{
   </div>
 </footer>
 
+<script>window.__KHAEMENES_EXPLORE_MODE__=new URLSearchParams(location.search).get("explore")==="1";if(window.__KHAEMENES_EXPLORE_MODE__)document.documentElement.dataset.khaemenesExploreMode="public";</script>
 <script src="./assets/khaemenes-family-registry.js"></script>
 <script src="./assets/khaemenes-learner-context.js"></script>
 <script src="./assets/khaemenes-naib-mentor-router.js"></script>
@@ -773,7 +774,7 @@ document.querySelectorAll(".academy-info-dialog").forEach(dialog=>{
 })();
 </script>
 <script src="/assets/vnv-beta-link.js" defer></script>
-<script src="./assets/khaemenes-home-personalization.js" defer></script>
+<script src="./assets/khaemenes-home-personalization.js?v=1.4.0" defer></script>
 <script src="./assets/khaemenes-learning-science.js" defer></script>
 <script src="./assets/khaemenes-account-connection-status.js"></script>
 <script src="./assets/khaemenes-campus-phrases.js" defer></script>
