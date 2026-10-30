@@ -111,7 +111,11 @@ for(const [stage,grade,courseId,lessonId,week,title,expected] of mathLessonCases
   },recentAssessments:[{verified:true,reviewSkills:["released concept"],answerKey:"FAKE_PRIVATE_KEY"}]});
   const answer=s.respond("Help me with my lesson");
   assert.match(answer,/Now try this one:/,"published Mathematics lesson needs fresh formative practice");
+  assert.match(answer,/lesson focuses on/,"exact released lesson must use the reviewed canonical objective");
+  assert.match(answer,new RegExp(title.replace(/[.*+?^$\{\}()|[\]\\]/g,"\\  assert.match(answer,/Now try this one:/,"published Mathematics lesson needs fresh formative practice");
   assert.match(answer,/published lesson objective/);
+  assert.doesNotMatch(answer,/FAKE_PRIVATE_KEY|answerKey/,"teacher key must never cross");")),"exact released lesson title must be preserved");
+  assert.doesNotMatch(answer,/published lesson objective/,"arbitrary supplied objective text must not override the reviewed canonical objective");
   assert.doesNotMatch(answer,/FAKE_PRIVATE_KEY|answerKey/,"teacher key must never cross");
   assert.match(s.respond(expected),/correct/);
   assert.equal(s.snapshot().successes,1);
