@@ -4,7 +4,8 @@
  */
 (function attachKhaemenesHomePersonalization(global){
 "use strict";
-const VERSION="1.3.0";
+const VERSION="1.4.0";
+const EXPLORE_MODE=(()=>{try{return global.__KHAEMENES_EXPLORE_MODE__===true||new URLSearchParams(global.location.search).get("explore")==="1"}catch{return false}})();
 const BAR_ID="khaemenesMyAcademyBar",DOCK_ID="khaemenesHomeUtilityDock",PROFILE_ID="khaemenesHomeProfileButton",SEARCH_ID="khaemenesHomeSearchButton",UPDATES_ID="khaemenesHomeUpdatesButton",UPDATES_DIALOG_ID="khaemenesHomeUpdatesDialog",MENTOR_ID="khaemenesHomeMentorButton",CONTRIBUTE_ID="khaemenesHomeContributeButton",STYLE_ID="khaemenesHomePersonalizationStyles",BETA_ID="vnvBetaProgramLink";
 const URLS=Object.freeze({student:"./student/",family:"./family/",enroll:"./family/enroll/",adult:"./adult/",mentor:"./mentor/",offline:"./offline/index.html",beta:"https://vervenveda.com/beta/",search:"https://vervenveda.com/PLERASearch.github.io/",contribute:"https://buy.stripe.com/aFa8wQ5xf9Scf65caT4AU0s"});
 const esc=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -26,6 +27,7 @@ function openDialog(id){
   return true;
 }
 function accountSnapshot(){
+  if(EXPLORE_MODE)return Object.freeze({mode:"public",hasIdentity:false,family:null,adult:null,learner:null,adultLearner:null});
   const r=registry();
   if(!r)return Object.freeze({mode:"public",hasIdentity:false,family:null,adult:null,learner:null,adultLearner:null});
   let family=null,adult=null,learner=null,adultLearner=null;
@@ -265,9 +267,9 @@ function observeBeta(){
   const observer=new MutationObserver(()=>{const beta=document.getElementById(BETA_ID);if(beta&&beta.parentElement?.id!==DOCK_ID)syncDock(accountSnapshot())});
   observer.observe(document.body,{childList:true,subtree:true});
 }
-function start(){refresh();observeBeta()}
+function start(){if(EXPLORE_MODE)document.documentElement.dataset.khaemenesExploreMode="public";refresh();observeBeta()}
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
 for(const eventName of ["pageshow","khaemenes-family-ready","khaemenes-family-changed","khaemenes-learner-placement-changed","khaemenes-learning-continuation-changed","online","offline"])global.addEventListener(eventName,schedule);
 global.addEventListener("storage",event=>{if(String(event.key||"").startsWith("khaemenes"))schedule()});
-global.KhaemenesHomePersonalization=Object.freeze({version:VERSION,accountSnapshot,bestContinuation,familyLearners,profileDestination,continueDestination,connectionState,setupPlan,renderUpdates,refresh});
+global.KhaemenesHomePersonalization=Object.freeze({version:VERSION,exploreMode:EXPLORE_MODE,accountSnapshot,bestContinuation,familyLearners,profileDestination,continueDestination,connectionState,setupPlan,renderUpdates,refresh});
 })(window);
