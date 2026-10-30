@@ -1,7 +1,17 @@
-# Beta Index Coverage
+# Legacy Beta Index Coverage — Retired
 
-- Added in this run: **0**
-- Already covered: **23**
-- Skipped: **0**
+The standalone `/assets/vnv-beta-link.js` rollout is retired.
 
-Rule: visible HTML filenames ending in `index.html` (including `_index.html` and common `inndex.html` typos) receive `/assets/vnv-beta-link.js`. The widget reports only public hostname + pathname; never learner/family IDs, answers, form values, query/hash, storage, or credentials.
+Khaemenes Academy now uses the single-source Verve N Veda ecosystem toolbar:
+
+`https://vervenveda.com/assets/vnv-ecosystem-toolbar.js`
+
+Current policy:
+
+- every public Academy HTML page loads exactly one official ecosystem toolbar;
+- legacy floating Beta launchers and landing-toolbar loaders must not coexist with it;
+- Beta remains available inside the official toolbar and through intentional in-page Beta links;
+- coverage is validated read-only by `scripts/audit-ecosystem-toolbar.mjs`;
+- GitHub Actions no longer rewrites HTML to inject standalone Beta controls.
+
+The historical rollout remains available in Git history if needed for forensic review.
