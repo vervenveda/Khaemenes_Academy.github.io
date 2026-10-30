@@ -66,8 +66,9 @@ for(const file of [
   assert.match(html,/data-khae-header/,"Main portal must preserve campus header: "+file);
   assert.match(html,/khaemenes-landing-standard\.css/,"Missing shared Home header in "+file);
   assert.match(html,/khaemenes-landing-toolbar\.css/,"Missing toolbar compatibility CSS in "+file);
-  assert.match(html,/khaemenes-landing-toolbar\.js/,"Missing canonical toolbar compatibility loader in "+file);
-  assert.match(html,/vnv-beta-link\.js/,"Existing Beta functionality must stay in "+file);
+  assert.match(html,/https:\/\/vervenveda\.com\/assets\/vnv-ecosystem-toolbar\.js/,"Missing canonical ecosystem toolbar in "+file);
+  assert.doesNotMatch(html,/vnv-beta-link\.js/,"Legacy standalone Beta loader must stay retired in "+file);
+  assert.doesNotMatch(html,/khaemenes-landing-toolbar\.js/,"Legacy landing-toolbar loader must not compete with the canonical toolbar in "+file);
   assert.match(html,/khaemenes-global-header\.js/,"Ticker and Academy menu must stay in "+file);
 }
 
