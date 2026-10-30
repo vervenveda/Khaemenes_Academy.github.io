@@ -264,7 +264,7 @@ const HIGH_PIN_META=Object.freeze({
   "physical-education-9":{title:"Physical Education 9",subtitle:"Physical Education · Grade 09",href:"https://vervenveda.com/Khaemenes_High.github.io/courses/physical-education/"},
   "psychology-101":{title:"Psychology 101",subtitle:"Elective · Grade 09",href:"https://vervenveda.com/Khaemenes_High.github.io/electives/grades/grade-09/psych-101/"},
   "world-language-9-spanish":{title:"Spanish I",subtitle:"World Language · Grade 09",href:"https://vervenveda.com/Khaemenes_Linguistics.github.io/Halls/index.html?language=spanish&course=hs1&source=khaemenes-high-grade09"},
-  "world-language-9-french":{title:"French I",subtitle:"World Language · Grade 09",href:"https://vervenveda.com/Khaemenes_Linguistics.github.io/Halls/index.html?language=french&course=hs1&source=khaemenes-high-grade09"},
+  "world-language-9-french":{title:"French 101",subtitle:"World Language · Grade 09",href:"https://vervenveda.com/Khaemenes_Linguistics.github.io/apps/French_101_index.html"},
   "world-language-9-german":{title:"German I",subtitle:"World Language · Grade 09",href:"https://vervenveda.com/Khaemenes_Linguistics.github.io/Halls/index.html?language=german&course=hs1&source=khaemenes-high-grade09"},
   "world-language-9-mandarin":{title:"Mandarin Chinese I",subtitle:"World Language · Grade 09",href:"https://vervenveda.com/Khaemenes_Linguistics.github.io/Halls/index.html?language=mandarin&course=hs1&source=khaemenes-high-grade09"},
   "world-language-9-japanese":{title:"Japanese I",subtitle:"World Language · Grade 09",href:"https://vervenveda.com/Khaemenes_Linguistics.github.io/Halls/index.html?language=japanese&course=hs1&source=khaemenes-high-grade09"},
@@ -292,6 +292,36 @@ function learnerPins(id){
     const key=String(pin.id||pin.courseId||pin.href||pin.title||"");
     if(!key||seen.has(key))continue;
     seen.add(key);merged.push(pin);
+  }
+  // Source-of-truth for this learner's display is their explicit Grade 09
+  // language preference, never a stale Spanish pin from a previous selection.
+  const prefix="world-language-9-";
+  const allowed=["spanish","french","german","mandarin","japanese","arabic","russian"];
+  const codeOf=item=>{
+    const key=String(item?.id||item?.courseId||"");
+    const code=key.startsWith(prefix)?key.slice(prefix.length):"";
+    return allowed.includes(code)?code:null;
+  };
+  const found=merged.filter(codeOf);
+  if(found.length){
+    let selected=null;
+    try{
+      const raw=JSON.parse(localStorage.getItem("khaemenes-high-language-choices-v1:learner:"+encodeURIComponent(id))||"null");
+      if(allowed.includes(raw?.["9"]))selected=raw["9"];
+    }catch{}
+    if(!selected){
+      const fromHigh=[...new Set(high.map(codeOf).filter(Boolean))];
+      const fromAll=[...new Set(found.map(codeOf).filter(Boolean))];
+      selected=fromHigh.length===1?fromHigh[0]:fromAll.length===1?fromAll[0]:null;
+    }
+    const meta=selected?HIGH_PIN_META[prefix+selected]:null;
+    if(meta){
+      const candidate={id:prefix+selected,courseId:prefix+selected,...meta,source:"khaemenes-high"};
+      const first=merged.findIndex(item=>codeOf(item));
+      const rest=merged.filter(item=>!codeOf(item));
+      rest.splice(Math.min(first,rest.length),0,candidate);
+      return rest.slice(0,24);
+    }
   }
   return merged.slice(0,24);
 }
@@ -321,7 +351,8 @@ function unpinCourse(learner,id){
   const academy=readPins(),before=academy.learners[learnerId];
   const list=Array.isArray(before)?before:[];
   const itemId=x=>typeof x==="string"?x:String(x?.id||x?.courseId||"");
-  const updated=list.filter(x=>itemId(x)!==id);
+  const isGrade09Language=id.startsWith("world-language-9-");
+  const updated=list.filter(x=>itemId(x)!==id&&!(isGrade09Language&&itemId(x).startsWith("world-language-9-")));
   const isHigh=Object.prototype.hasOwnProperty.call(HIGH_PIN_META,id);
   const highKey=`${HIGH_PIN_KEY}:learner:${encodeURIComponent(learnerId)}`;
   const priorAcademy=localStorage.getItem(PIN_KEY);
@@ -332,7 +363,7 @@ function unpinCourse(learner,id){
     if(isHigh){
       const raw=JSON.parse(priorHigh||"[]");
       const high=Array.isArray(raw)?raw:[];
-      localStorage.setItem(highKey,JSON.stringify(high.filter(x=>x!==id)));
+      localStorage.setItem(highKey,JSON.stringify(high.filter(x=>x!==id&&!(isGrade09Language&&typeof x==="string"&&x.startsWith("world-language-9-")))));
     }
     window.dispatchEvent(new CustomEvent("khaemenes-course-pins-changed",{detail:{learnerId}}));
     return true;
