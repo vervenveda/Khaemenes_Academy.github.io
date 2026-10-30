@@ -1,0 +1,30 @@
+name: Academy Front Door Topology Validation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**/*.html'
+      - 'scripts/audit-ecosystem-toolbar.mjs'
+      - 'scripts/audit-academy-local-links.mjs'
+      - 'assets/vnv-beta-link.js'
+      - 'assets/vnv-ecosystem-toolbar.js'
+      - 'shared-integration/academy-repository-topology.json'
+      - '.github/workflows/academy-topology-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      - name: Verify one canonical ecosystem toolbar per Academy HTML page
+        run: node scripts/audit-ecosystem-toolbar.mjs
+      - name: Verify repository-local Academy routes
+        run: node scripts/audit-academy-local-links.mjs
