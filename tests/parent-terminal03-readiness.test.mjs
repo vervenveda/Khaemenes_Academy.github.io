@@ -117,10 +117,11 @@ expect(read("index.html").includes("khaemenes-parent-action-center.js"),"Academy
 expect(read("family/index.html").includes("khaemenes-parent-action-center.js"),"Family Portal is missing Parent Action Center.");
 expect(read("assets/khaemenes-home-personalization.js").includes("Parent Action Center"),"Personalized home no longer surfaces Parent Action Center.");
 
-// Teacher Admin must keep exactly one canonical Beta fallback and no legacy fixed duplicates.
+// Teacher Admin must use the single canonical ecosystem toolbar and no legacy Beta loader.
 const teacher=read("teacher-admin/index.html");
-expect((teacher.match(/id="vnvBetaProgramFallback"/g)||[]).length===1,"Teacher Admin must contain exactly one canonical Beta fallback.");
-expect((teacher.match(/href="https:\/\/vervenveda\.com\/beta\/" aria-label="Open the Verve N Veda Beta Program" style="position:fixed;/g)||[]).length===0,"Teacher Admin still contains legacy duplicate fixed Beta controls.");
+expect((teacher.match(/https:\/\/vervenveda\.com\/assets\/vnv-ecosystem-toolbar\.js/g)||[]).length===1,"Teacher Admin must contain exactly one canonical ecosystem toolbar.");
+expect(!/vnv-beta-link\.js/i.test(teacher),"Teacher Admin still contains the retired standalone Beta loader.");
+expect(!/id="vnvBetaProgramFallback"/i.test(teacher),"Teacher Admin still contains a legacy Beta fallback.");
 
 console.log("Academy Parent + Terminal 03 readiness regression: PASS");
 console.log("  Parent Action Center: read-only");
@@ -130,4 +131,4 @@ console.log("  Terminal 03: primary + exclusive Academy designation / HOLD / unc
 console.log("  Terminal 04: no Academy authority");
 console.log("  Academy account storage and STOS storage: separate");
 console.log("  Main account-bearing surfaces covered: 5");
-console.log("  Teacher Admin Beta fallback: canonical single doorway");
+console.log("  Teacher Admin utility surface: canonical ecosystem toolbar");
