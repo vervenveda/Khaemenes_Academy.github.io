@@ -33,7 +33,7 @@
     "globalNavigation": "assets/khaemenes-global-navigation.js",
     "terminal03Readiness": "assets/khaemenes-terminal03-readiness.js",
     "language": "assets/vnv-language.js",
-    "toolbarLoader": "assets/khaemenes-landing-toolbar.js"
+    "toolbarLoader": "https://vervenveda.com/assets/vnv-ecosystem-toolbar.js"
   },
   "externalAcademyRepositories": [
     "Khaemenes_Preschool.github.io",
@@ -51,6 +51,6 @@
     "Archaemenes is advisory and does not award mastery",
     "Terminal03 readiness does not commission or activate STOS",
     "Terminal04 has no Khaemenes Academy authority",
-    "canonical ecosystem toolbar geometry is owned by Verve N Veda"
+    "canonical ecosystem toolbar geometry and controls are owned by Verve N Veda and loaded once per public Academy HTML surface"
   ]
 }
