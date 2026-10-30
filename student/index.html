@@ -142,34 +142,7 @@ body .actions > :is(a.btn,button.btn){display:inline-flex;align-items:center;jus
 <link rel="stylesheet" href="../assets/khaemenes-student-profile-v2.css">
 <link rel="stylesheet" href="/Khaemenes_Academy.github.io/assets/khaemenes-global-header.css">
 <link rel="stylesheet" href="https://vervenveda.com/assets/vnv-ecosystem-menu.css">
-<style id="student-header-alignment">
-/* Scoped Student Portal header: no overlapping navigation or duplicate actions. */
-body [data-khae-header] [data-khae-header-inner]{
-  width:calc(100% - 24px)!important;max-width:1500px!important;
-  display:grid!important;grid-template-columns:minmax(190px,1fr) auto auto 44px!important;
-  column-gap:clamp(8px,1.4vw,24px)!important;row-gap:8px!important;
-  align-items:center!important;min-height:76px!important;padding:8px 0!important;
-}
-body [data-khae-header] [data-khae-brand]{max-width:100%;min-width:0!important}
-body [data-khae-header] [data-khae-brand] span:last-child{min-width:0}
-body [data-khae-header] [data-khae-brand-name]{font-size:clamp(12px,1.1vw,15px)!important;line-height:1.25!important}
-body [data-khae-header] [data-khae-nav]{display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:8px!important;flex-wrap:wrap!important;min-width:0!important}
-body [data-khae-header] [data-khae-nav] a,body [data-khae-header] [data-khae-actions] a{font-size:clamp(12px,1vw,15px)!important;line-height:1.3!important;white-space:nowrap!important;min-height:40px!important;padding:9px 12px!important}
-body [data-khae-header] [data-khae-actions]{display:flex!important;align-items:center!important;gap:0!important}
-body [data-khae-header] [data-vnv-ecosystem-slot]{justify-self:end!important;grid-column:4!important;min-width:40px!important}
-@media(max-width:860px){
- body [data-khae-header] [data-khae-header-inner]{grid-template-columns:minmax(0,1fr) auto 44px!important}
- body [data-khae-header] [data-khae-nav]{grid-column:1/-1!important;grid-row:2!important;justify-content:center!important;padding-bottom:4px!important}
- body [data-khae-header] [data-khae-actions]{grid-column:2!important;grid-row:1!important}
- body [data-khae-header] [data-vnv-ecosystem-slot]{grid-column:3!important;grid-row:1!important}
-}
-@media(max-width:520px){
- body [data-khae-header] [data-khae-header-inner]{width:calc(100% - 16px)!important;column-gap:6px!important}
- body [data-khae-header] [data-khae-nav]{gap:5px!important}
- body [data-khae-header] [data-khae-nav] a{font-size:12px!important;padding:7px 8px!important}
- body [data-khae-header] [data-khae-actions] a{font-size:12px!important;padding:8px!important}
-}
-</style>
+
 <link rel="stylesheet" href="./../assets/khaemenes-landing-standard.css">
 <link rel="stylesheet" href="./../assets/khaemenes-landing-toolbar.css">
 <style id="academy-course-unpin-v1">
@@ -177,8 +150,32 @@ body [data-khae-header] [data-vnv-ecosystem-slot]{justify-self:end!important;gri
 .pin-row [data-course-unpin]{min-height:40px;min-width:76px;border-radius:7px;white-space:nowrap}
 .pin-row [data-course-unpin]:focus-visible{outline:3px solid #b48b45;outline-offset:3px}
 </style>
+<style id="academy-student-approved-chrome-20261029">
+/* Student Portal only: approved High School landing-page chrome and palette. */
+body[data-academy-student-landing] [data-khae-header]{background:#f4f0e7!important;color:#243038!important}
+body[data-academy-student-landing] [data-khae-header] [data-khae-header-inner]{display:flex!important;align-items:center!important;justify-content:space-between!important;width:calc(100% - 24px)!important;max-width:1500px!important;min-height:68px!important;gap:14px!important;padding:8px 0!important}
+body[data-academy-student-landing] [data-khae-header] [data-khae-brand]{margin-right:auto!important;min-width:0!important}
+body[data-academy-student-landing] [data-khae-header] [data-khae-nav],
+body[data-academy-student-landing] [data-khae-header] [data-khae-actions]{display:none!important}
+body[data-academy-student-landing] [data-khae-header] [data-khae-brand-mark]{width:52px!important;height:52px!important;flex:0 0 52px!important;display:grid!important;place-items:center!important;background:#243038!important;color:#fff8e9!important;border-radius:7px!important}
+body[data-academy-student-landing] [data-khae-header] [data-vnv-ecosystem-slot]{margin-left:auto!important;flex:0 0 auto!important}
+body[data-academy-student-landing] [data-khae-header] #vnvEcosystemMenuButton{position:static!important;width:52px!important;height:52px!important;min-width:52px!important;min-height:52px!important;background:#243038!important;color:#fff8e9!important;border-radius:7px!important}
+body[data-academy-student-landing] #khaeNetworkTicker{background:#10243b!important;color:#fff8e9!important;display:grid!important;grid-template-columns:minmax(0,1fr) 44px!important}
+body[data-academy-student-landing] #khaeNetworkTicker :is(.khae-network-ticker-app,.khae-network-ticker-label,.khae-network-ticker-call){color:#fff8e9!important;opacity:1!important}
+body[data-academy-student-landing] :is(h1,h2,h3,h4){font-family:Cinzel,Georgia,serif!important;font-weight:400!important}
+body[data-academy-student-landing] .portal-intro{background:#243038!important;color:#fff8e9!important;border-radius:7px!important}
+body[data-academy-student-landing] .portal-intro :is(h1,p,.eyebrow){color:#fff8e9!important;opacity:1!important}
+body[data-academy-student-landing] .heading h2{font-size:clamp(33px,calc(5.1vw - 9px),63px)!important;line-height:1.15!important}
+body[data-academy-student-landing] :is(.card,.portal-help article,.learner-row,.pin-row){border-radius:7px!important}
+body[data-academy-student-landing] :is(.btn,button.btn,a.btn){min-height:44px!important;border-radius:7px!important;font:400 11px/1.3 "Brandon Grotesque",Nunito,Arial,sans-serif!important;letter-spacing:0!important}
+body[data-academy-student-landing] .btn:not(.secondary):not(.gold){background:#243038!important;color:#fff8e9!important;border-color:#243038!important}
+body[data-academy-student-landing] .academy-student-footer{background:#243038!important;color:#fff8e9!important;padding:27px 16px!important;display:flex!important;flex-direction:column!important;align-items:center!important;text-align:center!important;gap:6px!important}
+body[data-academy-student-landing] .academy-student-footer strong{color:#fff8e9!important;font:400 16px/1.4 Cinzel,Georgia,serif!important}
+body[data-academy-student-landing] .academy-student-footer span{color:#e5d6ba!important;font:400 12px/1.45 "Brandon Grotesque",Nunito,Arial,sans-serif!important}
+@media(max-width:460px){body[data-academy-student-landing] [data-khae-header] [data-khae-brand-mark],body[data-academy-student-landing] [data-khae-header] #vnvEcosystemMenuButton{width:44px!important;height:44px!important;min-width:44px!important;min-height:44px!important}}
+</style>
 </head>
-<body data-i18n-no-online>
+<body data-i18n-no-online data-academy-student-landing="true">
 <header data-khae-header>
   <div class="shell nav" data-khae-header-inner>
     <a class="brand" data-khae-brand href="../"><span class="mark" data-khae-brand-mark>KA</span><span><strong data-khae-brand-name>Khaemenes Academy</strong><small data-khae-brand-sub>Student Portal</small></span></a>
@@ -211,7 +208,7 @@ body [data-khae-header] [data-vnv-ecosystem-slot]{justify-self:end!important;gri
   </div>
 </main>
 
-<footer class="footer"><strong>Khaemenes Academy</strong><span>Jennifer Kay Pearl · Verve N Veda · Student Learning Portal</span></footer>
+<footer class="footer academy-student-footer"><strong>Verve N Veda · Khaemenes Academy</strong><span>Jennifer Kay Pearl · 2026</span></footer>
 
 <script src="../assets/khaemenes-family-registry.js"></script>
 <script src="../assets/khaemenes-learner-context.js"></script>
@@ -455,11 +452,24 @@ render();
 <script src="../assets/khaemenes-student-profile-ui-v2.js"></script>
 <script src="../assets/khaemenes-learning-science.js"></script>
 <script src="../assets/khaemenes-terminal03-readiness.js"></script>
-<script src="https://vervenveda.com/assets/vnv-beta-link.js" defer></script>
+<!-- Legacy floating Beta retired; official ecosystem dock contains Beta. -->
 <script src="../assets/khaemenes-account-connection-status.js"></script>
 <script src="../assets/vnv-language.js" defer></script>
 <script src="/Khaemenes_Academy.github.io/assets/khaemenes-global-header.js" defer></script>
 <script src="https://vervenveda.com/assets/vnv-ecosystem-menu.js" defer></script>
-<script src="./../assets/khaemenes-landing-toolbar.js" defer></script>
+<script src="https://vervenveda.com/assets/vnv-ecosystem-toolbar.js" defer data-vnv-ecosystem-toolbar="1"></script>
+<script>
+window.addEventListener("load",()=>{
+ const ticker=document.getElementById("khaeNetworkTicker");
+ if(!ticker)return;
+ const a="https://vervenveda.com/Khaemenes_Academy.github.io/";
+ const links=[["Student Portal",a+"student/"],["My Profile",a+"student/profile.html"],["Pinned Courses",a+"student/#studentCourses"],["My Schedule",a+"student/#studentSchedule"],["Classrooms",a+"student/#studentCourseDoors"],["Family Portal",a+"family/"],["High School","https://vervenveda.com/Khaemenes_High.github.io/"],["Search","https://vervenveda.com/PLERASearch.github.io/"],["Beta","https://vervenveda.com/beta/"],["Support","https://vervenveda.com/#support"]];
+ ticker.querySelectorAll(".khae-network-ticker-set").forEach((set,i)=>{
+  set.replaceChildren();
+  const label=document.createElement("span");label.className="khae-network-ticker-label";label.textContent="Student Portal Quick Links";set.append(label);
+  links.forEach(([name,url])=>{const x=document.createElement("a");x.className="khae-network-ticker-app";x.href=url;x.textContent=name;if(i)x.tabIndex=-1;set.append(x)});
+ });
+});
+</script>
 </body>
 </html>
