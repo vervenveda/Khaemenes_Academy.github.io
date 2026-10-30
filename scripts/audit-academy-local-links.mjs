@@ -21,7 +21,7 @@ walk(ROOT);
 
 function normalize(source,raw){
   raw=String(raw||"").trim();
-  if(!raw||raw.startsWith("#")||raw.startsWith("?")||raw.startsWith("//")||raw.includes("${"))return null;
+  if(!raw||raw.startsWith("#")||raw.startsWith("?")||raw.startsWith("//")||raw.includes("${")||raw.includes("'+")||raw.includes("+'"))return null;
   if(/^(?:https?:|mailto:|tel:|javascript:|data:|blob:)/i.test(raw))return null;
   raw=raw.split("#")[0].split("?")[0];
   if(!raw)return null;
