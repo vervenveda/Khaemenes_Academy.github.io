@@ -7,6 +7,9 @@ on:
       - '**/*.html'
       - 'scripts/audit-ecosystem-toolbar.mjs'
       - 'scripts/audit-academy-local-links.mjs'
+      - 'scripts/audit-academy-ticker.mjs'
+      - 'assets/khaemenes-academy-ticker.js'
+      - 'assets/khaemenes-global-header.js'
       - 'assets/vnv-beta-link.js'
       - 'assets/vnv-ecosystem-toolbar.js'
       - 'shared-integration/academy-repository-topology.json'
@@ -26,5 +29,9 @@ jobs:
           node-version: '24'
       - name: Verify one canonical ecosystem toolbar per Academy HTML page
         run: node scripts/audit-ecosystem-toolbar.mjs
+      - name: Check canonical Academy ticker syntax
+        run: node --check assets/khaemenes-academy-ticker.js
+      - name: Verify Academy ticker links and toolbar coupling
+        run: node scripts/audit-academy-ticker.mjs
       - name: Verify repository-local Academy routes
         run: node scripts/audit-academy-local-links.mjs
