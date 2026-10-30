@@ -200,6 +200,12 @@ body[data-academy-student-landing] :is(#vnvBetaProgramLink,#vnvBetaProgramFallba
   display:none!important;
 }
 </style>
+<style id="student-help-action-buttons-v1">
+body[data-academy-student-landing] .portal-help h3{margin:0 0 12px!important;font-size:inherit!important}
+body[data-academy-student-landing] .portal-help .student-help-action{display:flex!important;align-items:center!important;justify-content:center!important;box-sizing:border-box!important;min-height:48px!important;width:100%!important;padding:11px 14px!important;background:#243038!important;color:#fff8e9!important;-webkit-text-fill-color:#fff8e9!important;border:1px solid #b48b45!important;border-radius:7px!important;text-decoration:none!important;font:400 16px/1.35 Cinzel,Georgia,serif!important;text-align:center!important}
+body[data-academy-student-landing] .portal-help .student-help-action:hover{background:#344b55!important}
+body[data-academy-student-landing] .portal-help .student-help-action:focus-visible{outline:3px solid #b48b45!important;outline-offset:3px!important}
+</style>
 </head>
 <body data-i18n-no-online data-academy-student-landing="true">
 <header data-khae-header>
@@ -226,9 +232,9 @@ body[data-academy-student-landing] :is(#vnvBetaProgramLink,#vnvBetaProgramFallba
     <div id="app"></div>
     <div id="profileStudio" tabindex="-1" aria-label="Learner-owned profile studio"></div>
     <section class="portal-help" aria-label="Student navigation help">
-      <article><h3>1 · My profile</h3><p>Choose your existing learner name to see your personal learning dashboard. Never enroll again just to find a saved profile.</p></article>
-      <article><h3>2 · My lessons</h3><p>Open a classroom or continue a pinned course. Your lessons keep their own progress and mastery checks.</p></article>
-      <article><h3>3 · My learning tools</h3><p>Use games, language tools, printables, goals, and evidence from your learner dashboard when your profile is selected.</p></article>
+      <article><h3><a class="student-help-action" href="#app">1 · My profile</a></h3><p>Choose your existing learner name to see your personal learning dashboard. Never enroll again just to find a saved profile.</p></article>
+      <article><h3><a class="student-help-action" href="#studentCourseDoors">2 · My lessons</a></h3><p>Open a classroom or continue a pinned course. Your lessons keep their own progress and mastery checks.</p></article>
+      <article><h3><a class="student-help-action" href="profile.html">3 · My learning tools</a></h3><p>Use games, language tools, printables, goals, and evidence from your learner dashboard when your profile is selected.</p></article>
     </section>
     <details class="account-details"><summary>Account status, local storage, and backup information</summary><p data-academy-account-status role="status" aria-live="polite">LOCAL PROFILE — Cloud synchronization has not been verified.</p><p>Profiles and some learner work may be saved in this browser. Cloud sign-in is not confirmed. Keep backups of important work. Do not clear website data while locating an existing learner.</p></details>
   </div>
@@ -484,7 +490,7 @@ render();
 <script src="../assets/vnv-language.js" defer></script>
 <script src="/Khaemenes_Academy.github.io/assets/khaemenes-global-header.js" defer></script>
 <script src="https://vervenveda.com/assets/vnv-ecosystem-menu.js" defer></script>
-<script src="https://vervenveda.com/assets/vnv-ecosystem-toolbar.js" defer data-vnv-ecosystem-toolbar="1"></script>
+<script src="../assets/vnv-ecosystem-toolbar.js" defer data-vnv-ecosystem-toolbar="1"></script>
 <script>
 window.addEventListener("load",()=>{
  const ticker=document.getElementById("khaeNetworkTicker");
@@ -502,7 +508,6 @@ window.addEventListener("load",()=>{
 
 <!-- The canonical ecosystem toolbar is the sole Beta entry. -->
 
-<!-- Verve N Veda Beta Program -->
-<script src="https://vervenveda.com/assets/vnv-beta-link.js" defer></script>
+<!-- Legacy standalone Beta removed: canonical dock contains Beta. -->
 </body>
 </html>
