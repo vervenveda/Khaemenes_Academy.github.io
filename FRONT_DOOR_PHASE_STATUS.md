@@ -80,14 +80,13 @@ Status: grade-root continuity implemented; second-depth audit remains.
 
 ## Phase 9 — High School integration
 
-Status: active on `hardening/archaemenes-highschool`; not released to High School `main`.
+Status: released on High School `main`; forensic hardening continues.
 
-- Grade 09 canonical front door exists on the hardening branch.
-- Grade 10 has an established substantial portal and requires a non-destructive learner-context patch rather than replacement.
-- Grade 11 canonical landing page has been added on the hardening branch.
-- Grade 12 canonical landing page has been added on the hardening branch with a deliberate Higher Learning transition.
-- High School root v4.1-readiness exists on the hardening branch.
-- A deliberate release/merge decision is still required before public High School traffic receives the hardening branch.
+- Grades 09–12 have live canonical grade portals on High School `main`.
+- The High School root is the public front desk for grade entry, course directories, learner/profile continuation, and Higher Learning transition.
+- Mathematics remains placement/proficiency based rather than owned by grade labels.
+- Shared learner continuity and profile routing are active; course-specific engines retain mastery authority.
+- Current hardening work focuses on route integrity, shared-shell consistency, assessment evidence, and removal of stale migration layers rather than replacing established course engines.
 
 ## Phase 10 — Higher Learning bridge
 
@@ -103,7 +102,7 @@ Status: bridge implemented; course-level scoping remains.
 Status: central public-safe shell implemented.
 
 - Teacher Administration spans Pre-K through Higher Learning.
-- Institutional review sequence is represented as Noema → NAIB → Teacher Administration → Archaemenes → Course / Academy decision.
+- Institutional review sequence is represented publicly as protected backend authority → NAIB → Teacher Administration → Archaemenes → Course / Academy decision.
 - Evidence review may trigger a hold or human review but never silently changes a grade or placement.
 - Protected backend/authentication work remains outside the public shell.
 
