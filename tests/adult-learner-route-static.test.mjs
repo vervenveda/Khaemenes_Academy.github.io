@@ -17,9 +17,11 @@ test("Academy front desk exposes a first-class adult learner doorway",()=>{
 });
 
 test("family workspace keeps parent and adult-self-learning roles separate",()=>{
-  assert.match(family,/I Am an Adult Learning for Myself/);
+  assert.match(family,/Adult Learner Pathway/);
+  assert.match(family,/separate self-directed adult learner workspace|separate self-directed learning path/);
   assert.match(family,/Start Adult Learning/);
   assert.match(family,/Open Adult Learner Portal/);
+  assert.match(family,/Parent\/family responsibilities remain here; personal coursework remains in the Adult Learner Portal/);
   assert.match(family,/familyLearners=f\.learners\.filter\(l=>l&&!l\.selfDirectedAdult\)/);
 });
 
