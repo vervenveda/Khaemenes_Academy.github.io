@@ -1,0 +1,19 @@
+name: Academy Language Pin Display Regression
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'student/index.html'
+      - 'tests/student-language-pin-display.test.cjs'
+      - '.github/workflows/student-language-pin-display.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify fictional learner language display and unpin
+        run: node tests/student-language-pin-display.test.cjs
