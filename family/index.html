@@ -121,8 +121,8 @@ body main .notice{font-size:13px;line-height:1.55}
 <header data-khae-header>
   <div class="shell nav" data-khae-header-inner>
     <a class="brand" data-khae-brand href="../"><span class="mark" data-khae-brand-mark>KA</span><span><strong data-khae-brand-name>Khaemenes Academy</strong><small data-khae-brand-sub>Family Learning Center</small></span></a>
-    <nav class="navlinks" data-khae-nav><a href="../student/">Student</a><a href="../adult/">Adult Learning</a><a href="../teacher-admin/">Teacher Admin</a><a href="../">Academy Home</a></nav>
-    <div data-khae-actions><a data-khae-secondary href="../student/">Student Entry</a><a href="enroll/">Enroll / Update</a></div>
+    <nav class="navlinks" data-khae-nav><a href="../student/" data-ticker>Student</a><a href="../adult/" data-ticker>Adult Learning</a><a href="../teacher-admin/" data-ticker>Teacher Admin</a><a href="../" data-ticker>Academy Home</a></nav>
+    <div data-khae-actions><a data-khae-secondary href="../student/">Student Entry</a><a href="enroll/" data-ticker>Enroll / Update</a></div>
     <div data-vnv-ecosystem-slot aria-label="Ecosystem menu"></div>
   </div>
 </header>
@@ -249,6 +249,8 @@ render();
 <script src="/Khaemenes_Academy.github.io/assets/khaemenes-global-header.js" defer></script>
 <script src="https://vervenveda.com/assets/vnv-ecosystem-menu.js" defer></script>
 <!-- The canonical ecosystem toolbar includes Beta; no standalone legacy launcher. -->
+<script src="https://vervenveda.com/assets/vnv-ticker-autopopulate.js" data-vnv-ticker-autopopulate></script>
+<script>VNV_TICKER.autoPopulate({label:"Family Hub Quick Links",max:14});</script>
 <script src="https://vervenveda.com/assets/vnv-ecosystem-toolbar.js"></script>
 </body>
 </html>
