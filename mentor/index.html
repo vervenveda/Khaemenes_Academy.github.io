@@ -109,9 +109,9 @@ body,.small,.notice,.kv,.route-card,.chat,.visitor-section{font-weight:400}
   <div class="shell nav" data-khae-header-inner>
     <a class="brand" data-khae-brand href="./" aria-label="Archaemenes Mentor home"><span class="seal" data-khae-brand-mark>A</span><span><strong data-khae-brand-name>Khaemenes Academy</strong><small data-khae-brand-sub>Mentor</small></span></a>
     <nav class="navlinks" data-khae-nav aria-label="Mentor navigation">
-      <a href="../family/">Family Profile</a>
-      <a href="../student/">Student Portal</a>
-      <a href="https://artist1970.github.io/Archaemenes.github.io/">About Archaemenes</a>
+      <a href="../family/" data-ticker>Family Profile</a>
+      <a href="../student/" data-ticker>Student Portal</a>
+      <a href="https://artist1970.github.io/Archaemenes.github.io/" data-ticker>About Archaemenes</a>
     </nav>
     <div data-khae-actions hidden aria-hidden="true"></div>
     <div data-vnv-ecosystem-slot aria-label="Ecosystem menu"></div>
@@ -693,6 +693,8 @@ window.addEventListener('DOMContentLoaded',()=>setTimeout(boot,0));
 <script src="../assets/khaemenes-archaemenes-living-bridge-v1.js" defer></script>
 <script src="../assets/khaemenes-archaemenes-conversation-v2.js" defer></script>
 <script src="../assets/khaemenes-archaemenes-visitor-local-v1.js" defer></script>
+<script src="https://vervenveda.com/assets/vnv-ticker-autopopulate.js" data-vnv-ticker-autopopulate></script>
+<script>VNV_TICKER.autoPopulate({label:"Mentor Quick Links",max:14});</script>
 <script src="https://vervenveda.com/assets/vnv-ecosystem-toolbar.js"></script>
 </body>
 </html>
