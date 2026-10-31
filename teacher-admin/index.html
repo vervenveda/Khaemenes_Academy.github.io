@@ -21,7 +21,7 @@
 <header data-khae-header>
   <div class="wrap" data-khae-header-inner>
     <a class="brand" data-khae-brand href="../index.html"><span class="mark" data-khae-brand-mark>KA</span><span><strong data-khae-brand-name>Khaemenes Academy</strong><small data-khae-brand-sub>Teacher Administration</small></span></a>
-    <nav class="nav" data-khae-nav aria-label="Teacher admin navigation"><a href="../index.html">Academy Home</a><a href="#workflow">Workflow</a><a href="#archaemenes">Archaemenes</a><a href="#continuum">Grade Levels</a><a href="#evidence">Evidence Review</a><a href="#records">Records</a></nav>
+    <nav class="nav" data-khae-nav aria-label="Teacher admin navigation"><a href="../index.html" data-ticker>Academy Home</a><a href="#workflow" data-ticker>Workflow</a><a href="#archaemenes" data-ticker>Archaemenes</a><a href="#continuum" data-ticker>Grade Levels</a><a href="#evidence" data-ticker>Evidence Review</a><a href="#records" data-ticker>Records</a></nav>
     <div data-khae-actions><a data-khae-secondary href="../family/">Family</a><a href="../student/">Student</a></div>
     <div data-vnv-ecosystem-slot aria-label="Ecosystem menu"></div>
   </div>
@@ -71,6 +71,8 @@ window.addEventListener('khaemenes:evidence-review-queue-updated',render);window
 <script src="../assets/khaemenes-terminal03-readiness.js"></script>
 <script src="/Khaemenes_Academy.github.io/assets/khaemenes-global-header.js" defer></script>
 <script src="https://vervenveda.com/assets/vnv-ecosystem-menu.js" defer></script>
+<script src="https://vervenveda.com/assets/vnv-ticker-autopopulate.js" data-vnv-ticker-autopopulate></script>
+<script>VNV_TICKER.autoPopulate({label:"Teacher Admin Quick Links",max:14});</script>
 <script src="https://vervenveda.com/assets/vnv-ecosystem-toolbar.js"></script>
 </body>
 </html>
