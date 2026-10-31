@@ -63,10 +63,10 @@ body{font-family:"Brandon Grotesque","Avenir Next",Arial,sans-serif}
   <div class="shell nav" data-khae-header-inner>
     <a class="brand" data-khae-brand href="../"><span class="mark" data-khae-brand-mark>KA</span><span><strong data-khae-brand-name>Khaemenes Academy</strong><small data-khae-brand-sub>Adult Learner Portal</small></span></a>
     <nav class="navlinks" data-khae-nav>
-      <a href="../family/">Family / Parent</a>
-      <a href="enroll/">Adult Enrollment</a>
-      <a href="https://vervenveda.com/Khaemenes_Higher_Learning.github.io/start/">Higher Learning</a>
-      <a href="../">Academy Home</a>
+      <a href="../family/" data-ticker>Family / Parent</a>
+      <a href="enroll/" data-ticker>Adult Enrollment</a>
+      <a href="https://vervenveda.com/Khaemenes_Higher_Learning.github.io/start/" data-ticker>Higher Learning</a>
+      <a href="../" data-ticker>Academy Home</a>
     </nav>
     <div data-khae-actions></div>
     <div data-vnv-ecosystem-slot aria-label="Ecosystem menu"></div>
@@ -153,6 +153,8 @@ render();
 <script src="../assets/vnv-language.js" defer></script>
 <script src="/Khaemenes_Academy.github.io/assets/khaemenes-global-header.js" defer></script>
 <script src="https://vervenveda.com/assets/vnv-ecosystem-menu.js" defer></script>
+<script src="https://vervenveda.com/assets/vnv-ticker-autopopulate.js" data-vnv-ticker-autopopulate></script>
+<script>VNV_TICKER.autoPopulate({label:"Adult Learner Quick Links",max:14});</script>
 <script src="https://vervenveda.com/assets/vnv-ecosystem-toolbar.js"></script>
 </body>
 </html>
