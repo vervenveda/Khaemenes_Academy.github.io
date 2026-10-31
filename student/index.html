@@ -212,11 +212,11 @@ body[data-academy-student-landing] .portal-help .student-help-action:focus-visib
   <div class="shell nav" data-khae-header-inner>
     <a class="brand" data-khae-brand href="../"><span class="mark" data-khae-brand-mark>KA</span><span><strong data-khae-brand-name>Khaemenes Academy</strong><small data-khae-brand-sub>Student Portal</small></span></a>
     <nav class="navlinks" data-khae-nav aria-label="Academy navigation">
-      <a href="./">Student Portal</a>
-      <a href="../">Academy Home</a>
-      <a href="../family/">Family Hub</a>
+      <a href="./" data-ticker>Student Portal</a>
+      <a href="../" data-ticker>Academy Home</a>
+      <a href="../family/" data-ticker>Family Hub</a>
     </nav>
-    <div data-khae-actions><a data-khae-secondary href="profile.html">My Profile</a></div>
+    <div data-khae-actions><a data-khae-secondary href="profile.html" data-ticker>My Profile</a></div>
     <div data-vnv-ecosystem-slot aria-label="Ecosystem menu"></div>
   </div>
 </header>
@@ -226,7 +226,7 @@ body[data-academy-student-landing] .portal-help .student-help-action:focus-visib
   <div class="shell">
     <section class="portal-intro" aria-labelledby="academyStudentTitle">
       <div><p class="eyebrow">Student learning dashboard</p><h1 id="academyStudentTitle">Khaemenes Academy</h1><p>Your learning home · Choose your profile, continue a class, and explore your tools.</p></div>
-      <a href="#studentCourseDoors">Explore classrooms →</a>
+      <a href="#studentCourseDoors" data-ticker data-ticker-label="Classrooms">Explore classrooms →</a>
     </section>
     <div class="heading"><p class="eyebrow">My learning space</p><h2>Welcome to your Student Portal</h2><p>Start with your existing student profile. You can also explore classrooms while we locate your saved learner record.</p></div>
     <div id="app"></div>
@@ -552,6 +552,8 @@ document.querySelector('[data-help-tools]')?.addEventListener('click',event=>{
 });
 </script>
 
+<script src="https://vervenveda.com/assets/vnv-ticker-autopopulate.js" data-vnv-ticker-autopopulate></script>
+<script>VNV_TICKER.autoPopulate({label:"Student Portal Quick Links",max:14});</script>
 <script src="https://vervenveda.com/assets/vnv-ecosystem-toolbar.js"></script>
 </body>
 </html>
