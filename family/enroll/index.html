@@ -54,7 +54,7 @@ main.grid>.card .field :is(input,select){border-color:#839b8e;color:#17251f}
 <header data-khae-header>
   <div class="shell" data-khae-header-inner>
     <a class="brand" data-khae-brand href="../../"><span class="mark" data-khae-brand-mark>KA</span><span><strong data-khae-brand-name>Khaemenes Academy</strong><small data-khae-brand-sub>Family Enrollment</small></span></a>
-    <nav data-khae-nav aria-label="Family enrollment navigation"><a href="../../">Academy Home</a><a href="../">Family Hub</a><a href="../../student/">Student Portal</a><a href="../../adult/">Adult Learning</a></nav>
+    <nav data-khae-nav aria-label="Family enrollment navigation"><a href="../../" data-ticker>Academy Home</a><a href="../" data-ticker>Family Hub</a><a href="../../student/" data-ticker>Student Portal</a><a href="../../adult/" data-ticker>Adult Learning</a></nav>
     <div data-khae-actions></div>
     <div data-vnv-ecosystem-slot aria-label="Ecosystem menu"></div>
   </div>
@@ -66,7 +66,7 @@ main.grid>.card .field :is(input,select){border-color:#839b8e;color:#17251f}
 <section class="card"><div class="eyebrow">Step 1</div><h2>Family Profile</h2><div id="familyPane"></div></section>
 <section class="card"><div class="eyebrow">Step 2</div><h2>K–12 Learner Placement</h2><div id="learnerPane"></div></section>
 <section class="card adult-card"><div class="eyebrow">Adult Pathway</div><h2>Learn for Yourself</h2><div id="adultPane"></div></section>
-<section class="card adult-card"><div class="eyebrow">Higher Learning</div><h2>Adult and continuing education</h2><p>Adults who are studying for themselves enter through Khaemenes Higher Learning rather than receiving a K–12 grade.</p><div class="actions"><a class="btn secondary" href="../../adult/">Adult Learner Portal</a><a class="btn gold" href="https://vervenveda.com/Khaemenes_Higher_Learning.github.io/start/">Higher Learning Entry</a></div></section>
+<section class="card adult-card"><div class="eyebrow">Higher Learning</div><h2>Adult and continuing education</h2><p>Adults who are studying for themselves enter through Khaemenes Higher Learning rather than receiving a K–12 grade.</p><div class="actions"><a class="btn secondary" href="../../adult/">Adult Learner Portal</a><a class="btn gold" href="https://vervenveda.com/Khaemenes_Higher_Learning.github.io/start/" data-ticker>Higher Learning Entry</a></div></section>
 <section class="card wide"><div class="eyebrow">Family Stewardship</div><h2>Keep learner records clear and current.</h2><p>Use each learner’s own profile, review grade placement whenever circumstances change, and keep exported family records in a private place.</p><p>The Student Portal continues from the active learner’s registered school path. Mentors and learning tools support study without replacing the learner’s formal placement or assessment record.</p></section>
 <section class="card" id="art101-enrollment-pathway" aria-labelledby="art101-enrollment-title" style="border-top:3px solid #b69a63"><div class="eyebrow">Open to family and adult learners</div><h2 id="art101-enrollment-title">Art 101 · Foundations of Visual Art</h2><p>Art 101 is a proficiency-based creative studio course, not a ninth-grade placement. Families may explore it for an individual learner, and adult scholars may begin without entering the K–12 grade sequence.</p><p>Start with the artist portfolio and original studio evidence. Enrollment does not award mastery or unlock restricted progression. The Week 01 formative quiz is practice; official advancement requires separate Academy verification of at least 80% knowledge and studio work, approved evidence, and learner authorization.</p><div class="actions"><a class="btn gold" href="https://vervenveda.com/bazaarart.github.io/academy/grade-9/unit-01/week-01/index.html">Explore Art 101 · Week 01</a><a class="btn secondary" href="../../student/profile.html">Learner profile</a></div><p class="fine">Current course access is a public learning preview. Course pinning and authenticated enrollment confirmation are not yet connected; use the appropriate learner profile when they become available.</p></section></main>
 
@@ -151,6 +151,8 @@ render();
 <script src="https://vervenveda.com/assets/vnv-ecosystem-menu.js" defer></script>
 <!-- Legacy standalone Beta launcher retired; canonical toolbar includes Beta. -->
 
+<script src="https://vervenveda.com/assets/vnv-ticker-autopopulate.js" data-vnv-ticker-autopopulate></script>
+<script>VNV_TICKER.autoPopulate({label:"Enrollment Quick Links",max:14});</script>
 <script src="https://vervenveda.com/assets/vnv-ecosystem-toolbar.js"></script>
 </body>
 </html>
