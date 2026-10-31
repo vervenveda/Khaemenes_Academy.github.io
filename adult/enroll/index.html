@@ -19,7 +19,7 @@
 <header data-khae-header>
   <div class="shell" data-khae-header-inner>
     <a class="brand" data-khae-brand href="../../"><span class="mark" data-khae-brand-mark>KA</span><span><strong data-khae-brand-name>Khaemenes Academy</strong><small data-khae-brand-sub>Adult Learning Enrollment</small></span></a>
-    <nav data-khae-nav aria-label="Adult enrollment navigation"><a href="../../">Academy Home</a><a href="../../family/enroll/">Family Enrollment</a></nav>
+    <nav data-khae-nav aria-label="Adult enrollment navigation"><a href="../../" data-ticker>Academy Home</a><a href="../../family/enroll/" data-ticker>Family Enrollment</a></nav>
     <div data-khae-actions></div>
     <div data-vnv-ecosystem-slot aria-label="Ecosystem menu"></div>
   </div>
@@ -41,6 +41,8 @@ pane.innerHTML=`<div class="notice">An Academy adult profile already exists for 
 <script src="https://vervenveda.com/assets/vnv-support.js" defer></script>
 <script src="/Khaemenes_Academy.github.io/assets/khaemenes-global-header.js" defer></script>
 <script src="https://vervenveda.com/assets/vnv-ecosystem-menu.js" defer></script>
+<script src="https://vervenveda.com/assets/vnv-ticker-autopopulate.js" data-vnv-ticker-autopopulate></script>
+<script>VNV_TICKER.autoPopulate({label:"Adult Enrollment Quick Links",max:14});</script>
 <script src="https://vervenveda.com/assets/vnv-ecosystem-toolbar.js"></script>
 </body>
 </html>
