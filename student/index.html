@@ -160,8 +160,8 @@ body[data-academy-student-landing] [data-khae-header] [data-khae-actions]{displa
 body[data-academy-student-landing] [data-khae-header] [data-khae-brand-mark]{width:52px!important;height:52px!important;flex:0 0 52px!important;display:grid!important;place-items:center!important;background:#243038!important;color:#fff8e9!important;border-radius:7px!important}
 body[data-academy-student-landing] [data-khae-header] [data-vnv-ecosystem-slot]{margin-left:auto!important;flex:0 0 auto!important}
 body[data-academy-student-landing] [data-khae-header] #vnvEcosystemMenuButton{position:static!important;width:52px!important;height:52px!important;min-width:52px!important;min-height:52px!important;background:#243038!important;color:#fff8e9!important;border-radius:7px!important}
-body[data-academy-student-landing] #khaeNetworkTicker{background:#10243b!important;color:#fff8e9!important;display:grid!important;grid-template-columns:minmax(0,1fr) 44px!important}
-body[data-academy-student-landing] #khaeNetworkTicker :is(.khae-network-ticker-app,.khae-network-ticker-label,.khae-network-ticker-call){color:#fff8e9!important;opacity:1!important}
+
+
 body[data-academy-student-landing] :is(h1,h2,h3,h4){font-family:Cinzel,Georgia,serif!important;font-weight:400!important}
 body[data-academy-student-landing] .portal-intro{background:#243038!important;color:#fff8e9!important;border-radius:7px!important}
 body[data-academy-student-landing] .portal-intro :is(h1,p,.eyebrow){color:#fff8e9!important;opacity:1!important}
@@ -519,21 +519,7 @@ render();
 <!-- Legacy floating Beta retired; official ecosystem dock contains Beta. -->
 <script src="../assets/khaemenes-account-connection-status.js"></script>
 <script src="../assets/vnv-language.js" defer></script>
-<script src="/Khaemenes_Academy.github.io/assets/khaemenes-global-header.js" defer></script>
 <script src="https://vervenveda.com/assets/vnv-ecosystem-menu.js" defer></script>
-<script>
-window.addEventListener("load",()=>{
- const ticker=document.getElementById("khaeNetworkTicker");
- if(!ticker)return;
- const a="https://vervenveda.com/Khaemenes_Academy.github.io/";
- const links=[["Student Portal",a+"student/"],["My Profile",a+"student/profile.html"],["Pinned Courses",a+"student/#studentCourses"],["My Schedule",a+"student/#studentSchedule"],["Classrooms",a+"student/#studentCourseDoors"],["Family Portal",a+"family/"],["High School","https://vervenveda.com/Khaemenes_High.github.io/"],["Search","https://vervenveda.com/PLERASearch.github.io/"],["Beta","https://vervenveda.com/beta/"],["Support","https://vervenveda.com/#support"]];
- ticker.querySelectorAll(".khae-network-ticker-set").forEach((set,i)=>{
-  set.replaceChildren();
-  const label=document.createElement("span");label.className="khae-network-ticker-label";label.textContent="Student Portal Quick Links";set.append(label);
-  links.forEach(([name,url])=>{const x=document.createElement("a");x.className="khae-network-ticker-app";x.href=url;x.textContent=name;if(i)x.tabIndex=-1;set.append(x)});
- });
-});
-</script>
 <!-- Removed legacy root Beta loader; Beta is available in the official ecosystem toolbar. -->
 
 <!-- The canonical ecosystem toolbar is the sole Beta entry. -->
@@ -552,6 +538,7 @@ document.querySelector('[data-help-tools]')?.addEventListener('click',event=>{
 });
 </script>
 
+<script src="https://vervenveda.com/assets/vnv-333-ticker.js"></script>
 <script src="https://vervenveda.com/assets/vnv-ticker-autopopulate.js" data-vnv-ticker-autopopulate></script>
 <script>VNV_TICKER.autoPopulate({label:"Student Portal Quick Links",max:14});</script>
 <script src="https://vervenveda.com/assets/vnv-ecosystem-toolbar.js"></script>
