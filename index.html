@@ -407,8 +407,6 @@ footer{padding:38px 0;color:rgba(255,255,255,.67);background:var(--night);font-s
 
 </style>
 <link rel="stylesheet" href="/Khaemenes_Academy.github.io/assets/khaemenes-global-header.css">
-<link rel="stylesheet" href="https://vervenveda.com/assets/vnv-ecosystem-menu.css">
-
 <style id="academy-frontdesk-header-gateway-standard-20261027">
 /* Homepage only. Match Verve N Veda's compact ticker -> identity/nav/menu -> tools.
    Overrides legacy grid CSS; keeps all original links and menu authority. */
@@ -546,22 +544,6 @@ header[data-khae-header] [data-khae-actions] a:focus-visible{
 </head>
 <body id="top">
 <a class="skip" href="#main">Skip to main content</a>
-
-<header data-khae-header>
-  <div class="shell header-inner" data-khae-header-inner>
-    <a class="brand" data-khae-brand href="https://vervenveda.com/" aria-label="Return to Verve N Veda home"><span class="seal" data-khae-brand-mark>KA</span><span><strong data-khae-brand-name>Khaemenes Academy</strong><small data-khae-brand-sub>Front Desk · Enrollment · Directory · Support</small></span></a>
-    <nav class="navlinks" data-khae-nav aria-label="Academy navigation">
-      <a href="#frontdesk">Front Desk</a><a href="#schools">Schools</a><a href="#services">Services</a><a href="#beta">Beta</a><a href="#help">Help</a>
-    </nav>
-    <div class="head-actions" data-khae-actions>
-      <a class="head-btn secondary" href="./student/">Student Entry</a>
-      <a class="head-btn primary" href="./family/">Create / Manage Account</a>
-      <a class="head-btn" href="./adult/">Adult Scholar</a>
-    </div>
-    <div class="academy-ecosystem-slot" data-vnv-ecosystem-slot aria-label="Ecosystem menu"></div>
-  </div>
-</header>
-
 
 <div class="academy-info-dock" aria-label="Academy information and utilities">
   <div class="shell academy-info-dock-inner">
@@ -783,11 +765,11 @@ document.querySelectorAll(".academy-info-dialog").forEach(dialog=>{
 body:has(#vnvEcosystemUtilityDock) #khaemenesHomeUtilityDock{display:none!important}
 </style>
 
+<script src="https://vervenveda.com/assets/vnv-header-autopopulate.js"></script>
+<script>VNV_HEADER.mount({"title":"Khaemenes Academy","subtitle":"Front Desk · Enrollment · Directory · Support","icon":"KA","home":"https://vervenveda.com/","actions":[{"label":"Front Desk","href":"#frontdesk"},{"label":"Schools","href":"#schools"},{"label":"Services","href":"#services"},{"label":"Beta","href":"#beta"},{"label":"Help","href":"#help"}]});</script>
 <script src="https://vervenveda.com/assets/vnv-333-ticker.js"></script>
 <script src="https://vervenveda.com/assets/vnv-ticker-autopopulate.js" data-vnv-ticker-autopopulate></script>
 <script>VNV_TICKER.autoPopulate({label:"Khaemenes Academy Quick Links",max:14});</script>
-
-<script src="https://vervenveda.com/assets/vnv-header-autopopulate.js"></script>
-<script>VNV_HEADER.mount({replaceLegacy:true});</script>\n<script src="https://vervenveda.com/assets/vnv-ecosystem-toolbar.js"></script>
+<script>VNV_HEADER.mount({"title":"Khaemenes Academy","subtitle":"Front Desk · Enrollment · Directory · Support","icon":"KA","home":"https://vervenveda.com/","actions":[{"label":"Front Desk","href":"#frontdesk"},{"label":"Schools","href":"#schools"},{"label":"Services","href":"#services"},{"label":"Beta","href":"#beta"},{"label":"Help","href":"#help"}]});</script><script src="https://vervenveda.com/assets/vnv-ecosystem-toolbar.js"></script>
 </body>
 </html>
