@@ -248,6 +248,15 @@ body[data-academy-student-landing] .academy-student-footer{background:#172832!im
 body[data-academy-student-landing] .academy-student-footer :is(strong,span){color:#fff8e9!important;font-size:16px!important;line-height:1.55!important}
 @media(max-width:850px){body[data-academy-student-landing] .portal-help{grid-template-columns:1fr!important}body[data-academy-student-landing] .portal-intro{justify-content:center!important;text-align:center!important}body[data-academy-student-landing] .portal-intro>div{flex-basis:100%}}
 @media(max-width:620px){body[data-academy-student-landing] .portal-intro{padding:22px 18px!important}body[data-academy-student-landing] .middle-student-basecamp{padding:17px!important}}
+</style><style id="academy-student-new-learner-entry-20261101">
+body[data-academy-student-landing] .new-learner-door{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-top:21px;padding:20px 23px;background:#edf1eb;border:1px solid #b3c8b7;border-left:5px solid #28634e;border-radius:7px}
+body[data-academy-student-landing] .new-learner-door>div{flex:1 1 320px}
+body[data-academy-student-landing] .new-learner-door h4{font:400 clamp(22px,2.5vw,28px)/1.2 Cinzel,Georgia,serif!important;margin:4px 0 8px!important;color:#183e32!important}
+body[data-academy-student-landing] .new-learner-door p{margin:0!important;color:#304c43!important;font-size:16px!important;line-height:1.55!important}
+body[data-academy-student-landing] .new-learner-door .btn{background:#28634e!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:1px solid #28634e!important;min-height:52px!important;text-align:center}
+body[data-academy-student-landing] .profile-entry .actions{justify-content:center!important}
+body[data-academy-student-landing] .profile-entry .actions .btn{flex:1 1 210px!important;text-align:center!important}
+@media(max-width:650px){body[data-academy-student-landing] .new-learner-door{justify-content:center;text-align:center}body[data-academy-student-landing] .new-learner-door .btn{width:100%}}
 </style></head>
 <body data-i18n-no-online data-academy-student-landing="true">
 <header data-khae-header>
@@ -489,7 +498,7 @@ function render(){
         // Course navigation remains an explicit student action.
       }));
     }else{
-      app.innerHTML=`<section class="card profile-entry" aria-labelledby="recoverProfileTitle"><p class="eyebrow">Already enrolled?</p><h3 id="recoverProfileTitle">Find your existing student profile</h3><p>No student record is visible in this Chrome profile at this website address. <strong>Please do not enroll again.</strong> Your existing record may be stored under another Chrome profile or an earlier Academy website address. You can still open classrooms below.</p><div class="actions"><a class="btn" href="../family/">Check Family Hub for existing learners →</a><a class="btn secondary" href="../family/#familyApp">I already have a backup file</a></div><p class="notice"><strong>Try this first:</strong> If the Family Hub also shows no learner, try the Chrome profile or website address you originally used. Import is only for an existing backup file. No profile or coursework is deleted by visiting this page.</p><details style="margin-top:14px"><summary>New to the Academy?</summary><p>Only families who have never created a profile need enrollment.</p><a class="btn secondary" href="../family/enroll/">Create a new family profile</a></details></section>`;
+      app.innerHTML=`<section class="card profile-entry" aria-labelledby="recoverProfileTitle"><p class="eyebrow">Already enrolled?</p><h3 id="recoverProfileTitle">Find your existing student profile</h3><p>No student record is visible in this Chrome profile at this website address. <strong>Please do not enroll again.</strong> Your existing record may be stored under another Chrome profile or an earlier Academy website address. You can still open classrooms below.</p><div class="actions"><a class="btn" href="../family/">Check Family Hub for existing learners →</a><a class="btn secondary" href="../family/#familyApp">I already have a backup file</a></div><p class="notice"><strong>Try this first:</strong> If the Family Hub also shows no learner, try the Chrome profile or website address you originally used. Import is only for an existing backup file. No profile or coursework is deleted by visiting this page.</p><div class="new-learner-door"><div><p class="eyebrow">First time here?</p><h4>Start a new Academy family profile</h4><p>Only choose enrollment if your family has never registered. Otherwise recover your existing learner above.</p></div><a class="btn gold" href="../family/enroll/">Enroll a New Learner</a></div></section>`;
     }
     app.insertAdjacentHTML("beforeend",classrooms);
     return;
