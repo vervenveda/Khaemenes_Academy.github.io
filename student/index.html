@@ -264,6 +264,28 @@ body[data-academy-student-landing] #studentClassroomMount{margin:0 auto 23px!imp
 body[data-academy-student-landing] #studentClassroomMount #studentCourseDoors{max-width:none!important;width:100%!important;margin:0 auto!important}
 body[data-academy-student-landing] .middle-student-basecamp{margin-top:23px!important}
 body[data-academy-student-landing] .portal-help .student-help-action{min-height:62px!important}
+</style><style id="academy-student-six-campus-directory-20261101">
+body[data-academy-student-landing] .academy-campus-directory{margin:16px auto 25px;padding:28px 24px 32px;border:1px solid #c9b99a;border-top:4px solid #b48b45;border-radius:7px;background:#f7f1e4}
+body[data-academy-student-landing] .campus-directory-heading{text-align:center;max-width:800px;margin:0 auto 23px}
+body[data-academy-student-landing] .campus-directory-heading h2{font:400 clamp(28px,3.5vw,43px)/1.18 Cinzel,Georgia,serif!important;color:#243038;margin:8px 0 10px}
+body[data-academy-student-landing] .campus-directory-heading p{color:#334b4c;font-size:16px!important;line-height:1.55}
+body[data-academy-student-landing] .campus-directory-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+body[data-academy-student-landing] .campus-door{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;min-width:0;min-height:230px;padding:20px 14px 14px;background:#fffdf8;border:1px solid #cbb99b;border-top:5px solid var(--campus-color,#315e94);border-radius:7px;color:#243038!important;text-decoration:none!important;box-shadow:0 5px 16px rgba(20,35,40,.07)}
+body[data-academy-student-landing] .campus-door:nth-child(1){--campus-color:#28634e}
+body[data-academy-student-landing] .campus-door:nth-child(2){--campus-color:#315e94}
+body[data-academy-student-landing] .campus-door:nth-child(3){--campus-color:#805b24}
+body[data-academy-student-landing] .campus-door:nth-child(4){--campus-color:#624679}
+body[data-academy-student-landing] .campus-door:nth-child(5){--campus-color:#863e54}
+body[data-academy-student-landing] .campus-door:nth-child(6){--campus-color:#24636a}
+body[data-academy-student-landing] .campus-door :is(span,strong){font-size:16px!important;line-height:1.4!important;color:#243038!important}
+body[data-academy-student-landing] .campus-door strong{font:400 clamp(21px,2.3vw,27px)/1.2 Cinzel,Georgia,serif!important}
+body[data-academy-student-landing] .campus-door-number{color:#5a625e!important}
+body[data-academy-student-landing] .campus-door .campus-door-action{display:flex;align-items:center;justify-content:center;min-height:52px;width:100%;padding:10px 8px;margin-top:auto;background:var(--campus-color);border-radius:7px;color:#fff!important;-webkit-text-fill-color:#fff!important}
+body[data-academy-student-landing] .campus-door:hover{box-shadow:0 9px 24px rgba(20,35,40,.14);transform:translateY(-2px)}
+body[data-academy-student-landing] .campus-door:focus-visible{outline:3px solid #b48b45;outline-offset:3px}
+@media(max-width:850px){body[data-academy-student-landing] .campus-directory-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){body[data-academy-student-landing] .academy-campus-directory{padding:23px 14px}body[data-academy-student-landing] .campus-directory-grid{grid-template-columns:1fr}body[data-academy-student-landing] .campus-door{min-height:195px}}
+@media(prefers-reduced-motion:reduce){body[data-academy-student-landing] .campus-door:hover{transform:none}}
 </style></head>
 <body data-i18n-no-online data-academy-student-landing="true">
 <header data-khae-header>
@@ -292,6 +314,17 @@ body[data-academy-student-landing] .portal-help .student-help-action{min-height:
       <article><h3><a class="student-help-action" href="#studentTools" data-help-tools>3 · My learning tools</a></h3><p>Use games, language tools, printables, goals, and evidence from your learner dashboard when your profile is selected.</p></article>
     </section>
     <div id="studentClassroomMount" aria-live="off"></div>
+    <section class="academy-campus-directory" id="studentCampusDirectory" aria-labelledby="studentCampusDirectoryTitle">
+      <div class="campus-directory-heading"><p class="eyebrow">Explore every learning stage</p><h2 id="studentCampusDirectoryTitle">Choose Your Academy Campus</h2><p>Go directly to the home page for your learning stage. Exploring a campus does not enroll you or change your saved learner profile.</p></div>
+      <nav class="campus-directory-grid" aria-label="Academy campus home pages">
+        <a href="https://vervenveda.com/Khaemenes_Preschool.github.io/" class="campus-door"><span class="campus-door-number">01 · Early Learning</span><strong>Pre-K · Crèche</strong><span>Preschool learning home</span><span class="campus-door-action">Visit Pre-K Campus →</span></a>
+        <a href="https://vervenveda.com/Khaemenes_KinderGarden.github.io/" class="campus-door"><span class="campus-door-number">02 · Early Learning</span><strong>Kindergarten</strong><span>Kindergarten learning home</span><span class="campus-door-action">Visit Kindergarten →</span></a>
+        <a href="https://vervenveda.com/Khaemenes_Elementary.github.io/" class="campus-door"><span class="campus-door-number">03 · Grades 1–5</span><strong>Elementary School</strong><span>Elementary learning home</span><span class="campus-door-action">Visit Elementary →</span></a>
+        <a href="https://vervenveda.com/Khaemenes_Middle.github.io/" class="campus-door"><span class="campus-door-number">04 · Grades 6–8</span><strong>Middle School</strong><span>Middle School learning home</span><span class="campus-door-action">Visit Middle School →</span></a>
+        <a href="https://vervenveda.com/Khaemenes_High.github.io/" class="campus-door"><span class="campus-door-number">05 · Grades 9–12</span><strong>High School</strong><span>High School learning home</span><span class="campus-door-action">Visit High School →</span></a>
+        <a href="https://vervenveda.com/Khaemenes_Higher_Learning.github.io/" class="campus-door"><span class="campus-door-number">06 · Beyond Grade 12</span><strong>Higher Learning</strong><span>University and advanced study home</span><span class="campus-door-action">Visit Higher Learning →</span></a>
+      </nav>
+    </section>
     <section class="middle-student-basecamp" aria-labelledby="middleStudentBasecampTitle">
   <div class="middle-basecamp-heading"><div><p class="eyebrow">Grades 6–8 · Daily routine</p><h2 id="middleStudentBasecampTitle">Your Daily Basecamp</h2></div><a href="https://vervenveda.com/Khaemenes_Middle.github.io/#basecamp">Middle School Campus</a></div>
   <div class="middle-basecamp-steps">
