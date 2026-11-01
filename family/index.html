@@ -115,7 +115,37 @@ body main .notice{font-size:13px;line-height:1.55}
 <link rel="stylesheet" href="https://vervenveda.com/assets/vnv-ecosystem-menu.css">
 <link rel="stylesheet" href="./../assets/khaemenes-landing-standard.css">
 <link rel="stylesheet" href="./../assets/khaemenes-landing-toolbar.css">
-</head>
+<style id="academy-family-t03-ready-visual-20261101">
+/* Presentation only: no change to family registry, enrollment, backups, authentication, or sync. */
+body .family-hero{padding:51px 18px 55px!important}
+body .family-hero h1{font:400 clamp(35px,5vw,61px)/1.16 Cinzel,Georgia,serif!important;margin:11px auto!important;color:#fff8ed!important}
+body .family-hero .kicker{font-size:16px!important;line-height:1.4!important;color:#edcd91!important}
+body .family-hero-subtitle{font-size:clamp(21px,2.6vw,30px)!important;line-height:1.35!important}
+body .family-hero-copy{font-size:16px!important;line-height:1.6!important;max-width:780px!important}
+body .family-hero-actions{max-width:980px!important;gap:12px!important}
+body .family-hero-actions a{font-size:16px!important;line-height:1.3!important;min-height:55px!important;padding:12px!important;background:#fffdf8!important;color:#243038!important}
+body #workspace{padding-block:48px 55px!important}
+body #workspace .family-workspace-heading{margin-bottom:27px!important}
+body #workspace .family-workspace-heading .family-workspace-eyebrow{font-size:16px!important;color:#5b4433!important}
+body #workspace .family-workspace-stack{width:min(100%,850px)!important}
+body #workspace #familyApp>.card{padding:28px!important;border:1px solid #c9b898!important;border-top:4px solid #315c49!important}
+body #workspace #familyApp>.card h3{font-size:clamp(24px,3vw,34px)!important;line-height:1.25!important;color:#17392f!important}
+body main :is(p,li,small,label,summary,.notice,.stage,.metric span,.snapshot-meta,.snapshot-status,.learner small,.step span){font-size:16px!important;line-height:1.55!important}
+body main :is(a.btn,button.btn,input:not([type=hidden]),select,textarea){font-size:16px!important;line-height:1.35!important}
+body main .actions :is(a,button){font-size:16px!important;min-height:52px!important;display:inline-flex;align-items:center;justify-content:center;text-align:center}
+body #workspace #familyApp .actions :is(a,button){font-size:16px!important;min-height:54px!important}
+body #workspace #familyApp #findExistingFamily{background:#315e94!important;color:#fff!important;border-color:#315e94!important}
+body #workspace #familyApp #createFamily{background:#28634e!important;color:#fff!important;border-color:#28634e!important}
+body #workspace #familyStatus .notice{font-size:16px!important}
+body #family-continuum .heading{margin-bottom:30px!important}
+body #family-continuum .heading .kicker{font-size:16px!important;color:#e9ce99!important}
+body #family-continuum .heading h2{font-size:clamp(30px,4vw,47px)!important}
+body #family-continuum .heading p{font-size:16px!important;color:#fff8eb!important}
+body #family-continuum .step{min-height:117px!important;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;text-align:center}
+body footer.footer{background:#172832!important;color:#fff8eb!important;text-align:center!important;border-top:3px solid #b48b45!important;padding:32px 18px!important}
+body footer.footer :is(strong,p){color:#fff8eb!important;font-size:16px!important;line-height:1.6!important}
+@media(max-width:650px){body #workspace #familyApp>.card{padding:20px!important}body #workspace{padding-block:35px 42px!important}}
+</style></head>
 <body data-i18n-no-online>
 <a class="skip" href="#workspace">Skip to family workspace</a>
 <header data-khae-header>
@@ -131,7 +161,7 @@ body main .notice{font-size:13px;line-height:1.55}
 <main>
 <section class="family-hero" aria-labelledby="family-hero-title">
  <div class="shell">
- <p class="kicker">Family Learning Center</p><h1 id="family-hero-title">Khaemenes Academy</h1>
+ <p class="kicker">Khaemenes Academy · Family Learning</p><h1 id="family-hero-title">Family Learning Center</h1>
  <p class="family-hero-subtitle">One family, many individual learning paths.</p>
  <p class="family-hero-copy">Find or restore a family profile, review learner placement, and continue to each student's learning pathway.</p>
  <div class="family-hero-actions"><a href="../student/">Student Portal</a><a href="enroll/">Enroll / Update</a><a href="../adult/">Adult Scholar</a><a href="../">Academy Home</a></div>
@@ -146,7 +176,7 @@ body main .notice{font-size:13px;line-height:1.55}
 
 <section class="section alt" id="family-continuum">
   <div class="shell">
-    <div class="heading"><p class="kicker">Academic Continuum</p><h2>A learning path from early childhood through higher learning.</h2></div>
+    <div class="heading"><p class="kicker">From early childhood through advanced study</p><h2>Academic Continuum</h2><p>Every learning stage has a direct path through the Academy.</p></div>
     <div class="continuum"><div class="step"><strong>Pre-K</strong><span>Preschool</span></div><div class="step"><strong>K</strong><span>Kinder Garden</span></div><div class="step"><strong>01–05</strong><span>Elementary</span></div><div class="step"><strong>06–08</strong><span>Middle</span></div><div class="step"><strong>09–12</strong><span>High School</span></div><div class="step"><strong>Higher</strong><span>Adult · College · Research</span></div></div>
     <div class="notice" style="margin-top:18px"><strong>Placement:</strong> K–12 learners use an exact grade. Adults learning for themselves enter through Higher Learning.</div>
   </div>
@@ -168,7 +198,7 @@ const STAGE={preschool:{label:"Preschool",color:"#8a6a44"},kindergarten:{label:"
 
 function family(){return R?.getFamily?.()||null}
 function meta(l){const g=l?.grade&&R?.gradeMeta?.[l.grade]?R.gradeMeta[l.grade]:null;return {stage:STAGE[l?.stage]||{label:l?.stage||"Placement",color:"#667382"},grade:g?.label||null,school:g?.school||null}}
-function status(){const box=$("#familyStatus");if(!box)return;if(!R){box.innerHTML='<div class="notice">The Family Learning Center could not open completely. Return to the Academy home and try again.</div>';return}box.innerHTML='<div class="notice ok"><strong>Family workspace ready on this device.</strong> These profiles are saved in this browser. Protected account sign-in and cross-device sync are not connected yet. Choose a learner below or update placement when needed.</div>'}
+function status(){const box=$("#familyStatus");if(!box)return;if(!R){box.innerHTML='<div class="notice">The Family Learning Center could not open completely. Return to the Academy home and try again.</div>';return}box.innerHTML='<div class="notice ok"><strong>Family tools are available on this device.</strong> These profiles are saved in this browser. Protected account sign-in and cross-device sync are not connected yet. Choose a learner below or update placement when needed.</div>'}
 function createFamily(){const name=prompt("Family display name:","Khaemenes Family");if(!name)return;const adult=prompt("First adult display name:","Parent / Guardian");if(!adult)return;R.createFamily({displayName:name,adultName:adult,adultRole:"parent"});render()}
 function statusLabel(value){return ({continue:"Continue",practice:"Practice",corrections:"Corrections",mastery:"Mastery Required",assessment:"Assessment Next",complete:"Complete",paused:"Paused"})[value]||"Continue"}
 function learnerProgress(l,adult){
