@@ -142,6 +142,9 @@ body #family-continuum .heading .kicker{font-size:16px!important;color:#e9ce99!i
 body #family-continuum .heading h2{font-size:clamp(30px,4vw,47px)!important}
 body #family-continuum .heading p{font-size:16px!important;color:#fff8eb!important}
 body #family-continuum .step{min-height:117px!important;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;text-align:center}
+body #family-continuum a.step{cursor:pointer;text-decoration:none;transition:background .16s ease,border-color .16s ease,transform .16s ease}
+body #family-continuum a.step:hover,body #family-continuum a.step:focus-visible{background:#f7efdd!important;border-color:#b48b45!important;transform:translateY(-2px)}
+body #family-continuum a.step:focus-visible{outline:3px solid #b48b45;outline-offset:3px}
 body footer.footer{background:#172832!important;color:#fff8eb!important;text-align:center!important;border-top:3px solid #b48b45!important;padding:32px 18px!important}
 body footer.footer :is(strong,p){color:#fff8eb!important;font-size:16px!important;line-height:1.6!important}
 @media(max-width:650px){body #workspace #familyApp>.card{padding:20px!important}body #workspace{padding-block:35px 42px!important}}
@@ -177,7 +180,7 @@ body footer.footer :is(strong,p){color:#fff8eb!important;font-size:16px!importan
 <section class="section alt" id="family-continuum">
   <div class="shell">
     <div class="heading"><p class="kicker">From early childhood through advanced study</p><h2>Academic Continuum</h2><p>Every learning stage has a direct path through the Academy.</p></div>
-    <div class="continuum"><div class="step"><strong>Pre-K</strong><span>Preschool</span></div><div class="step"><strong>K</strong><span>Kinder Garden</span></div><div class="step"><strong>01–05</strong><span>Elementary</span></div><div class="step"><strong>06–08</strong><span>Middle</span></div><div class="step"><strong>09–12</strong><span>High School</span></div><div class="step"><strong>Higher</strong><span>Adult · College · Research</span></div></div>
+    <nav class="continuum" aria-label="Academic Continuum campus links"><a class="step" href="https://vervenveda.com/Khaemenes_Preschool.github.io/"><strong>Pre-K</strong><span>Preschool</span></a><a class="step" href="https://vervenveda.com/Khaemenes_KinderGarden.github.io/"><strong>K</strong><span>Kinder Garden</span></a><a class="step" href="https://vervenveda.com/Khaemenes_Elementary.github.io/"><strong>01–05</strong><span>Elementary</span></a><a class="step" href="https://vervenveda.com/Khaemenes_Middle.github.io/"><strong>06–08</strong><span>Middle</span></a><a class="step" href="https://vervenveda.com/Khaemenes_High.github.io/"><strong>09–12</strong><span>High School</span></a><a class="step" href="https://vervenveda.com/Khaemenes_Higher_Learning.github.io/"><strong>Higher</strong><span>Adult · College · Research</span></a></nav>
     <div class="notice" style="margin-top:18px"><strong>Placement:</strong> K–12 learners use an exact grade. Adults learning for themselves enter through Higher Learning.</div>
   </div>
 </section>
