@@ -293,7 +293,29 @@ function renderInvite(f){
 function render(){
   status();if(!R)return;
   const f=family();
-  if(!f){$("#familyApp").innerHTML='<section class="card" style="width:100%;margin:auto;text-align:center"><h3>Find or create a family profile</h3><p>Already enrolled? This browser has not identified an existing family profile. Do not create a duplicate. Select an existing verified family backup to restore your family identity here. Course grades remain separately managed.</p><div class="actions"><button class="btn" id="findExistingFamily" type="button">Restore Existing Family Backup</button><input id="existingFamilyBackupFile" type="file" accept=".json,application/json" hidden></div><p id="existingFamilyRestoreStatus" role="status" aria-live="polite">If your original profile is in another browser or device and you have no backup, return to that browser to export the family record. Cloud sign-in is not currently verified.</p><p>New to the Academy? Create a family profile below.</p><div class="actions"><button class="btn primary" id="createFamily" type="button">Create Family Profile</button><a class="btn" href="../adult/enroll/">Adult Learner Entry</a></div></section>';$("#createFamily").onclick=createFamily;const picker=$("#existingFamilyBackupFile");$("#findExistingFamily").onclick=()=>picker?.click();picker?.addEventListener("change",async()=>{const file=picker.files?.[0];picker.value="";if(!file)return;const status=$("#existingFamilyRestoreStatus");if(!window.KhaemenesFamilyBackupVault?.restoreFile){status.textContent="The backup tool is unavailable. Refresh and try again.";return}status.textContent="Validating existing family backup…";try{await window.KhaemenesFamilyBackupVault.restoreFile(file);status.textContent="Backup restored. Select your learner profile.";render()}catch(error){status.textContent="Restore could not complete: "+String(error?.message||error)}});return}
+  if(!f){
+    // Existing browser-local families must be selectable even if the active
+    // family pointer is absent or stale. Never create or import records here.
+    const saved=R.load?.()||null;
+    const families=Object.values(saved?.families||{}).filter(x=>x?.familyId&&saved.families[x.familyId]===x);
+    if(families.length){
+      $("#familyApp").innerHTML='<section class="card" style="width:100%;margin:auto;text-align:center"><h3>Choose Your Existing Family</h3><p>Family records are already saved in this browser. Select the correct family to continue; no new registration or backup restoration is needed.</p><div class="actions" id="existingFamilyChoices">'+families.map(item=>'<button class="btn" type="button" data-existing-family="'+esc(item.familyId)+'">'+esc(item.displayName||"Existing Family")+'</button>').join("")+'</div></section>';
+      $("#existingFamilyChoices [data-existing-family]").forEach(button=>button.addEventListener("click",()=>{
+        const selected=R.getFamily?.(button.dataset.existingFamily);
+        if(!selected)return;
+        const ids=R.activeIds?.()||{};
+        const adult=selected.adults?.find(x=>x.adultId===ids.adultId)||selected.adults?.[0]||null;
+        const learner=selected.learners?.find(x=>x.learnerId===ids.learnerId)||selected.learners?.[0]||null;
+        // setActive only writes non-null values: clear stale cross-family
+        // selections first, without altering the actual registry or courses.
+        if(!adult)localStorage.removeItem(R.keys.activeAdult);
+        if(!learner)localStorage.removeItem(R.keys.activeLearner);
+        R.setActive({familyId:selected.familyId,adultId:adult?.adultId||null,learnerId:learner?.learnerId||null});
+        render();
+      }));
+      return;
+    }
+$("#familyApp").innerHTML='<section class="card" style="width:100%;margin:auto;text-align:center"><h3>Find or create a family profile</h3><p>Already enrolled? This browser has not identified an existing family profile. Do not create a duplicate. Select an existing verified family backup to restore your family identity here. Course grades remain separately managed.</p><div class="actions"><button class="btn" id="findExistingFamily" type="button">Restore Existing Family Backup</button><input id="existingFamilyBackupFile" type="file" accept=".json,application/json" hidden></div><p id="existingFamilyRestoreStatus" role="status" aria-live="polite">If your original profile is in another browser or device and you have no backup, return to that browser to export the family record. Cloud sign-in is not currently verified.</p><p>New to the Academy? Create a family profile below.</p><div class="actions"><button class="btn primary" id="createFamily" type="button">Create Family Profile</button><a class="btn" href="../adult/enroll/">Adult Learner Entry</a></div></section>';$("#createFamily").onclick=createFamily;const picker=$("#existingFamilyBackupFile");$("#findExistingFamily").onclick=()=>picker?.click();picker?.addEventListener("change",async()=>{const file=picker.files?.[0];picker.value="";if(!file)return;const status=$("#existingFamilyRestoreStatus");if(!window.KhaemenesFamilyBackupVault?.restoreFile){status.textContent="The backup tool is unavailable. Refresh and try again.";return}status.textContent="Validating existing family backup…";try{await window.KhaemenesFamilyBackupVault.restoreFile(file);status.textContent="Backup restored. Select your learner profile.";render()}catch(error){status.textContent="Restore could not complete: "+String(error?.message||error)}});return}
   renderFamily(f);
 }
 window.addEventListener("khaemenes-family-changed",render);
