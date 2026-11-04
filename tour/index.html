@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Explore Khaemenes Academy before enrollment. A read-only tour of campus pathways, student profiles, and sample learning.">
+<title>Explore Khaemenes Academy · Public Tour</title>
+<style>
+:root{--coal:#243038;--cream:#fff8eb;--paper:#f5f0e5;--gold:#b48b45;--green:#234b3b;--line:#c9bba2;--ink:#243038}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.65 "Brandon Grotesque",Nunito,"Avenir Next",Arial,sans-serif}
+a{color:inherit}button{font:inherit;cursor:pointer}button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.shell{width:min(1160px,calc(100% - 32px));margin:auto}.skip{position:absolute;left:-9999px}.skip:focus{left:10px;top:10px;background:white;padding:10px;z-index:10}
+header{background:var(--coal);color:var(--cream);border-bottom:3px solid var(--gold)}.head{min-height:77px;display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;padding:15px 0}
+.brand{font:400 19px Cinzel,Georgia,serif;text-decoration:none;color:var(--cream)}.head nav{display:flex;gap:9px;flex-wrap:wrap}
+.btn,.head nav a{display:inline-flex;align-items:center;justify-content:center;min-height:45px;padding:9px 16px;border:1px solid var(--coal);border-radius:7px;background:var(--coal);color:var(--cream);text-decoration:none;font-size:16px;font-weight:400}
+.head nav a{border-color:#8a806e}.btn.light{background:var(--cream);color:var(--coal)}.btn.gold{background:#edd9aa;color:#2d2618;border-color:#bd9857}
+.hero{padding:50px 0 36px;text-align:center}.eyebrow{color:#8c6429;font:400 18px Cinzel,Georgia,serif;letter-spacing:.08em}
+h1,h2,h3{font-family:Cinzel,Georgia,serif;font-weight:400;line-height:1.2}h1{font-size:clamp(34px,5vw,55px);margin:12px 0}h2{font-size:clamp(27px,3.4vw,36px)}h3{font-size:23px}
+.hero p{max-width:780px;margin:0 auto 20px}.disclaimer{max-width:900px;margin:18px auto;padding:14px 18px;border:1px solid #b9a77c;border-radius:7px;background:#fffaf0;text-align:center}
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:25px 0}.step{border:1px solid #ab9777;background:#fffdf7;color:var(--coal);padding:13px 7px;border-radius:7px;min-height:54px}.step[aria-current="step"]{background:var(--coal);color:var(--cream);border-color:var(--coal)}
+.panel{padding:30px;border:1px solid var(--line);border-radius:7px;background:#fffdf8;margin:0 0 24px;box-shadow:0 7px 22px #2430380b}.panel[hidden]{display:none}.intro{margin:0 0 20px;color:#53615a}.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.card{padding:23px;border:1px solid var(--line);border-radius:7px;background:#faf7ee;display:flex;flex-direction:column;align-items:flex-start;gap:8px}.card h3{margin:3px 0 0}.card p{margin:0 0 9px}.card .btn{margin-top:auto}.capsule{display:inline-block;border:1px solid var(--line);padding:4px 10px;border-radius:100px;font-size:14px;background:white}
+.preview{display:grid;grid-template-columns:1fr 1fr;gap:16px}.preview article{background:#f8f3e9;padding:20px;border:1px solid var(--line);border-radius:7px}.preview ul{padding-left:22px;margin-bottom:0}
+.demo-label{color:#6b5030;font-size:14px;letter-spacing:.06em;text-transform:uppercase}.mock-photo{width:110px;height:110px;display:grid;place-items:center;margin:0 0 12px;border:3px solid #b48b45;background:#e3d0ab;color:#243038;border-radius:50%;font-size:50px}
+.choice{display:block;margin:11px 0;padding:12px 14px;border:1px solid #b6a88d;border-radius:7px;width:100%;background:#fffdf7;color:#243038;text-align:left}.choice[aria-pressed="true"]{border-color:#234b3b;background:#dcebdc}
+.feedback{min-height:50px;padding:14px 0;font-weight:400}.locked{padding:21px;border:2px dashed #ab9777;border-radius:7px;background:#f5f0e5;text-align:center}
+.controls{display:flex;justify-content:space-between;gap:12px;margin:24px 0 0;flex-wrap:wrap}footer{background:var(--coal);color:var(--cream);padding:27px 0;text-align:center;font-size:16px}footer a{color:var(--cream)}
+@media(max-width:780px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.preview{grid-template-columns:1fr}.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.cards{grid-template-columns:1fr}.panel{padding:18px}.head{justify-content:center;text-align:center}.controls .btn{flex:1}}
+@media print{header nav,.steps,.controls,.choice{display:none!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#tour">Skip to tour</a>
+<header><div class="shell head"><a class="brand" href="../">Khaemenes Academy</a><nav aria-label="Public navigation"><a href="../">Academy Home</a><a href="../family/">Family Hub</a><a href="../student/">Student Portal</a></nav></div></header>
+<main class="shell" id="tour">
+<section class="hero">
+<div class="eyebrow">A window into your learning future</div>
+<h1>Explore Khaemenes Academy</h1>
+<p>Choosing a home education platform is a meaningful decision. Visit our campuses, see how a student profile can look, and try a tiny lesson preview before enrolling.</p>
+<div class="disclaimer"><strong>Public demonstration.</strong> No sign-in, enrollment, learner identity, grade, score, mastery, or coursework is created or changed by this tour. The profile and lesson below are examples, not real student records.</div>
+</section>
+<div class="steps" role="navigation" aria-label="Tour sections">
+<button type="button" class="step" data-go="0" aria-current="step">1 · Campuses</button>
+<button type="button" class="step" data-go="1">2 · Student Profile</button>
+<button type="button" class="step" data-go="2">3 · Sample Lesson</button>
+<button type="button" class="step" data-go="3">4 · Learning Access</button>
+</div>
+<section class="panel" data-panel="0" aria-labelledby="campusTitle"><h2 id="campusTitle">Discover your campus</h2><p class="intro">These are genuine Academy campus entry links. You may explore their public landing pages, then return to this tour. Actual course activities may have their own access rules.</p>
+<div class="cards">
+<article class="card"><span class="capsule">Pre-K</span><h3>Preschool</h3><p>Letters, early numbers, stories, creativity, and gentle first steps.</p><a class="btn" href="https://vervenveda.com/Khaemenes_Preschool.github.io/">Visit Preschool</a></article>
+<article class="card"><span class="capsule">K</span><h3>Kinder Garden</h3><p>Tracing, reading, shapes, nature, and playful exploration.</p><a class="btn" href="https://vervenveda.com/Khaemenes_KinderGarden.github.io/">Visit Kinder Garden</a></article>
+<article class="card"><span class="capsule">Grades 01–05</span><h3>Elementary</h3><p>Foundations in literacy, mathematics, science, and discovery.</p><a class="btn" href="https://vervenveda.com/Khaemenes_Elementary.github.io/">Visit Elementary</a></article>
+<article class="card"><span class="capsule">Grades 06–08</span><h3>Middle School</h3><p>Increasing independence, investigation, and deeper subject work.</p><a class="btn" href="https://vervenveda.com/Khaemenes_Middle.github.io/">Visit Middle School</a></article>
+<article class="card"><span class="capsule">Grades 09–12</span><h3>High School</h3><p>Course pathways, learning tools, assessment, and study organization.</p><a class="btn" href="https://vervenveda.com/Khaemenes_High.github.io/">Visit High School</a></article>
+<article class="card"><span class="capsule">Adult learners</span><h3>Higher Learning</h3><p>Continued study, scholarship, and independent learning opportunities.</p><a class="btn" href="https://vervenveda.com/Khaemenes_Higher_Learning.github.io/start/">Visit Higher Learning</a></article>
+</div></section>
+<section class="panel" data-panel="1" hidden aria-labelledby="profileTitle"><span class="demo-label">Illustrative profile · no real learner data</span><h2 id="profileTitle">Your personal learning home</h2><p class="intro">This preview illustrates the kind of daily organization and personalization offered by student profiles. It is not connected to a live account.</p>
+<div class="preview"><article><div class="mock-photo" aria-hidden="true">✦</div><h3>Sample Student</h3><p>Grade 09 · Demonstration only</p><span class="capsule">Profile frame & themes</span> <span class="capsule">Learning goals</span> <span class="capsule">Personal settings</span></article>
+<article><h3>My learning day</h3><ul><li>Review today's schedule</li><li>Open a pinned mathematics course</li><li>Continue language and literature</li><li>Check a science investigation</li><li>Record a goal or reflection</li><li>Review feedback and portfolio evidence</li></ul></article></div></section>
+<section class="panel" data-panel="2" hidden aria-labelledby="lessonTitle"><span class="demo-label">Original illustrative lesson · ungraded</span><h2 id="lessonTitle">Try a tiny mathematics lesson</h2><p>We can recognize a pattern by noticing what changes from one term to the next.</p><div class="preview"><article><h3>Observe</h3><p>The sequence is <strong>3, 6, 9, 12, …</strong></p><p>Each term is three more than the previous term. What number comes next?</p></article><article><h3>Choose an answer</h3><button class="choice" type="button" data-answer="13" aria-pressed="false">13</button><button class="choice" type="button" data-answer="15" aria-pressed="false">15</button><button class="choice" type="button" data-answer="18" aria-pressed="false">18</button><p class="feedback" id="feedback" role="status" aria-live="polite">Choose an answer to see an explanation. Nothing is saved or graded.</p></article></div></section>
+<section class="panel" data-panel="3" hidden aria-labelledby="accessTitle"><h2 id="accessTitle">Explore freely. Learn securely.</h2><p class="intro">The public tour is a demonstration, separate from active learning. A full student journey should begin only after a valid learner identity and placement are established.</p>
+<div class="preview"><article><h3>Available before enrollment</h3><ul><li>Public campus and program overviews</li><li>Illustrative profile experience</li><li>Ungraded sample lesson</li><li>Descriptions of learning tools and supports</li></ul></article><article><h3>Reserved for enrolled learners</h3><div class="locked"><strong>Learning activity locked in this tour</strong><p>Submitting graded assessments, unlocking mastery, storing learner evidence, and changing official progress are not available here.</p><button class="btn" disabled aria-disabled="true">Submit Assessment · Locked</button></div></article></div>
+<p>Already enrolled? Use your existing student or family entry. New families can explore enrollment without creating an account during this tour.</p>
+<div class="controls"><a class="btn light" href="../student/">Existing Student Entry</a><a class="btn gold" href="../family/">Family & Enrollment Information</a></div></section>
+<div class="controls" aria-label="Tour navigation"><button class="btn light" id="prev" type="button">Previous</button><span id="position" aria-live="polite">Step 1 of 4</span><button class="btn" id="next" type="button">Next Stop</button></div>
+</main>
+<footer><div class="shell">Khaemenes Academy · A sovereign education ecosystem · <a href="../">Return to Academy</a></div></footer>
+<script>
+(function(){
+"use strict";
+const tabs=[...document.querySelectorAll("[data-go]")],panels=[...document.querySelectorAll("[data-panel]")];
+const prev=document.getElementById("prev"),next=document.getElementById("next"),position=document.getElementById("position");let current=0;
+function show(i){current=Math.max(0,Math.min(3,i));panels.forEach((p,j)=>p.hidden=j!==current);tabs.forEach((t,j)=>{if(j===current)t.setAttribute("aria-current","step");else t.removeAttribute("aria-current")});prev.disabled=current===0;next.disabled=current===3;next.textContent=current===3?"Tour Complete":"Next Stop";position.textContent="Step "+(current+1)+" of 4";document.getElementById("tour").scrollIntoView({block:"start",behavior:"smooth"});}
+tabs.forEach(b=>b.addEventListener("click",()=>show(Number(b.dataset.go))));
+prev.addEventListener("click",()=>show(current-1));next.addEventListener("click",()=>show(current+1));
+document.querySelectorAll("[data-answer]").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll("[data-answer]").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));document.getElementById("feedback").textContent=b.dataset.answer==="15"?"Correct! Add three to 12 to get 15. This is practice feedback only.":"Try again: each number rises by three. Add three to 12. This practice is not graded."; }));
+show(0);
+})();
+</script>
+</body></html>
