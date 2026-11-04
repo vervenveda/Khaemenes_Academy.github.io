@@ -75,20 +75,34 @@ main.grid>.academy-curriculum-directory{grid-column:1/-1;padding:26px;background
 @media(max-width:920px){.academy-inventory-groups{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:540px){main.grid>.academy-curriculum-directory{padding:15px}.academy-inventory-group summary{font-size:16px;flex-wrap:wrap}}
 
-</style>
-<link rel="stylesheet" href="/Khaemenes_Academy.github.io/assets/khaemenes-global-header.css">
-<link rel="stylesheet" href="https://vervenveda.com/assets/vnv-ecosystem-menu.css">
-</head>
-<body data-i18n-no-online>
-<header data-khae-header>
-  <div class="shell" data-khae-header-inner>
-    <a class="brand" data-khae-brand href="../../"><span class="mark" data-khae-brand-mark>KA</span><span><strong data-khae-brand-name>Khaemenes Academy</strong><small data-khae-brand-sub>Family Enrollment</small></span></a>
-    <nav data-khae-nav aria-label="Family enrollment navigation"><a href="../../" data-ticker>Academy Home</a><a href="../" data-ticker>Family Hub</a><a href="../../student/" data-ticker>Student Portal</a><a href="../../adult/" data-ticker>Adult Learning</a></nav>
-    <div data-khae-actions></div>
-    <div data-vnv-ecosystem-slot aria-label="Ecosystem menu"></div>
-  </div>
-</header>
 
+/* Enrollment 2026-11-04: single canonical header, equal cards, readable buttons. */
+body{font-family:"Brandon Grotesque",Nunito,"Avenir Next",Arial,sans-serif;font-size:16px}
+main.shell.grid{width:min(calc(100% - 32px),1080px)!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:18px!important;align-items:stretch!important}
+main.shell.grid>.card{box-sizing:border-box!important;min-width:0!important;width:100%!important;margin:0!important;padding:24px!important;border-radius:7px!important}
+main.shell.grid>.card:not(.wide){height:100%;display:flex;flex-direction:column}
+main.shell.grid>.card:not(.wide)>.actions{margin-top:auto}
+main.shell.grid>.card h2{font:400 clamp(22px,2.2vw,28px)/1.3 Cinzel,Georgia,serif!important}
+main.shell.grid>.card .eyebrow,main.shell.grid>.card .field label{font-size:16px!important;font-weight:400!important;letter-spacing:.02em!important}
+main.shell.grid>.card p,main.shell.grid>.card .notice,main.shell.grid>.card .learner{font-size:16px!important;line-height:1.5!important}
+main.shell.grid>.card .actions{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important;align-items:stretch!important}
+main.shell.grid>.card .actions>.btn,
+main.shell.grid>.card button.btn{min-width:0!important;min-height:44px!important;height:auto!important;padding:10px 12px!important;white-space:normal!important;border-radius:7px!important;font:400 16px/1.35 "Brandon Grotesque",Nunito,Arial,sans-serif!important;text-transform:none!important;letter-spacing:0!important;text-align:center!important}
+main.shell.grid>.card .field :is(input,select){font-size:16px!important;min-height:44px!important}
+main.shell.grid>.card .learner .btn{font-size:16px!important}
+main.shell.grid>.academy-curriculum-directory{grid-column:1/-1!important}
+.enrollment-official-footer{box-sizing:border-box;width:100%;padding:26px 18px 90px;margin:25px auto 0;background:#243038;color:#fff8e9;text-align:center;border-top:2px solid #b48b45;font:400 16px/1.5 "Brandon Grotesque",Nunito,Arial,sans-serif}
+.enrollment-official-footer p{margin:5px auto;color:#fff8e9}
+.enrollment-official-footer nav{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin:15px auto 0}
+.enrollment-official-footer nav a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:9px 14px;border-radius:7px;border:1px solid #c5b08d;color:#fff8e9;text-decoration:none;font-size:16px}
+.enrollment-official-footer nav a:hover,.enrollment-official-footer nav a:focus-visible{background:#374944;color:#fff8e9}
+@media(max-width:760px){main.shell.grid{grid-template-columns:1fr!important}main.shell.grid>.card .actions{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:430px){main.shell.grid>.card .actions{grid-template-columns:1fr!important}main.shell.grid>.card{padding:16px!important}}
+@media print{.enrollment-official-footer{padding:12px;color:#243038;background:#fff}.enrollment-official-footer nav{display:none}}
+
+</style>
+</head>
+<body data-i18n-no-online data-vnv-header-title="Family Enrollment" data-vnv-header-subtitle="Khaemenes Academy · Enrollment & Placement">
 <section class="hero shell"><div class="eyebrow">Enrollment & Placement</div><h1>Khaemenes Academy</h1><h2 class="academy-page-subtitle">Enrollment &amp; Learning Pathways</h2><p>Begin the right learning path.</p><p>Create or open a family profile, register each K–12 learner with an exact grade, or begin an adult learning path through Khaemenes Higher Learning.</p></section>
 
 <main class="shell grid">
@@ -113,6 +127,7 @@ main.grid>.academy-curriculum-directory{grid-column:1/-1;padding:26px;background
 <p class="inventory-footnote">Directory audit: November 4, 2026. Sources: High School course catalog, Academy Life Skills, Bazaar Art, The Refrain, Solanar, ARSHIF, Linguistics, Medicament Hub, One Nation For All and the Verve N Veda ecosystem registry. Listings are independently source-owned. The directory does not grant mastery, pin a course, register students or synchronize grades.</p>
 <div class="inventory-footlinks"><a href="https://vervenveda.com/Khaemenes_High.github.io/courses/electives/">High School Electives Hall</a><a href="https://vervenveda.com/Khaemenes_High.github.io/courses/">All High School Courses</a><a href="https://vervenveda.com/Khaemenes_Academy_Life_Skills.github.io/">Life Skills Campus</a></div>
 </section></main>
+<footer class="enrollment-official-footer" aria-label="Khaemenes Academy footer"><p>Verve N Veda · Khaemenes Academy</p><p>Family Enrollment &amp; Learning Pathways · Free learning for all</p><nav aria-label="Enrollment footer links"><a href="https://vervenveda.com/">Verve N Veda</a><a href="../../">Academy</a><a href="../">Family Portal</a><a href="../../student/">Student Portal</a></nav></footer>
 
 <script src="../../assets/khaemenes-family-registry.js"></script>
 <script src="../../assets/khaemenes-institutional-id.js"></script>
@@ -191,9 +206,26 @@ render();
 </script>
 
 <script src="../../assets/vnv-language.js" defer></script>
-<script src="https://vervenveda.com/assets/vnv-ecosystem-menu.js" defer></script>
+<script src="https://vervenveda.com/assets/vnv-header-autopopulate.js" defer></script>
 <!-- Legacy standalone Beta launcher retired; canonical toolbar includes Beta. -->
 
+<script>
+(function(){
+ const mount=()=>window.VNV_HEADER?.mount?.({
+  title:"Family Enrollment",
+  subtitle:"Khaemenes Academy · Enrollment & Placement",
+  home:"https://vervenveda.com/Khaemenes_Academy.github.io/",
+  icon:"K",
+  actions:[
+   {label:"Academy",href:"https://vervenveda.com/Khaemenes_Academy.github.io/"},
+   {label:"Family",href:"https://vervenveda.com/Khaemenes_Academy.github.io/family/"},
+   {label:"Student",href:"https://vervenveda.com/Khaemenes_Academy.github.io/student/"},
+   {label:"Enrollment",href:"https://vervenveda.com/Khaemenes_Academy.github.io/family/enroll/"}
+  ]
+ });
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",mount,{once:true});else mount();
+})();
+</script>
 <script src="https://vervenveda.com/assets/vnv-333-ticker.js"></script>
 <script src="https://vervenveda.com/assets/vnv-ticker-autopopulate.js" data-vnv-ticker-autopopulate></script>
 <script>VNV_TICKER.autoPopulate({label:"Enrollment Quick Links",max:14});</script>
