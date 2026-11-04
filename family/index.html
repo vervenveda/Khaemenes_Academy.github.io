@@ -281,7 +281,7 @@ function renderFamily(f){
   bind(f);
 }
 function bind(f){
-  document.querySelectorAll("[data-learner-profile]").forEachlink=>link.addEventListener("click",event=>{
+  document.querySelectorAll("[data-learner-profile]").forEach(link=>link.addEventListener("click",event=>{
     const learner=R.getLearner?.(link.dataset.learnerProfile);
     if(!learner||learner.familyId!==f.familyId){event.preventDefault();return}
     // Select the student before leaving so the individual profile shows the right learner.
