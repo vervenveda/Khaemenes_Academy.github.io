@@ -30,7 +30,7 @@
   }
 
   function routeForLearner(learner=activeLearner()){
-    if(!learner)return Object.freeze({status:"no-active-learner",version:VERSION,destination:"https://vervenveda.com/Khaemenes_Academy.github.io/family/enroll/",requiresEnrollment:true,requiresPlacement:true});
+    if(!learner)return Object.freeze({status:"no-active-learner",version:VERSION,destination:"https://vervenveda.com/Khaemenes_Academy.github.io/student/",requiresEnrollment:false,requiresPlacement:false});
     const r=registry();
     const placement=context()?.placementFor?.(learner)||null;
     const local=r?.learnerDestination?.(learner)||r?.destinationFor?.(learner)||null;
