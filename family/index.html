@@ -201,6 +201,22 @@ function meta(l){const g=l?.grade&&R?.gradeMeta?.[l.grade]?R.gradeMeta[l.grade]:
 function status(){const box=$("#familyStatus");if(!box)return;if(!R){box.innerHTML='<div class="notice">The Family Learning Center could not open completely. Return to the Academy home and try again.</div>';return}box.innerHTML='<div class="notice ok"><strong>Family tools are available on this device.</strong> These profiles are saved in this browser. Protected account sign-in and cross-device sync are not connected yet. Choose a learner below or update placement when needed.</div>'}
 function createFamily(){const name=prompt("Family display name:","Khaemenes Family");if(!name)return;const adult=prompt("First adult display name:","Parent / Guardian");if(!adult)return;R.createFamily({displayName:name,adultName:adult,adultRole:"parent"});render()}
 function statusLabel(value){return ({continue:"Continue",practice:"Practice",corrections:"Corrections",mastery:"Mastery Required",assessment:"Assessment Next",complete:"Complete",paused:"Paused"})[value]||"Continue"}
+function familyGradeNineBars(snapshots){
+ const cat=window.KhaemenesHighEightClass;if(!cat)return "";
+ const ids=snapshots.map(x=>x.courseId);
+ const math=ids.find(x=>x==="pre-algebra"||x==="algebra-1")||null;
+ const langCourse=ids.find(x=>/^world-language-9-(spanish|french|german|mandarin|japanese|arabic|russian)$/.test(x));
+ const slots=cat.slots(9,{mathId:math,language:langCourse?langCourse.replace("world-language-9-",""):""});
+ const colors=["#D53E4F","#F46D43","#FDAE61","#FEE08B","#E6F598","#ABDDA4","#66C2A5","#3288BD"];
+ const wrap=document.createElement("div");
+ return slots.map((s,i)=>{
+  const record=s.id?snapshots.find(x=>x.courseId===s.id&&!x.stale):null;
+  const pct=record?.progress?.percent;
+  const valid=typeof pct==="number"&&Number.isFinite(pct)&&pct>=0&&pct<=100;
+  const bar='<span style="display:block;height:17px;width:'+(valid?pct:0)+'%;background:'+colors[i]+'"></span>';
+  return '<div style="display:grid;grid-template-columns:170px minmax(80px,1fr) 110px;gap:8px;align-items:center;margin:7px 0"><span>'+esc(s.label)+'</span><span style="background:#e5dfd5;border-radius:7px;overflow:hidden">'+bar+'</span><span>'+(valid?Math.round(pct)+"%":"Not reported")+'</span></div>';
+ }).join("");
+}
 function learnerProgress(l,adult){
   if(!adult||!R?.canAdult?.(adult.adultId,l.learnerId,"progress.view")){
     return `<article class="snapshot-learner"><h3>${esc(l.nickname||"Learner")}</h3><p class="snapshot-meta">Progress view is not enabled for this adult.</p></article>`;
@@ -210,8 +226,9 @@ function learnerProgress(l,adult){
   if(!snapshots.length){
     return `<article class="snapshot-learner"><h3>${esc(l.nickname||"Learner")}</h3><p class="snapshot-meta">No course continuation snapshot has been published yet. Existing records remain unchanged; snapshots appear as school courses adopt the shared continuation contract.</p><div class="actions"><a class="btn" href="../student/">Open Student Portal</a></div></article>`;
   }
+  const bars=/^(?:grade[\s-]*)?0?9$/i.test(String(l.grade||""))?familyGradeNineBars(snapshots):"";
   const courses=snapshots.slice(0,6).map(s=>`<article class="snapshot-course"><strong>${esc(s.courseTitle||s.courseId)}</strong><small>${esc(s.nextTitle||s.summary||"Next learning step")}</small><span class="snapshot-status">${esc(statusLabel(s.status))}</span>${s.stale?`<div class="snapshot-action"><strong>Progress changed in the course.</strong> Reopen the course to refresh this next-step summary before relying on it.</div>`:""}${s.mastery?.best!==null&&s.mastery?.best!==undefined?`<small>Best mastery: ${esc(s.mastery.best)}% · target ${esc(s.mastery.threshold||80)}%</small>`:""}${s.family?.needsAction?`<div class="snapshot-action"><strong>Family attention</strong>${esc(s.family.summary||s.family.label||"Review this learning step.")}</div>`:""}<div class="actions">${s.nextHref?`<button class="btn" type="button" data-open-next="${esc(s.nextHref)}" data-learner-id="${esc(l.learnerId)}">${s.stale?"Refresh in Course":"Open Next Step"}</button>`:""}</div></article>`).join("");
-  return `<article class="snapshot-learner"><h3>${esc(l.nickname||"Learner")}</h3><p class="snapshot-meta">${esc(summary?.courses||snapshots.length)} course snapshot${(summary?.courses||snapshots.length)===1?"":"s"} · ${esc(summary?.needsFamilyAction||0)} need family attention</p><div class="snapshot-grid">${courses}</div></article>`;
+  return `<article class="snapshot-learner"><h3>${esc(l.nickname||"Learner")}</h3><p class="snapshot-meta">${esc(summary?.courses||snapshots.length)} course snapshot${(summary?.courses||snapshots.length)===1?"":"s"} · ${esc(summary?.needsFamilyAction||0)} need family attention</p>${bars}<div class="snapshot-grid">${courses}</div></article>`;
 }
 /* Grade 09 browser-local daily report; parent permission is mandatory. */
 function gradeNineDailyReport(l,adult){
@@ -282,6 +299,7 @@ function render(){
 window.addEventListener("khaemenes-family-changed",render);
 window.addEventListener("khaemenes-learner-placement-changed",render);
 window.addEventListener("khaemenes-learning-continuation-changed",render);
+window.addEventListener("load",render);
 render();
 })();
 </script>
