@@ -69,14 +69,24 @@ for(const file of [
   assert.match(html,/https:\/\/vervenveda\.com\/assets\/vnv-ecosystem-toolbar\.js/,"Missing canonical ecosystem toolbar in "+file);
   assert.doesNotMatch(html,/vnv-beta-link\.js/,"Legacy standalone Beta loader must stay retired in "+file);
   assert.doesNotMatch(html,/khaemenes-landing-toolbar\.js/,"Legacy landing-toolbar loader must not compete with the canonical toolbar in "+file);
-  assert.match(html,/khaemenes-global-header\.js/,"Ticker and Academy menu must stay in "+file);
+  assert.match(html,/vnv-header-autopopulate\.js/,"Canonical branched header must load in "+file);
+  assert.match(html,/VNV_HEADER\.mount\(/,"Canonical branched header must mount in "+file);
+  assert.match(html,/replaceLegacy:true/,"Legacy page-wide header must be retired in "+file);
+  assert.match(html,/vnv-333-ticker\.js/,"333 Network ticker must load in "+file);
+  assert.match(html,/vnv-ticker-autopopulate\.js/,"Page AutoPopulate ticker must load in "+file);
+  assert.doesNotMatch(html,/khaemenes-global-header\.js/,"Retired header script must not return in "+file);
 }
 
 assert.match(
   home,
-  /vnv-ecosystem-toolbar\.js" defer data-vnv-ecosystem-toolbar="1"/,
+  /<script\s+src="https:\/\/vervenveda\.com\/assets\/vnv-ecosystem-toolbar\.js"[^>]*><\/script>/,
   "Academy Home must load the canonical VNV ecosystem toolbar"
 );
+assert.match(home,/vnv-header-autopopulate\.js/,"Academy Home must load the canonical branched header");
+assert.match(home,/VNV_HEADER\.mount\(/,"Academy Home must mount the canonical header");
+assert.match(home,/vnv-333-ticker\.js/,"Academy Home must load the sanctioned 333 ticker");
+assert.match(home,/vnv-ticker-autopopulate\.js/,"Academy Home must load the sanctioned AutoPopulate ticker");
+assert.doesNotMatch(home,/khaemenes-global-header\.js/,"Retired Academy header must not return");
 
 console.log(
   "PASS Academy header parity, centralized VNV toolbar delegation, and 5 major portal entrances."
