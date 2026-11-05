@@ -180,6 +180,17 @@ body #workspace .family-workspace-stack{width:min(100%,1080px)!important}
 @media(max-width:480px){.family-hub-cards{grid-template-columns:1fr}.family-hub-quick-nav a{padding:10px 7px}.family-hub-quick-nav a strong{font-size:17px}#family-progress div[style*="grid-template-columns:170px"]{grid-template-columns:1fr!important}}
 @media print{.family-hub-quick-nav,.family-hub-cards a{display:none!important}}
 </style>
+<style id="academy-family-reported-graphs-20261105">
+.family-reported-bars{padding:16px;margin:15px 0;background:#f9f5ec;border:1px solid #d4c5ac;border-radius:7px}
+.family-reported-bars h4{font:400 21px/1.3 Cinzel,Georgia,serif;color:#273e32;margin:0 0 7px}
+.family-reported-bars p{font-size:16px;color:#546358}
+.family-reported-row{display:grid;grid-template-columns:minmax(120px,1fr) minmax(100px,2fr) minmax(104px,auto);align-items:center;gap:11px;margin:10px 0;color:#30493c;font-size:16px}
+.family-reported-row>span:last-child{text-align:right}
+.family-reported-track{display:block;min-width:0;height:18px;background:#e6e2d9;border:1px solid #d2c5ad;border-radius:7px;overflow:hidden}
+.family-reported-track>span{display:block;height:100%}
+@media(max-width:620px){.family-reported-row{grid-template-columns:1fr 1fr}.family-reported-row>span:last-child{grid-column:2;text-align:left}}
+@media(max-width:440px){.family-reported-row{grid-template-columns:1fr;gap:5px}.family-reported-row>span:last-child{grid-column:1}}
+</style>
 </head>
 <body data-i18n-no-online>
 <a class="skip" href="#workspace">Skip to family workspace</a>
@@ -281,6 +292,18 @@ function familyGradeNineBars(snapshots){
   return '<div style="display:grid;grid-template-columns:170px minmax(80px,1fr) 110px;gap:8px;align-items:center;margin:7px 0"><span>'+esc(s.label)+'</span><span style="background:#e5dfd5;border-radius:7px;overflow:hidden">'+bar+'</span><span>'+(valid?Math.round(pct)+"%":"Not reported")+'</span></div>';
  }).join("");
 }
+function familyPublishedProgressBars(records){
+ const courses=records.filter(r=>r?.progress?.percent!==null&&r?.progress?.percent!==undefined).slice(0,8);
+ if(!courses.length)return '<p class="snapshot-meta">No course-completion figures have been reported for this learner. This does not mean zero progress.</p>';
+ const palette=["#315f86","#416b50","#8c5660","#a0782d"];
+ return '<div class="family-reported-bars" role="group" aria-label="Reported course completion"><h4>Reported Course Completion</h4><p>Current course-completion reports only; not grades or mastery.</p>'
+  +courses.map((r,i)=>{
+    const v=r.progress.percent,ok=!r.stale&&typeof v==="number"&&Number.isFinite(v)&&v>=0&&v<=100;
+    const n=ok?Math.round(v):null,label=esc(r.courseTitle||r.courseId);
+    const track=ok?'<span class="family-reported-track" role="progressbar" aria-label="'+label+' completion" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+n+'"><span style="width:'+n+'%;background:'+palette[i%4]+'"></span></span>':'<span class="family-reported-track" aria-hidden="true"></span>';
+    return '<div class="family-reported-row"><span>'+label+'</span>'+track+'<span>'+(r.stale?"Refresh required":ok?n+"%":"Not reported")+'</span></div>';
+  }).join("")+'</div>';
+}
 function learnerProgress(l,adult){
   if(!adult||!R?.canAdult?.(adult.adultId,l.learnerId,"progress.view")){
     return `<article class="snapshot-learner"><h3>${esc(l.nickname||"Learner")}</h3><p class="snapshot-meta">Progress view is not enabled for this adult.</p></article>`;
@@ -288,11 +311,11 @@ function learnerProgress(l,adult){
   const snapshots=C?.readLearner?.(l.learnerId)||[];
   const summary=C?.summarize?.(l.learnerId)||null;
   if(!snapshots.length){
-    return `<article class="snapshot-learner"><h3>${esc(l.nickname||"Learner")}</h3><p class="snapshot-meta">No course continuation snapshot has been published yet. Existing records remain unchanged; snapshots appear as school courses adopt the shared continuation contract.</p><div class="actions"><a class="btn" href="../student/">Open Student Portal</a></div></article>`;
+    return `<article class="snapshot-learner"><h3>${esc(l.nickname||"Learner")}</h3><p class="snapshot-meta">No course continuation snapshot has been published yet. Existing records remain unchanged; snapshots appear as school courses adopt the shared continuation contract.</p><div class="actions"><a class="btn" href="${esc(learnerProfileDestination(l))}" data-learner-profile="${esc(l.learnerId)}">Open Student Schedule &amp; Profile</a></div></article>`;
   }
-  const bars=/^(?:grade[\s-]*)?0?9$/i.test(String(l.grade||""))?familyGradeNineBars(snapshots):"";
+  const bars=/^(?:grade[\s-]*)?0?9$/i.test(String(l.grade||""))?familyGradeNineBars(snapshots):familyPublishedProgressBars(snapshots);
   const courses=snapshots.slice(0,6).map(s=>`<article class="snapshot-course"><strong>${esc(s.courseTitle||s.courseId)}</strong><small>${esc(s.nextTitle||s.summary||"Next learning step")}</small><span class="snapshot-status">${esc(statusLabel(s.status))}</span>${s.stale?`<div class="snapshot-action"><strong>Progress changed in the course.</strong> Reopen the course to refresh this next-step summary before relying on it.</div>`:""}${s.mastery?.best!==null&&s.mastery?.best!==undefined?`<small>Best mastery: ${esc(s.mastery.best)}% · target ${esc(s.mastery.threshold||80)}%</small>`:""}${s.family?.needsAction?`<div class="snapshot-action"><strong>Family attention</strong>${esc(s.family.summary||s.family.label||"Review this learning step.")}</div>`:""}<div class="actions">${s.nextHref?`<button class="btn" type="button" data-open-next="${esc(s.nextHref)}" data-learner-id="${esc(l.learnerId)}">${s.stale?"Refresh in Course":"Open Next Step"}</button>`:""}</div></article>`).join("");
-  return `<article class="snapshot-learner"><h3>${esc(l.nickname||"Learner")}</h3><p class="snapshot-meta">${esc(summary?.courses||snapshots.length)} course snapshot${(summary?.courses||snapshots.length)===1?"":"s"} · ${esc(summary?.needsFamilyAction||0)} need family attention</p>${bars}<div class="snapshot-grid">${courses}</div></article>`;
+  return `<article class="snapshot-learner"><h3>${esc(l.nickname||"Learner")}</h3><p class="snapshot-meta">${esc(summary?.courses||snapshots.length)} course snapshot${(summary?.courses||snapshots.length)===1?"":"s"} · ${esc(summary?.needsFamilyAction||0)} need family attention</p><div class="actions"><a class="btn" href="${esc(learnerProfileDestination(l))}" data-learner-profile="${esc(l.learnerId)}">Open Student Schedule &amp; Profile</a></div>${bars}<div class="snapshot-grid">${courses}</div></article>`;
 }
 /* Grade 09 browser-local daily report; parent permission is mandatory. */
 function gradeNineDailyReport(l,adult){
