@@ -353,12 +353,14 @@ render();
 
 <script src="../assets/khaemenes-account-connection-status.js"></script>
 <script src="../assets/vnv-language.js" defer></script>
-<script src="https://vervenveda.com/assets/vnv-ecosystem-menu.js" defer></script>
 <!-- The canonical ecosystem toolbar includes Beta; no standalone legacy launcher. -->
 
 <script src="https://vervenveda.com/assets/vnv-333-ticker.js"></script>
 <script src="https://vervenveda.com/assets/vnv-ticker-autopopulate.js" data-vnv-ticker-autopopulate></script>
 <script>VNV_TICKER.autoPopulate({label:"Family Hub Quick Links",max:14});</script>
+<!-- One canonical VNV header and branched hamburger. Retire old Academy page-wide header. -->
+<script src="https://vervenveda.com/assets/vnv-header-autopopulate.js"></script>
+<script>VNV_HEADER.mount({title:"Family Portal",subtitle:"Khaemenes Academy",icon:"KA",home:"https://vervenveda.com/Khaemenes_Academy.github.io/",replaceLegacy:true,legacySelectors:["header[data-khae-header]"]});</script>
 <script src="https://vervenveda.com/assets/vnv-ecosystem-toolbar.js"></script>
 </body>
 </html>
