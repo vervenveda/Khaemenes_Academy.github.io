@@ -123,6 +123,16 @@ test("account status changes cause the adaptive home to refresh",()=>{
 });
 
 
-test("Academy brand returns visitors to the Verve N Veda public gateway",()=>{
-  assert.match(index,/class="brand"[^>]*data-khae-brand[^>]*href="https:\/\/vervenveda\.com\/"[^>]*aria-label="Return to Verve N Veda home"/);
+test("Academy brand uses the canonical VNV header and returns to the public gateway",()=>{
+  assert.match(index,/https:\/\/vervenveda\.com\/assets\/vnv-header-autopopulate\.js/);
+  assert.match(index,/VNV_HEADER\.mount\(\{[^\n]*"home":"https:\/\/vervenveda\.com\/"/);
+  assert.doesNotMatch(index,/<header\s+data-khae-header/);
+});
+
+test("My Academy displays after the front desk and before Academy Compass",()=>{
+  assert.match(index,/id="frontdesk"/);
+  assert.match(index,/id="academy-compass"/);
+  assert.match(personalization,/frontdesk\.insertAdjacentElement\("afterend",bar\)/);
+  assert.match(personalization,/frontdesk\.nextElementSibling!==bar/);
+  assert.doesNotMatch(personalization,/hero\.insertAdjacentElement\("afterend",bar\)/);
 });
