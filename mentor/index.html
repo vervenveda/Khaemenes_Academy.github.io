@@ -688,7 +688,6 @@ window.addEventListener('DOMContentLoaded',()=>setTimeout(boot,0));
 })();
 </script>
 <script src="../assets/vnv-language.js" defer></script>
-<script src="https://vervenveda.com/assets/vnv-ecosystem-menu.js" defer></script>
 <script src="../assets/khaemenes-archaemenes-living-bridge-v1.js" defer></script>
 <script src="../assets/khaemenes-archaemenes-conversation-v2.js" defer></script>
 <script src="../assets/khaemenes-archaemenes-visitor-local-v1.js" defer></script>
@@ -696,6 +695,9 @@ window.addEventListener('DOMContentLoaded',()=>setTimeout(boot,0));
 <script src="https://vervenveda.com/assets/vnv-333-ticker.js"></script>
 <script src="https://vervenveda.com/assets/vnv-ticker-autopopulate.js" data-vnv-ticker-autopopulate></script>
 <script>VNV_TICKER.autoPopulate({label:"Mentor Quick Links",max:14});</script>
+<!-- One canonical VNV header and branched hamburger. Retire old Academy page-wide header. -->
+<script src="https://vervenveda.com/assets/vnv-header-autopopulate.js"></script>
+<script>VNV_HEADER.mount({title:"Academy Mentor",subtitle:"Khaemenes Academy",icon:"KA",home:"https://vervenveda.com/Khaemenes_Academy.github.io/",replaceLegacy:true,legacySelectors:["header[data-khae-header]"]});</script>
 <script src="https://vervenveda.com/assets/vnv-ecosystem-toolbar.js"></script>
 </body>
 </html>
