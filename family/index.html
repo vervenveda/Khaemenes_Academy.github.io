@@ -148,7 +148,39 @@ body #family-continuum a.step:focus-visible{outline:3px solid #b48b45;outline-of
 body footer.footer{background:#172832!important;color:#fff8eb!important;text-align:center!important;border-top:3px solid #b48b45!important;padding:32px 18px!important}
 body footer.footer :is(strong,p){color:#fff8eb!important;font-size:16px!important;line-height:1.6!important}
 @media(max-width:650px){body #workspace #familyApp>.card{padding:20px!important}body #workspace{padding-block:35px 42px!important}}
-</style><style id="academy-family-headings-final-20261101">body #workspace .family-workspace-heading .family-workspace-eyebrow{margin:0 auto 10px!important;font-size:16px!important;letter-spacing:.035em!important}body #workspace .family-workspace-heading h2{margin:0 auto 14px!important}body main .heading>.kicker{font-size:16px!important;line-height:1.4!important;letter-spacing:.045em!important;text-transform:none!important}body main .heading>h2{font:400 clamp(30px,4vw,49px)/1.16 Cinzel,Georgia,serif!important;margin:8px auto 12px!important}body main .heading>p:not(.kicker):not(.family-workspace-eyebrow){font-size:16px!important;line-height:1.55!important}</style></head>
+</style><style id="academy-family-headings-final-20261101">body #workspace .family-workspace-heading .family-workspace-eyebrow{margin:0 auto 10px!important;font-size:16px!important;letter-spacing:.035em!important}body #workspace .family-workspace-heading h2{margin:0 auto 14px!important}body main .heading>.kicker{font-size:16px!important;line-height:1.4!important;letter-spacing:.045em!important;text-transform:none!important}body main .heading>h2{font:400 clamp(30px,4vw,49px)/1.16 Cinzel,Georgia,serif!important;margin:8px auto 12px!important}body main .heading>p:not(.kicker):not(.family-workspace-eyebrow){font-size:16px!important;line-height:1.55!important}</style>
+<style id="academy-family-parent-hub-20261105">
+/* Parent-facing layout only. Existing identity, course, and STOS authorities unchanged. */
+body{font-size:16px}
+body #workspace .family-workspace-stack{width:min(100%,1080px)!important}
+.family-hub-quick-nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;position:relative;z-index:2;margin:-20px auto 12px}
+.family-hub-quick-nav a{min-width:0;min-height:103px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center;padding:12px;border:1px solid #c4b595;border-top:4px solid #315c49;border-radius:7px;background:#fffdf8;color:#243b34;box-shadow:0 6px 16px rgba(26,43,35,.075)}
+.family-hub-quick-nav a:nth-child(2){border-top-color:#315f86}.family-hub-quick-nav a:nth-child(3){border-top-color:#8c5660}.family-hub-quick-nav a:nth-child(4){border-top-color:#b48b45}
+.family-hub-quick-nav a small,.family-hub-quick-nav a span{font-size:16px;line-height:1.35;color:#506358}
+.family-hub-quick-nav a strong{font:400 18px/1.3 Cinzel,Georgia,serif;color:#253b33}
+.family-hub-quick-nav a:hover,.family-hub-quick-nav a:focus-visible{background:#f6ebd7}
+.family-hub-services{padding:45px 18px!important;scroll-margin-top:110px;background:#fffdf8}
+.family-hub-services .heading{margin-bottom:25px}
+.family-hub-services .heading .kicker{font:400 16px/1.4 Cinzel,Georgia,serif;letter-spacing:.04em;color:#86663d;text-transform:none}
+.family-hub-services .heading h2{font-weight:400;color:#253b33}
+.family-hub-services .heading p{font-size:16px;line-height:1.6;color:#4d6055}
+.family-hub-support{background:#f0f2ea}
+.family-hub-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.family-hub-cards article{display:flex;flex-direction:column;min-width:0;min-height:205px;padding:18px;border:1px solid #c7b897;border-top:4px solid #315c49;border-radius:7px;background:#fffdf8}
+.family-hub-cards h3{font:400 22px/1.3 Cinzel,Georgia,serif;color:#253b33;margin:0 0 7px}
+.family-hub-cards p{font-size:16px;line-height:1.55;color:#4d6055;margin:0 0 15px}
+.family-hub-cards a{display:flex;align-items:center;justify-content:center;margin-top:auto;min-height:44px;padding:10px;text-align:center;border-radius:7px;background:#273f34;color:#fff8e9;font-size:16px;line-height:1.4}
+.family-hub-cards a:hover,.family-hub-cards a:focus-visible{background:#3b604b}
+#family-progress,#family-records-controls{scroll-margin-top:115px}
+#family-progress .snapshot-learner{border-radius:7px}
+#familyApp .metric span,#familyApp .metric strong,#familyApp .learner small{font-size:16px!important;font-weight:400}
+#familyApp .learner-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))}
+@media(max-width:960px){.family-hub-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.family-hub-quick-nav{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}#family-progress div[style*="grid-template-columns:170px"]{grid-template-columns:minmax(110px,1fr) minmax(80px,1fr)!important}}
+@media(max-width:480px){.family-hub-cards{grid-template-columns:1fr}.family-hub-quick-nav a{padding:10px 7px}.family-hub-quick-nav a strong{font-size:17px}#family-progress div[style*="grid-template-columns:170px"]{grid-template-columns:1fr!important}}
+@media print{.family-hub-quick-nav,.family-hub-cards a{display:none!important}}
+</style>
+</head>
 <body data-i18n-no-online>
 <a class="skip" href="#workspace">Skip to family workspace</a>
 <header data-khae-header>
@@ -165,11 +197,17 @@ body footer.footer :is(strong,p){color:#fff8eb!important;font-size:16px!importan
 <section class="family-hero" aria-labelledby="family-hero-title">
  <div class="shell">
  <p class="kicker">Khaemenes Academy · Family Learning</p><h1 id="family-hero-title">Family Learning Center</h1>
- <p class="family-hero-subtitle">One family, many individual learning paths.</p>
- <p class="family-hero-copy">Find or restore a family profile, review learner placement, and continue to each student's learning pathway.</p>
+ <p class="family-hero-subtitle">Your Parent Information Hub</p>
+ <p class="family-hero-copy">Find your learners, review available schedules and progress, manage family records, and discover ways to support their education.</p>
  <div class="family-hero-actions"><a href="../student/">Student Portal</a><a href="enroll/">Enroll / Update</a><a href="../adult/">Adult Scholar</a><a href="../">Academy Home</a></div>
  </div>
 </section>
+<nav class="family-hub-quick-nav shell" aria-label="Parent Information Hub sections">
+ <a href="#workspace"><small>My Family</small><strong>Learners</strong><span>Student profiles</span></a>
+ <a href="#family-progress"><small>Class Planning</small><strong>Schedules &amp; Progress</strong><span>Reported evidence</span></a>
+ <a href="#family-records"><small>Academic Documents</small><strong>Records &amp; Reports</strong><span>Family and course tools</span></a>
+ <a href="#family-involvement"><small>Family Engagement</small><strong>Get Involved</strong><span>Guidance and support</span></a>
+</nav>
 <section class="section" id="workspace">
   <div class="shell">
     <div class="heading family-workspace-heading"><p class="family-workspace-eyebrow">One family, many individual learning paths.</p><h2>Family Workspace</h2><p>Each learner keeps a separate school placement and academic path while families can move easily between students, records, and learning resources.</p></div>
@@ -177,6 +215,28 @@ body footer.footer :is(strong,p){color:#fff8eb!important;font-size:16px!importan
   </div>
 </section>
 
+<section class="section family-hub-services" id="family-records" aria-labelledby="familyRecordsHubTitle">
+ <div class="shell">
+  <div class="heading"><p class="kicker">Records · Documents · Planning</p><h2 id="familyRecordsHubTitle">Records &amp; Reports</h2><p>Access existing document and family-backup tools. Course grades remain with the school and course that issued them.</p></div>
+  <div class="family-hub-cards">
+   <article><h3>Family Records</h3><p>Back up or restore the family profile with the established verified controls.</p><a href="#family-records-controls">Open Family Backups</a></article>
+   <article><h3>Academic Transcripts</h3><p>Prepare documents from reviewed course records.</p><a href="../Parent_resources/Transcript_generator_index.html">Transcript Generator</a></article>
+   <article><h3>Diplomas</h3><p>Prepare completion documents when the required academic evidence is available.</p><a href="../Parent_resources/Diploma_generator_index.html">Diploma Generator</a></article>
+   <article><h3>Homeschool Compass</h3><p>Organize study plans and family learning resources.</p><a href="../Parent_resources/Homeschool_compass_index.html">Open Homeschool Compass</a></article>
+  </div>
+ </div>
+</section>
+<section class="section family-hub-services family-hub-support" id="family-involvement" aria-labelledby="familyInvolvementHubTitle">
+ <div class="shell">
+  <div class="heading"><p class="kicker">Support · Celebrate · Participate</p><h2 id="familyInvolvementHubTitle">Parent Involvement</h2><p>Helpful ways to stay engaged without changing grades, academic mastery, or another student's work.</p></div>
+  <div class="family-hub-cards">
+   <article><h3>Parent Action Center</h3><p>Review weekly learning attention and celebrate reported progress.</p><a href="#khaemenesParentActionCenter">Open Parent Actions</a></article>
+   <article><h3>Family Support Plan</h3><p>Plan encouragement, study routines, and family learning conversations.</p><a href="#khaemenesFamilySupportPlan">Open Support Planning</a></article>
+   <article><h3>Archaemenes</h3><p>Find educational mentoring, academic guidance, and study support.</p><a href="../mentor/">Meet Archaemenes</a></article>
+   <article><h3>Academy Tour</h3><p>Find your way through each campus and learning stage.</p><a href="../tour/">Take the Academy Tour</a></article>
+  </div>
+ </div>
+</section>
 <section class="section alt" id="family-continuum">
   <div class="shell">
     <div class="heading"><p class="kicker">From early childhood through advanced study</p><h2>Academic Continuum</h2><p>Every learning stage has a direct path through the Academy.</p></div>
@@ -253,7 +313,7 @@ function gradeNineDailyReport(l,adult){
 function learnerProfileDestination(l){
   const grade=String(l?.grade||"");
   if(l?.stage==="high"&&/^(09|10|11|12)$/.test(grade))
-    return "https://vervenveda.com/Khaemenes_High.github.io/grades/student-profile/";
+    return "https://vervenveda.com/Khaemenes_High.github.io/grades/grade-"+grade+"/student-profile/";
   return "../student/profile.html";
 }
 function learnerCard(l,active){const m=meta(l),ready=l.stage==="higher"||Boolean(l.grade),isActive=l.learnerId===active;return `<article class="learner ${isActive?"active":""}" style="--accent:${m.stage.color}"><div class="stage">${esc(m.stage.label)}${isActive?" · Active":""}</div><h3>${esc(l.nickname)}</h3><small>${esc(m.grade||"Grade selection needed")}${m.school?" · "+esc(m.school):""}</small><p>${ready?"Ready to continue through your Student Profile.":"Choose an exact K–12 grade before continuing to a school pathway."}</p><div class="actions">${isActive?'<span class="btn primary">Active Learner</span>':`<button class="btn" type="button" data-active="${esc(l.learnerId)}">Make Active</button>`}${ready?`<a class="btn dark" href="${esc(learnerProfileDestination(l))}" data-learner-profile="${esc(l.learnerId)}">Open Student Profile</a>`:`<a class="btn dark" href="enroll/">Complete Placement</a>`}<a class="btn" href="enroll/">${ready?"Review Placement":"Complete Placement"}</a></div></article>`}
@@ -269,14 +329,14 @@ function renderFamily(f){
   </section>`:"";
   $("#familyApp").innerHTML=`${pinReturnNotice}<div class="metric-grid"><div class="metric"><strong>${esc(f.displayName)}</strong><span>Family</span></div><div class="metric"><strong>${f.learners.length}</strong><span>Learners</span></div><div class="metric"><strong>${f.adults.length}</strong><span>Adults</span></div><div class="metric"><strong>${scholar?"Active":"Optional"}</strong><span>Adult Learning</span></div></div>
   <section><div class="heading" style="margin-top:38px"><p class="kicker">Every learner has an individual path.</p><h2>Learners</h2><p>Choose the active learner here. Grade placement can be reviewed or changed through Enrollment & Placement.</p></div><div class="learner-grid">${familyLearners.map(l=>learnerCard(l,ids.learnerId)).join("")||'<div class="empty">No K–12 learners yet.</div>'}</div><div class="actions"><a class="btn primary" href="enroll/">Enroll / Add Learner</a><a class="btn" href="../student/">Open Student Portal</a></div></section>
-  <section><div class="heading" style="margin-top:46px"><p class="kicker">See what comes next without taking over the learner\'s work.</p><h2>Family Learning Snapshot</h2><p>This read-only view shows continuation, corrections, mastery gates, assessments, portfolio needs, and family attention only for learners this adult may view.</p></div><div class="grid">${familyLearners.map(l=>learnerProgress(l,activeAdult)).join("")||'<div class="empty">No K–12 learner progress to show yet.</div>'}</div></section>
+  <section id="family-progress"><div class="heading" style="margin-top:31px"><p class="kicker">See what comes next without taking over the learner\'s work.</p><h2>Schedules &amp; Progress</h2><p>Grade 09 provides our eight-subject reference model. Other grades are being upgraded toward that standard. Read-only reports show only available, permission-authorized course progress, mastery checkpoints, and next steps. No class times or unreported scores are invented.</p></div><div class="grid">${familyLearners.map(l=>learnerProgress(l,activeAdult)).join("")||'<div class="empty">No K–12 learner progress to show yet.</div>'}</div></section>
   <section><div class="heading" style="margin-top:34px"><h2>To Do Today · Daily Family Reports</h2><p>Read-only, browser-local updates for authorized adults. These reports are not emailed or synchronized across devices.</p></div><div class="grid">${familyLearners.map(l=>gradeNineDailyReport(l,activeAdult)).filter(Boolean).join("")||'<div class="empty">No authorized daily reports available on this browser.</div>'}</div></section>
   <div class="grid cols2" style="margin-top:34px">
     <section class="card"><h3>Adults & Family Access</h3><p>Parents, guardians, caregivers, educators, and other authorized adults can be connected to the family learning workspace.</p><div>${f.adults.map(a=>`<div class="adult"><strong>${esc(a.displayName)}</strong><small>${esc(a.role)} · ${a.adultId===ids.adultId?"active adult":"family adult"}</small></div>`).join("")}</div><div class="actions"><button class="btn" id="addAdult" type="button">Add Adult</button></div></section>
     <section class="card scholar"><h3>Adult Learner Pathway</h3>${scholar?`<p><strong>${esc(scholar.nickname)}</strong> has a separate self-directed adult learner workspace. Parent/family responsibilities remain here; personal coursework remains in the Adult Learner Portal.</p><div class="actions"><a class="btn primary" href="../adult/">Open Adult Learner Portal</a><a class="btn" href="../adult/enroll/">Review Adult Profile</a></div>`:`<p>An adult family member can create a separate self-directed learning path without receiving a K–12 grade assignment.</p><div class="actions"><a class="btn primary" href="../adult/enroll/">Start Adult Learning</a><a class="btn" href="../adult/">Adult Learner Portal</a></div>`}</section>
   </div>
   <div class="grid cols2" style="margin-top:17px">
-    <section class="card"><h3>Family Records</h3><p>Open family record tools or protect this browser-local family profile with a verified backup. Restore changes only the selected family identity; course grades and assessment records remain under their own course authorities.</p><div class="actions"><a class="btn" href="../Parent_resources/Homeschool_compass_index.html">Homeschool Compass</a><a class="btn" href="../Parent_resources/Transcript_generator_index.html">Transcript</a><a class="btn" href="../Parent_resources/Diploma_generator_index.html">Diploma</a><button class="btn gold" id="exportFamily" type="button">Download Verified Backup</button><button class="btn" id="restoreFamily" type="button">Verify / Restore Backup</button><button class="btn" id="undoFamilyRestore" type="button" disabled>Undo Last Restore</button><input id="restoreFamilyFile" type="file" accept="application/json,.json" hidden></div><p id="familyBackupStatus" class="notice" role="status" aria-live="polite" style="margin-top:12px">Backups stay on your device unless you choose where to save the downloaded file.</p></section>
+    <section class="card" id="family-records-controls"><h3>Family Records</h3><p>Open family record tools or protect this browser-local family profile with a verified backup. Restore changes only the selected family identity; course grades and assessment records remain under their own course authorities.</p><div class="actions"><a class="btn" href="../Parent_resources/Homeschool_compass_index.html">Homeschool Compass</a><a class="btn" href="../Parent_resources/Transcript_generator_index.html">Transcript</a><a class="btn" href="../Parent_resources/Diploma_generator_index.html">Diploma</a><button class="btn gold" id="exportFamily" type="button">Download Verified Backup</button><button class="btn" id="restoreFamily" type="button">Verify / Restore Backup</button><button class="btn" id="undoFamilyRestore" type="button" disabled>Undo Last Restore</button><input id="restoreFamilyFile" type="file" accept="application/json,.json" hidden></div><p id="familyBackupStatus" class="notice" role="status" aria-live="polite" style="margin-top:12px">Backups stay on your device unless you choose where to save the downloaded file.</p></section>
     <section class="card"><h3>Invite Another Adult</h3><p>When invitations are available, choose the learners and level of family access for the person you want to invite.</p><div id="inviteBox"></div></section>
   </div>`;
   bind(f);
