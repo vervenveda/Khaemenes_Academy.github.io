@@ -7,10 +7,33 @@ import {spawn,spawnSync} from "node:child_process";
 const root=process.cwd();
 const chrome=["google-chrome","chromium","chromium-browser"].find(x=>spawnSync("which",[x],{encoding:"utf8"}).status===0);
 if(!chrome)throw Error("Chrome/Chromium not installed");
-const files=["index.html","student/index.html","family/index.html",
-"Health_learning/Health_is_wealth_6weeks_index.html","Health_learning/workout_builder_index.html",
-"Parent_resources/Art_studio_index.html","Parent_resources/Family_photo_album_index.html",
-"diagnostics/front-door/index.html","tools/Keyboard_index.html","tools/song_embedder_index.html"];
+const files=[
+  "Health_learning/Health_is_wealth_6weeks_index.html",
+  "Health_learning/Trivia_Health_index.html",
+  "Health_learning/wellness_workshop_index.html",
+  "Health_learning/workout_builder_index.html",
+  "Parent_resources/Art_studio_index.html",
+  "Parent_resources/Diploma_generator_index.html",
+  "Parent_resources/Family_photo_album_index.html",
+  "Parent_resources/Homeschool_compass_index.html",
+  "Parent_resources/Transcript_generator_index.html",
+  "adult/enroll/index.html",
+  "adult/index.html",
+  "diagnostics/front-door/index.html",
+  "family/accept/index.html",
+  "family/enroll/index.html",
+  "family/index.html",
+  "index.html",
+  "mentor/index.html",
+  "offline/index.html",
+  "student/index.html",
+  "student/profile.html",
+  "teacher-admin/index.html",
+  "tools/Keyboard_index.html",
+  "tools/song_embedder_index.html",
+  "tour/index.html",
+  "verify/index.html"
+]
 function browserProbe(){
  function check(){
   try{
@@ -21,6 +44,9 @@ function browserProbe(){
    const ok={
     single333:document.querySelectorAll("#vnv333NetworkTicker").length===1,
     singleAuto:document.querySelectorAll("#vnvTickerAutoPopulate").length===1,
+    oneHeader:document.querySelectorAll("#vnvHeaderAutoPopulate").length===1,
+    branchedMenu:!!document.querySelector("#vnvHeaderAutoPopulate .vnv-header-menu-button")&&typeof window.VNV_ENRICHED_MENU?.open==="function",
+    noLegacyMenu:!document.getElementById("vnvEcosystemMenuButton")&&!document.getElementById("vnvEcosystemMenuOverlay"),
     sequence:!!b&&!!a&&kids.indexOf(b)>=0&&kids.indexOf(a)>kids.indexOf(b)&&!kids.slice(0,kids.indexOf(b)).some(el=>el.matches("main,section,article,header")||el.matches("div.app,div.wrap,div.container")),
     headerBelow:!h||!kids.includes(h)||kids.indexOf(h)>kids.indexOf(a),
     sticky:!!b&&!!a&&getComputedStyle(b).position==="sticky"&&getComputedStyle(a).position==="sticky",
