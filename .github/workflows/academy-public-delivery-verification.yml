@@ -1,0 +1,39 @@
+name: Academy Anonymous Public Delivery Verification
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/verify-public-academy-routes.mjs'
+      - '.github/workflows/academy-public-delivery-verification.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  anonymous-delivery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out Academy source
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Use Node.js 24
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Check delivery probe syntax
+        run: node --check scripts/verify-public-academy-routes.mjs
+      - name: Verify every public Academy page, route, and homepage asset anonymously
+        run: node scripts/verify-public-academy-routes.mjs
+      - name: Retain public-delivery receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: academy-anonymous-delivery-receipt
+          path: academy-public-route-receipt.json
+          if-no-files-found: warn
+          retention-days: 14
