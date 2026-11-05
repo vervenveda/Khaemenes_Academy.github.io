@@ -1,0 +1,47 @@
+name: Academy Front Desk Four-Entrance Verification
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'student/index.html'
+      - 'family/index.html'
+      - 'teacher-admin/index.html'
+      - 'adult/index.html'
+      - 'scripts/browser-ticker-smoke.mjs'
+      - '.github/workflows/academy-front-desk-four-door-browser.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  front-desk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check front-desk heading and four canonical destinations
+        run: |
+          node <<'NODE'
+          const fs=require("node:fs"),assert=require("node:assert/strict");
+          const home=fs.readFileSync("index.html","utf8");
+          assert.match(home,/<p class="kicker">What do you need today\?<\/p><h2>Front Desk<\/h2>/);
+          const pages=[
+            ["student/index.html","Student Portal"],
+            ["family/index.html","Family Learning Center"],
+            ["teacher-admin/index.html","Teacher Administration"],
+            ["adult/index.html","Adult Learner Portal"]
+          ];
+          for(const [path,title] of pages){
+            const html=fs.readFileSync(path,"utf8");
+            assert.ok(html.includes("<h1")&&html.includes(">"+title+"</h1>"),path+" has wrong title");
+            for(const script of ["vnv-header-autopopulate.js","vnv-333-ticker.js","vnv-ticker-autopopulate.js","vnv-ecosystem-toolbar.js"]){
+              assert.ok(html.includes(script),path+" is missing "+script);
+            }
+            assert.match(html,/<footer\b/);
+            console.log("PASS",path,"title and shared chrome");
+          }
+          NODE
+      - name: Verify four doorways in Chrome at 1280px and 390px
+        env:
+          ACADEMY_SMOKE_PAGES: student/index.html,family/index.html,teacher-admin/index.html,adult/index.html
+        run: node scripts/browser-ticker-smoke.mjs
