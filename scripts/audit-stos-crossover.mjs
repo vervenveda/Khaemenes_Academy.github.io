@@ -67,6 +67,50 @@ for(const surface of Object.values(topology.surfaces)){
   if(!fs.existsSync(path.join(ROOT,surface)))fail("Topology surface missing: "+surface);
 }
 
+/* The migration snapshot must describe what current public HTML really loads.
+   Legacy Academy header/ticker files may remain as compatibility artifacts, but
+   cannot be mistaken for the active canonical UI authority. */
+const chrome=topology.canonicalPublicChrome;
+if(!chrome||chrome.authority!=="vervenveda/vervenveda.github.io"){
+  fail("Missing canonical Verve N Veda shared UI ownership contract");
+}
+const shared={
+  header:"https://vervenveda.com/assets/vnv-header-autopopulate.js",
+  ticker333:"https://vervenveda.com/assets/vnv-333-ticker.js",
+  pageAutoTicker:"https://vervenveda.com/assets/vnv-ticker-autopopulate.js",
+  ecosystemToolbar:"https://vervenveda.com/assets/vnv-ecosystem-toolbar.js"
+};
+for(const [role,url] of Object.entries(shared)){
+  if(chrome[role]!==url)fail("Canonical public UI role drift: "+role);
+  if(!deps.categories?.VERVE_SHARED?.examples?.includes(url)){
+    fail("Crossover dependency inventory omits canonical UI: "+role);
+  }
+}
+if(typeof chrome.stosNativeSharedServiceCertified!=="boolean"){
+  fail("STOS shared-service certification must be an explicit boolean");
+}
+if(chrome.stosNativeSharedServiceCertified===true&&!chrome.stosCertificationReceipt){
+  fail("STOS native UI services cannot be certified without a receipt");
+}
+for(const pathName of chrome.retiredLocalPresentationAssets||[]){
+  if(!files.includes(pathName))fail("Legacy source inventory drift: "+pathName);
+}
+const publicPages=files.filter(rel=>/\.html$/i.test(rel));
+for(const rel of publicPages){
+  const html=read(rel);
+  for(const [role,url] of Object.entries(shared)){
+    // Exact string presence and singularity guard against forgotten migrations
+    // and duplicate imports. Browser tests separately prove runtime mounting.
+    const references=html.split(url).length-1;
+    if(references!==1)fail("Public page shared UI "+role+" reference count="+references+" in "+rel);
+  }
+  if(/<script[^>]+src=["'][^"']*(?:khaemenes-global-header|khaemenes-academy-ticker)\.js/i.test(html)){
+    fail("Retired local header/ticker script is still loaded by "+rel);
+  }
+}
+console.log("  public HTML shared UI contracts:",publicPages.length);
+console.log("  canonical shared service: VNV (STOS mapping pending)");
+
 console.log("Khaemenes Academy STOS crossover validation: PASS");
 console.log("  files:",files.length);
 console.log("  STOS repo:",crossover.stosTarget.repositoryId);
