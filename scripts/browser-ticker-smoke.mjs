@@ -7,7 +7,7 @@ import {spawn,spawnSync} from "node:child_process";
 const root=process.cwd();
 const chrome=["google-chrome","chromium","chromium-browser"].find(x=>spawnSync("which",[x],{encoding:"utf8"}).status===0);
 if(!chrome)throw Error("Chrome/Chromium not installed");
-const files=[
+const allFiles=[
   "Health_learning/Health_is_wealth_6weeks_index.html",
   "Health_learning/Trivia_Health_index.html",
   "Health_learning/wellness_workshop_index.html",
@@ -33,7 +33,12 @@ const files=[
   "tools/song_embedder_index.html",
   "tour/index.html",
   "verify/index.html"
-]
+];
+const requested=String(process.env.ACADEMY_SMOKE_PAGES||"").split(",").map(s=>s.trim()).filter(Boolean);
+const files=requested.length?allFiles.filter(file=>requested.includes(file)):allFiles;
+if(requested.length && (files.length!==requested.length || new Set(requested).size!==requested.length)){
+  throw new Error("Unknown or duplicated ACADEMY_SMOKE_PAGES: "+requested.join(","));
+}
 function browserProbe(){
  function check(){
   try{
