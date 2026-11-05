@@ -21,13 +21,13 @@ function browserProbe(){
    const ok={
     single333:document.querySelectorAll("#vnv333NetworkTicker").length===1,
     singleAuto:document.querySelectorAll("#vnvTickerAutoPopulate").length===1,
-    sequence:!!b&&!!a&&kids.indexOf(b)===0&&kids.indexOf(a)===1,
+    sequence:!!b&&!!a&&kids.indexOf(b)>=0&&kids.indexOf(a)>kids.indexOf(b)&&!kids.slice(0,kids.indexOf(b)).some(el=>el.matches("main,section,article,header")||el.matches("div.app,div.wrap,div.container")),
     headerBelow:!h||!kids.includes(h)||kids.indexOf(h)>kids.indexOf(a),
     sticky:!!b&&!!a&&getComputedStyle(b).position==="sticky"&&getComputedStyle(a).position==="sticky",
     visible:!!b&&!!a&&b.getBoundingClientRect().height>0&&a.getBoundingClientRect().height>0,
     clickable:!!bPause&&!!aPause,
     links:!!a&&a.querySelectorAll("a[href]").length>=2,
-    viewport:innerWidth>550||document.documentElement.scrollWidth<=document.documentElement.clientWidth+3
+    viewport:!!b&&!!a&&[b,a].every(el=>{const box=el.getBoundingClientRect();return box.left>=-1&&box.right<=document.documentElement.clientWidth+1;})
    };
    if(bPause&&aPause){
     const bv=b.dataset.paused,av=a.dataset.paused;
