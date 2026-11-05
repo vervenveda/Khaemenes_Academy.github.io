@@ -94,3 +94,29 @@ test("parent features automatically refresh when family or learning summaries ch
   }
   assert.match(support,/startsWith\("khaemenes"\)/);
 });
+
+
+test("Parent Information Hub keeps Grade 09 as the reference without inventing other-grade records",()=>{
+  for(const section of ["family-hub-quick-nav","family-progress","family-records","family-involvement"]) {
+    assert.ok(family.includes(section),"Missing Family Hub section "+section);
+  }
+  assert.match(family,/Grade 09 provides our eight-subject reference model/);
+  assert.match(family,/function familyGradeNineBars\(snapshots\)/);
+  assert.match(family,/function familyPublishedProgressBars\(records\)/);
+  assert.match(family,/This does not mean zero progress/);
+  assert.match(family,/R\?\.canAdult\?\.\(adult\.adultId,l\.learnerId,"progress\.view"\)/);
+  assert.match(family,/grade-"\+grade\+"\/student-profile\//);
+  assert.match(family,/data-learner-profile/);
+  for(const key of ["Download Verified Backup","Verify / Restore Backup","Undo Last Restore"]) {
+    assert.ok(family.includes(key),"Existing family backup authority changed: "+key);
+  }
+});
+
+test("Family Hub inline application JavaScript remains syntactically valid",()=>{
+  const scripts=[...family.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)]
+    .filter(([,attrs,body])=>!(/\bsrc\s*=/.test(attrs))&&body.trim());
+  assert.ok(scripts.length>=3,"Expected existing Family Portal inline scripts");
+  for(const [,attrs,body] of scripts){
+    assert.doesNotThrow(()=>new Function(body),"Invalid inline Family Hub script");
+  }
+});
