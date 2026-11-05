@@ -1,7 +1,7 @@
 name: Academy Ticker Browser Verification
 on:
   push:
-    branches: [main]
+    branches: [main, audit/home-canonical-shell-20261105]
     paths:
       - 'scripts/browser-ticker-smoke.mjs'
       - '.github/workflows/academy-ticker-browser-verification.yml'
