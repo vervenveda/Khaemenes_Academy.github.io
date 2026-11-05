@@ -1,0 +1,25 @@
+name: Academy Ticker Browser Verification
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/browser-ticker-smoke.mjs'
+      - '.github/workflows/academy-ticker-browser-verification.yml'
+      - 'Health_learning/*.html'
+      - 'Parent_resources/*.html'
+      - 'tools/*.html'
+      - 'diagnostics/**/*.html'
+      - 'student/**/*.html'
+      - 'family/**/*.html'
+      - 'index.html'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser-ticker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify 333 and AutoPopulate browser placement at desktop and mobile widths
+        run: node scripts/browser-ticker-smoke.mjs
