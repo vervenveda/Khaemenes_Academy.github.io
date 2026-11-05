@@ -19,11 +19,13 @@
     "VERVE_SHARED": {
       "description": "Canonical ecosystem services currently hosted by Verve N Veda.",
       "examples": [
-        "https://vervenveda.com/assets/vnv-ecosystem-toolbar.js",
-        "https://vervenveda.com/assets/vnv-ecosystem-menu.js",
-        "https://vervenveda.com/assets/vnv-beta-link.js"
+        "https://vervenveda.com/assets/vnv-header-autopopulate.js",
+        "https://vervenveda.com/assets/vnv-333-ticker.js",
+        "https://vervenveda.com/assets/vnv-ticker-autopopulate.js",
+        "https://vervenveda.com/assets/vnv-ecosystem-toolbar.js"
       ],
-      "migrationRule": "Preserve during GitHub production; do not silently clone or fork without a separate STOS shared-service authority decision."
+      "migrationRule": "Current pages require these four public shared scripts. An approved STOS shared-service mapping or certified delivery fallback is mandatory before any change that would interrupt the public host; do not silently copy/fork the shared authority.",
+      "stosNativeMappingCertified": false
     },
     "OPTIONAL_EXTERNAL": {
       "description": "Non-authoritative optional services.",
