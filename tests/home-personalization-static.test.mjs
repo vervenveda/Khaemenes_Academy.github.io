@@ -29,33 +29,19 @@ test("an actively selected child learner wins over adult-scholar fallback",()=>{
   assert.match(personalization,/learner:mode==="adult"\?scholar:learner/);
 });
 
-test("profile utility remains a safe recovery doorway before account creation",()=>{
-  assert.match(personalization,/Keep Profile available as the sixth tool, including to first-time visitors/);
-  assert.match(personalization,/profile\.href=profileDestination\(snapshot\)\|\|URLS\.student/);
-  assert.match(personalization,/!snapshot\.hasIdentity\?"Find your existing student profile"/);
+test("personalized profile remains available without a duplicate floating dock",()=>{
+  assert.match(personalization,/function profileDestination\(snapshot\)/);
+  assert.match(personalization,/makeAction\("Profile",URLS\.student\)/);
+  assert.doesNotMatch(personalization,/function ensureDock\(/);
+  assert.doesNotMatch(personalization,/function syncDock\(/);
+  assert.match(index,/https:\/\/vervenveda\.com\/assets\/vnv-ecosystem-toolbar\.js/);
 });
 
-test("utility dock reuses the universal Beta button instead of creating another",()=>{
-  assert.match(personalization,/BETA_ID="vnvBetaProgramLink"/);
-  assert.match(personalization,/beta&&beta\.parentElement!==dock\)dock\.appendChild\(beta\)/);
-  assert.doesNotMatch(personalization,/createElement\(["']button["']\).*Beta Program/);
+test("Updates and Help remains accessible from the learner-specific bar",()=>{
+  assert.match(personalization,/updatesButton\.textContent="Updates & Help"/);
+  assert.match(personalization,/openDialog\(renderUpdates\(accountSnapshot\(\)\)\.id\)/);
+  assert.match(personalization,/\.my-academy-actions/);
 });
-
-test("utility dock includes Profile, Search, Updates, Archaemenes, Contribute, and the shared Beta doorway",()=>{
-  assert.match(personalization,/MENTOR_ID="khaemenesHomeMentorButton"/);
-  assert.match(personalization,/PROFILE_ID="khaemenesHomeProfileButton"/);
-  assert.match(personalization,/SEARCH_ID="khaemenesHomeSearchButton"/);
-  assert.match(personalization,/UPDATES_ID="khaemenesHomeUpdatesButton"/);
-  assert.match(personalization,/CONTRIBUTE_ID="khaemenesHomeContributeButton"/);
-  assert.match(personalization,/profileDestination\(snapshot\)/);
-  assert.match(personalization,/mentorDestination\(\)/);
-  assert.match(personalization,/renderUpdates\(accountSnapshot\(\)\)/);
-  assert.match(personalization,/search:"https:\/\/vervenveda\.com\/PLERASearch\.github\.io\//);
-  assert.match(personalization,/contribute:"https:\/\/buy\.stripe\.com\/aFa8wQ5xf9Scf65caT4AU0s"/);
-  assert.match(personalization,/contribute\.target="_blank"/);
-  assert.match(personalization,/contribute\.rel="noopener noreferrer"/);
-});
-
 test("learner-specific home copy is protected from optional online translation",()=>{
   assert.match(personalization,/setAttribute\(["']data-private["']/);
   assert.match(personalization,/setAttribute\(["']data-i18n-no-online["']/);
