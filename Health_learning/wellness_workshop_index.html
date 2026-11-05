@@ -36,8 +36,7 @@
       box-shadow:var(--shadow);
       overflow:hidden;
     }
-
-    header{
+    .wellness-app > .shell > header{
       padding:14px 14px 11px;
       background:linear-gradient(180deg, rgba(125,211,252,0.16), rgba(167,139,250,0.10));
       border-bottom:1px solid rgba(255,255,255,0.08);
@@ -45,7 +44,7 @@
     .top{
       display:flex;gap:14px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;
     }
-    h1{margin:0;font-size:1.55rem;letter-spacing:0.01em}
+    .wellness-app h1{margin:0;font-size:1.55rem;letter-spacing:0.01em}
     .sub{margin:6px 0 0;color:rgba(238,242,255,0.84);font-size:1.02rem;line-height:1.4}
     .pillrow{display:flex;gap:11px;align-items:center;flex-wrap:wrap}
     .pill{
@@ -241,8 +240,7 @@
     td:first-child{border-radius:12px 0 0 12px}
     td:last-child{border-radius:0 12px 12px 0}
     .right{text-align:right}
-
-    footer{
+    .wellness-app > .shell > footer{
       padding:14px 16px;
       border-top:1px solid rgba(255,255,255,0.08);
       background:rgba(2,6,23,0.40);
@@ -252,15 +250,90 @@
     }
     .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:0.92rem}
   </style>
+
+<style id="wellness-compact-canonical-studio">
+html,body{height:auto;min-height:100%;background:#f3eee5;color:#202724;font:400 18px/1.6 "Brandon Grotesque",Nunito,Arial,sans-serif}
+.wellness-app{--ink:#243a32;--muted:#4b5d52;--accent:#294b3c;--ring:rgba(180,139,69,.24);width:min(1260px,calc(100% - 32px));max-width:none;margin:24px auto 40px;padding:0;color:#243a32;font:400 18px/1.6 "Brandon Grotesque",Nunito,Arial,sans-serif}
+.wellness-app .shell{background:#fffdf8;border:1px solid #d3c4ac;box-shadow:0 12px 35px rgba(21,41,31,.12);border-radius:7px;overflow:hidden}
+.wellness-app > .shell > header{padding:28px clamp(19px,3vw,36px);background:linear-gradient(125deg,#213b32,#315046);border-bottom:3px solid #b9975f;color:#fff8e9}
+.wellness-app .top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:22px;align-items:center}
+.wellness-app .wellness-eyebrow{margin:0 0 6px;color:#e9d4af;font:400 clamp(19px,2.2vw,27px)/1.35 Cinzel,Georgia,serif}
+.wellness-app h1{font:400 clamp(36px,4.4vw,62px)/1.15 Cinzel,Georgia,serif;margin:0;color:#fff8e9}
+.wellness-app .sub{font-size:18px;line-height:1.6;max-width:720px;margin:10px 0 0;color:#f0e8d8}
+.wellness-app .pillrow{max-width:360px;justify-content:flex-end}
+.wellness-app .pill{font-size:16px;background:rgba(255,248,233,.1);color:#fff8e9;border:1px solid #70887c;border-radius:7px}
+.wellness-app .pill strong{color:#fff8e9;font-weight:444}
+.wellness-app :is(button,input,select,textarea){font:400 16px/1.45 "Brandon Grotesque",Nunito,Arial,sans-serif}
+.wellness-app :is(button,a,input,select,textarea):focus-visible{outline:3px solid #b58d48;outline-offset:3px}
+.wellness-app .btn{font-size:16px;font-weight:400;min-height:44px;background:#254739;color:#fff8e9;border:1px solid #254739;border-radius:7px;box-shadow:none;justify-content:center}
+.wellness-app .btn.secondary{background:#fffdf8;color:#254739;border-color:#9fb0a3}
+.wellness-app .btn.ghost{background:#344d42;color:#fff8e9;border-color:#718578}
+.wellness-app .btn:disabled{opacity:.5;cursor:not-allowed}
+.wellness-app .posture{position:static;z-index:auto;padding:0;background:#f4eee2;border-bottom:1px solid #d5c8b5;backdrop-filter:none}
+.wellness-app .posture summary{padding:14px 22px;cursor:pointer;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:17px;color:#2c473a}
+.wellness-app .posture summary span{font-size:16px;color:#74562c}
+.wellness-app .posture .title{font:400 20px Cinzel,Georgia,serif;margin:12px 22px 5px;color:#284639}
+.wellness-app .posture .text,.wellness-app .posture .tiny{font-size:16px;line-height:1.6;color:#354d41;margin:6px 22px 15px}
+.wellness-app .body{display:grid;grid-template-columns:310px minmax(0,1fr);height:min(78vh,780px);min-height:550px;overflow:hidden;background:#f8f4eb}
+.wellness-app .side{min-width:0;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:17px;background:#273e34;color:#fff8e9;border-right:1px solid #ae9067}
+.wellness-app .navgroup{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:13px}
+.wellness-app .navtab{min-height:44px;font-weight:400;font-size:16px;color:#fff8e9;background:#385247;border:1px solid #6a8174;border-radius:7px}
+.wellness-app .navtab.active{color:#263b30;background:#f2dfbe;border-color:#e8d2a8;box-shadow:none}
+.wellness-app .sidecard{margin:0 0 13px;padding:13px;background:#354e43;border:1px solid #6c8173;border-radius:7px}
+.wellness-app .sidecard h3{font:400 23px Cinzel,Georgia,serif;color:#fff8e9}
+.wellness-app .sidecard .meta{font-size:16px;color:#eee7db;line-height:1.55}
+.wellness-app .tinyrow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.wellness-app .kv{min-width:0;padding:8px 5px;text-align:center;background:#284137;border:1px solid #637b6a;border-radius:7px}
+.wellness-app .kv .k{font-size:16px;line-height:1.3;color:#f0e5d1;overflow-wrap:anywhere}
+.wellness-app .kv .v{font-size:18px;font-weight:444;color:#fff8e9}
+.wellness-app .week-picker{border:1px solid #61796b;border-radius:7px;overflow:hidden}
+.wellness-app .week-picker summary{cursor:pointer;padding:11px 13px;font-size:17px;color:#fff8e9}
+.wellness-app .week-picker summary span{display:block;font-size:16px;color:#e8d5ac}
+.wellness-app .weeklist{margin:0;display:grid;gap:7px;padding:9px}
+.wellness-app .weekbtn{width:100%;padding:10px;border:1px solid #6c8676;border-radius:7px;background:#30493e;color:#fff8e9;box-shadow:none}
+.wellness-app .weekbtn.active,.wellness-app .weekbtn:hover{border-color:#e5c78e;box-shadow:none;background:#405e50}
+.wellness-app .weekbtn .wtitle{font-weight:444;font-size:16px;color:#fff8e9}
+.wellness-app .weekbtn .wsub{font-size:16px;line-height:1.35;color:#eee5d7;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.wellness-app .badge{font-size:16px;border-radius:7px;padding:5px 7px;background:#385847;color:#fff8e9}
+.wellness-app .badge.good{background:#2b684d;border-color:#91be99}.wellness-app .badge.lock{background:#59472d;border-color:#cfaa70}
+.wellness-app .main{min-width:0;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:22px clamp(16px,2.4vw,32px) 30px;background:#f8f4eb;color:#263c33}
+.wellness-app .card{padding:19px;border:1px solid #d9c9b2;border-radius:7px;background:#fffdf8;color:#263c33;margin:0 0 14px}
+.wellness-app .card h2{font:400 clamp(26px,2.6vw,35px)/1.3 Cinzel,Georgia,serif;color:#253d32}
+.wellness-app .card h3{font:400 clamp(20px,2vw,25px)/1.35 Cinzel,Georgia,serif;color:#253d32}
+.wellness-app :is(.muted,.help,.list){color:#4c5e51;font-size:16px;line-height:1.6}
+.wellness-app .list li{margin-bottom:9px}
+.wellness-app .card a{color:#245a3c;text-decoration:underline;text-underline-offset:3px}
+.wellness-app .grid2{grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.wellness-app .lesson-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 0 14px}
+.wellness-app .lesson-tab{min-height:47px;border:1px solid #a7b5a6;background:#fffdf8;color:#274537;border-radius:7px;padding:9px;font-size:16px;font-weight:444;cursor:pointer}
+.wellness-app .lesson-tab[aria-selected="true"]{background:#254739;color:#fff8e9;border-color:#254739}
+.wellness-app .lesson-panel[hidden]{display:none!important}
+.wellness-app .q{background:#f7f3eb;border-color:#d6c8b5;border-radius:7px}
+.wellness-app .q .qt{font-size:17px;font-weight:444;color:#263b32}
+.wellness-app .choice{color:#263c33;background:#fffdf8;border:1px solid #afbdad;border-radius:7px;min-height:44px;text-align:left}
+.wellness-app .choice.selected,.wellness-app .choice:hover{border-color:#b99354;background:#faefd9;box-shadow:none}
+.wellness-app input,.wellness-app select,.wellness-app textarea{width:100%;color:#243a32;background:#fffdf8;border:1px solid #9daa9a;border-radius:7px}
+.wellness-app .result{color:#253a32;background:#f1f4ec;border-radius:7px;border-color:#a8bba8}
+.wellness-app .result.good{background:#e9f5e8}.wellness-app .result.warn{background:#fff4d8}.wellness-app .result.bad{background:#fff0ec}
+.wellness-app .row .btn{flex:0 0 auto}.wellness-app .row .muted{flex:1 1 170px}
+.wellness-app table{width:100%}.wellness-app th{font-size:16px;color:#425b49}.wellness-app td{color:#243b34;background:#f8f4eb;border-color:#dacdb9}
+.wellness-app > .shell > footer{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:19px;text-align:center;font-size:16px;color:#fff8e9;background:#202f28;border-top:1px solid #b89d70}
+.wellness-app .mono{font-size:16px;overflow-wrap:anywhere}
+@media(max-width:950px){.wellness-app .top{grid-template-columns:1fr}.wellness-app .pillrow{max-width:none;justify-content:flex-start}.wellness-app .body{grid-template-columns:275px minmax(0,1fr)}.wellness-app .grid2{grid-template-columns:1fr}}
+@media(max-width:860px){.wellness-app{width:min(100% - 22px,750px);margin:16px auto 28px}.wellness-app .body{height:auto;min-height:0;grid-template-columns:1fr;overflow:visible}.wellness-app .side{overflow:visible;border-right:0;border-bottom:1px solid #b8a17c}.wellness-app .main{height:min(68svh,680px);min-height:420px;overflow-y:auto;padding:17px}.wellness-app .week-picker .weeklist{max-height:260px;overflow-y:auto}.wellness-app .grid2{grid-template-columns:1fr}.wellness-app .card{padding:16px}}
+@media(max-width:500px){.wellness-app > .shell > header{padding:22px 17px}.wellness-app .sub{font-size:16px}.wellness-app .lesson-tabs{gap:5px}.wellness-app .lesson-tab{padding:8px 5px}.wellness-app .row .btn{flex:1 1 120px}}
+@media print{.wellness-app{width:100%;margin:0}.wellness-app .body{display:block;height:auto;min-height:0;overflow:visible}.wellness-app .side,.wellness-app .lesson-tabs,.wellness-app .pillrow{display:none!important}.wellness-app .main{height:auto;overflow:visible}.wellness-app .lesson-panel[hidden]{display:block!important}}
+</style>
 </head>
 <body data-i18n-no-online>
-  <div class="app">
+  <div class="app wellness-app">
     <div class="shell">
       <header>
         <div class="top">
           <div>
-            <h1>Health is Wealth — Ongoing Wellness Workshop</h1>
-            <div class="sub">A calm, evidence-guided, self-paced wellness program with weekly lessons, tools, and progress tracking (saved locally on your device).</div>
+            <p class="wellness-eyebrow">Khaemenes Academy · Continuing Education</p>
+            <h1>Health Is Wealth</h1>
+            <div class="sub">12-week Wellness Workshop · Guided lessons, practical tools, and progress saved privately on your device.</div>
           </div>
           <div class="pillrow">
             <div class="pill"><strong>12 Weeks</strong> Free</div>
@@ -270,8 +343,9 @@
         </div>
       </header>
 
-      <div class="posture">
-        <div class="title">Course Posture Statement</div>
+      <details class="posture">
+        <summary>Workshop principles &amp; wellbeing guidance <span>Educational only · Not medical advice</span></summary>
+        <div class="title">Our learning commitment</div>
         <div class="text">
           We choose humility, honesty, and steady growth. We reject shame and “all-or-nothing” thinking.
           This workshop is about building sustainable habits—small steps done consistently.
@@ -280,13 +354,11 @@
           Educational only (not medical advice). If you’re pregnant, under 18, managing a health condition, recovering from injury, or changing medications:
           consult a licensed clinician before major diet/exercise changes.
         </div>
-      </div>
+      </details>
 
       <div class="body">
         <aside class="side">
           <div class="navgroup" id="topTabs"></div>
-
-          <div class="weeklist" id="weekList"></div>
 
           <div class="sidecard">
             <h3>Your Progress</h3>
@@ -312,6 +384,11 @@
               Everything is saved locally on this device (localStorage) and never uploaded.
             </div>
           </div>
+
+          <details class="week-picker" id="weekPicker">
+            <summary>Choose a week <span>12 guided lessons</span></summary>
+            <div class="weeklist" id="weekList"></div>
+          </details>
         </aside>
 
         <main class="main">
@@ -719,6 +796,8 @@ const TABS = [
   {id:"journal", label:"Journal"},
   {id:"about", label:"Resources"}
 ];
+// Visual state only; no change to persisted progress or assessments.
+let activeLessonPanel="learn",activeLessonPanelWeek=null;
 
 // Progressive access: Week 1 open, Week N unlocks when Week N-1 is done
 function canAccessWeek(w){
@@ -874,6 +953,47 @@ function renderCourse(view){
     <div class="muted">${escapeHtml(wk.aim)}</div>
   `;
   view.appendChild(head);
+  // Three accessible sections replace the single endless lesson column.
+  if(activeLessonPanelWeek!==w){activeLessonPanelWeek=w;activeLessonPanel="learn";}
+  const sections=[["learn","Learn"],["resources","Resources"],["quiz","Weekly Quiz"]];
+  const tabs=document.createElement("div");
+  tabs.className="lesson-tabs";
+  tabs.setAttribute("role","tablist");
+  tabs.setAttribute("aria-label","Current week's learning sections");
+  const panels={},tabButtons={};
+  for(const [id,label] of sections){
+    const button=document.createElement("button");
+    button.type="button";button.className="lesson-tab";button.id="wellness-tab-"+id;
+    button.textContent=label;button.setAttribute("role","tab");
+    button.setAttribute("aria-controls","wellness-panel-"+id);
+    button.addEventListener("click",()=>selectLessonPanel(id));
+    const panel=document.createElement("section");
+    panel.className="lesson-panel";panel.id="wellness-panel-"+id;
+    panel.setAttribute("role","tabpanel");panel.setAttribute("aria-labelledby",button.id);
+    tabButtons[id]=button;panels[id]=panel;
+    tabs.appendChild(button);
+  }
+  view.appendChild(tabs);
+  sections.forEach(([id])=>view.appendChild(panels[id]));
+  function selectLessonPanel(id){
+    activeLessonPanel=id;
+    sections.forEach(([key])=>{
+      const on=key===id;
+      tabButtons[key].setAttribute("aria-selected",String(on));
+      tabButtons[key].tabIndex=on?0:-1;
+      panels[key].hidden=!on;
+    });
+    const viewport=document.querySelector(".wellness-app .main");
+    if(viewport)viewport.scrollTop=0;
+  }
+  sections.forEach(([id],i)=>{
+    tabButtons[id].addEventListener("keydown",e=>{
+      if(e.key!=="ArrowRight"&&e.key!=="ArrowLeft")return;
+      e.preventDefault();
+      const next=sections[(i+(e.key==="ArrowRight"?1:sections.length-1))%sections.length][0];
+      selectLessonPanel(next);tabButtons[next].focus();
+    });
+  });
 
   // At a glance + flow
   const g = document.createElement("div");
@@ -900,7 +1020,7 @@ function renderCourse(view){
 
   g.appendChild(c1);
   g.appendChild(c2);
-  view.appendChild(g);
+  panels.learn.appendChild(g);
 
   // Resources
   const res = document.createElement("div");
@@ -911,10 +1031,10 @@ function renderCourse(view){
       ${wk.resources.map(r=>`<li><a href="${escapeHtml(r.u)}" target="_blank" rel="noopener">${escapeHtml(r.t)}</a></li>`).join("")}
     </ul>
   `;
-  view.appendChild(res);
+  panels.resources.appendChild(res);
 
   // Quiz
-  renderWeekQuiz(view, w, wk);
+  renderWeekQuiz(panels.quiz, w, wk);
 
   // Navigation row
   const nav = document.createElement("div");
@@ -934,6 +1054,7 @@ function renderCourse(view){
     </div>
   `;
   view.appendChild(nav);
+  selectLessonPanel(activeLessonPanel);
 }
 
 function goWeek(w){
@@ -1639,6 +1760,8 @@ $("resetBtn").addEventListener("click", ()=>{
    Boot
    ========================= */
 (function init(){
+  const picker=$("weekPicker");
+  if(picker&&window.matchMedia)picker.open=window.matchMedia("(min-width:861px)").matches;
   // clamp week
   state.week = clamp(state.week,1,12);
   if(!canAccessWeek(state.week)) state.week = 1;
