@@ -11,7 +11,11 @@ const toolbar=read("assets/khaemenes-landing-toolbar.js");
 const dockCss=read("assets/khaemenes-landing-toolbar.css");
 const hallType=read("assets/khaemenes-hall-typography.css");
 
-assert.match(home,/academy-frontdesk-header-gateway-standard-20261027/);
+/* Home header authority belongs exclusively to VNV; legacy campus styles stay on older portals. */
+assert.doesNotMatch(home,/<header\b/i,"Home must not hard-code a competing navigation header");
+assert.doesNotMatch(home,/academy-frontdesk-header-gateway-standard-20261027/);
+assert.match(home,/vnv-header-autopopulate\.js/);
+assert.equal((home.match(/VNV_HEADER\.mount\(/g)||[]).length,1,"Home must mount exactly one canonical header");
 assert.match(head,/academy-frontdesk-header-gateway-standard-20261027|Homepage only\. Match Verve N Veda/);
 assert.match(head,/data-khae-header/);
 assert.match(head,/grid-template-columns:minmax\(185px,auto\)/);
@@ -72,11 +76,18 @@ for(const file of [
   assert.match(html,/khaemenes-global-header\.js/,"Ticker and Academy menu must stay in "+file);
 }
 
-assert.match(
-  home,
-  /vnv-ecosystem-toolbar\.js" defer data-vnv-ecosystem-toolbar="1"/,
-  "Academy Home must load the canonical VNV ecosystem toolbar"
+/* One canonical toolbar and exactly one loader for each approved ticker. */
+assert.equal(
+  (home.match(/src="https:\/\/vervenveda\.com\/assets\/vnv-ecosystem-toolbar\.js"/g)||[]).length,1,
+  "Academy Home must load one canonical VNV ecosystem toolbar"
 );
+for(const asset of ["vnv-333-ticker.js","vnv-ticker-autopopulate.js"]){
+  assert.equal(
+    home.split('src="https://vervenveda.com/assets/'+asset+'"').length-1,1,
+    "Academy Home must load one ticker script: "+asset
+  );
+}
+assert.match(home,/VNV_TICKER\.autoPopulate\(/);
 
 console.log(
   "PASS Academy header parity, centralized VNV toolbar delegation, and 5 major portal entrances."
