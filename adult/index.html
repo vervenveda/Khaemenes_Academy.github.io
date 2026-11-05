@@ -17,7 +17,7 @@
 }
 *{box-sizing:border-box}
 html{background:var(--paper);scroll-behavior:smooth}
-body{margin:0;min-width:300px;color:var(--ink);background:radial-gradient(circle at 10% 0,rgba(180,139,69,.11),transparent 28rem),linear-gradient(180deg,#fbfaf6,var(--paper));font:15px/1.68 var(--sans)}
+body{margin:0;min-width:300px;color:var(--ink);background:radial-gradient(circle at 10% 0,rgba(180,139,69,.11),transparent 28rem),linear-gradient(180deg,#fbfaf6,var(--paper));font:16px/1.68 var(--sans)}
 a{color:inherit;text-decoration:none}button{font:inherit;cursor:pointer}:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
 .shell{width:min(calc(100% - 32px),var(--max));margin:auto}
 .top{color:#fff;background:linear-gradient(135deg,var(--night),var(--navy) 55%,#173b4f)}
@@ -53,6 +53,22 @@ body{font-family:"Brandon Grotesque","Avenir Next",Arial,sans-serif}
 .hero h1,.heading h2{font-weight:400;text-align:center}
 .actions{justify-content:center;align-items:stretch}
 </style>
+<style id="academy-adult-frontdesk-blueprint-20261105">
+/* Academy-specific typography and footer. Shared VNV chrome remains unchanged. */
+body{font-size:16px}
+.hero .eyebrow{color:#ead9b8;font:400 16px/1.45 Cinzel,Georgia,serif;letter-spacing:.04em;text-transform:none}
+.hero h1{font:400 clamp(35px,6vw,62px)/1.16 Cinzel,Georgia,serif;color:#fff8e9;letter-spacing:0}
+.hero p{font-size:16px;line-height:1.65;color:#fff8e9}
+.heading .eyebrow{font:400 16px/1.45 Cinzel,Georgia,serif;letter-spacing:.04em;text-transform:none}
+.heading h2{font:400 clamp(29px,4.2vw,44px)/1.22 Cinzel,Georgia,serif;color:#233e34}
+main :is(p,small,label,.notice,.empty),.section :is(p,small,label){font-size:16px;line-height:1.6}
+.chip,.status,.path-mark,.next-row small{font-size:16px;font-weight:400;letter-spacing:0;text-transform:none}
+.btn{min-height:44px;padding:11px 14px;font:400 16px/1.4 "Brandon Grotesque",Nunito,Arial,sans-serif;text-transform:none;letter-spacing:0}
+.card h3,.profile-name{font-weight:400}
+.footer{padding:30px 16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;border-top:3px solid #b48b45;background:#243038;color:#fff8e9;text-align:center;font-size:16px;line-height:1.6}
+.footer strong{color:#fff8e9;font:400 18px/1.4 Cinzel,Georgia,serif}
+.footer span{font-size:16px;color:#fff8e9}
+</style>
 <link rel="stylesheet" href="/Khaemenes_Academy.github.io/assets/khaemenes-global-header.css">
 <link rel="stylesheet" href="https://vervenveda.com/assets/vnv-ecosystem-menu.css">
 <link rel="stylesheet" href="./../assets/khaemenes-landing-standard.css">
@@ -74,8 +90,8 @@ body{font-family:"Brandon Grotesque","Avenir Next",Arial,sans-serif}
 </header>
 <div class="top">
   <section class="hero shell">
-    <p class="eyebrow">Self-Directed Adult Scholar</p>
-    <h1>Khaemenes Academy</h1><h2 class="khae-page-subtitle">Adult Learner Portal</h2>
+    <p class="eyebrow">Khaemenes Academy · Adult Learning</p>
+    <h1>Adult Learner Portal</h1>
     <p>Your own learning path stays separate from any parent or guardian role. Continue from your actual starting point — foundational study, GED, career development, languages, college-level coursework, or advanced independent scholarship.</p>
   </section>
 </div>
@@ -88,7 +104,7 @@ body{font-family:"Brandon Grotesque","Avenir Next",Arial,sans-serif}
 
 <section class="section" style="background:rgba(255,255,255,.54);border-block:1px solid var(--line)">
   <div class="shell">
-    <div class="heading"><p class="eyebrow">Choose Your Direction</p><h2>No artificial grade label.</h2><p>Adult learners enter the pathway appropriate to their current goals and preparation. Exploring a pathway does not change K–12 records or another learner's placement.</p></div>
+    <div class="heading"><p class="eyebrow">Choose Your Direction</p><h2>Adult Learning Pathways</h2><p>No artificial grade label is assigned. Adult learners enter the pathway appropriate to their current goals and preparation. Exploring a pathway does not change K–12 records or another learner's placement.</p></div>
     <div class="grid">
       <article class="card col4 path-card"><span class="path-mark">HL</span><h3>Higher Learning</h3><p>University-level study, independent scholarship, advanced mathematics, research preparation, and expanding collegiate departments.</p><div class="actions"><a class="btn dark" href="https://vervenveda.com/Khaemenes_Higher_Learning.github.io/start/">Enter Higher Learning</a></div></article>
       <article class="card col4 path-card"><span class="path-mark">GED</span><h3>GED & Foundations</h3><p>Rebuild foundations or prepare for high-school-equivalency study without being placed into a child grade.</p><div class="actions"><a class="btn" href="https://vervenveda.com/Khaemenes_Higher_Learning.github.io/GED/">Open GED Pathway</a></div></article>
