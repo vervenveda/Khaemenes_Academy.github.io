@@ -20,7 +20,7 @@
 }
 
 body{margin:0;font-family:system-ui;background:#494A4D;color:#ffffff;}
-header{padding:2rem;text-align:center;background:linear-gradient(135deg,#1f2937,#0e1117);}
+section.portal-introduction{padding:2rem;text-align:center;background:linear-gradient(135deg,#1f2937,#0e1117);}
 nav{display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;padding:1rem;}
 nav button{background:var(--panel);border:1px solid #222;color:#000000;padding:.6rem 1rem;border-radius:7px;cursor:pointer;}
 section{display:none;max-width:999px;margin:auto;padding:2rem;}
@@ -41,10 +41,10 @@ body{background:#26363e;color:#fffdf5;font-family:"Brandon Grotesque","Avenir Ne
 </head>
 <body data-i18n-no-online><div class="family-return"><a href="../family/">← Family Learning Center</a></div>
 
-<header>
+<section class="portal-introduction">
   <h1>Khaemenes Academy Homeschool Portal v3.1</h1>
   <p>Private · Parent-Issued · State-Aware · International · Offline-First</p>
-</header>
+</section>
 
 <nav>
   <button onclick="show('diploma')">Diploma</button>
@@ -250,7 +250,7 @@ A sovereign homeschool resource — parent directed, student centered.
 <script>VNV_TICKER.autoPopulate({label:"Diploma Generator Quick Links",max:14});</script>
 
 <script src="https://vervenveda.com/assets/vnv-header-autopopulate.js"></script>
-<script>VNV_HEADER.mount({replaceLegacy:true});</script>
+<script>VNV_HEADER.mount({title:"Homeschool Diploma Generator",subtitle:"Khaemenes Academy",home:"https://vervenveda.com/Khaemenes_Academy.github.io/",icon:"KA"});</script>
 <script src="https://vervenveda.com/assets/vnv-ecosystem-toolbar.js"></script>
 </body>
 </html>
