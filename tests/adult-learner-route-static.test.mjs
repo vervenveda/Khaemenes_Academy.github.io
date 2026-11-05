@@ -11,7 +11,8 @@ const registry=fs.readFileSync(new URL("../assets/khaemenes-family-registry.js",
 const student=fs.readFileSync(new URL("../student/index.html",import.meta.url),"utf8");
 
 test("Academy front desk exposes a first-class adult learner doorway",()=>{
-  assert.match(index,/href="\.\/adult\/"[^>]*>Adult Scholar<\/a>/);
+  assert.match(index,/href="\.\/adult\/"[^>]*>Adult Learning<\/a>/,"Adult Learning must open the actual adult portal");
+  assert.match(index,/href="\.\/adult\/"[^>]*>Adult Scholar Entry<\/a>/,"Adult Scholar must have a direct front-desk entrance");
   assert.match(index,/Adult Scholar Entry/);
   assert.match(index,/<h3>Adult Scholar<\/h3>/);
 });
