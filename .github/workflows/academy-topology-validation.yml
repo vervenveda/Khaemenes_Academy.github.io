@@ -2,9 +2,10 @@ name: Academy Front Door Topology Validation
 
 on:
   push:
-    branches: [main]
+    branches: [main, audit/home-canonical-shell-20261105]
     paths:
       - '**/*.html'
+      - 'tests/academy-block01-chrome-contract.mjs'
       - 'scripts/audit-ecosystem-toolbar.mjs'
       - 'scripts/audit-academy-local-links.mjs'
       - 'scripts/audit-academy-ticker.mjs'
@@ -35,3 +36,5 @@ jobs:
         run: node scripts/audit-academy-ticker.mjs
       - name: Verify repository-local Academy routes
         run: node scripts/audit-academy-local-links.mjs
+      - name: Verify ten-page canonical chrome ownership
+        run: node tests/academy-block01-chrome-contract.mjs
