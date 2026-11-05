@@ -30,9 +30,11 @@ test("high-school fallback no longer depends on the dead grades anchor",()=>{
   assert.match(router,/Academy canonical high-school learner route/);
 });
 
-test("student portal continues through the front-door router",()=>{
+test("student portal opens the canonical profile and preserves direct classroom access",()=>{
   assert.match(portal,/khaemenes-front-door-router\.js/);
-  assert.match(portal,/continueLearner/);
+  assert.match(portal,/href="profile\.html">Open My Student Profile/);
+  assert.match(portal,/data-select-existing/);
+  assert.match(portal,/id="studentCourseDoors"/);
 });
 
 
@@ -48,89 +50,83 @@ test("High School daily entry opens the grade profile before course continuation
   assert.match(portal,/Select Profile →/);
 });
 
-/* Canonical student/profile.html entry regression — fictional learners only.
-   Exercises the actual inline page script rather than repeating the route logic. */
-const canonicalProfilePage=fs.readFileSync(new URL("../student/profile.html",import.meta.url),"utf8");
-const canonicalProfileInline=canonicalProfilePage.match(/<script>([\s\S]*?)<\/script>/)?.[1];
+/* The profile is now module-driven; guard its real entry points instead of
+   executing a removed inline script. The separate student-profile-v2 suite
+   exercises storage, evidence, import, and the two-learner isolation rules. */
+const profilePage=fs.readFileSync(new URL("../student/profile.html",import.meta.url),"utf8");
+const uiModule=fs.readFileSync(new URL("../assets/khaemenes-student-profile-ui-v2.js",import.meta.url),"utf8");
 
-function mountFictionalProfile(initialLearnerId=null){
-  assert.ok(canonicalProfileInline,"canonical student profile must expose its inline bootstrap");
+test("canonical profile loads the learner-owned modules and studio",()=>{
+  assert.match(profilePage,/id="profileStudio"/);
+  for(const script of [
+    "khaemenes-family-registry.js",
+    "khaemenes-front-door-router.js",
+    "khaemenes-student-profile-v2.js",
+    "khaemenes-student-profile-ui-v2.js"
+  ])assert.ok(profilePage.includes(script),"profile missing "+script);
+  assert.match(uiModule,/function render\(\)/);
+  assert.match(uiModule,/global\.addEventListener\("khaemenes-student-profile-changed"/);
+  assert.doesNotMatch(profilePage,/khaemenes-global-header\.js/);
+});
+
+function makeFictionalRouter(){
   const learners={
     "fictional-A":{learnerId:"fictional-A",familyId:"fictional-family",nickname:"Scholar A",grade:"09",stage:"high"},
     "fictional-B":{learnerId:"fictional-B",familyId:"fictional-family",nickname:"Scholar B",grade:"10",stage:"high"}
   };
   const originalLearners=JSON.stringify(learners);
-  let selectedId=initialLearnerId;
-  const listeners={},selectors={};
-  const nodes={
-    identity:{
-      innerHTML:"",
-      querySelectorAll(selector){
-        assert.equal(selector,"[data-learner]");
-        return Object.values(learners).map(learner=>({
-          dataset:{learner:learner.learnerId},
-          addEventListener(type,fn){
-            assert.equal(type,"click");
-            selectors[learner.learnerId]=fn;
-          }
-        }));
-      }
-    },
-    gradePathway:{hidden:true},
-    gradeDashboardLink:{href:"./"}
-  };
+  let selected="fictional-A";
+  const navigations=[],events=[];
   const registry={
     gradeMeta:{"09":{label:"Grade 9"},"10":{label:"Grade 10"}},
-    getLearner(id){return learners[id||selectedId]||null;},
-    load(){return {learners};},
-    setActive({learnerId}){
+    getLearner(id){return learners[id||selected]||null;},
+    getFamily(){return {familyId:"fictional-family",learners:Object.values(learners)};},
+    getAdult(){return null;},
+    setActive({familyId,learnerId}){
+      assert.equal(familyId,"fictional-family");
       assert.ok(learners[learnerId],"only an existing learner may be selected");
-      selectedId=learnerId;
-      if(listeners["khaemenes-family-changed"])listeners["khaemenes-family-changed"]();
-    }
+      selected=learnerId;
+    },
+    learnerDestination(){return null;},
+    destinationFor(){return null;}
   };
-  const context={
-    window:{KhaemenesFamilyRegistry:registry,addEventListener(event,fn){listeners[event]=fn;}},
-    document:{getElementById(id){assert.ok(nodes[id], "unexpected element "+id);return nodes[id];}}
+  const window={
+    KhaemenesFamilyRegistry:registry,
+    location:{assign(url){navigations.push(url)}},
+    addEventListener(){},
+    dispatchEvent(event){events.push(event.type)}
   };
-  const reload=()=>vm.runInNewContext(canonicalProfileInline,context,{filename:"student/profile.html:inline",timeout:2500});
-  reload();
-  return {registry,nodes,selectors,reload,getSelected:()=>selectedId,originalLearners,learners};
+  const document={readyState:"loading",addEventListener(){}};
+  class CustomEvent{constructor(type,{detail}={}){this.type=type;this.detail=detail}}
+  vm.runInNewContext(router,{window,document,CustomEvent},{filename:"khaemenes-front-door-router.js",timeout:2500});
+  return {api:window.KhaemenesFrontDoorRouter,learners,registry,navigations,events,originalLearners,getSelected:()=>selected};
 }
 
-test("canonical profile page supports two existing fictional learners without creating new records",()=>{
-  const state=mountFictionalProfile(null);
-  assert.match(state.nodes.identity.innerHTML,/Select an existing student/);
-  assert.match(state.nodes.identity.innerHTML,/Scholar A/);
-  assert.match(state.nodes.identity.innerHTML,/Scholar B/);
-  assert.equal(state.nodes.gradePathway.hidden,true);
-  assert.equal(typeof state.selectors["fictional-B"],"function");
-  state.selectors["fictional-B"]();
-  assert.equal(state.getSelected(),"fictional-B");
-  assert.match(state.nodes.identity.innerHTML,/Scholar B/);
-  assert.match(state.nodes.identity.innerHTML,/Grade 10/);
-  assert.equal(state.nodes.gradePathway.hidden,false);
-  assert.match(state.nodes.gradeDashboardLink.href,/\/grades\/grade-10\/student-profile\/$/);
-  assert.equal(JSON.stringify(state.learners),state.originalLearners,"existing learner records remain unchanged");
-  state.reload();
-  assert.match(state.nodes.identity.innerHTML,/Scholar B/);
-  assert.match(state.nodes.gradeDashboardLink.href,/\/grades\/grade-10\/student-profile\/$/);
+test("fictional Grade 9 and Grade 10 route to their actual daily profile pages",()=>{
+  const t=makeFictionalRouter();
+  const a=t.api.routeForLearner(t.learners["fictional-A"]);
+  const b=t.api.routeForLearner(t.learners["fictional-B"]);
+  assert.equal(a.destination,"https://vervenveda.com/Khaemenes_High.github.io/grades/grade-09/student-profile/");
+  assert.equal(b.destination,"https://vervenveda.com/Khaemenes_High.github.io/grades/grade-10/student-profile/");
+  assert.equal(a.authority.changesPlacement,false);
+  assert.equal(a.authority.awardsMastery,false);
+  assert.equal(t.navigations.length,0,"inspecting a route must not navigate");
+  assert.equal(JSON.stringify(t.learners),t.originalLearners,"routing must not edit learner records");
 });
 
-test("canonical profile page renders Grade 9 then switches to Grade 10 without an exception",()=>{
-  const state=mountFictionalProfile("fictional-A");
-  assert.match(state.nodes.identity.innerHTML,/Scholar A/);
-  assert.match(state.nodes.identity.innerHTML,/Grade 9/);
-  assert.match(state.nodes.gradeDashboardLink.href,/\/grades\/grade-09\/student-profile\/$/);
-  state.registry.setActive({learnerId:"fictional-B"});
-  assert.match(state.nodes.identity.innerHTML,/Scholar B/);
-  assert.match(state.nodes.identity.innerHTML,/Grade 10/);
-  assert.match(state.nodes.gradeDashboardLink.href,/\/grades\/grade-10\/student-profile\/$/);
-  assert.equal(JSON.stringify(state.learners),state.originalLearners);
+test("switching fictional learners does not navigate without an explicit continue action",()=>{
+  const t=makeFictionalRouter();
+  const next=t.api.switchLearner("fictional-B");
+  assert.equal(t.getSelected(),"fictional-B");
+  assert.match(next.destination,/\/grades\/grade-10\/student-profile\/$/);
+  assert.equal(t.navigations.length,0);
+  t.api.continueLearner();
+  assert.deepEqual(t.navigations,["https://vervenveda.com/Khaemenes_High.github.io/grades/grade-10/student-profile/"]);
+  assert.equal(JSON.stringify(t.learners),t.originalLearners);
 });
 
-test("canonical student profile metadata uses keyed grade lookup, not a function call",()=>{
-  assert.match(canonicalProfilePage,/R\.gradeMeta\?\.\[active\.grade\]/);
-  assert.match(canonicalProfilePage,/R\.gradeMeta\?\.\[l\.grade\]/);
-  assert.doesNotMatch(canonicalProfilePage,/R\.gradeMeta\?\.\(/);
+test("grade metadata uses keyed lookup rather than calling gradeMeta as a function",()=>{
+  assert.match(portal,/R\?\.gradeMeta\?\.\[l\.grade\]/);
+  assert.match(router,/r\?\.gradeMeta\?\.\[grade\]/);
+  assert.doesNotMatch(portal,/R\?\.gradeMeta\?\.\(/);
 });
