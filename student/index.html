@@ -542,7 +542,6 @@ render();
 <!-- Legacy floating Beta retired; official ecosystem dock contains Beta. -->
 <script src="../assets/khaemenes-account-connection-status.js"></script>
 <script src="../assets/vnv-language.js" defer></script>
-<script src="https://vervenveda.com/assets/vnv-ecosystem-menu.js" defer></script>
 <!-- Removed legacy root Beta loader; Beta is available in the official ecosystem toolbar. -->
 
 <!-- The canonical ecosystem toolbar is the sole Beta entry. -->
@@ -564,6 +563,9 @@ document.querySelector('[data-help-tools]')?.addEventListener('click',event=>{
 <script src="https://vervenveda.com/assets/vnv-333-ticker.js"></script>
 <script src="https://vervenveda.com/assets/vnv-ticker-autopopulate.js" data-vnv-ticker-autopopulate></script>
 <script>VNV_TICKER.autoPopulate({label:"Student Portal Quick Links",max:14});</script>
+<!-- One canonical VNV header and branched hamburger. Retire old Academy page-wide header. -->
+<script src="https://vervenveda.com/assets/vnv-header-autopopulate.js"></script>
+<script>VNV_HEADER.mount({title:"Student Portal",subtitle:"Khaemenes Academy",icon:"KA",home:"https://vervenveda.com/Khaemenes_Academy.github.io/",replaceLegacy:true,legacySelectors:["header[data-khae-header]"]});</script>
 <script src="https://vervenveda.com/assets/vnv-ecosystem-toolbar.js"></script>
 </body>
 </html>
