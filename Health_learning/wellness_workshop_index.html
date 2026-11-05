@@ -1649,6 +1649,10 @@ $("resetBtn").addEventListener("click", ()=>{
 </script>
 <script src="../assets/vnv-language.js" defer></script>
 <script src="https://vervenveda.com/assets/vnv-support.js" defer></script>
+<!-- Canonical ticker pair: 333 Network above page AutoPopulate, outside the app shell. -->
+<script src="https://vervenveda.com/assets/vnv-333-ticker.js"></script>
+<script src="https://vervenveda.com/assets/vnv-ticker-autopopulate.js"></script>
+<script>if(window.VNV_TICKER?.autoPopulate){const links=window.VNV_TICKER.discover({max:14});window.VNV_TICKER.autoPopulate({label:"Wellness Workshop Quick Links",max:14,before:"body > :first-child",links:links.length?links:[{label:"Academy Home",href:"https://vervenveda.com/Khaemenes_Academy.github.io/"}]});}</script>
 <script src="https://vervenveda.com/assets/vnv-ecosystem-toolbar.js"></script>
 </body>
 </html>
