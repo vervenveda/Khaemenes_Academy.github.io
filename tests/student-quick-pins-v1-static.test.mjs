@@ -48,9 +48,17 @@ test("Grade 09 legacy Quick Pins migrate into the canonical learner store",()=>{
   assert.deepEqual(store.learners["learner-a"],["scientific-calculator","the-verifier"]);
 });
 
-test("Student Portal surfaces canonical Quick Pins",()=>{
+test("Student Portal retains canonical learner-scoped Quick Pin controls",()=>{
   assert.match(portal,/khaemenes-student-quick-pins-v1\.js/);
-  assert.match(portal,/Games, tools &amp; resources/);
+  assert.match(portal,/No Quick Pins yet\. Games, tools, resources/);
   assert.match(portal,/data-quick-remove/);
   assert.match(portal,/khaemenes-student-quick-pins-changed/);
+});
+
+test("Student Profile preserves learner-scoped Quick Pin export and restore",()=>{
+  const profile=fs.readFileSync(new URL("../student/profile.html",import.meta.url),"utf8");
+  const ui=fs.readFileSync(new URL("../assets/khaemenes-student-profile-ui-v2.js",import.meta.url),"utf8");
+  assert.match(profile,/khaemenes-student-quick-pins-v1\.js/);
+  assert.match(ui,/Q\?\.list\?\.\(\)/);
+  assert.match(ui,/Q\?\.resources\?\.\[id\]/);
 });
