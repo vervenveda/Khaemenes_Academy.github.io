@@ -90,7 +90,15 @@
     link.href="./family/";
     link.dataset.academyVerify="true";
     link.textContent="Parent Records →";
-    records.appendChild(link);
+    let actions=records.querySelector(":scope > .service-actions");
+    if(!actions){
+      actions=document.createElement("div");
+      actions.className="service-actions";
+      actions.dataset.academyActionGroup="";
+      records.querySelectorAll(":scope > a").forEach(anchor=>actions.appendChild(anchor));
+      records.appendChild(actions);
+    }
+    actions.appendChild(link);
   }
 
   function attachArchaemenesDoorway(){
@@ -112,7 +120,7 @@
       const card=document.createElement("article");
       card.className="service";
       card.dataset.academyArchaemenes="true";
-      card.innerHTML=`<span class="service-mark">A</span><h3>Archaemenes · Principal & Mentor</h3><p>Archaemenes is Principal of Khaemenes Academy and its one continuous educational Mentor. His expression grows from Wise Owl to Academy Mentor to Scholar while learner identity, grades, placement, and mastery remain with their proper Academy authorities.</p><a href="${mentorDestination()}" data-academy-mentor-enter>Chat →</a><br><a href="${ARCHAEMENES_HOME}" rel="noopener noreferrer">Meet Archaemenes →</a>`;
+      card.innerHTML=`<span class="service-mark">A</span><h3>Archaemenes</h3><p>Archaemenes is Principal of Khaemenes Academy and its one continuous educational Mentor. His expression grows from Wise Owl to Academy Mentor to Scholar while learner identity, grades, placement, and mastery remain with their proper Academy authorities.</p><div class="service-actions" data-academy-action-group><a href="${mentorDestination()}" data-academy-mentor-enter>Chat →</a><a href="${ARCHAEMENES_HOME}" rel="noopener noreferrer">Meet Archaemenes →</a></div>`;
       services.appendChild(card);
     }
 
