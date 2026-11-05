@@ -6,13 +6,15 @@ import vm from "node:vm";
 const contract=fs.readFileSync(new URL("../assets/khaemenes-student-profile-v2.js",import.meta.url),"utf8");
 const ui=fs.readFileSync(new URL("../assets/khaemenes-student-profile-ui-v2.js",import.meta.url),"utf8");
 const css=fs.readFileSync(new URL("../assets/khaemenes-student-profile-v2.css",import.meta.url),"utf8");
-const portal=fs.readFileSync(new URL("../student/index.html",import.meta.url),"utf8");
+const portal=fs.readFileSync(new URL("../student/profile.html",import.meta.url),"utf8");
+const entry=fs.readFileSync(new URL("../student/index.html",import.meta.url),"utf8");
 
-test("profile v2 assets are wired into the canonical Student Portal",()=>{
+test("profile v2 assets are wired into the canonical Student Profile",()=>{
   assert.match(portal,/khaemenes-student-profile-v2\.css/);
   assert.match(portal,/khaemenes-student-profile-v2\.js/);
   assert.match(portal,/khaemenes-student-profile-ui-v2\.js/);
   assert.match(portal,/id="profileStudio"/);
+  assert.match(entry,/href="profile\.html">Open My Student Profile/);
 });
 
 test("profile studio exposes all five learner-profile upgrades",()=>{
