@@ -209,6 +209,14 @@ function render(){
     </section>
   </div>`;
   const set=(id,value)=>{const el=document.getElementById(id);if(el)el.value=value};
+  // On the dedicated Academy Portfolio Studio, the High School profile editor
+  // owns appearance and personal workspace settings. Remove duplicate controls
+  // from this page's rendered DOM without changing saved learner preferences or
+  // the shared studio's behavior on other Academy pages.
+  if(host.dataset.portfolioOnly==="true"){
+    host.querySelector('[aria-labelledby="workspaceTitle"]')?.remove();
+    host.querySelector('[aria-labelledby="privacyTitle"]')?.remove();
+  }
   set("pv2Collaboration",rec.learningMap.collaboration);set("pv2Theme",rec.workspace.theme);set("pv2Text",rec.workspace.textSize);set("pv2Line",rec.workspace.lineSpacing);set("pv2Width",rec.workspace.readingWidth);set("pv2Contrast",rec.workspace.contrast);set("pv2Density",rec.workspace.density);
   bind();
 }
