@@ -4,7 +4,7 @@
  */
 (function attachKhaemenesHomePersonalization(global){
 "use strict";
-const VERSION="1.4.0";
+const VERSION="1.4.1";
 const EXPLORE_MODE=(()=>{try{return global.__KHAEMENES_EXPLORE_MODE__===true||new URLSearchParams(global.location.search).get("explore")==="1"}catch{return false}})();
 const BAR_ID="khaemenesMyAcademyBar",DOCK_ID="khaemenesHomeUtilityDock",PROFILE_ID="khaemenesHomeProfileButton",SEARCH_ID="khaemenesHomeSearchButton",UPDATES_ID="khaemenesHomeUpdatesButton",UPDATES_DIALOG_ID="khaemenesHomeUpdatesDialog",MENTOR_ID="khaemenesHomeMentorButton",CONTRIBUTE_ID="khaemenesHomeContributeButton",STYLE_ID="khaemenesHomePersonalizationStyles",BETA_ID="vnvBetaProgramLink";
 const URLS=Object.freeze({student:"./student/",family:"./family/",enroll:"./family/enroll/",adult:"./adult/",mentor:"./mentor/",offline:"./offline/index.html",beta:"https://vervenveda.com/beta/",search:"https://vervenveda.com/PLERASearch.github.io/",contribute:"https://buy.stripe.com/aFa8wQ5xf9Scf65caT4AU0s"});
@@ -174,51 +174,6 @@ function renderUpdates(snapshot=accountSnapshot()){
   body.innerHTML='<div class="home-updates-grid">'+items.join("")+'</div><div class="home-updates-actions">'+actions.join("")+'</div>';
   return dialog;
 }
-function ensureDock(){
-  addStyles();
-  let dock=document.getElementById(DOCK_ID);
-  if(!dock){dock=document.createElement("nav");dock.id=DOCK_ID;dock.setAttribute("aria-label","Academy quick utilities");document.body.appendChild(dock)}
-  let search=document.getElementById(SEARCH_ID);
-  if(!search){search=document.createElement("a");search.id=SEARCH_ID;search.innerHTML='<span class="home-dock-mark" aria-hidden="true">S</span><span>Search</span>';search.setAttribute("aria-label","Open PLERA Search");search.title="Search the Verve N Veda / PLERA ecosystem";dock.appendChild(search)}
-  search.href=URLS.search;
-  let updates=document.getElementById(UPDATES_ID);
-  if(!updates){
-    updates=document.createElement("button");
-    updates.id=UPDATES_ID;
-    updates.type="button";
-    updates.innerHTML='<span class="home-dock-mark" aria-hidden="true">U</span><span>Updates</span>';
-    updates.setAttribute("aria-label","Open Academy Updates and Help");
-    updates.setAttribute("aria-haspopup","dialog");
-    updates.setAttribute("aria-controls",UPDATES_DIALOG_ID);
-    updates.title="Current Academy status, next steps, and help";
-    updates.addEventListener("click",()=>openDialog(renderUpdates(accountSnapshot()).id));
-    dock.appendChild(updates);
-  }
-  let mentor=document.getElementById(MENTOR_ID);
-  if(!mentor){mentor=document.createElement("a");mentor.id=MENTOR_ID;mentor.innerHTML='<span class="home-dock-mark" aria-hidden="true">A</span><span>Mentor</span>';mentor.setAttribute("aria-label","Open Archaemenes, Khaemenes Academy Mentor");dock.appendChild(mentor)}
-  mentor.href=mentorDestination();
-  let contribute=document.getElementById(CONTRIBUTE_ID);
-  if(!contribute){
-    contribute=document.createElement("a");
-    contribute.id=CONTRIBUTE_ID;
-    contribute.innerHTML='<span class="home-dock-mark" aria-hidden="true">♡</span><span>Support</span>';
-    contribute.setAttribute("aria-label","Contribute to support free Khaemenes Academy learning");
-    contribute.title="Optional support for free education · opens secure Stripe checkout";
-    contribute.target="_blank";
-    contribute.rel="noopener noreferrer";
-    dock.appendChild(contribute);
-  }
-  contribute.href=URLS.contribute;
-  const beta=document.getElementById(BETA_ID);if(beta&&beta.parentElement!==dock)dock.appendChild(beta);
-  return dock;
-}
-function syncDock(snapshot=accountSnapshot()){
-  const dock=ensureDock();let profile=document.getElementById(PROFILE_ID);
-  // Keep Profile available as the sixth tool, including to first-time visitors.
-  if(!profile){profile=document.createElement("a");profile.id=PROFILE_ID;profile.innerHTML='<span class="home-dock-mark" aria-hidden="true">P</span><span>Profile</span>';profile.setAttribute("aria-label","Open the active Khaemenes Academy profile");dock.appendChild(profile)}
-  profile.href=profileDestination(snapshot)||URLS.student;
-  profile.title=!snapshot.hasIdentity?"Find your existing student profile":snapshot.mode==="adult"?"Open Adult Scholar Profile":snapshot.mode==="learner"?"Open Student Profile":"Open Family Profile";
-}
 function removeBar(){document.getElementById(BAR_ID)?.remove()}
 function makeAction(label,href,kind=""){return '<a class="my-academy-action '+kind+'" href="'+esc(href)+'">'+esc(label)+'</a>'}
 function renderBar(snapshot=accountSnapshot()){
@@ -248,6 +203,11 @@ function renderBar(snapshot=accountSnapshot()){
     actions=[learnerSwitcher(snapshot),makeAction("Family Profile",URLS.family,"primary"),makeAction(learnerCount?"Parent Actions":"Enroll Learner",learnerCount?URLS.family+"#khaemenesParentActionCenter":URLS.enroll),makeAction("Archaemenes",mentor,"gold")].join("");
   }
   bar.innerHTML='<div class="my-academy-inner"><div class="my-academy-identity"><p class="my-academy-kicker">'+esc(kicker)+'</p><h2 class="my-academy-name">'+esc(name)+'</h2><p class="my-academy-meta">'+esc(meta)+'</p>'+connectionMarkup()+'</div><div class="my-academy-next">'+nextText+setupMarkup(snapshot)+'</div><div class="my-academy-actions">'+actions+'</div></div>';
+  const updatesButton=document.createElement("button");
+  updatesButton.type="button";updatesButton.className="my-academy-action";updatesButton.textContent="Updates & Help";
+  updatesButton.setAttribute("aria-haspopup","dialog");updatesButton.setAttribute("aria-controls",UPDATES_DIALOG_ID);
+  updatesButton.addEventListener("click",()=>openDialog(renderUpdates(accountSnapshot()).id));
+  bar.querySelector(".my-academy-actions")?.appendChild(updatesButton);
   bar.querySelector("[data-academy-account-health]")?.addEventListener("click",()=>openDialog("accountContinuityDialog"));
   bar.querySelector("[data-academy-learner-switch]")?.addEventListener("change",event=>{
     const learnerId=event.currentTarget.value;
@@ -260,14 +220,9 @@ function renderBar(snapshot=accountSnapshot()){
     }
   });
 }
-function refresh(){const snapshot=accountSnapshot();renderBar(snapshot);syncDock(snapshot);return snapshot}
+function refresh(){const snapshot=accountSnapshot();renderBar(snapshot);return snapshot}
 let queued=0;function schedule(){clearTimeout(queued);queued=setTimeout(refresh,50)}
-function observeBeta(){
-  if(typeof MutationObserver!=="function"||!document.body)return;
-  const observer=new MutationObserver(()=>{const beta=document.getElementById(BETA_ID);if(beta&&beta.parentElement?.id!==DOCK_ID)syncDock(accountSnapshot())});
-  observer.observe(document.body,{childList:true,subtree:true});
-}
-function start(){if(EXPLORE_MODE)document.documentElement.dataset.khaemenesExploreMode="public";refresh();observeBeta()}
+function start(){if(EXPLORE_MODE)document.documentElement.dataset.khaemenesExploreMode="public";refresh()}
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
 for(const eventName of ["pageshow","khaemenes-family-ready","khaemenes-family-changed","khaemenes-learner-placement-changed","khaemenes-learning-continuation-changed","online","offline"])global.addEventListener(eventName,schedule);
 global.addEventListener("storage",event=>{if(String(event.key||"").startsWith("khaemenes"))schedule()});
