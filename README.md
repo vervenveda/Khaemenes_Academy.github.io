@@ -716,3 +716,40 @@ May your next question lead you somewhere extraordinary.
 **Khaemenes Academy**
 
 *A Sanctuary for Lifelong Learners*
+
+---
+
+# Public Repository Maintainer Guidance
+
+> This section is for authorized maintainers and contributors. This repository is public: do not add secrets, confidential architecture, private infrastructure inventories, unpublished security findings, identifiable student records, or privileged access procedures here. Store sensitive operational runbooks only in an appropriately restricted system.
+
+## Scope and change control
+
+The Academy core provides public learning pages and shared browser-side services. Maintain the separate public Academy Home entrance without treating a public repository as a private access boundary.
+
+Before changing routing, registration, records, or shared scripts:
+
+1. Review the affected pages, consumer scripts, and course entry points.
+2. Identify data-write behavior and expected side effects.
+3. Preserve existing student data and avoid unplanned storage-key or schema changes.
+4. Prefer one narrowly scoped change with a descriptive commit.
+5. Verify the change in relevant student, family, adult, and guest flows before deployment.
+6. Record observable results and a rollback plan without including sensitive data.
+
+## Reliability and idempotency
+
+Shared headers, tickers, navigation, dialogs, and widgets should mount once and remain stable when initialized again. Repeated initialization must not duplicate controls, listeners, observers, records, or rewards. Review grade-specific behavior before reusing a component across grades.
+
+Treat storage failures as real failures: never tell a learner, parent, or educator that information was saved without confirming persistence. Preserve appropriate revision and backup behavior during migrations.
+
+## Privacy and authorization
+
+Browser-local identity and progress state are not verified server-side authentication. Any future connected account service must enforce its own authorization, user separation, and protection of private records. Never commit personal learner exports, credentials, private tokens, incident details, or production secrets.
+
+## Deployment checks
+
+Check public entry links, keyboard accessibility, readable contrast, responsive layouts, page loading, and correct guest behavior. Confirm any connection-status claims reflect verified capability. Keep dormant and non-public systems out of ordinary public deployment.
+
+## Reporting
+
+Use [SECURITY.md](SECURITY.md) for responsible disclosure and maintainer handling of vulnerability reports. Security-sensitive operational details should be exchanged through private, access-controlled channels.
