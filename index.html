@@ -553,6 +553,58 @@ header[data-khae-header] [data-khae-actions] a:focus-visible{
 @media(max-width:1150px){
   header[data-khae-header] [data-khae-actions] a{font-size:9px!important;padding:5px 6px!important}
 }
+
+/* Academy front desk: 2026-11-05 accessible type and theme normalization.
+   Scoped to this page; shared ecosystem assets and protected gateway untouched. */
+:root {
+  --academy-charcoal:#202724;
+  --academy-cream:#fff8e9;
+  --academy-parchment:#f4f0e7;
+}
+.hero .eyebrow { font-size:clamp(20px,2.6vw,33px); line-height:1.25; letter-spacing:.05em; }
+.hero h1 { font-family:var(--ceremonial); font-size:clamp(42px,5.4vw,66px); line-height:1.12; }
+.hero-lead, .heading p, .desk-head p { font-family:var(--sans); font-size:18px; line-height:1.6; }
+.kicker { font-size:16px; line-height:1.45; }
+.heading h2 { font-family:var(--ceremonial); font-size:clamp(32px,3.7vw,44px); }
+.quick h3, .school h3, .service h3, .compass-card h3 { font-family:var(--ceremonial); font-size:clamp(23px,2.1vw,33px); }
+.quick p, .school p, .service p, .compass-card p { font-size:18px; line-height:1.55; }
+.school small { font-size:18px; text-transform:none; letter-spacing:0; }
+.quick a, .school a, .service a, .btn,
+#schools .school a, #services .service a,
+.head-btn, .navlinks a { font-size:16px; line-height:1.35; letter-spacing:0; text-transform:none; }
+.quick a, #schools .school a, #services .service a { min-height:48px; height:auto; max-height:none; }
+#schools .school a { flex:0 0 auto; padding:10px 12px; }
+.quick a, .school a, .btn.primary, #services .service a {
+  background:var(--academy-charcoal); color:var(--academy-cream);
+  border-color:var(--academy-charcoal);
+}
+.quick a:hover, .school a:hover, .btn.primary:hover,
+#services .service a:hover { background:#34413b; color:var(--academy-cream); }
+.hero .btn.primary { background:var(--academy-cream); color:var(--academy-charcoal); border-color:var(--academy-cream); }
+.dark #services .service a, #services .service a {
+  border:1px solid var(--academy-cream); background:var(--academy-cream); color:var(--academy-charcoal);
+}
+#services .service a:hover { background:#e9dec9; color:var(--academy-charcoal); }
+@media(max-width:760px) {
+  .quick-grid,.compass-grid,.service-grid,#services .service-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .school-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media(max-width:520px) {
+  .quick-grid,.compass-grid,.school-grid,.service-grid,#services .service-grid { grid-template-columns:minmax(0,1fr); }
+  .hero .eyebrow { font-size:20px; }
+  .hero h1 { font-size:42px; }
+}
+header[data-khae-header] [data-khae-nav] a,
+header[data-khae-header] [data-khae-actions] a,
+header[data-khae-header] [data-khae-actions] a:not([data-khae-secondary]) {
+  font-size:16px!important; line-height:1.3!important;
+}
+header[data-khae-header] [data-khae-actions] a,
+header[data-khae-header] [data-khae-actions] a:not([data-khae-secondary]) {
+  background:var(--academy-charcoal)!important;color:var(--academy-cream)!important;
+  border-color:var(--academy-charcoal)!important;
+}
+header[data-khae-header] [data-khae-brand-sub] { font-size:16px!important; }
 </style>
 </head>
 <body id="top">
