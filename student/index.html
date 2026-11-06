@@ -284,7 +284,7 @@ body[data-academy-student-landing] .campus-door:focus-visible{outline:3px solid 
       <a href="../" data-ticker>Academy Home</a>
       <a href="../family/" data-ticker>Family Hub</a>
     </nav>
-    <div data-khae-actions><a data-khae-secondary href="profile.html" data-ticker>My Profile</a></div>
+    <div data-khae-actions><a data-khae-secondary href="../family/" data-ticker data-academy-direct-profile>My Profile</a></div>
     <div data-vnv-ecosystem-slot aria-label="Ecosystem menu"></div>
   </div>
 </header>
@@ -308,7 +308,7 @@ body[data-academy-student-landing] .campus-door:focus-visible{outline:3px solid 
       </nav>
     </section>
     <section class="portal-help" aria-label="Student navigation help">
-      <article><h3><a class="student-help-action" href="profile.html">1 · My profile</a></h3><p>Choose your existing learner name to see your personal learning dashboard. Never enroll again just to find a saved profile.</p></article>
+      <article><h3><a class="student-help-action" href="../family/" data-academy-direct-profile>1 · My profile</a></h3><p>Choose your existing learner name to see your personal learning dashboard. Never enroll again just to find a saved profile.</p></article>
       <article><h3><a class="student-help-action" href="#studentCourseDoors">2 · My lessons</a></h3><p>Open a classroom or continue a pinned course. Your lessons keep their own progress and mastery checks.</p></article>
       <article><h3><a class="student-help-action" href="profile.html#studentTools">3 · My learning tools</a></h3><p>Use games, language tools, printables, goals, and evidence from your learner dashboard when your profile is selected.</p></article>
     </section>
@@ -329,6 +329,28 @@ body[data-academy-student-landing] .campus-door:focus-visible{outline:3px solid 
 <script src="../assets/khaemenes-learner-context.js"></script>
 <script src="../assets/khaemenes-front-door-router.js"></script>
 <script src="../assets/khaemenes-learning-continuation.js"></script>
+<script id="academy-direct-profile-routing">
+(()=>{"use strict";
+ function destination(){
+  const route=window.KhaemenesFrontDoorRouter?.routeForLearner?.();
+  return route?.destination||"https://vervenveda.com/Khaemenes_Academy.github.io/family/";
+ }
+ function refresh(){
+  const target=destination();
+  document.querySelectorAll("[data-academy-direct-profile]").forEach(a=>a.href=target);
+  return target;
+ }
+ document.addEventListener("click",event=>{
+  const a=event.target.closest?.("[data-academy-direct-profile]");if(!a)return;
+  if(event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
+  const target=refresh();event.preventDefault();location.assign(target);
+ },true);
+ window.addEventListener("pageshow",refresh);
+ window.addEventListener("khaemenes-family-changed",refresh);
+ window.addEventListener("storage",event=>{if(!event.key||/khaemenes_(active_learner|family_registry)_v1/.test(event.key))refresh()});
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",refresh,{once:true});else refresh();
+})();
+</script>
 <script src="../assets/khaemenes-student-profile-v2.js"></script>
 <script src="../assets/khaemenes-student-quick-pins-v1.js"></script>
 <script>
@@ -526,7 +548,7 @@ function render(){
     document.getElementById("studentClassroomMount").innerHTML=classrooms;
     return;
   }
-  app.innerHTML=`<section class="card profile-entry" aria-labelledby="portalProfileReadyTitle"><p class="eyebrow">Your existing Academy learner</p><h3 id="portalProfileReadyTitle">Open your personal Student Profile</h3><p>Your schedule, continuation, pinned courses, learning tools, family switcher, and study studio are now together on your individual Student Profile page.</p><div class="actions"><a class="btn" href="profile.html">Open My Student Profile →</a><a class="btn secondary" href="../family/">Family Hub</a></div></section>`;
+  app.innerHTML=`<section class="card profile-entry" aria-labelledby="portalProfileReadyTitle"><p class="eyebrow">Your existing Academy learner</p><h3 id="portalProfileReadyTitle">Open your personal Student Profile</h3><p>Your schedule, continuation, pinned courses, learning tools, family switcher, and study studio are now together on your individual Student Profile page.</p><div class="actions"><a class="btn" href="../family/" data-academy-direct-profile>Open My Student Profile →</a><a class="btn secondary" href="../family/">Family Hub</a></div></section>`;
 
 }
 window.addEventListener("khaemenes-family-changed",render);
