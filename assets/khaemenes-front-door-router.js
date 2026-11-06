@@ -1,6 +1,6 @@
 (function attachKhaemenesFrontDoorRouter(global){
   "use strict";
-  const VERSION="1.5.0";
+  const VERSION="1.6.0";
   const ACADEMY_MENTOR="https://vervenveda.com/Khaemenes_Academy.github.io/mentor/";
   const FAMILY_PORTAL="https://vervenveda.com/Khaemenes_Academy.github.io/family/";
   const ARCHAEMENES_HOME="https://artist1970.github.io/Archaemenes.github.io/";
@@ -22,15 +22,15 @@
   function identifiedStudentDestination({stage=null,grade=null}={}){
     if(stage!=="high")return null;
     const base="https://vervenveda.com/Khaemenes_High.github.io";
-    if(grade==="09")return `${base}/grades/grade-09/student-profile/`;
-    if(grade==="10")return `${base}/grades/grade-10/student-profile/`;
-    if(grade==="11")return `${base}/grades/grade-11/student-profile/`;
-    if(grade==="12")return `${base}/grades/grade-12/student-profile/`;
+    if(grade==="09")return `${base}/grades/grade-09/student-profile/profile/`;
+    if(grade==="10")return `${base}/grades/grade-10/student-profile/profile/`;
+    if(grade==="11")return `${base}/grades/grade-11/student-profile/profile/`;
+    if(grade==="12")return `${base}/grades/grade-12/student-profile/profile/`;
     return `${base}/`;
   }
 
   function routeForLearner(learner=activeLearner()){
-    if(!learner)return Object.freeze({status:"no-active-learner",version:VERSION,destination:"https://vervenveda.com/Khaemenes_Academy.github.io/student/",requiresEnrollment:false,requiresPlacement:false});
+    if(!learner)return Object.freeze({status:"no-active-learner",version:VERSION,destination:FAMILY_PORTAL,requiresEnrollment:false,requiresPlacement:false});
     const r=registry();
     const placement=context()?.placementFor?.(learner)||null;
     const local=r?.learnerDestination?.(learner)||r?.destinationFor?.(learner)||null;
