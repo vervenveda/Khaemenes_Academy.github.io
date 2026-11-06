@@ -81,7 +81,7 @@ body #profileStudio > .heading .profile-v2-stage-note{
 }
 body #profileStudio > .heading .profile-v2-stage-note span{font-size:14px!important}
 </style></head><body data-i18n-no-online>
-<header data-khae-header><div class="shell nav" data-khae-header-inner><a class="brand" data-khae-brand href="../"><span class="mark" data-khae-brand-mark>KA</span><span data-khae-brand-name>Khaemenes Academy</span></a><nav class="navlinks" data-khae-nav aria-label="Student navigation"><a href="./">Student Portal</a><a href="../">Academy Home</a><a href="../family/">Family Hub</a></nav><div data-khae-actions><a data-khae-secondary href="profile.html" aria-current="page">My Profile</a></div><div data-vnv-ecosystem-slot aria-label="Ecosystem menu"></div></div></header>
+<header data-khae-header><div class="shell nav" data-khae-header-inner><a class="brand" data-khae-brand href="../"><span class="mark" data-khae-brand-mark>KA</span><span data-khae-brand-name>Khaemenes Academy</span></a><nav class="navlinks" data-khae-nav aria-label="Student navigation"><a href="./">Student Portal</a><a href="../">Academy Home</a><a href="../family/">Family Hub</a></nav><div data-khae-actions><a data-khae-secondary href="../family/" data-academy-direct-profile>My Profile</a></div><div data-vnv-ecosystem-slot aria-label="Ecosystem menu"></div></div></header>
 <section class="mast"><div class="shell"><div class="eyebrow">Khaemenes Academy · Student Learning</div><h1>My Student Profile</h1><p>Your personal learning home: daily schedule, course continuation, preferences, learning evidence, and pinned tools.</p><nav class="toolbar" aria-label="Profile shortcuts"><a href="#profileStudio">My Profile Studio</a><a href="./">Student Portal</a></nav></div></section>
 <main class="shell"><div id="profileStudio" data-portfolio-only="true" tabindex="-1" aria-label="Student portfolio and learning evidence studio"></div><section class="card"><h2>Find your next learning step</h2><p>Return to the Student Portal to open your classes, pinned subjects, and continuation links. Your profile preferences and evidence are separate from graded course records.</p><div class="profile-links"><a class="button" href="./">Open Student Portal →</a><a class="button" href="../">Explore Academy →</a></div></section></main>
 <footer>Khaemenes Academy · Verve N Veda · Student Learning</footer>
@@ -94,4 +94,35 @@ body #profileStudio > .heading .profile-v2-stage-note span{font-size:14px!import
 <script src="https://vervenveda.com/assets/vnv-header-autopopulate.js"></script>
 <script>VNV_HEADER.mount({title:"Student Profile",subtitle:"Khaemenes Academy",icon:"KA",home:"https://vervenveda.com/Khaemenes_Academy.github.io/",replaceLegacy:true,legacySelectors:["header[data-khae-header]"]});</script>
 <script src="https://vervenveda.com/assets/vnv-ecosystem-toolbar.js"></script>
+<script id="legacy-profile-direct-canonical">
+(()=>{"use strict";
+ const A="https://vervenveda.com/Khaemenes_Academy.github.io/";
+ const H="https://vervenveda.com/Khaemenes_High.github.io/";
+ function destination(){
+  try{
+   const id=JSON.parse(localStorage.getItem("khaemenes_active_learner_v1")||"null");
+   const family=JSON.parse(localStorage.getItem("khaemenes_family_registry_v1")||"null");
+   const learner=typeof id==="string"?family?.learners?.[id]:null;
+   if(!learner||learner.learnerId!==id)return A+"family/";
+   const stage=String(learner.stage||"").toLowerCase();
+   const grade=String(learner.grade||"").replace(/^grade[- ]?/i,"").trim();
+   const n=Number(grade);
+   if(stage==="high"&&[9,10,11,12].includes(n)){
+    return H+"grades/grade-"+String(n).padStart(2,"0")+"/student-profile/profile/";
+   }
+   if(stage==="higher"||learner.selfDirectedAdult===true)return A+"adult/";
+   return A+"student/";
+  }catch{return A+"family/"}
+ }
+ function refresh(){const target=destination();document.querySelectorAll("[data-academy-direct-profile]").forEach(a=>a.href=target);return target}
+ document.addEventListener("click",event=>{
+  const a=event.target.closest?.("[data-academy-direct-profile]");if(!a)return;
+  if(event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
+  const target=refresh();event.preventDefault();location.assign(target);
+ },true);
+ window.addEventListener("pageshow",refresh);
+ window.addEventListener("storage",event=>{if(!event.key||/khaemenes_(active_learner|family_registry)_v1/.test(event.key))refresh()});
+ refresh();
+})();
+</script>
 </body></html>
