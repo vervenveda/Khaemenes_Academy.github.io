@@ -39,7 +39,7 @@ const adapter=Object.freeze({
   let badge=read(ks.badge(id));
   const options=["★","✦","📚","🧭","⚛","🎨","🎵","🌿","🔬","🧪","🧬","🌌","🌙","☀️","🪐","🌎","⚙️","💻","✏️","🎭","📐","🏛️","🦋","🏆"];
   if(!options.includes(badge))badge="★";
-  return {displayName:"",badge,frame:frame||"circle",background:"parchment",cardColor:custom};
+  return {displayName:"",badge,frame:frame||"circle",background:"parchment",cardColor:custom,nameFont:["academy","friendly","classic","modern","handwriting"].includes(setting.nameFont)?setting.nameFont:"academy"};
  },
  readPhoto(id){
   if(identity()?.id!==id)return "";
@@ -55,12 +55,12 @@ const adapter=Object.freeze({
   const current=g.KhaemenesGrade09Design.read();
   if(!current||typeof current!=="object")return false;
   const supported=["rectangle","square","circle","oval","rhombus","heart","star","octagon","semicircle","kite"];
-  if(!supported.includes(look?.frame))return false;
+  if(!supported.includes(look?.frame)||!["academy","friendly","classic","modern","handwriting"].includes(look?.nameFont))return false;
   const legacyKey=grade!=="09"?"khaemenes.grade"+String(Number(grade))+".profile.appearance:"+E(id):null;
   const old={};for(const key of [ks.badge(id),ks.photo(id),ks.sections(id),...(legacyKey?[legacyKey]:[])])old[key]=read(key);
   const nextSections=settings(id);
   const identitySetting=nextSections.identity&&typeof nextSections.identity==="object"?nextSections.identity:{};
-  const newSections={...nextSections,identity:{...identitySetting,mode:look.cardColor?"custom":(identitySetting.mode==="page"?"page":"default"),color:look.cardColor||"#f4f0e7"}};
+  const newSections={...nextSections,identity:{...identitySetting,mode:look.cardColor?"custom":(identitySetting.mode==="page"?"page":"default"),color:look.cardColor||"#f4f0e7",nameFont:look.nameFont}};
   try{
    g.localStorage.setItem(ks.badge(id),look.badge);
    g.localStorage.setItem(ks.sections(id),JSON.stringify(newSections));
