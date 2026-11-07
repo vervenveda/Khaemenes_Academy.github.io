@@ -17,12 +17,12 @@ const read=(key)=>{try{return g.localStorage.getItem(key)}catch{return null}};
 const save=(key,value)=>{try{g.localStorage.setItem(key,value);return true}catch{return false}};
 const erase=(key)=>{try{g.localStorage.removeItem(key);return true}catch{return false}};
 const adult=()=>{try{const r=registry(),id=r?.activeIds?.()?.adultId;const a=r?.getAdult?.();return a&&id&&a.adultId===id?a:null}catch{return null}};
-const defaults=()=>({displayName:"",background:"charcoal",frame:"circle",badge:"",cardColor:""});
+const defaults=()=>({displayName:"",background:"charcoal",frame:"circle",badge:"",cardColor:"",nameFont:"academy"});
 function appearance(id){
  if(!id)return defaults();
  try{
   const saved=JSON.parse(read(lookKey(id))||"null");
-  return {displayName:typeof saved?.displayName==="string"?saved.displayName.slice(0,70):"",background:Object.hasOwn(COLORS,saved?.background)?saved.background:"charcoal",frame:SHAPES.includes(saved?.frame)?saved.frame:"circle",badge:typeof saved?.badge==="string"&&saved.badge.length<12?saved.badge:"",cardColor:typeof saved?.cardColor==="string"&&/^#[0-9a-f]{6}$/i.test(saved.cardColor)?saved.cardColor:""};
+  return {displayName:typeof saved?.displayName==="string"?saved.displayName.slice(0,70):"",background:Object.hasOwn(COLORS,saved?.background)?saved.background:"charcoal",frame:SHAPES.includes(saved?.frame)?saved.frame:"circle",badge:typeof saved?.badge==="string"&&saved.badge.length<12?saved.badge:"",cardColor:typeof saved?.cardColor==="string"&&/^#[0-9a-f]{6}$/i.test(saved.cardColor)?saved.cardColor:"",nameFont:["academy","friendly","classic","modern","handwriting"].includes(saved?.nameFont)?saved.nameFont:"academy"};
  }catch{return defaults()}
 }
 function nameFor(a,look){return look.displayName||a?.displayName||"Parent / Guardian"}
@@ -112,6 +112,9 @@ function update(){
  const look=appearance(id);
  const label=nameFor(a,look);
  byId("kphName").textContent=label;
+ const fontMap={academy:'Cinzel,Georgia,serif',friendly:'Nunito,"Trebuchet MS",Arial,sans-serif',classic:'Georgia,"Times New Roman",serif',modern:'"Trebuchet MS",Arial,sans-serif',handwriting:'"Comic Sans MS","Trebuchet MS",cursive'};
+ byId("kphName").style.fontFamily=fontMap[look.nameFont]||fontMap.academy;
+ byId("kphName").style.fontWeight="400";
  byId("kphDetail").textContent=a?"Family profile on this device · No verified cloud sign-in":"Choose an existing family and adult profile below to personalize this space.";
  const hero=byId("kphIdentity");hero.dataset.background=look.background;
  const selected=look.cardColor||COLORS[look.background]||COLORS.charcoal;
