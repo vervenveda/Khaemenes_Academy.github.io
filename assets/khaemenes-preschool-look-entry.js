@@ -36,15 +36,18 @@ function mount(){
  if(approvalLabel)consentBox.append(approvalLabel); // MOVE the original node, don't duplicate its ID or handler.
  const button=d.createElement("button");button.type="button";button.className="kpu-open";button.textContent="Customize My Picture & Colors";
  const status=d.createElement("p");status.className="kpu-status";status.setAttribute("role","status");status.setAttribute("aria-live","polite");
- const legacy=d.createElement("p");legacy.className="kpu-classic";legacy.textContent="Your original picture controls, learning-space colors, and backup tools remain available below while this new editor is being proofed.";
+ const legacy=d.createElement("p");legacy.className="kpu-classic";legacy.textContent="Your picture tools are here. Learning-space colors and family backup tools remain in My Colors and the Grown-Up Corner.";
  section.append(title,help,consentBox,button,status,legacy);
  hero.insertAdjacentElement("afterend",section);
- button.addEventListener("click",()=>{
+ const openStudio=()=>{
   const identity=w.KhaemenesPreschoolUniversalLookAdapter?.getIdentity?.();
   if(!identity){status.textContent="Choose your enrolled Pre-K learner in the Family Portal first.";return}
   if(!consent.checked){status.textContent="Please check the grown-up confirmation above before changing this learner's appearance.";consent.focus();return}
-  if(!w.KhaemenesUniversalProfileLookEditor.open("picture"))status.textContent="Picture editor unavailable; use the original controls below.";
- });
+  if(!w.KhaemenesUniversalProfileLookEditor.open("picture"))status.textContent="Picture editor unavailable; your saved picture is unchanged.";
+ };
+ button.addEventListener("click",openStudio);
+ const pictureTile=d.querySelector('[data-universal-picture="true"]');
+ if(pictureTile)pictureTile.addEventListener("click",openStudio);
  consent.addEventListener("change",()=>{status.textContent=consent.checked?"Grown-up assistance confirmed for the selected learner.":""});
  refresh();return true;
 }
