@@ -1,0 +1,126 @@
+/* Kindergarten Student Profile — isolated visual refinement (2026-11-07).
+ * This is presentation ONLY. Original picture editor, guardian gate, native
+ * garden colors, bubble ocean, learning records and all handlers remain owned
+ * by the existing Kindergarten page.
+ * Do not change body/theme/palette, remove nodes or hide editors.
+ */
+body[data-kindergarten-profile-polish="v1"]{
+ --kg-ink:#202724;--kg-cream:#fff8e9;--kg-turquoise:#00a1ad;
+ --kg-blue:#2461c2;--kg-red:#d83c37;--kg-yellow:#ffd04a;
+}
+body[data-kindergarten-profile-polish="v1"] :is(.hero-grid,main .card,main .notice,main .adult-inside){
+ border-radius:7px;
+}
+body[data-kindergarten-profile-polish="v1"] .hero-grid{
+ border:2px solid rgba(32,39,36,.25);
+ box-shadow:0 7px 26px rgba(21,64,67,.13);
+}
+body[data-kindergarten-profile-polish="v1"] .hero h1,
+body[data-kindergarten-profile-polish="v1"] main :is(h2,h3){
+ font-family:"Trebuchet MS",Nunito,"Avenir Next",Arial,sans-serif;
+ font-weight:400;
+ letter-spacing:0;
+ line-height:1.24;
+ text-shadow:none;
+}
+body[data-kindergarten-profile-polish="v1"] .hero h1{
+ font-size:clamp(32px,4.5vw,55px);
+}
+body[data-kindergarten-profile-polish="v1"] :is(.hero p,main p,main label,main li,main summary,main .activity,main .milestone,main .empty){
+ font-family:Nunito,"Trebuchet MS",Arial,sans-serif;
+ font-size:max(16px,1rem);
+ font-weight:400;
+ line-height:1.55;
+ text-shadow:none;
+}
+body[data-kindergarten-profile-polish="v1"] :is(.hero .eyebrow,main .eyebrow){
+ font-size:16px;
+ font-weight:400;
+ letter-spacing:.045em;
+}
+body[data-kindergarten-profile-polish="v1"] .hero-controls{
+ gap:10px;
+}
+body[data-kindergarten-profile-polish="v1"] .hero-btn{
+ border-radius:7px;
+ border:2px solid rgba(32,39,36,.3);
+ min-height:51px;
+ padding:10px;
+ font:400 16px/1.4 Nunito,"Trebuchet MS",Arial,sans-serif;
+ box-shadow:2px 3px 0 rgba(20,35,50,.12);
+}
+body[data-kindergarten-profile-polish="v1"]:not([data-palette="pastel"]) .hero-today{
+ background:#197f51;color:#fff8e9;
+}
+body[data-kindergarten-profile-polish="v1"]:not([data-palette="pastel"]) .hero-garden{
+ background:#5645b1;color:#fff8e9;
+}
+body[data-kindergarten-profile-polish="v1"]:not([data-palette="pastel"]) .hero-graduate{
+ background:#bd4a1f;color:#fff8e9;
+}
+body[data-kindergarten-profile-polish="v1"]:not([data-palette="pastel"]) .hero-theme{
+ background:#116b93;color:#fff8e9;
+}
+/* Decorative color stripes on existing cards; cream reading surface stays. */
+body[data-kindergarten-profile-polish="v1"] main .grid>.card{
+ background:rgba(255,248,233,.96);
+ border:2px solid rgba(32,39,36,.2);
+ padding:clamp(19px,2.4vw,28px);
+ box-shadow:3px 5px 0 rgba(25,59,62,.12);
+}
+body[data-kindergarten-profile-polish="v1"] main .grid>.card:nth-child(4n+1){
+ border-top:8px solid #f2bc36;
+}
+body[data-kindergarten-profile-polish="v1"] main .grid>.card:nth-child(4n+2){
+ border-top:8px solid #03a4ad;
+}
+body[data-kindergarten-profile-polish="v1"] main .grid>.card:nth-child(4n+3){
+ border-top:8px solid #3264bd;
+}
+body[data-kindergarten-profile-polish="v1"] main .grid>.card:nth-child(4n+4){
+ border-top:8px solid #d84d3f;
+}
+body[data-kindergarten-profile-polish="v1"] main :is(button,.btn,.activity,select,input[type=file]){
+ border-radius:7px;
+ font-family:Nunito,"Trebuchet MS",Arial,sans-serif;
+ font-size:16px;
+ font-weight:400;
+ line-height:1.45;
+}
+body[data-kindergarten-profile-polish="v1"] main :is(button,.btn){
+ min-height:46px;
+}
+body[data-kindergarten-profile-polish="v1"] main .actions :is(button,.btn){
+ border:1px solid #202724;
+ background:#202724;
+ color:#fff8e9;
+}
+body[data-kindergarten-profile-polish="v1"] main .actions :is(button,.btn):nth-child(even){
+ background:#fff8e9;
+ color:#202724;
+}
+body[data-kindergarten-profile-polish="v1"] main .actions :is(button,.btn):focus-visible,
+body[data-kindergarten-profile-polish="v1"] .hero-btn:focus-visible{
+ outline:3px solid #d99b23;
+ outline-offset:3px;
+}
+body[data-kindergarten-profile-polish="v1"] main .adult-door summary{
+ border-radius:7px;
+ background:#244d58;
+ color:#fff8e9;
+ font:400 18px/1.45 Nunito,"Trebuchet MS",Arial,sans-serif;
+}
+body[data-kindergarten-profile-polish="v1"] main .adult-inside{
+ background:#fff8e9;
+ border:2px solid #9bb6a5;
+}
+body[data-kindergarten-profile-polish="v1"] main :is(.sticker,.milestone,.activity){
+ border-radius:7px;
+}
+@media(max-width:480px){
+ body[data-kindergarten-profile-polish="v1"] .hero-btn{font-size:16px;padding:9px 5px}
+ body[data-kindergarten-profile-polish="v1"] main .grid>.card{padding:17px}
+}
+@media print{
+ body[data-kindergarten-profile-polish="v1"] main .grid>.card{background:#fff;border:1px solid #777;box-shadow:none}
+}
