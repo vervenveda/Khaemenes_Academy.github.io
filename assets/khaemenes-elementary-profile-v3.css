@@ -65,3 +65,258 @@ body[data-profile-stage="elementary"] main :is(.card,#khaemenesElementaryProfile
  body[data-profile-stage="elementary"] main .card.hero{color:#202724;background:#fff}
  body[data-profile-stage="elementary"] main .card.hero :is(.eyebrow,.muted,h2){color:#202724}
 }
+
+/* ================================================================
+   ELEMENTARY COLOR-BLOCK STUDIO — reference-inspired visual layer
+   Deliberately scoped to Elementary profile; no learner data changes.
+   Bright primary-color rectangles with charcoal/cream reading surfaces.
+   ================================================================ */
+body[data-profile-stage="elementary"]{
+ --kep-turquoise:#008e9b;
+ --kep-cobalt:#183ba5;
+ --kep-cobalt-deep:#122878;
+ --kep-red:#c92b20;
+ --kep-yellow:#f1b82b;
+ --kep-orange:#eb7926;
+ --kep-ink:#202724;
+ --kep-cream:#fff8e9;
+}
+body[data-profile-stage="elementary"][data-theme="parchment"]{
+ background:
+ linear-gradient(90deg,transparent 0 28%,rgba(16,38,77,.95) 28% 29%,transparent 29% 68%,rgba(16,38,77,.95) 68% 69%,transparent 69%),
+ linear-gradient(180deg,rgba(252,185,33,.96) 0 15%,#028f9c 15% 40%,#153ca6 40% 64%,#cb3123 64% 82%,#f1b62c 82% 100%);
+ background-attachment:fixed;
+}
+body[data-profile-stage="elementary"] main{
+ background:rgba(255,248,233,.94);
+ border-left:7px solid var(--kep-cobalt-deep);
+ border-right:7px solid var(--kep-cobalt-deep);
+ box-shadow:0 12px 60px rgba(12,30,43,.2);
+ padding-top:clamp(29px,4vw,48px);
+}
+body[data-profile-stage="elementary"] main>.eyebrow{
+ color:#263c70;
+ font-size:17px!important;
+ letter-spacing:.075em;
+}
+body[data-profile-stage="elementary"] main>h1{
+ color:#132f82;
+ font-size:clamp(38px,4.7vw,55px);
+ line-height:1.2;
+ margin-bottom:15px;
+}
+body[data-profile-stage="elementary"] main>p.muted:first-of-type{
+ max-width:900px;
+ color:#2e403c;
+ font:400 18px/1.6 Nunito,Arial,sans-serif;
+}
+body[data-profile-stage="elementary"] main>.notice{
+ background:#fff1bb;
+ border:2px solid #bb841e;
+ border-left:8px solid #c92b20;
+ color:#392a19;
+ font-size:17px;
+}
+body[data-profile-stage="elementary"] main .card{
+ border:2px solid #233d52;
+ box-shadow:6px 7px 0 rgba(22,54,108,.13);
+ border-radius:7px;
+}
+body[data-profile-stage="elementary"] main .card.hero{
+ background-color:#153b8c;
+ border:3px solid #162c70;
+ border-left:12px solid #e8b02e;
+ border-right:12px solid #cd3427;
+ box-shadow:0 10px 0 #0791a3;
+ padding:clamp(26px,3.2vw,38px);
+ margin:21px 0 31px;
+}
+body[data-profile-stage="elementary"] main .card.hero .portrait{
+ border:5px solid var(--kep-cream);
+ outline:3px solid #efb42c;
+ box-shadow:5px 7px 0 rgba(9,30,60,.28);
+}
+body[data-profile-stage="elementary"] main .card.hero :is(.pill){
+ background:#fff8e9;
+ color:#202724;
+ border:1px solid #b57d15;
+ border-radius:7px;
+ font-size:16px!important;
+ min-height:33px;
+ display:inline-flex;
+ align-items:center;
+ padding:6px 10px;
+}
+body[data-profile-stage="elementary"] main .card.hero .actions{
+ margin-top:15px;
+}
+body[data-profile-stage="elementary"] main .card.hero .actions :is(a,button){
+ background:#efb82d;
+ color:#202724;
+ border:2px solid #162b62;
+ border-radius:7px;
+ box-shadow:3px 3px 0 #172958;
+ font-size:16px!important;
+ font-weight:400;
+}
+body[data-profile-stage="elementary"] main .card.hero .actions :is(a,button):nth-child(even){
+ background:#fff8e9;
+ color:#202724;
+}
+body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools{
+ background:#fff8e9;
+ border:4px solid #173e8c;
+ border-top:13px solid #efb82d;
+ border-right:13px solid #ca3327;
+ border-bottom:13px solid #008f9c;
+ box-shadow:10px 12px 0 rgba(14,44,91,.2);
+ padding:clamp(20px,3vw,35px);
+ margin:28px auto 33px;
+ border-radius:7px;
+}
+body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools .kep-heading{
+ border-bottom:3px solid #192e75;
+ padding:0 0 15px;
+ margin-bottom:20px;
+}
+body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools .kep-heading .eyebrow{
+ color:#18458c;
+ font-size:17px!important;
+}
+body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools .kep-heading h2{
+ color:#173b9a;
+ font-size:clamp(30px,3.3vw,42px);
+ line-height:1.23;
+ font-weight:400!important;
+}
+body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools .kep-guardian label{
+ background:#e3f4f1;
+ border:2px solid #008f9c;
+ padding:13px 19px;
+ border-radius:7px;
+ font-size:17px!important;
+ color:#1d3634;
+}
+body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools .kep-tiles{
+ display:grid;
+ grid-template-columns:repeat(4,minmax(0,1fr));
+ gap:12px;
+ padding:12px;
+ background:
+ linear-gradient(90deg,#f2ba2d 0 26%,#008e9b 26% 51%,#c83325 51% 74%,#193aa0 74% 100%);
+ border:3px solid #202724;
+ border-radius:7px;
+}
+body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools .kep-tiles .kep-tool{
+ min-height:65px;
+ padding:12px 8px;
+ border:2px solid #142d57!important;
+ border-radius:7px!important;
+ box-shadow:3px 4px 0 rgba(10,25,43,.35)!important;
+ font:400 16px/1.35 Nunito,Arial,sans-serif!important;
+ transition:filter .12s ease,transform .12s ease;
+}
+body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools .kep-tiles .kep-tool:nth-child(4n+1){
+ background:#16388d!important;color:#fff8e9!important;
+}
+body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools .kep-tiles .kep-tool:nth-child(4n+2){
+ background:#007e8e!important;color:#fff8e9!important;
+}
+body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools .kep-tiles .kep-tool:nth-child(4n+3){
+ background:#b9271b!important;color:#fff8e9!important;
+}
+body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools .kep-tiles .kep-tool:nth-child(4n+4){
+ background:#f2c43a!important;color:#202724!important;
+}
+body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools .kep-tiles .kep-tool:hover{
+ filter:brightness(1.1);
+ transform:translateY(-2px);
+}
+body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools :is(.kep-backup,.kep-foot,.kep-backup-status){
+ color:#243a37;
+}
+body[data-profile-stage="elementary"] main .grid>.card{
+ border:3px solid #202724;
+ box-shadow:6px 7px 0 rgba(17,39,77,.13);
+ padding:clamp(21px,2.7vw,29px);
+}
+body[data-profile-stage="elementary"] main .grid>.card:nth-child(4n+1){
+ background:#fce4b6;
+ border-top:12px solid #eab324;
+ color:#26322d;
+}
+body[data-profile-stage="elementary"] main .grid>.card:nth-child(4n+2){
+ background:#d6f2ef;
+ border-top:12px solid #00909a;
+ color:#202e32;
+}
+body[data-profile-stage="elementary"] main .grid>.card:nth-child(4n+3){
+ background:#e0e8ff;
+ border-top:12px solid #1c49ab;
+ color:#22314e;
+}
+body[data-profile-stage="elementary"] main .grid>.card:nth-child(4n+4){
+ background:#ffe3d8;
+ border-top:12px solid #c32a20;
+ color:#3c2925;
+}
+body[data-profile-stage="elementary"] main .grid>.card :is(h2,h3){
+ color:#153a82;
+ font-weight:400;
+}
+body[data-profile-stage="elementary"] main .grid>.card .actions :is(button,a.button){
+ background:#202724;
+ color:#fff8e9;
+ border:1px solid #202724;
+ border-radius:7px;
+ font-size:16px!important;
+}
+body[data-profile-stage="elementary"] main .grid>.card .actions :is(button,a.button).secondary{
+ background:#fff8e9;
+ color:#202724;
+}
+body[data-profile-stage="elementary"] main #gradePreview{
+ background:#e3f3ee;
+ border:3px solid #144c90;
+ border-left:12px solid #f1bb2e;
+ border-right:12px solid #0b8d9b;
+}
+body[data-profile-stage="elementary"] main #academyStudio{
+ border:3px solid #1e3e91;
+ border-left:12px solid #c83225;
+ border-top:12px solid #eebb30;
+ background:var(--panel);
+}
+body[data-profile-stage="elementary"] main :is(input,select,textarea){
+ max-width:100%;
+ border-radius:7px;
+}
+@media(max-width:650px){
+ body[data-profile-stage="elementary"] main{
+  border-left-width:3px;border-right-width:3px;
+  padding-inline:13px;
+ }
+ body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools{
+  border-right-width:7px;border-bottom-width:7px;
+ }
+ body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools .kep-tiles{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:9px;
+  padding:9px;
+ }
+ body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools .kep-tiles .kep-tool{
+  min-height:56px;
+ }
+ body[data-profile-stage="elementary"] main .card.hero{
+  border-left-width:7px;border-right-width:7px;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools .kep-tiles .kep-tool{transition:none}
+}
+@media print{
+ body[data-profile-stage="elementary"] main{background:#fff;border:0;box-shadow:none}
+ body[data-profile-stage="elementary"] main .card,
+ body[data-profile-stage="elementary"] main .grid>.card{background:#fff!important;color:#202724!important;box-shadow:none}
+ body[data-profile-stage="elementary"] main .card.hero{border:2px solid #202724;box-shadow:none}
+}
