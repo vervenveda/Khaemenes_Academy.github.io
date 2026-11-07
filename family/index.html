@@ -213,6 +213,21 @@ body footer.footer .family-footer-links a:focus-visible{outline:3px solid #edcd9
 @media(max-width:600px){body .family-hero .kicker{font-size:24px!important}body .family-hero-copy{font-size:18px!important}body .family-hub-cards h3{font-size:26px!important}}
 @media print{body footer.footer .family-footer-links{display:none!important}}
 </style>
+<style id="academy-family-final-authorization-preflight">
+.khae-final-auth-dialog{max-width:min(92vw,720px);width:100%;max-height:88vh;overflow:auto;padding:0;border:2px solid #202724;border-radius:7px;background:#fffdf8;color:#202724;box-shadow:0 18px 55px #0005}
+.khae-final-auth-dialog::backdrop{background:rgba(20,25,24,.68)}
+.khae-final-auth-panel{padding:clamp(20px,4vw,36px);font:400 18px/1.6 "Brandon Grotesque",Nunito,Arial,sans-serif}
+.khae-final-auth-panel h2,.khae-final-auth-panel h3{font-family:Cinzel,Georgia,serif;font-weight:400;line-height:1.25}
+.khae-final-auth-panel h2{font-size:clamp(28px,4vw,40px);margin:8px 0 16px}
+.khae-final-auth-panel h3{font-size:clamp(22px,3vw,27px);margin:0 0 8px}
+.khae-final-auth-eyebrow{color:#735c35;font-size:18px;margin:0}
+.khae-final-auth-learner,.khae-final-auth-warning{padding:14px;border-radius:7px;background:#f6f2e8}
+.khae-final-auth-warning{border-left:4px solid #8b5b32;margin:16px 0}
+.khae-final-auth-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:24px 0}
+.khae-final-auth-actions :is(a,button){flex:1 1 180px;display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:10px 12px;border:1px solid #202724;border-radius:7px;background:#202724;color:#fff8e9;font:400 16px/1.35 "Brandon Grotesque",Nunito,Arial,sans-serif;text-align:center;text-decoration:none;cursor:pointer}
+.khae-final-auth-actions :is(a,button):focus-visible{outline:3px solid #987338;outline-offset:3px}
+.khae-final-auth-status{font-size:16px;color:#40584b;text-align:center}
+</style>
 </head>
 <body data-i18n-no-online>
 <a class="skip" href="#workspace">Skip to family workspace</a>
@@ -361,7 +376,7 @@ function learnerProfileDestination(l){
     return "https://vervenveda.com/Khaemenes_High.github.io/grades/grade-"+grade+"/student-profile/";
   return "../student/profile.html";
 }
-function learnerCard(l,active){const m=meta(l),ready=l.stage==="higher"||Boolean(l.grade),isActive=l.learnerId===active;return `<article class="learner ${isActive?"active":""}" style="--accent:${m.stage.color}"><div class="stage">${esc(m.stage.label)}${isActive?" · Active":""}</div><h3>${esc(l.nickname)}</h3><small>${esc(m.grade||"Grade selection needed")}${m.school?" · "+esc(m.school):""}</small><p>${ready?"Ready to continue through your Student Profile.":"Choose an exact K–12 grade before continuing to a school pathway."}</p><div class="actions">${isActive?'<span class="btn primary">Active Learner</span>':`<button class="btn" type="button" data-active="${esc(l.learnerId)}">Make Active</button>`}${ready?`<a class="btn dark" href="${esc(learnerProfileDestination(l))}" data-learner-profile="${esc(l.learnerId)}">Open Student Profile</a>`:`<a class="btn dark" href="enroll/">Complete Placement</a>`}<a class="btn" href="enroll/#existing" aria-label="Change grade or review placement for ${esc(l.nickname)}">${ready?"Change Grade / Placement":"Complete Placement"}</a></div></article>`}
+function learnerCard(l,active){const m=meta(l),ready=l.stage==="higher"||Boolean(l.grade),isActive=l.learnerId===active;return `<article class="learner ${isActive?"active":""}" style="--accent:${m.stage.color}"><div class="stage">${esc(m.stage.label)}${isActive?" · Active":""}</div><h3>${esc(l.nickname)}</h3><small>${esc(m.grade||"Grade selection needed")}${m.school?" · "+esc(m.school):""}</small><p>${ready?"Ready to continue through your Student Profile.":"Choose an exact K–12 grade before continuing to a school pathway."}</p><div class="actions">${isActive?'<span class="btn primary">Active Learner</span>':`<button class="btn" type="button" data-active="${esc(l.learnerId)}">Make Active</button>`}${ready?`<a class="btn dark" href="${esc(learnerProfileDestination(l))}" data-learner-profile="${esc(l.learnerId)}">Open Student Profile</a>`:`<a class="btn dark" href="enroll/">Complete Placement</a>`}<a class="btn" href="enroll/#existing" aria-label="Change grade or review placement for ${esc(l.nickname)}">${ready?"Change Grade / Placement":"Complete Placement"}</a><button class="btn" type="button" data-review-learner-removal="${esc(l.learnerId)}" aria-label="Review learner removal safeguards for ${esc(l.nickname)}">Removal Safeguards</button></div></article>`}
 function renderFamily(f){
   const ids=R.activeIds(),activeAdult=R.getAdult(),scholar=activeAdult&&R.getAdultLearner?R.getAdultLearner(activeAdult.adultId):null,familyLearners=f.learners.filter(l=>l&&!l.selfDirectedAdult);
   let pinHandoff=null;try{pinHandoff=JSON.parse(sessionStorage.getItem("khaemenes_kindergarten_pin_handoff_v1")||"null")}catch{}
@@ -454,6 +469,7 @@ render();
 <script src="../assets/khaemenes-parent-action-center.js"></script>
 <script src="../assets/khaemenes-family-support-plan.js"></script>
 <script src="../assets/khaemenes-family-backup-vault.js"></script>
+<script src="../assets/khaemenes-family-final-authorization-ui.js"></script>
 <script src="../assets/khaemenes-terminal03-readiness.js"></script>
 
 <script src="../assets/khaemenes-account-connection-status.js"></script>
