@@ -10,6 +10,7 @@ const BADGES=Object.freeze(["★","✦","📚","🧭","⚛","🎨","🎵","🌿"
 const FRAMES=Object.freeze([{"id":"rectangle","label":"Rectangle"},{"id":"square","label":"Square"},{"id":"circle","label":"Circle"},{"id":"oval","label":"Oval"},{"id":"rhombus","label":"Rhombus"},{"id":"heart","label":"Heart"},{"id":"star","label":"Star"},{"id":"octagon","label":"Octagon"},{"id":"semicircle","label":"Semicircle"},{"id":"kite","label":"Kite"}]);
 const COLORS=Object.freeze(["#D53E4F","#F46D43","#FDAE61","#FEE08B","#E6F598","#ABDDA4","#66C2A5","#3288BD","#243038","#49374B","#7D283C","#254A75","#2C634A","#9A732C","#6A4C93","#A34836","#F4F0E7","#E7D7B6","#D1E3E5","#CAD8BC","#D5C1CF","#B9CBE0","#F2D8B6","#D0D6D1"]);
 const CLIPS=Object.freeze({"heart":"polygon(50% 95%,43% 88%,31% 76%,20% 64%,10% 51%,4% 39%,4% 25%,10% 13%,21% 7%,32% 7%,42% 13%,50% 24%,58% 13%,68% 7%,79% 7%,90% 13%,96% 25%,96% 39%,90% 51%,80% 64%,69% 76%,57% 88%)","star":"polygon(50% 2%,63% 34%,98% 36%,71% 58%,80% 94%,50% 75%,20% 94%,29% 58%,2% 36%,37% 34%)","octagon":"polygon(30% 0%,70% 0%,100% 30%,100% 70%,70% 100%,30% 100%,0% 70%,0% 30%)","rhombus":"polygon(50% 0%,100% 50%,50% 100%,0% 50%)","semicircle":"polygon(0% 100%,0% 50%,4% 31%,15% 15%,31% 4%,50% 0%,69% 4%,85% 15%,96% 31%,100% 50%,100% 100%)","kite":"polygon(50% 0%,90% 38%,50% 100%,10% 38%)"});
+const NAME_FONTS=Object.freeze({academy:'Cinzel,Georgia,serif',friendly:'Nunito,"Trebuchet MS",Arial,sans-serif',classic:'Georgia,"Times New Roman",serif',modern:'"Trebuchet MS",Arial,sans-serif',handwriting:'"Comic Sans MS","Trebuchet MS",cursive'});
 const HOME_COLORS=Object.freeze({charcoal:"#202724",forest:"#315c49",navy:"#263858",burgundy:"#643044",gold:"#a47f2f",parchment:"#f4f0e7"});
 let adapter=null;
 const $=id=>d.getElementById(id);
@@ -24,7 +25,7 @@ function existing(id){
  const badge=BADGES.includes(v.badge)?v.badge:"★";
  const background=Object.hasOwn(HOME_COLORS,v.background)?v.background:"forest";
  const cardColor=COLORS.includes(v.cardColor)?v.cardColor:"";
- return {displayName:typeof v.displayName==="string"?v.displayName.slice(0,70):"",frame,badge,background,cardColor};
+ return {displayName:typeof v.displayName==="string"?v.displayName.slice(0,70):"",frame,badge,background,cardColor,nameFont:Object.hasOwn(NAME_FONTS,v.nameFont)?v.nameFont:"academy"};
 }
 function photoFor(id){const p=adapter?.readPhoto?.(id);return p&&/^data:image\/jpeg;base64,[a-z0-9+/=]+$/i.test(p)&&p.length<400000?p:""}
 function mk(tag,cls,txt){const el=d.createElement(tag);if(cls)el.className=cls;if(txt!==undefined)el.textContent=txt;return el}
@@ -44,6 +45,7 @@ function style(){
 #kplsDialog .kpls-layout{display:grid;grid-template-columns:minmax(230px,.73fr) minmax(0,1.67fr);gap:20px}
 #kplsDialog .kpls-preview{display:flex;flex-direction:column;align-items:center;text-align:center;gap:9px;justify-content:center;padding:20px 14px;background:#202724;color:#fff8e9;border:2px solid #b48b45;border-radius:7px;min-height:320px}
 #kplsDialog .kpls-preview h3,#kplsDialog .kpls-preview p{color:inherit;margin:0}
+#kplsDialog #kplsNamePreview{font-weight:400;font-size:24px;line-height:1.3;overflow-wrap:anywhere}
 #kplsDialog .kpls-picture{display:grid;place-items:center;overflow:hidden;width:188px;height:188px;max-width:100%;border:3px solid #e3c68a;background:#fff8e9;color:#202724;font:400 66px/1.1 Georgia,serif;border-radius:50%}
 #kplsDialog .kpls-picture img{width:100%;height:100%;object-fit:cover}
 #kplsDialog .kpls-controls{min-width:0}
@@ -56,6 +58,7 @@ function style(){
 #kplsDialog .kpls-inputs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0}
 #kplsDialog .kpls-field{display:grid;gap:5px}
 #kplsDialog .kpls-field[hidden]{display:none}
+#kplsDialog .kpls-field select{width:100%;min-height:47px;padding:8px 10px;border:1px solid #67756d;border-radius:7px;background:#fff;color:#202724;font:400 18px/1.4 Nunito,Arial,sans-serif}
 #kplsDialog .kpls-field input{width:100%;min-height:47px;padding:8px 10px;border:1px solid #67756d;border-radius:7px;background:#fff;color:#202724;font:400 18px/1.4 Nunito,Arial,sans-serif}
 #kplsDialog .kpls-action-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:12px}
 #kplsDialog .kpls-action{min-height:48px;padding:9px 14px;border:1px solid #202724;border-radius:7px;background:#202724;color:#fff8e9;font:400 16px/1.35 Nunito,Arial,sans-serif;cursor:pointer}
@@ -97,7 +100,7 @@ function style(){
 function build(){
  if(dialog)return dialog;
  style();dialog=d.createElement("dialog");dialog.id="kplsDialog";dialog.setAttribute("aria-labelledby","kplsTitle");
- dialog.innerHTML='<div class="kpls-inner"><div class="kpls-top"><h2 id="kplsTitle">My Picture &amp; Colors</h2><button type="button" class="kpls-action kpls-secondary" id="kplsClose">Close</button></div><p>Personalize your profile with a badge, photo, frame, and background color. Settings remain on this device; academic records are untouched.</p><div class="kpls-layout"><div class="kpls-preview"><div class="kpls-picture" id="kplsPicture" aria-label="Profile picture preview">★</div><h3>My Picture &amp; Colors</h3><p id="kplsPictureLabel">My profile badge</p><p>Choose a picture, badge, frame and colors that feel like you.</p></div><div class="kpls-controls"><h3>Choose My Badge</h3><div class="kpls-options" id="kplsBadges" role="group" aria-label="Profile badge choices"></div><h3>Choose My Photo Frame</h3><div class="kpls-options kpls-frame-options" id="kplsFrames" role="group" aria-label="Picture frame choices"></div><h3>Photo Card Background</h3><div class="kpls-options kpls-color-options" id="kplsColors" role="group" aria-label="Profile card background swatches"></div><p>Your choice affects the profile card, not the entire page.</p><div class="kpls-inputs"><div class="kpls-field"><label for="kplsDisplay">Profile display name</label><input id="kplsDisplay" maxlength="70" autocomplete="off"></div><div class="kpls-field"><label for="kplsFile">Choose My Picture (optional, JPG/PNG/WebP up to 4 MB)</label><input id="kplsFile" type="file" accept="image/jpeg,image/png,image/webp"></div></div><div class="kpls-action-row"><button type="button" class="kpls-action kpls-secondary" id="kplsRemove">Remove Picture</button><button type="button" class="kpls-action kpls-secondary" id="kplsResetColor">Original Background</button><button type="button" class="kpls-action" id="kplsSave">Save My Look</button></div><p class="kpls-status" id="kplsStatus" role="status" aria-live="polite"></p></div></div></div>';
+ dialog.innerHTML='<div class="kpls-inner"><div class="kpls-top"><h2 id="kplsTitle">My Picture &amp; Colors</h2><button type="button" class="kpls-action kpls-secondary" id="kplsClose">Close</button></div><p>Personalize your profile with a badge, photo, frame, and background color. Settings remain on this device; academic records are untouched.</p><div class="kpls-layout"><div class="kpls-preview"><div class="kpls-picture" id="kplsPicture" aria-label="Profile picture preview">★</div><h3>My Picture &amp; Colors</h3><p id="kplsNamePreview" aria-label="Name font preview"></p><p id="kplsPictureLabel">My profile badge</p><p>Choose a picture, badge, frame and colors that feel like you.</p></div><div class="kpls-controls"><h3>Choose My Badge</h3><div class="kpls-options" id="kplsBadges" role="group" aria-label="Profile badge choices"></div><h3>Choose My Photo Frame</h3><div class="kpls-options kpls-frame-options" id="kplsFrames" role="group" aria-label="Picture frame choices"></div><h3>Photo Card Background</h3><div class="kpls-options kpls-color-options" id="kplsColors" role="group" aria-label="Profile card background swatches"></div><p>Your choice affects the profile card, not the entire page.</p><div class="kpls-inputs"><div class="kpls-field"><label for="kplsDisplay">Profile display name</label><input id="kplsDisplay" maxlength="70" autocomplete="off"></div><div class="kpls-field"><label for="kplsNameFont">Choose My Name Font</label><select id="kplsNameFont"><option value="academy">Academy · Cinzel</option><option value="friendly">Friendly · Nunito</option><option value="classic">Classic · Georgia</option><option value="modern">Modern · Trebuchet</option><option value="handwriting">Playful · Handwriting</option></select></div><div class="kpls-field"><label for="kplsFile">Choose My Picture (optional, JPG/PNG/WebP up to 4 MB)</label><input id="kplsFile" type="file" accept="image/jpeg,image/png,image/webp"></div></div><div class="kpls-action-row"><button type="button" class="kpls-action kpls-secondary" id="kplsRemove">Remove Picture</button><button type="button" class="kpls-action kpls-secondary" id="kplsResetColor">Original Background</button><button type="button" class="kpls-action" id="kplsSave">Save My Look</button></div><p class="kpls-status" id="kplsStatus" role="status" aria-live="polite"></p></div></div></div>';
  d.body.append(dialog);
  for(const badge of BADGES){const b=mk("button","kpls-choice",badge);b.type="button";b.dataset.badge=badge;b.setAttribute("aria-label","Choose "+badge+" badge");b.addEventListener("click",()=>{selected.badge=badge;badgeTouched=true;render();setStatus("Badge selected. Save My Look to keep it.");});$("kplsBadges").append(b)}
  for(const frame of FRAMES){const b=mk("button","kpls-choice",frame.label);b.type="button";b.dataset.frame=frame.id;b.addEventListener("click",()=>{selected.frame=frame.id;render();setStatus("Frame selected. Save My Look to keep it.");});$("kplsFrames").append(b)}
@@ -105,7 +108,8 @@ function build(){
  $("kplsClose").addEventListener("click",()=>dialog.close());
  $("kplsRemove").addEventListener("click",()=>{stagedPhoto="";render();setStatus("Picture will be removed when you save.");});
  $("kplsResetColor").addEventListener("click",()=>{selected.cardColor="";render();setStatus("Original background selected. Save to apply.");});
- $("kplsDisplay").addEventListener("input",()=>{if(selected){selected.displayName=$("kplsDisplay").value.slice(0,70);}});
+ $("kplsDisplay").addEventListener("input",()=>{if(selected){selected.displayName=$("kplsDisplay").value.slice(0,70);render();}});
+ $("kplsNameFont").addEventListener("change",()=>{if(selected){selected.nameFont=$("kplsNameFont").value;render();setStatus("Name font selected. Save My Look to keep it.");}});
  $("kplsFile").addEventListener("change",async()=>{
   const f=$("kplsFile").files?.[0];$("kplsFile").value="";if(!f)return;
   if(!["image/jpeg","image/png","image/webp"].includes(f.type)||f.size===0||f.size>4*1024*1024){setStatus("Select a JPG, PNG, or WebP under 4 MB.");return;}
@@ -125,7 +129,7 @@ function build(){
   const id=adult()?.id;
   if(!id||id!==owner){setStatus("Choose the correct profile again.");return}
   const look={...selected,displayName:$("kplsDisplay").value.trim().slice(0,70)};
-  if(!FRAMES.some(x=>x.id===look.frame)||!BADGES.includes(look.badge)||!(look.cardColor===""||COLORS.includes(look.cardColor))){setStatus("Choose valid profile options.");return}
+  if(!FRAMES.some(x=>x.id===look.frame)||!BADGES.includes(look.badge)||!(look.cardColor===""||COLORS.includes(look.cardColor))||!Object.hasOwn(NAME_FONTS,look.nameFont)){setStatus("Choose valid profile options.");return}
   // Existing appearance/photo keys remain unchanged; never touch student or registry storage.
   try{
    const result=adapter?.commit?.({id,look,photo:stagedPhoto,badgeTouched});
@@ -141,6 +145,7 @@ function render(){
  if(!selected)return;
  const bg=selected.cardColor||HOME_COLORS[selected.background]||HOME_COLORS.forest;
  const preview=$("kplsDialog")?.querySelector(".kpls-preview");if(preview){preview.style.backgroundColor=bg;preview.style.color=inkFor(bg)}
+ const nameNode=$("kplsNamePreview");if(nameNode){nameNode.textContent=selected.displayName||adult()?.displayName||"My Name";nameNode.style.fontFamily=NAME_FONTS[selected.nameFont]||NAME_FONTS.academy;nameNode.style.fontWeight="400"}
  const frame=$("kplsPicture");if(!frame)return;
  frame.replaceChildren();
  const imgData=stagedPhoto!==null?stagedPhoto:photo;
@@ -160,6 +165,7 @@ function open(mode="edit"){
  build();owner=a.id;selected=existing(owner);photo=photoFor(owner);stagedPhoto=null;badgeTouched=false;opener=d.activeElement;
  $("kplsTitle").textContent=mode==="picture"?"Customize My Picture":mode==="background"?"Customize My Background":"Edit My Profile";
  $("kplsDisplay").value=selected.displayName||a.displayName||"";
+ $("kplsNameFont").value=selected.nameFont;
  $("kplsDisplay").closest(".kpls-field").hidden=adapter?.showDisplayName===false;
  $("kplsFile").value="";setStatus("Choose your preferences, then select Save My Look.");
  render();if(typeof dialog.showModal==="function"&&!dialog.open){dialog.showModal();$("kplsClose").focus();return true}return false;
