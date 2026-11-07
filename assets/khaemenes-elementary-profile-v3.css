@@ -81,17 +81,19 @@ body[data-profile-stage="elementary"]{
  --kep-ink:#202724;
  --kep-cream:#fff8e9;
 }
+/* The default page canvas stays crisp parchment. Students can still select
+   the existing background themes in the native Elementary appearance editor.
+   Patchwork colors belong to cards, button tiles and picture frames only. */
 body[data-profile-stage="elementary"][data-theme="parchment"]{
- background:
- linear-gradient(90deg,transparent 0 28%,rgba(16,38,77,.95) 28% 29%,transparent 29% 68%,rgba(16,38,77,.95) 68% 69%,transparent 69%),
- linear-gradient(180deg,rgba(252,185,33,.96) 0 15%,#028f9c 15% 40%,#153ca6 40% 64%,#cb3123 64% 82%,#f1b62c 82% 100%);
- background-attachment:fixed;
+ background:#fff8e9;
+ background-image:none;
+ background-attachment:scroll;
 }
 body[data-profile-stage="elementary"] main{
- background:rgba(255,248,233,.94);
- border-left:7px solid var(--kep-cobalt-deep);
- border-right:7px solid var(--kep-cobalt-deep);
- box-shadow:0 12px 60px rgba(12,30,43,.2);
+ background:#fff8e9;
+ border-left:2px solid #ddd1b8;
+ border-right:2px solid #ddd1b8;
+ box-shadow:none;
  padding-top:clamp(29px,4vw,48px);
 }
 body[data-profile-stage="elementary"] main>.eyebrow{
