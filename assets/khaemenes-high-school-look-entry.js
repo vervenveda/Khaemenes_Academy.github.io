@@ -16,6 +16,7 @@ const style=()=>{
 #grade09LookPanel .kuhle-avatar{display:grid;place-items:center;overflow:hidden;width:175px;height:175px;border:3px solid #b48b45;background:#f4f0e7;color:#202724;border-radius:50%;font:400 66px/1 Cinzel,Georgia,serif}
 #grade09LookPanel .kuhle-avatar img{width:100%;height:100%;object-fit:cover}
 #grade09LookPanel .kuhle-eyebrow{font:400 18px/1.5 Nunito,Arial,sans-serif;color:#6d5736;margin:0 0 5px}
+#grade09LookPanel .kuhle-student-name{font-size:33px;line-height:1.3;font-weight:400;margin:0 0 8px;overflow-wrap:anywhere}
 #grade09LookPanel .kuhle-title{font:400 clamp(30px,4vw,44px)/1.2 Cinzel,Georgia,serif;color:#202724;margin:0 0 12px}
 #grade09LookPanel .kuhle-help{font:400 18px/1.55 Nunito,Arial,sans-serif;color:#354b3e;margin:0 0 14px}
 #grade09LookPanel .kuhle-open{display:inline-flex;align-items:center;justify-content:center;min-height:49px;padding:10px 19px;border:1px solid #202724;border-radius:7px;background:#202724;color:#fff8e9;font:400 16px/1.4 Nunito,Arial,sans-serif;cursor:pointer}
@@ -41,7 +42,14 @@ function render(){
  p.style.height=frame==="rectangle"?"135px":frame==="oval"?"148px":"175px";
  if(/^data:image\/jpeg;base64,[a-z0-9+/=]+$/i.test(photo)&&photo.length<400000){const img=d.createElement("img");img.src=photo;img.alt="Saved student profile picture";p.append(img)}
  else p.textContent=look.badge||"★";
- p.style.backgroundColor=look.cardColor||"#f4f0e7";
+ p.style.backgroundColor="#f4f0e7";
+ // The color swatch belongs to the entire profile card, not the avatar frame.
+ const card=find("grade09LookPanel");if(card){card.style.backgroundColor=look.cardColor||"";card.style.backgroundImage=look.cardColor?"none":"";}
+ const shade=look.cardColor||"#f6f0e4";const channels=[1,3,5].map(i=>parseInt(shade.slice(i,i+2),16)/255).map(x=>x<=.04045?x/12.92:((x+.055)/1.055)**2.4);
+ const tone=.2126*channels[0]+.7152*channels[1]+.0722*channels[2]>.18?"#202724":"#fff8e9";
+ const name=card?.querySelector(".kuhle-student-name");
+ if(name){const choices={academy:'Cinzel,Georgia,serif',friendly:'Nunito,"Trebuchet MS",Arial,sans-serif',classic:'Georgia,"Times New Roman",serif',modern:'"Trebuchet MS",Arial,sans-serif',handwriting:'"Comic Sans MS","Trebuchet MS",cursive'};name.textContent=identity.displayName;name.style.fontFamily=choices[look.nameFont]||choices.academy;name.style.color=tone}
+ if(card){for(const el of card.querySelectorAll(".kuhle-eyebrow,.kuhle-title,.kuhle-help,.kuhle-status"))el.style.color=tone;}
  note.textContent="Your existing learner photo, badge, frame and card color are preserved.";
 }
 function mount(){
@@ -53,11 +61,12 @@ function mount(){
  const root=d.createElement("div");root.id=hostId;root.className="kuhle-layout";
  const image=d.createElement("div");image.className="kuhle-avatar";image.setAttribute("aria-label","Student picture preview");
  const content=d.createElement("div");const eyebrow=d.createElement("p");eyebrow.className="kuhle-eyebrow";eyebrow.textContent="My Student Profile";
+ const person=d.createElement("p");person.className="kuhle-student-name";person.textContent="My Student Profile";
  const heading=d.createElement("h2");heading.className="kuhle-title";heading.id="grade09LookHeading";heading.textContent="My Picture & Colors";
  const help=d.createElement("p");help.className="kuhle-help";help.textContent="Personalize your profile using the universal 24 badges, 10 photo frames, and 24 colors.";
  const button=d.createElement("button");button.className="kuhle-open";button.type="button";button.textContent="Customize My Picture & Colors";button.addEventListener("click",()=>w.KhaemenesUniversalProfileLookEditor.open("picture"));
  const status=d.createElement("p");status.className="kuhle-status";status.setAttribute("role","status");
- content.append(eyebrow,heading,help,button,status);root.append(image,content);
+ content.append(eyebrow,person,heading,help,button,status);root.append(image,content);
  // The former chooser markup belongs to the retired editor. All course and
  // other student-profile sections are outside this panel and are preserved.
  panel.replaceChildren(root);
