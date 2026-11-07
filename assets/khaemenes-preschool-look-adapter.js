@@ -9,6 +9,7 @@ const VISUAL="khaemenes_preschool_visual_profile_v1:",VERSION="khaemenes.prek-vi
 const COLS=new Set(["#D53E4F","#F46D43","#FDAE61","#FEE08B","#E6F598","#ABDDA4","#66C2A5","#3288BD","#243038","#49374B","#7D283C","#254A75","#2C634A","#9A732C","#6A4C93","#A34836","#F4F0E7","#E7D7B6","#D1E3E5","#CAD8BC","#D5C1CF","#B9CBE0","#F2D8B6","#D0D6D1"]);
 const BADGES=new Set(["★","✦","📚","🧭","⚛","🎨","🎵","🌿","🔬","🧪","🧬","🌌","🌙","☀️","🪐","🌎","⚙️","💻","✏️","🎭","📐","🏛️","🦋","🏆"]);
 const FRAMES=new Set(["rectangle","square","circle","oval","rhombus","heart","star","octagon","semicircle","kite"]);
+const NAME_FONTS=new Set(["academy","friendly","classic","modern","handwriting"]);
 const key=id=>VISUAL+encodeURIComponent(id);
 const raw=k=>{try{return w.localStorage.getItem(k)}catch{return null}};
 const identity=()=>{try{
@@ -31,12 +32,12 @@ const adapter=Object.freeze({
   if(identity()?.id!==id)return {};
   const old=record(id),x=extras(id);
   const legacyFrame={diamond:"rhombus",hexagon:"octagon"};
-  return {displayName:"",background:"parchment",badge:BADGES.has(x.badge)?x.badge:"★",frame:FRAMES.has(x.frame)?x.frame:(legacyFrame[old?.frame]||old?.frame||"square"),cardColor:COLS.has(x.cardColor)?x.cardColor:""};
+  return {displayName:"",background:"parchment",badge:BADGES.has(x.badge)?x.badge:"★",frame:FRAMES.has(x.frame)?x.frame:(legacyFrame[old?.frame]||old?.frame||"square"),cardColor:COLS.has(x.cardColor)?x.cardColor:"",nameFont:NAME_FONTS.has(x.nameFont)?x.nameFont:"academy"};
  },
  readPhoto(id){if(identity()?.id!==id)return "";const p=record(id)?.photo;return typeof p==="string"&&/^data:image\/jpeg;base64,[a-z0-9+/=]+$/i.test(p)&&p.length<180000?p:""},
  commit({id,look,photo,badgeTouched}){
   if(identity()?.id!==id||!approval())return false;
-  if(!FRAMES.has(look?.frame)||!BADGES.has(look?.badge)||look.cardColor&&!COLS.has(look.cardColor))return false;
+  if(!FRAMES.has(look?.frame)||!BADGES.has(look?.badge)||look.cardColor&&!COLS.has(look.cardColor)||!NAME_FONTS.has(look?.nameFont))return false;
   const before=raw(key(id)),old=record(id);
   if(old===null)return false;
   if(photo!==null&&photo!==""&&(!/^data:image\/jpeg;base64,[a-z0-9+/=]+$/i.test(photo)||photo.length>=180000))return false;
@@ -46,7 +47,7 @@ const adapter=Object.freeze({
   const legacy=legacyFrames[look.frame]||(new Set(["circle","oval","square"]).has(look.frame)?look.frame:(old.frame||"square"));
   const updated={...old,schema:VERSION,learnerId:id,frame:legacy,
    photo:photo===null?(old.photo||""):photo,updatedAt:new Date().toISOString(),
-   universalLook:{badge:badgeTouched===true?look.badge:(old.universalLook?.badge||""),frame:look.frame,cardColor:look.cardColor||""}};
+   universalLook:{badge:badgeTouched===true?look.badge:(old.universalLook?.badge||""),frame:look.frame,cardColor:look.cardColor||"",nameFont:look.nameFont}};
   try{
    w.localStorage.setItem(key(id),JSON.stringify(updated));
    if(identity()?.id!==id||!approval())throw Error("Profile selection or adult approval changed");
