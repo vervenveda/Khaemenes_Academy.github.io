@@ -32,6 +32,19 @@ h1,h2,h3{font-family:Cinzel,Georgia,serif;font-weight:400;line-height:1.2}h1{fon
 @media(max-width:520px){.route-options,.passport-stamps,.day-grid,.preview-facts{grid-template-columns:1fr}}
 
 @media print{header nav,.steps,.controls,.choice,.route-chooser,.passport,.tour-dialog{display:none!important}}
+
+/* Pierre Audio Guide · page-owned tour module */
+.pierre-audio{overflow:hidden;padding:0!important;background:#fffdf7!important;border:3px solid var(--gold)!important;box-shadow:0 11px 30px rgba(36,48,56,.15)}
+.pierre-audio-head{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:17px;align-items:center;padding:22px;background:var(--coal);color:var(--cream)}
+.pierre-avatar{display:grid;place-items:center;width:66px;height:66px;border:3px solid var(--gold);border-radius:50%;background:#31543e;color:var(--cream);font:400 33px/1 Cinzel,Georgia,serif}
+.pierre-audio-identity .demo-label{color:#e6c98c}.pierre-audio-identity h2{margin:3px 0 5px!important;color:var(--cream);font-size:30px}.pierre-audio-identity p{color:var(--cream)}
+.pierre-voice-card{min-width:200px;padding:11px 14px;border:1px solid #a99772;border-radius:7px;background:#18262d;color:var(--cream);font-size:16px}
+.pierre-voice-card>span:not(.pierre-status-dot){display:inline}.pierre-voice-card output{display:block;margin-top:3px;color:#e6c98c;font-size:16px;overflow-wrap:anywhere}
+.pierre-status-dot{display:inline-block;width:11px;height:11px;margin-right:7px;border-radius:50%;background:#75a77f;box-shadow:0 0 0 3px rgba(117,167,127,.2)}
+.pierre-player{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:18px 22px 6px}.pierre-player .narrator-controls{justify-content:flex-end}
+.pierre-wave{display:flex;align-items:center;gap:4px;height:33px;padding:0 7px}.pierre-wave span{display:block;width:4px;height:13px;border-radius:7px;background:var(--gold)}.pierre-wave span:nth-child(2),.pierre-wave span:nth-child(6){height:24px}.pierre-wave span:nth-child(3),.pierre-wave span:nth-child(5){height:33px}.pierre-wave span:nth-child(4){height:19px}
+.pierre-audio .narrator-caption{margin:12px 22px 0!important}.pierre-audio .narrator-note{display:block;margin:11px 22px 20px}
+@media(max-width:780px){.pierre-audio-head{grid-template-columns:auto 1fr}.pierre-voice-card{grid-column:1/-1}.pierre-player{align-items:flex-start;flex-direction:column}.pierre-player .narrator-controls{justify-content:flex-start}.pierre-avatar{width:55px;height:55px;font-size:28px}}
 </style>
 </head>
 <body>
@@ -43,11 +56,18 @@ h1,h2,h3{font-family:Cinzel,Georgia,serif;font-weight:400;line-height:1.2}h1{fon
 <h1>Explore Khaemenes Academy</h1>
 <p>Choosing a home education platform is a meaningful decision. Visit our campuses, see how a student profile can look, and try a tiny lesson preview before enrolling.</p>
 <div class="disclaimer"><strong>Public demonstration.</strong> No sign-in, enrollment, learner identity, grade, score, mastery, or coursework is created or changed by this tour. The profile and lesson below are examples, not real student records.</div>
-<section class="narrator" aria-labelledby="narratorTitle">
-<div class="narrator-grid"><div><span class="demo-label">Optional guided experience</span><h2 id="narratorTitle">Let Pierre guide your visit</h2><p>Hear Pierre introduce each stop in his locked Arthur English voice while following the same visible captions.</p></div>
-<div class="narrator-controls"><button class="btn gold" id="narratorStart" type="button">Start Narration</button><button class="btn light" id="narratorPause" type="button" disabled>Pause</button><button class="btn light" id="narratorReplay" type="button">Replay Stop</button><button class="btn" id="narratorNext" type="button">Next Narrated Stop</button></div></div>
-<p class="narrator-caption" id="narratorCaption" role="status" aria-live="polite">Select Start Narration when you are ready. You remain in control and may pause or continue manually at any time.</p>
-<small class="narrator-note">Pierre uses Arthur-en-GB-device when available, with one natural male-English fallback. The tour does not record your voice, collect audio, or upload narration data.</small>
+<section class="narrator pierre-audio" aria-labelledby="narratorTitle">
+<div class="pierre-audio-head">
+<div class="pierre-avatar" aria-hidden="true">P</div>
+<div class="pierre-audio-identity"><span class="demo-label">Academy tour narrator</span><h2 id="narratorTitle">Pierre Audio Guide</h2><p>Welcome. I will introduce each stop while the same words remain visible as captions.</p></div>
+<div class="pierre-voice-card"><span class="pierre-status-dot" aria-hidden="true"></span><span>Voice profile</span><output id="tourPierreVoice">Arthur-en-GB-device</output></div>
+</div>
+<div class="pierre-player" role="group" aria-label="Pierre audio tour controls">
+<div class="pierre-wave" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+<div class="narrator-controls"><button class="btn gold" id="narratorStart" type="button">Hear Pierre</button><button class="btn light" id="narratorPause" type="button" disabled>Pause</button><button class="btn light" id="narratorReplay" type="button">Replay Stop</button><button class="btn" id="narratorNext" type="button">Next Narrated Stop</button></div>
+</div>
+<p class="narrator-caption" id="narratorCaption" role="status" aria-live="polite">Pierre is ready. Select Hear Pierre when you would like the guided tour to begin.</p>
+<small class="narrator-note">Pierre uses Arthur-en-GB-device when available, with one natural male-English fallback. Captions always remain available. The tour does not record your voice, collect audio, or upload narration data.</small>
 </section>
 <section class="route-chooser" aria-labelledby="routeTitle"><span class="demo-label">Choose your point of view</span><h2 id="routeTitle">What brings you to the Academy?</h2><p>This only personalizes recommendations during this browser session. It does not identify you or create an account.</p><div class="route-options" role="group" aria-label="Choose a tour route"><button class="route-option" type="button" data-audience="family" aria-pressed="false">Touring as a family</button><button class="route-option" type="button" data-audience="student" aria-pressed="false">Prospective student</button><button class="route-option" type="button" data-audience="adult" aria-pressed="false">Adult learner</button><button class="route-option" type="button" data-audience="educator" aria-pressed="false">Educator or community</button><button class="route-option" type="button" data-audience="full" aria-pressed="false">Show me everything</button></div><p class="route-status" id="routeStatus" aria-live="polite">Choose a route, or continue with the complete tour.</p></section>
 <section class="passport" aria-labelledby="passportTitle"><span class="demo-label">Session-only tour passport</span><h2 id="passportTitle">Your Academy visit</h2><p>Stamps appear as you explore. They remain only for this browser session and are not learner records.</p><div class="passport-stamps"><div class="passport-stamp" data-stamp="route" data-earned="false"><span>✦</span>Route Chosen</div><div class="passport-stamp" data-stamp="campus" data-earned="false"><span>🏛</span>Campus Explorer</div><div class="passport-stamp" data-stamp="creative" data-earned="false"><span>♪</span>Creative Pathfinder</div><div class="passport-stamp" data-stamp="profile" data-earned="false"><span>◉</span>Profile Previewed</div><div class="passport-stamp" data-stamp="lesson" data-earned="false"><span>✓</span>Lesson Attempted</div><div class="passport-stamp" data-stamp="day" data-earned="false"><span>☀</span>Academy Day</div></div></section>
@@ -119,7 +139,7 @@ h1,h2,h3{font-family:Cinzel,Georgia,serif;font-weight:400;line-height:1.2}h1{fon
 "use strict";
 const tabs=[...document.querySelectorAll(".step[data-go]")],tourLinks=[...document.querySelectorAll("[data-go]")],panels=[...document.querySelectorAll("[data-panel]")];
 const prev=document.getElementById("prev"),next=document.getElementById("next"),position=document.getElementById("position"),progressKey="khaemenes_public_tour_visits_v1",audienceKey="khaemenes_public_tour_audience_v1",stampKey="khaemenes_public_tour_passport_v1",exploredKey="khaemenes_public_tour_explored_v1";let current=0,audience="full",lastFocus=null,previewCard=null;
-const narratorStart=document.getElementById("narratorStart"),narratorPause=document.getElementById("narratorPause"),narratorReplay=document.getElementById("narratorReplay"),narratorNext=document.getElementById("narratorNext"),narratorCaption=document.getElementById("narratorCaption");
+const narratorStart=document.getElementById("narratorStart"),narratorPause=document.getElementById("narratorPause"),narratorReplay=document.getElementById("narratorReplay"),narratorNext=document.getElementById("narratorNext"),narratorCaption=document.getElementById("narratorCaption"),tourPierreVoice=document.getElementById("tourPierreVoice");
 const narration=[
 {title:"Stop 1 · Discover your campus",text:"Welcome to Khaemenes Academy. Begin with the campus map. Preschool through Higher Learning are arranged by learning stage, while Linguistics, Life Skills, research, tools, and the sample profile show how the wider Academy connects."},
 {title:"Stop 2 · Creative and life pathways",text:"Learning is more than required subjects. Explore electives, culinary arts, visual art, music, practical life skills, and foreign languages. These pathways help learners discover interests, build independence, and communicate creatively."},
@@ -169,9 +189,10 @@ function refreshPierreNarratorVoice(){
  const arthur=tourVoices.find(v=>v.name==="Arthur"&&/^en-GB$/i.test(v.lang)&&v.localService);
  const named=pierreFallbackNames.map(name=>tourVoices.find(v=>v.name===name&&english(v))).find(Boolean);
  pierreNarratorVoice=arthur||named||tourVoices.find(v=>/^en-GB$/i.test(v.lang)&&v.localService)||tourVoices.find(v=>/^en-GB$/i.test(v.lang))||tourVoices.find(v=>english(v)&&v.localService)||tourVoices.find(english)||null;
+ if(tourPierreVoice)tourPierreVoice.textContent=arthur?PIERRE_VOICE_PROFILE:(pierreNarratorVoice?"Arthur fallback · "+pierreNarratorVoice.name+" · "+pierreNarratorVoice.lang:PIERRE_VOICE_PROFILE+" · browser voice pending");
 }
 if(narrationSupported()){refreshPierreNarratorVoice();window.speechSynthesis.addEventListener?.("voiceschanged",refreshPierreNarratorVoice)}
-function setNarratorButtons(){narratorStart.textContent=narrationActive?"End Narration":"Start Narration";narratorPause.disabled=!narrationActive;narratorPause.textContent=narrationPaused?"Resume":"Pause"}
+function setNarratorButtons(){narratorStart.textContent=narrationActive?"End Narration":"Hear Pierre";narratorPause.disabled=!narrationActive;narratorPause.textContent=narrationPaused?"Resume":"Pause"}
 function stopNarration(){if(narrationSupported())window.speechSynthesis.cancel();narrationActive=false;narrationPaused=false;document.querySelectorAll(".narration-focus").forEach(x=>x.classList.remove("narration-focus"));setNarratorButtons()}
 function speakText(text,label){narratorCaption.textContent=(label?label+" — ":"")+text;if(!narrationSupported())return;window.speechSynthesis.cancel();narrationPaused=false;setNarratorButtons();const utterance=new SpeechSynthesisUtterance(text);if(pierreNarratorVoice){utterance.voice=pierreNarratorVoice;utterance.lang=pierreNarratorVoice.lang}else utterance.lang="en-GB";utterance.rate=.92;utterance.pitch=1;window.speechSynthesis.speak(utterance)}
 function speakStep(i){const item=narration[i],personal=audience!=="full"?" This visit is being guided for "+audienceNames[audience]+".":"";narratorCaption.textContent=item.title+" — "+item.text+personal;if(!narrationActive||!narrationSupported())return;speakText(item.text+personal,item.title)}
