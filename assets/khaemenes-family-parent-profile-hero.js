@@ -9,7 +9,7 @@ if(g.KhaemenesFamilyParentHero)return;
 const registry=()=>g.KhaemenesFamilyRegistry;
 const lookKey=id=>"khaemenes.parent.profile.appearance.v1:"+encodeURIComponent(id);
 const photoKey=id=>"khaemenes.parent.profile.photo.v1:"+encodeURIComponent(id);
-const SHAPES=["circle","oval","square","rhombus","kite","heart","star","octagon"];
+const SHAPES=["circle","oval","square","rectangle","rhombus","kite","heart","star","octagon","semicircle"];
 const COLORS={charcoal:"#202724",forest:"#315c49",navy:"#263858",burgundy:"#643044",gold:"#a47f2f"};
 let activeId=null,photoUrl=null;
 const byId=id=>d.getElementById(id);
@@ -17,12 +17,12 @@ const read=(key)=>{try{return g.localStorage.getItem(key)}catch{return null}};
 const save=(key,value)=>{try{g.localStorage.setItem(key,value);return true}catch{return false}};
 const erase=(key)=>{try{g.localStorage.removeItem(key);return true}catch{return false}};
 const adult=()=>{try{const r=registry(),id=r?.activeIds?.()?.adultId;const a=r?.getAdult?.();return a&&id&&a.adultId===id?a:null}catch{return null}};
-const defaults=()=>({displayName:"",background:"charcoal",frame:"circle"});
+const defaults=()=>({displayName:"",background:"charcoal",frame:"circle",badge:"★",cardColor:""});
 function appearance(id){
  if(!id)return defaults();
  try{
   const saved=JSON.parse(read(lookKey(id))||"null");
-  return {displayName:typeof saved?.displayName==="string"?saved.displayName.slice(0,70):"",background:Object.hasOwn(COLORS,saved?.background)?saved.background:"charcoal",frame:SHAPES.includes(saved?.frame)?saved.frame:"circle"};
+  return {displayName:typeof saved?.displayName==="string"?saved.displayName.slice(0,70):"",background:Object.hasOwn(COLORS,saved?.background)?saved.background:"charcoal",frame:SHAPES.includes(saved?.frame)?saved.frame:"circle",badge:typeof saved?.badge==="string"&&saved.badge.length<12?saved.badge:"★",cardColor:typeof saved?.cardColor==="string"&&/^#[0-9a-f]{6}$/i.test(saved.cardColor)?saved.cardColor:""};
  }catch{return defaults()}
 }
 function nameFor(a,look){return look.displayName||a?.displayName||"Parent / Guardian"}
@@ -47,6 +47,8 @@ function styleOnce(){
 #${ID} .kph-avatar img{width:100%;height:100%;object-fit:cover}
 #${ID} .kph-avatar[data-shape=oval]{height:124px;width:102px;border-radius:50%}
 #${ID} .kph-avatar[data-shape=square]{border-radius:7px}
+#${ID} .kph-avatar[data-shape=rectangle]{border-radius:7px;width:170px;height:113px}
+#${ID} .kph-avatar[data-shape=semicircle]{border-radius:0;clip-path:polygon(0 100%,0 50%,4% 31%,15% 15%,31% 4%,50% 0,69% 4%,85% 15%,96% 31%,100% 50%,100% 100%)}
 #${ID} .kph-avatar[data-shape=rhombus]{border-radius:0;clip-path:polygon(50% 0%,100% 50%,50% 100%,0 50%)}
 #${ID} .kph-avatar[data-shape=kite]{border-radius:0;clip-path:polygon(50% 0%,100% 32%,50% 100%,0 32%)}
 #${ID} .kph-avatar[data-shape=heart]{border-radius:0;clip-path:polygon(50% 94%,10% 57%,4% 28%,20% 7%,50% 26%,80% 7%,96% 28%,90% 57%)}
@@ -112,10 +114,16 @@ function update(){
  byId("kphName").textContent=label;
  byId("kphDetail").textContent=a?"Family profile on this device · No verified cloud sign-in":"Choose an existing family and adult profile below to personalize this space.";
  const hero=byId("kphIdentity");hero.dataset.background=look.background;
+ const selected=look.cardColor||COLORS[look.background]||COLORS.charcoal;
+ hero.style.backgroundColor=selected;
+ const lum=hex=>{const parts=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);return .2126*parts[0]+.7152*parts[1]+.0722*parts[2]};
+ const light=lum("#fff8e9"),dark=lum("#202724"),bg=lum(selected),ratio=(x,y)=>(Math.max(x,y)+.05)/(Math.min(x,y)+.05);
+ const ink=ratio(bg,dark)>ratio(bg,light)?"#202724":"#fff8e9";
+ hero.style.color=ink;byId("kphDetail").style.color=ink;
  const face=byId("kphAvatar");face.dataset.shape=look.frame;
  const photo=validPhoto(id);
  if(photo){const img=d.createElement("img");img.src=photo;img.alt="Parent profile photograph";face.replaceChildren(img)}
- else face.textContent=initials(label);
+ else face.textContent=look.badge&&look.badge!=="★"?look.badge:initials(label);
  for(const x of section.querySelectorAll("[data-editor]")){x.disabled=!id;x.title=id?"": "Choose an adult family profile first."}
 }
 function dialog(){
@@ -157,6 +165,8 @@ function dialog(){
 }
 function openEditor(which){
  const a=adult();if(!a)return;
+ const studio=g.KhaemenesFamilyParentLookStudio;
+ if(studio?.open){studio.open(which);return}
  const look=appearance(a.adultId),box=dialog();
  byId("kphDialogTitle").textContent=which==="picture"?"Customize My Picture":which==="background"?"Customize My Background":"Edit My Parent Profile";
  byId("kphDisplayName").value=look.displayName||a.displayName||"";
@@ -166,7 +176,7 @@ function openEditor(which){
  byId("kphDialogStatus").textContent="No changes have been made.";
  if(!box.open&&typeof box.showModal==="function")box.showModal();
 }
-g.KhaemenesFamilyParentHero=Object.freeze({version:"1.0",refresh:update,scope:"browser-local-parent-appearance"});
+g.KhaemenesFamilyParentHero=Object.freeze({version:"1.1",refresh:update,scope:"browser-local-parent-appearance"});
 if(d.readyState==="loading")d.addEventListener("DOMContentLoaded",update,{once:true});else update();
 for(const event of ["khaemenes-family-changed","pageshow","khaemenes-learner-placement-changed"])g.addEventListener(event,update);
 })();
