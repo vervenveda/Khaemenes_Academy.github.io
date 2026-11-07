@@ -86,14 +86,14 @@ h1,h2,h3{font-family:Cinzel,Georgia,serif;font-weight:400;line-height:1.2}h1{fon
 <script>
 (function(){
 "use strict";
-const tabs=[...document.querySelectorAll("[data-go]")],panels=[...document.querySelectorAll("[data-panel]")];
+const tabs=[...document.querySelectorAll(".step[data-go]")],tourLinks=[...document.querySelectorAll("[data-go]")],panels=[...document.querySelectorAll("[data-panel]")];
 const prev=document.getElementById("prev"),next=document.getElementById("next"),position=document.getElementById("position"),progressKey="khaemenes_public_tour_visits_v1";let current=0;
 function readVisits(){try{const value=JSON.parse(sessionStorage.getItem(progressKey)||"[]");return new Set(Array.isArray(value)?value.map(Number).filter(n=>n>=1&&n<=12):[])}catch{return new Set()}}
 function writeVisits(visits){try{sessionStorage.setItem(progressKey,JSON.stringify([...visits].sort((a,b)=>a-b)))}catch{}}
 function renderVisits(){const visits=readVisits();document.querySelectorAll("[data-tour-stop]").forEach(card=>card.dataset.complete=String(visits.has(Number(card.dataset.tourStop))));const status=document.getElementById("tourVisitStatus"),fill=document.getElementById("tourProgressFill");if(status)status.textContent=visits.size+" of 12 tour destinations visited";if(fill)fill.style.width=(visits.size/12*100)+"%"}
 function markVisit(value){const visits=readVisits();visits.add(Number(value));writeVisits(visits);renderVisits()}
 function show(i,{scroll=true}={}){current=Math.max(0,Math.min(4,i));panels.forEach((p,j)=>p.hidden=j!==current);tabs.forEach((t,j)=>{if(j===current)t.setAttribute("aria-current","step");else t.removeAttribute("aria-current")});prev.disabled=current===0;next.disabled=current===4;next.textContent=current===4?"Tour Complete":"Next Stop";position.textContent="Step "+(current+1)+" of 5";try{sessionStorage.setItem("khaemenes_public_tour_step_v1",String(current))}catch{}if(scroll)document.getElementById("tour").scrollIntoView({block:"start",behavior:"smooth"});}
-tabs.forEach(b=>b.addEventListener("click",()=>show(Number(b.dataset.go))));
+tourLinks.forEach(b=>b.addEventListener("click",()=>show(Number(b.dataset.go))));
 prev.addEventListener("click",()=>show(current-1));next.addEventListener("click",()=>show(current+1));
 document.querySelectorAll("[data-tour-visit]").forEach(link=>link.addEventListener("click",()=>markVisit(link.dataset.tourVisit)));
 document.getElementById("resetTourProgress")?.addEventListener("click",()=>{try{sessionStorage.removeItem(progressKey)}catch{}renderVisits()});
