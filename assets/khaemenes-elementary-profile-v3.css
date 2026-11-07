@@ -1,0 +1,62 @@
+/* Elementary Profile V3 — presentation-only, additive.
+ * Retain all original DOM, buttons, guardian consent and educational systems.
+ * Titles Cinzel; body Nunito; normal weight; 16px minimum; 7px corners.
+ */
+body[data-profile-stage="elementary"]{
+ --kep-charcoal:#202724;--kep-parchment:#f5f0e6;--kep-leaf:#315c49;
+}
+body[data-profile-stage="elementary"] main{
+ max-width:1160px;
+ padding-inline:clamp(14px,3vw,32px);
+}
+body[data-profile-stage="elementary"] main>.eyebrow,
+body[data-profile-stage="elementary"] main>h1,
+body[data-profile-stage="elementary"] main>p.muted:first-of-type{
+ text-align:center;
+}
+body[data-profile-stage="elementary"] main>.eyebrow{color:var(--kep-leaf);font-size:16px;letter-spacing:.045em}
+body[data-profile-stage="elementary"] main>h1{font:400 clamp(33px,4vw,44px)/1.23 Cinzel,Georgia,serif;margin:8px auto 15px;color:var(--ink)}
+body[data-profile-stage="elementary"] main>p.muted:first-of-type{max-width:860px;margin:0 auto 25px;font-size:18px;line-height:1.6}
+body[data-profile-stage="elementary"] main .card{border-radius:7px;box-shadow:0 4px 17px rgba(24,49,43,.075)}
+body[data-profile-stage="elementary"] main .card.hero{
+ background:#263f39;
+ color:#fff8e9;
+ border:2px solid #b48b45;
+ padding:clamp(23px,3vw,36px);
+ margin:16px 0;
+}
+body[data-profile-stage="elementary"] main .card.hero .eyebrow,
+body[data-profile-stage="elementary"] main .card.hero .muted,
+body[data-profile-stage="elementary"] main .card.hero h2{color:#fff8e9}
+body[data-profile-stage="elementary"] main .card.hero .portrait{
+ box-shadow:0 0 0 2px #b48b45;
+}
+body[data-profile-stage="elementary"] main .grid{gap:18px;align-items:stretch;margin:22px 0}
+body[data-profile-stage="elementary"] main .grid>.card{min-width:0;height:100%;display:flex;flex-direction:column;gap:4px;padding:clamp(21px,2.5vw,28px)}
+body[data-profile-stage="elementary"] main .grid>.card:nth-child(4n+2),
+body[data-profile-stage="elementary"] main .grid>.card:nth-child(4n+3){background:#e6f0e8;color:#202724;border-color:#b2c6b5}
+body[data-profile-stage="elementary"] main .card .actions{gap:9px}
+body[data-profile-stage="elementary"] main .card .actions button,
+body[data-profile-stage="elementary"] main .card .actions a.button{
+ min-height:48px;
+ font:400 16px/1.42 Nunito,Arial,sans-serif!important;
+ border-radius:7px;
+}
+body[data-profile-stage="elementary"] main .grid>.card .actions:last-child{margin-top:auto}
+body[data-profile-stage="elementary"] main #gradePreview,
+body[data-profile-stage="elementary"] main #academyStudio{margin:21px 0;padding:clamp(22px,3vw,32px)}
+body[data-profile-stage="elementary"] main #gradePreview{background:#e7f0e8;color:#202724;border:2px solid #aac4b5}
+body[data-profile-stage="elementary"] main #academyStudio{border:2px solid #b48b45}
+body[data-profile-stage="elementary"] main :is(p,li,label,summary,small,button,select,textarea,input,.status){font-size:max(16px,1rem);line-height:1.5}
+body[data-profile-stage="elementary"] main .card p,
+body[data-profile-stage="elementary"] main .card label{font-size:18px;line-height:1.55}
+body[data-profile-stage="elementary"] main h2{font-weight:400;line-height:1.35}
+body[data-profile-stage="elementary"] main :is(.card,#khaemenesElementaryProfileTools) button:focus-visible{outline:3px solid #b48b45;outline-offset:3px}
+@media(max-width:760px){
+ body[data-profile-stage="elementary"] main .card.hero{grid-template-columns:1fr;text-align:center}
+ body[data-profile-stage="elementary"] main .grid>.card{height:auto}
+}
+@media print{
+ body[data-profile-stage="elementary"] main .card.hero{color:#202724;background:#fff}
+ body[data-profile-stage="elementary"] main .card.hero :is(.eyebrow,.muted,h2){color:#202724}
+}
