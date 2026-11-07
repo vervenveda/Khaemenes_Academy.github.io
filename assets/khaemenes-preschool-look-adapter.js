@@ -46,7 +46,7 @@ const adapter=Object.freeze({
   const legacy=legacyFrames[look.frame]||(new Set(["circle","oval","square"]).has(look.frame)?look.frame:(old.frame||"square"));
   const updated={...old,schema:VERSION,learnerId:id,frame:legacy,
    photo:photo===null?(old.photo||""):photo,updatedAt:new Date().toISOString(),
-   universalLook:{badge:look.badge,frame:look.frame,cardColor:look.cardColor||""}};
+   universalLook:{badge:look.badge==="★"&&!old.universalLook?.badge?"":look.badge,frame:look.frame,cardColor:look.cardColor||""}};
   try{
    w.localStorage.setItem(key(id),JSON.stringify(updated));
    if(identity()?.id!==id||!approval())throw Error("Profile selection or adult approval changed");
