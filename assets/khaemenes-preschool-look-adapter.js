@@ -34,7 +34,7 @@ const adapter=Object.freeze({
   return {displayName:"",background:"parchment",badge:BADGES.has(x.badge)?x.badge:"★",frame:FRAMES.has(x.frame)?x.frame:(legacyFrame[old?.frame]||old?.frame||"square"),cardColor:COLS.has(x.cardColor)?x.cardColor:""};
  },
  readPhoto(id){if(identity()?.id!==id)return "";const p=record(id)?.photo;return typeof p==="string"&&/^data:image\/jpeg;base64,[a-z0-9+/=]+$/i.test(p)&&p.length<180000?p:""},
- commit({id,look,photo}){
+ commit({id,look,photo,badgeTouched}){
   if(identity()?.id!==id||!approval())return false;
   if(!FRAMES.has(look?.frame)||!BADGES.has(look?.badge)||look.cardColor&&!COLS.has(look.cardColor))return false;
   const before=raw(key(id)),old=record(id);
@@ -46,7 +46,7 @@ const adapter=Object.freeze({
   const legacy=legacyFrames[look.frame]||(new Set(["circle","oval","square"]).has(look.frame)?look.frame:(old.frame||"square"));
   const updated={...old,schema:VERSION,learnerId:id,frame:legacy,
    photo:photo===null?(old.photo||""):photo,updatedAt:new Date().toISOString(),
-   universalLook:{badge:look.badge==="★"&&!old.universalLook?.badge?"":look.badge,frame:look.frame,cardColor:look.cardColor||""}};
+   universalLook:{badge:badgeTouched===true?look.badge:(old.universalLook?.badge||""),frame:look.frame,cardColor:look.cardColor||""}};
   try{
    w.localStorage.setItem(key(id),JSON.stringify(updated));
    if(identity()?.id!==id||!approval())throw Error("Profile selection or adult approval changed");
