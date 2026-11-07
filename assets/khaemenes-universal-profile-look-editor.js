@@ -17,7 +17,7 @@ const adult=()=>{try{const identity=adapter?.getIdentity?.();return identity&&ty
 
 const lum=hex=>{const ch=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);return .2126*ch[0]+.7152*ch[1]+.0722*ch[2]};
 const inkFor=hex=>{const bg=lum(hex),light=lum("#fff8e9"),dark=lum("#202724"),r=(a,b)=>(Math.max(a,b)+.05)/(Math.min(a,b)+.05);return r(bg,dark)>=r(bg,light)?"#202724":"#fff8e9"};
-let selected=null,photo="",stagedPhoto=null,owner=null,opener=null,dialog=null;
+let selected=null,photo="",stagedPhoto=null,owner=null,opener=null,dialog=null,badgeTouched=false;
 function existing(id){
  let v={};try{v=adapter?.readLook?.(id)||{}}catch{}
  const frame=FRAMES.some(x=>x.id===v.frame)?v.frame:"circle";
@@ -99,7 +99,7 @@ function build(){
  style();dialog=d.createElement("dialog");dialog.id="kplsDialog";dialog.setAttribute("aria-labelledby","kplsTitle");
  dialog.innerHTML='<div class="kpls-inner"><div class="kpls-top"><h2 id="kplsTitle">My Picture &amp; Colors</h2><button type="button" class="kpls-action kpls-secondary" id="kplsClose">Close</button></div><p>Personalize your profile with a badge, photo, frame, and background color. Settings remain on this device; academic records are untouched.</p><div class="kpls-layout"><div class="kpls-preview"><div class="kpls-picture" id="kplsPicture" aria-label="Profile picture preview">★</div><h3>My Picture &amp; Colors</h3><p id="kplsPictureLabel">My profile badge</p><p>Choose a picture, badge, frame and colors that feel like you.</p></div><div class="kpls-controls"><h3>Choose My Badge</h3><div class="kpls-options" id="kplsBadges" role="group" aria-label="Profile badge choices"></div><h3>Choose My Photo Frame</h3><div class="kpls-options kpls-frame-options" id="kplsFrames" role="group" aria-label="Picture frame choices"></div><h3>Photo Card Background</h3><div class="kpls-options kpls-color-options" id="kplsColors" role="group" aria-label="Profile card background swatches"></div><p>Your choice affects the profile card, not the entire page.</p><div class="kpls-inputs"><div class="kpls-field"><label for="kplsDisplay">Profile display name</label><input id="kplsDisplay" maxlength="70" autocomplete="off"></div><div class="kpls-field"><label for="kplsFile">Choose My Picture (optional, JPG/PNG/WebP up to 4 MB)</label><input id="kplsFile" type="file" accept="image/jpeg,image/png,image/webp"></div></div><div class="kpls-action-row"><button type="button" class="kpls-action kpls-secondary" id="kplsRemove">Remove Picture</button><button type="button" class="kpls-action kpls-secondary" id="kplsResetColor">Original Background</button><button type="button" class="kpls-action" id="kplsSave">Save My Look</button></div><p class="kpls-status" id="kplsStatus" role="status" aria-live="polite"></p></div></div></div>';
  d.body.append(dialog);
- for(const badge of BADGES){const b=mk("button","kpls-choice",badge);b.type="button";b.dataset.badge=badge;b.setAttribute("aria-label","Choose "+badge+" badge");b.addEventListener("click",()=>{selected.badge=badge;render();setStatus("Badge selected. Save My Look to keep it.");});$("kplsBadges").append(b)}
+ for(const badge of BADGES){const b=mk("button","kpls-choice",badge);b.type="button";b.dataset.badge=badge;b.setAttribute("aria-label","Choose "+badge+" badge");b.addEventListener("click",()=>{selected.badge=badge;badgeTouched=true;render();setStatus("Badge selected. Save My Look to keep it.");});$("kplsBadges").append(b)}
  for(const frame of FRAMES){const b=mk("button","kpls-choice",frame.label);b.type="button";b.dataset.frame=frame.id;b.addEventListener("click",()=>{selected.frame=frame.id;render();setStatus("Frame selected. Save My Look to keep it.");});$("kplsFrames").append(b)}
  for(const color of COLORS){const b=mk("button","kpls-choice");b.type="button";b.dataset.color=color;b.style.setProperty("--swatch",color);b.setAttribute("aria-label","Choose background color "+color);b.addEventListener("click",()=>{selected.cardColor=color;render();setStatus("Background selected. Save My Look to keep it.");});$("kplsColors").append(b)}
  $("kplsClose").addEventListener("click",()=>dialog.close());
@@ -128,13 +128,13 @@ function build(){
   if(!FRAMES.some(x=>x.id===look.frame)||!BADGES.includes(look.badge)||!(look.cardColor===""||COLORS.includes(look.cardColor))){setStatus("Choose valid profile options.");return}
   // Existing appearance/photo keys remain unchanged; never touch student or registry storage.
   try{
-   const result=adapter?.commit?.({id,look,photo:stagedPhoto});
+   const result=adapter?.commit?.({id,look,photo:stagedPhoto,badgeTouched});
    if(result!==true){setStatus("Profile changes could not be committed. Your previous appearance is preserved.");return}
   }catch{setStatus("Unable to save changes. Your previous appearance is preserved.");return}
   adapter?.refresh?.();
   dialog.close();
  });
- dialog.addEventListener("close",()=>{selected=null;photo="";stagedPhoto=null;owner=null;opener?.focus?.();opener=null});
+ dialog.addEventListener("close",()=>{selected=null;photo="";stagedPhoto=null;owner=null;badgeTouched=false;opener?.focus?.();opener=null});
  return dialog;
 }
 function render(){
@@ -157,7 +157,7 @@ function render(){
 }
 function open(mode="edit"){
  const a=adult();if(!a)return false;
- build();owner=a.id;selected=existing(owner);photo=photoFor(owner);stagedPhoto=null;opener=d.activeElement;
+ build();owner=a.id;selected=existing(owner);photo=photoFor(owner);stagedPhoto=null;badgeTouched=false;opener=d.activeElement;
  $("kplsTitle").textContent=mode==="picture"?"Customize My Picture":mode==="background"?"Customize My Background":"Edit My Profile";
  $("kplsDisplay").value=selected.displayName||a.displayName||"";
  $("kplsDisplay").closest(".kpls-field").hidden=adapter?.showDisplayName===false;
