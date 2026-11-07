@@ -62,9 +62,28 @@ function mount(){
 function refresh(){
  const section=$(ID);if(!section)return;
  const identity=w.KhaemenesKindergartenUniversalLookAdapter?.getIdentity?.();
- const button=section.querySelector("button.kku-action");
- if(button)button.disabled=!identity;
+ const button=section.querySelector("button.kku-action");if(button)button.disabled=!identity;
+ const card=d.querySelector(".hero .hero-grid"),face=$("photoPreview"),name=$("childTitle");if(!card||!face||!name)return;
+ let rec={};if(identity)try{rec=JSON.parse(w.localStorage.getItem("khaemenes_kindergarten_visual_profile_v1:"+encodeURIComponent(identity.id))||"{}");if(rec.learnerId!==identity.id||rec.schema!=="khaemenes.kindergarten-visual.v1")rec={}}catch{rec={}}
+ const v=rec.universalLook||{},frames=new Set(["rectangle","square","circle","oval","rhombus","heart","star","octagon","semicircle","kite"]);
+ const paths={rhombus:"polygon(50% 0,100% 50%,50% 100%,0 50%)",heart:"polygon(50% 95%,43% 88%,31% 76%,20% 64%,10% 51%,4% 39%,4% 25%,10% 13%,21% 7%,32% 7%,42% 13%,50% 24%,58% 13%,68% 7%,79% 7%,90% 13%,96% 25%,96% 39%,90% 51%,80% 64%,69% 76%,57% 88%)",star:"polygon(50% 2%,63% 34%,98% 36%,71% 58%,80% 94%,50% 75%,20% 94%,29% 58%,2% 36%,37% 34%)",octagon:"polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 70%,0 30%)",semicircle:"polygon(0 100%,0 50%,4% 31%,15% 15%,31% 4%,50% 0,69% 4%,85% 15%,96% 31%,100% 50%,100% 100%)",kite:"polygon(50% 0,90% 38%,50% 100%,10% 38%)"};
+ const frame=frames.has(v.frame)?v.frame:"";
+ face.style.clipPath=paths[frame]||"none";
+ face.style.borderRadius=frame?(["circle","oval"].includes(frame)?"50%":["rectangle","square"].includes(frame)?"7px":"0"):"";
+ face.style.width=frame?(frame==="rectangle"?"245px":frame==="oval"?"205px":"210px"):"";
+ face.style.height=frame?(frame==="rectangle"?"165px":frame==="oval"?"178px":"210px"):"";
+ const tint=typeof v.cardColor==="string"&&/^#[0-9a-f]{6}$/i.test(v.cardColor)?v.cardColor:"";
+ card.style.backgroundColor=tint||"";card.style.backgroundImage=tint?"none":"";
+ let ink="";if(tint){const rgb=[1,3,5].map(i=>parseInt(tint.slice(i,i+2),16)/255).map(x=>x<=.04045?x/12.92:((x+.055)/1.055)**2.4);ink=.2126*rgb[0]+.7152*rgb[1]+.0722*rgb[2]>.18?"#202724":"#fff8e9"}
+ card.style.color=ink;
+ for(const el of card.querySelectorAll(".eyebrow,#childTitle,#childMeta")){el.style.color=ink;el.style.textShadow=tint?"none":""}
+ const fonts={academy:'Cinzel,Georgia,serif',friendly:'Nunito,"Trebuchet MS",Arial,sans-serif',classic:'Georgia,"Times New Roman",serif',modern:'"Trebuchet MS",Arial,sans-serif',handwriting:'"Comic Sans MS","Trebuchet MS",cursive'};
+ name.style.setProperty("font-family",fonts[v.nameFont]||fonts.academy,"important");name.style.setProperty("font-weight","400","important");
+ if(rec.photo&&/^data:image\/jpeg;base64,[a-z0-9+/=]+$/i.test(rec.photo)&&rec.photo.length<180000){const img=d.createElement("img");img.src=rec.photo;img.alt="Learner's locally stored picture";face.replaceChildren(img)}
+ else if(typeof v.badge==="string"&&v.badge)face.textContent=v.badge;
+ else if(!face.querySelector("img"))face.textContent=rec.avatar||"🌻";
 }
+w.addEventListener("khaemenes-kindergarten-universal-look-updated",refresh);
 w.KhaemenesKindergartenUniversalLookEntry=Object.freeze({mount,refresh});
 if(d.readyState==="loading")d.addEventListener("DOMContentLoaded",mount,{once:true});else mount();
 for(const event of ["khaemenes-family-changed","pageshow"])w.addEventListener(event,()=>{mount();refresh()});
