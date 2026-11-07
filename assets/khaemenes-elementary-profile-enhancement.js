@@ -182,6 +182,41 @@ function refresh(){
  const note=root.querySelector(".kep-foot");if(note)note.textContent=l?"Grade "+Number(l.grade)+" · Your tools and decorations stay with this learner on this device.":"Explore the tools. Choose a registered learner in the Family Portal to save personal work.";
  root.querySelectorAll(".kep-tool").forEach(b=>{b.disabled=false});
 }
+function decorateBackup(root){
+ const group=mk("div","kep-backup");
+ const statusLine=mk("p","kep-backup-status");statusLine.setAttribute("role","status");
+ const exportButton=mk("button","","Export My Decorations");exportButton.type="button";
+ const input=mk("input");input.type="file";input.accept=".json,application/json";input.setAttribute("aria-label","Restore my decorations backup");
+ const label=mk("label","","Restore My Decorations");label.append(input);
+ exportButton.addEventListener("click",()=>{
+  const l=identity();if(!l){statusLine.textContent="Choose your learner first.";return}
+  const data=value("khaemenes.elementary.profile.decor.v1:"+encodeURIComponent(l.id));if(!data){statusLine.textContent="No saved decorations yet.";return}
+  try{
+   const decoded=JSON.parse(data);
+   if(decoded.learnerId!==l.id)return;
+   const blob=new Blob([JSON.stringify({...decoded,grade:l.grade},null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=mk("a");
+   a.href=url;a.download="elementary-profile-decorations.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1200);
+   statusLine.textContent="Your decorations backup has been prepared.";
+  }catch{statusLine.textContent="Decorations could not be exported."}
+ });
+ input.addEventListener("change",async e=>{
+  const file=e.target.files?.[0];e.target.value="";
+  const l=identity();if(!file||!l||!$("adultConfirm")?.checked){statusLine.textContent="Choose a learner and confirm grown-up assistance first.";return}
+  if(file.size>20000){statusLine.textContent="This backup is too large.";return}
+  try{
+   const x=JSON.parse(await file.text());
+   const frames=new Set(["rectangle","square","circle","oval","rhombus","heart","star","octagon","semicircle","kite"]);
+   const fonts=new Set(["academy","friendly","classic","modern","handwriting"]);
+   const badges=new Set(["","★","✦","📚","🧭","⚛","🎨","🎵","🌿","🔬","🧪","🧬","🌌","🌙","☀️","🪐","🌎","⚙️","💻","✏️","🎭","📐","🏛️","🦋","🏆"]);
+   if(x?.schema!=="khaemenes.elementary-decoration.v1"||x.learnerId!==l.id||x.grade!==l.grade||!frames.has(x.frame)||!fonts.has(x.nameFont)||!badges.has(x.badge)||x.cardColor&&!/^#[0-9a-f]{6}$/i.test(x.cardColor)||identity()?.id!==l.id||!$("adultConfirm")?.checked)throw Error("Mismatch");
+   const key="khaemenes.elementary.profile.decor.v1:"+encodeURIComponent(l.id);
+   const next={schema:"khaemenes.elementary-decoration.v1",learnerId:l.id,updatedAt:new Date().toISOString(),badge:x.badge,sourceAvatar:typeof x.sourceAvatar==="string"?x.sourceAvatar.slice(0,8):"",frame:x.frame,cardColor:x.cardColor||"",nameFont:x.nameFont};
+   if(!save(key,JSON.stringify(next)))throw Error("Storage");
+   refresh();statusLine.textContent="Decorations restored for this learner.";
+  }catch{statusLine.textContent="Could not restore: this backup must match the selected learner and grade."}
+ });
+ group.append(exportButton,label);root.append(group,statusLine);
+}
 function mount(){
  if($(ID)){refresh();return true}
  const hero=d.querySelector("main .card.hero"),guardian=$("adultConfirm");
@@ -198,7 +233,7 @@ function mount(){
  for(const [label,action] of actions){
   const b=mk("button","kep-tool",label);b.type="button";b.dataset.profileTool=action;b.addEventListener("click",()=>{currentOpener=b;act(action)});tiles.append(b)
  }
- root.append(tiles,mk("p","kep-foot","Your decorations are saved to this device. Family and academic records stay in their existing systems."));
+ root.append(tiles);decorateBackup(root);root.append(mk("p","kep-foot","Your decorations are saved to this device. Family and academic records stay in their existing systems."));
  hero.insertAdjacentElement("afterend",root);
  refresh();return true;
 }
