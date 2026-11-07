@@ -113,8 +113,9 @@ function build(){
   try{const img=new Image();await new Promise((ok,fail)=>{img.onload=ok;img.onerror=fail;img.src=url;});if(!img.naturalWidth||!img.naturalHeight)throw Error("Invalid image");
    const canvas=d.createElement("canvas");canvas.width=canvas.height=240;const ctx=canvas.getContext("2d");if(!ctx)throw Error("Canvas unavailable");
    const side=Math.min(img.naturalWidth,img.naturalHeight);ctx.drawImage(img,(img.naturalWidth-side)/2,(img.naturalHeight-side)/2,side,side,0,0,240,240);
-   const encoded=canvas.toDataURL("image/jpeg",.78);
-   if(encoded.length>=400000)throw Error("Image too large");
+   let encoded="";const ceiling=Number.isFinite(adapter?.maxPhotoChars)?Math.max(20000,Math.min(400000,adapter.maxPhotoChars)):400000;
+   for(const quality of [.78,.64,.50,.38]){encoded=canvas.toDataURL("image/jpeg",quality);if(encoded.length<ceiling)break}
+   if(encoded.length>=ceiling)throw Error("Image too large");
    if(owner!==target||adult()?.id!==target){setStatus("Profile selection changed; reopen the editor.");return}
    stagedPhoto=encoded;render();setStatus("Photo preview ready. Save My Look to keep it.");
   }catch{setStatus("Unable to process this picture. Existing photo remains unchanged.")}
