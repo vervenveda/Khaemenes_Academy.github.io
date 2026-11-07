@@ -233,6 +233,24 @@ body footer.footer .family-footer-links a:focus-visible{outline:3px solid #edcd9
 .khae-final-auth-code-preview p{margin:0;font-size:16px}
 .khae-final-auth-code-preview button{min-height:46px;padding:9px 12px;border:1px solid #8c928c;border-radius:7px;background:#e3e5e0;color:#535c55;font:400 16px/1.3 "Brandon Grotesque",Arial,sans-serif;cursor:not-allowed}
 </style>
+<style id="academy-family-account-continuity-20261107">
+.family-account-readiness{padding:45px 18px;background:#f5f2e9;scroll-margin-top:115px}
+.family-account-readiness .heading{margin-bottom:25px}
+.family-account-readiness .heading .kicker{font:400 clamp(23px,3vw,33px)/1.3 Cinzel,Georgia,serif;color:#755a33}
+.family-account-readiness .heading h2{font:400 clamp(32px,4vw,44px)/1.18 Cinzel,Georgia,serif;color:#202724}
+.family-account-readiness .heading p{font-size:18px;line-height:1.6}
+.family-account-local-status{padding:13px 17px;border:1px solid #b9ad93;border-left:4px solid #8b6a43;border-radius:7px;background:#fffdf8;font-size:16px;line-height:1.55;color:#2e4037;margin:0 0 18px}
+.family-account-readiness-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.family-account-readiness-card{display:flex;flex-direction:column;min-width:0;padding:20px;border:1px solid #c7b897;border-radius:7px;background:#fffdf8}
+.family-account-readiness-card h3{font:400 clamp(23px,2.2vw,33px)/1.25 Cinzel,Georgia,serif;color:#202724;margin:0 0 10px}
+.family-account-readiness-card p{font-size:18px;line-height:1.6;margin:0 0 18px;color:#3b4d43}
+.family-account-readiness-card :is(a,button){display:flex;align-items:center;justify-content:center;margin-top:auto;min-height:50px;padding:10px 12px;border:1px solid #202724;border-radius:7px;background:#202724;color:#fff8e9;font:400 16px/1.35 "Brandon Grotesque",Nunito,Arial,sans-serif;text-align:center;text-decoration:none}
+.family-account-readiness-card button:disabled{background:#e5e4dd;border-color:#aaa99f;color:#555e57;cursor:not-allowed}
+.family-account-readiness-card a:focus-visible{outline:3px solid #956f32;outline-offset:3px}
+.family-account-boundary{max-width:1080px;margin:20px auto 0;font-size:16px;line-height:1.6;color:#435347;text-align:center}
+@media(max-width:960px){.family-account-readiness-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:550px){.family-account-readiness-grid{grid-template-columns:1fr}.family-account-readiness{padding:34px 12px}}
+</style>
 </head>
 <body data-i18n-no-online>
 <a class="skip" href="#workspace">Skip to family workspace</a>
@@ -261,6 +279,39 @@ body footer.footer .family-footer-links a:focus-visible{outline:3px solid #edcd9
  <a href="#family-records"><small>Academic Documents</small><strong>Records &amp; Reports</strong><span>Family and course tools</span></a>
  <a href="#family-involvement"><small>Family Engagement</small><strong>Get Involved</strong><span>Guidance and support</span></a>
 </nav>
+<section class="family-account-readiness" id="family-account-readiness" aria-labelledby="familyAccountReadinessTitle">
+  <div class="shell">
+    <div class="heading">
+      <p class="kicker">Khaemenes Academy</p>
+      <h2 id="familyAccountReadinessTitle">Family Account Continuity</h2>
+      <p>Keep your family and each learner connected as Academy account services develop. Your current local family records remain unchanged.</p>
+    </div>
+    <p class="family-account-local-status" role="status" data-academy-account-status>LOCAL PROFILE — Cloud synchronization is not verified.</p>
+    <div class="family-account-readiness-grid">
+      <article class="family-account-readiness-card">
+        <h3>Parent Sign-In</h3>
+        <p>Planned: a private parent account with its own sign-in credentials, recovery options, and approved access to family records.</p>
+        <button type="button" disabled aria-disabled="true">Parent Sign-In · Coming Later</button>
+      </article>
+      <article class="family-account-readiness-card">
+        <h3>Student Accounts</h3>
+        <p>Planned: individual student sign-in with the correct grade, lessons, preferences, and parent-approved permissions.</p>
+        <button type="button" disabled aria-disabled="true">Student Sign-In · Coming Later</button>
+      </article>
+      <article class="family-account-readiness-card">
+        <h3>Cross-Device Continuity</h3>
+        <p>Planned: securely reconnect to the same family and student records across supported devices after verified account synchronization is available.</p>
+        <button type="button" disabled aria-disabled="true">Cloud Sync · Not Connected</button>
+      </article>
+      <article class="family-account-readiness-card">
+        <h3>Protect Current Records</h3>
+        <p>Available now: use the existing verified family backup tools. Academic work managed by individual courses may require separate backups.</p>
+        <a href="#family-records-controls">Open Family Backup Tools</a>
+      </article>
+    </div>
+    <p class="family-account-boundary">An existing family or learner ID is not a password or proof of account ownership. No passwords are requested or stored by this page. Sign-in, email verification, and cross-device synchronization remain unavailable until independently activated.</p>
+  </div>
+</section>
 <section class="section" id="workspace">
   <div class="shell">
     <div class="heading family-workspace-heading"><p class="family-workspace-eyebrow">One family, many individual learning paths.</p><h2>Family Workspace</h2><p>Each learner keeps a separate school placement and academic path while families can move easily between students, records, and learning resources.</p></div>
