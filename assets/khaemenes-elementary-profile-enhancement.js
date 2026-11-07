@@ -1,0 +1,208 @@
+/* Elementary 1–5 profile enhancement — additive, idempotent, browser-local.
+ * Preserves every existing section, grade engine, native photo editor, guardian
+ * checkbox, subject pins, Kindergarten handoff, backup, and evidence studio.
+ */
+(()=>{"use strict";
+const w=window,d=document,KEY="khaemenesElementaryProfileEnhancement",ID="khaemenesElementaryProfileTools";
+if(w[KEY])return;
+const V="https://vervenveda.com/",A=V+"Khaemenes_Academy.github.io/",BASE=V+"Khaemenes_Elementary.github.io/";
+const $=id=>d.getElementById(id);
+const adapter=()=>w.KhaemenesElementaryLookAdapter;
+const identity=()=>adapter()?.getIdentity?.()||null;
+const gradeURL=()=>{const l=identity();return l?BASE+"grades/grade-"+l.grade+"/":BASE};
+const toolKey=(type,id)=>"khaemenes.elementary.profile.tools.v1:"+type+":"+encodeURIComponent(id);
+const value=k=>{try{return w.localStorage.getItem(k)||""}catch{return ""}};
+const save=(k,v)=>{try{w.localStorage.setItem(k,v);return true}catch{return false}};
+const FONTS={academy:'Cinzel,Georgia,serif',friendly:'Nunito,"Trebuchet MS",Arial,sans-serif',classic:'Georgia,"Times New Roman",serif',modern:'"Trebuchet MS",Arial,sans-serif',handwriting:'"Comic Sans MS","Trebuchet MS",cursive'};
+const SHAPES={rhombus:"polygon(50% 0,100% 50%,50% 100%,0 50%)",heart:"polygon(50% 95%,43% 88%,31% 76%,20% 64%,10% 51%,4% 39%,4% 25%,10% 13%,50% 24%,90% 13%,96% 25%,96% 39%,80% 64%,69% 76%,57% 88%)",star:"polygon(50% 2%,63% 34%,98% 36%,71% 58%,80% 94%,50% 75%,20% 94%,29% 58%,2% 36%,37% 34%)",octagon:"polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%)",semicircle:"polygon(0 100%,0 50%,4% 31%,15% 15%,31% 4%,50% 0,69% 4%,85% 15%,96% 31%,100% 50%,100% 100%)",kite:"polygon(50% 0,90% 38%,50% 100%,10% 38%)"};
+function mk(tag,cls,text){const e=d.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e}
+function mountStyle(){
+ if($("khaemenesElementaryProfileEnhancementStyle"))return;
+ const e=mk("style");e.id="khaemenesElementaryProfileEnhancementStyle";
+ e.textContent=`
+ #${ID}{margin:20px auto 25px;padding:25px;background:#f5f0e6;color:#202724;border:2px solid #315c49;border-radius:7px;box-shadow:0 5px 18px #20272416}
+ #${ID} .kep-heading{text-align:center;margin:0 auto 20px;max-width:860px}
+ #${ID} .kep-heading .eyebrow{color:#315c49;font:400 16px/1.5 Nunito,Arial,sans-serif;letter-spacing:.03em}
+ #${ID} h2{font:400 clamp(28px,3.2vw,33px)/1.3 Cinzel,Georgia,serif!important;color:#202724;margin:5px auto 10px}
+ #${ID} p,#${ID} label{font:400 18px/1.55 Nunito,Arial,sans-serif!important;color:#344a40}
+ #${ID} .kep-guardian{display:flex;justify-content:center;align-items:center;margin:12px auto 18px;max-width:760px}
+ #${ID} .kep-guardian label{display:flex;align-items:center;gap:10px;background:#e9f3e9;border:1px solid #92aa93;border-radius:7px;padding:12px 16px}
+ #${ID} .kep-guardian input{flex:none;width:23px;height:23px;accent-color:#315c49}
+ #${ID} .kep-tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}
+ #${ID} .kep-tool{display:flex;align-items:center;justify-content:center;text-align:center;min-height:57px;padding:10px 7px;background:#202724!important;color:#fff8e9!important;border:1px solid #a8874f;border-radius:7px;text-decoration:none;font:400 16px/1.4 Nunito,Arial,sans-serif!important;cursor:pointer;box-shadow:none}
+ #${ID} .kep-tool:hover{background:#315c49!important;color:#fff8e9!important}
+ #${ID} .kep-tool:focus-visible{outline:3px solid #b48b45;outline-offset:3px}
+ #${ID} .kep-foot{text-align:center;margin-top:15px!important;font-size:16px!important}
+ main .hero.kep-card-enhanced{transition:background-color .15s ease;border:2px solid #315c49}
+ main .hero.kep-card-enhanced .portrait{background:linear-gradient(145deg,#fde6b4,#d8e8ed)!important;color:#202724}
+ main .hero.kep-card-enhanced h2{font-weight:400!important}
+ #kepDialog{width:min(94vw,820px);max-height:calc(100dvh - 24px);margin:auto;overflow:auto;padding:0;border:2px solid #b48b45;border-radius:7px;background:#fff8e9;color:#202724;box-shadow:0 20px 70px #0006}
+ #kepDialog::backdrop{background:rgba(12,26,23,.75)}
+ #kepDialog *{box-sizing:border-box}
+ #kepDialog .kep-modal-inner{padding:clamp(18px,3vw,26px)}
+ #kepDialog .kep-modal-head{display:flex;justify-content:space-between;align-items:center;gap:14px}
+ #kepDialog h2{font:400 clamp(26px,3.5vw,33px)/1.3 Cinzel,Georgia,serif!important;color:#202724;margin:0}
+ #kepDialog p,#kepDialog label{font:400 18px/1.55 Nunito,Arial,sans-serif;color:#344a40}
+ #kepDialog textarea{display:block;width:100%;min-height:175px;padding:13px;border:1px solid #8a9a8c;border-radius:7px;background:#fff;color:#202724;font:400 18px/1.55 Nunito,Arial,sans-serif}
+ #kepDialog button{min-height:48px;padding:9px 16px;background:#202724;color:#fff8e9;border:1px solid #b48b45;border-radius:7px;font:400 16px/1.4 Nunito,Arial,sans-serif;cursor:pointer}
+ #kepDialog button.secondary{background:#fff8e9;color:#202724}
+ #kepDialog button:focus-visible,#kepDialog a:focus-visible,#kepDialog textarea:focus-visible{outline:3px solid #b48b45;outline-offset:3px}
+ #kepDialog .kep-modal-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+ #kepDialog .kep-status{min-height:27px}
+ #kepDialog .kep-canvas{display:block;width:100%;height:300px;touch-action:none;border:2px solid #315c49;border-radius:7px;background:#fff}
+ #kepDialog .kep-math{display:flex;gap:9px;flex-wrap:wrap}
+ #kepDialog .kep-math button{min-width:70px}
+ @media(max-width:650px){#${ID}{padding:18px 12px}#${ID} .kep-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}#kepDialog .kep-canvas{height:230px}}
+ @media print{#${ID},#kepDialog{display:none!important}}
+ `;d.head.append(e);
+}
+let modal=null,currentOpener=null;
+function modalUI(title,details){
+ if(!modal){modal=d.createElement("dialog");modal.id="kepDialog";d.body.append(modal);
+  modal.addEventListener("close",()=>{modal.replaceChildren();currentOpener?.focus?.();currentOpener=null})}
+ if(modal.open)modal.close();
+ const inner=mk("div","kep-modal-inner"),head=mk("div","kep-modal-head");
+ const h=mk("h2","",title),close=mk("button","secondary","Close");close.type="button";close.addEventListener("click",()=>modal.close());
+ head.append(h,close);inner.append(head);
+ if(details)inner.append(mk("p","",details));
+ const area=mk("div","kep-modal-body");inner.append(area);
+ modal.append(inner);modal.showModal();close.focus();
+ return area;
+}
+function status(area,message){let node=area.querySelector(".kep-status");if(!node){node=mk("p","kep-status");node.setAttribute("role","status");area.append(node)}node.textContent=message}
+function openStorageTool(type,title,description){
+ const l=identity();if(!l)return openGuest();
+ const area=modalUI(title,description);const key=toolKey(type,l.id);
+ const label=mk("label","",title+" for "+l.displayName),textarea=mk("textarea");textarea.value=value(key);textarea.maxLength=12000;
+ label.append(textarea);area.append(label);
+ const controls=mk("div","kep-modal-actions"),saveBtn=mk("button","","Save My Work");saveBtn.type="button";
+ saveBtn.addEventListener("click",()=>{if(identity()?.id!==l.id){status(area,"The selected learner changed. Reopen this tool.");return}
+  status(area,save(key,textarea.value)?"Saved to this learner's browser-local workspace.":"Storage is unavailable. Copy your work before closing.")});
+ const copy=mk("button","secondary","Copy Text");copy.type="button";copy.addEventListener("click",()=>{textarea.select();try{d.execCommand("copy");status(area,"Text selected and copy requested.")}catch{status(area,"Select the text and copy it manually.")}});
+ controls.append(saveBtn,copy);area.append(controls);
+}
+function openGuest(){const area=modalUI("Choose My Learner","This is a safe preview. Choose an enrolled learner in the Family Portal to use personal tools.");const a=mk("a");a.href=A+"family/";a.textContent="Open Family Portal";a.className="kep-tool";area.append(a)}
+function openSchedule(){
+ const l=identity();if(!l)return openGuest();
+ const area=modalUI("My Learning Schedule","Start with the subjects you've pinned. Open your registered grade to see the official daily lesson sequence.");
+ const select=$("subjectSelect"),subjects=[...select?.options||[]].map(o=>o.textContent).filter(x=>x&&x!=="Choose a subject");
+ const list=d.createElement("ol");
+ for(const item of subjects){const li=mk("li","",item);li.style.fontSize="18px";list.append(li)}
+ area.append(list);
+ const a=mk("a","kep-tool","Open My Grade "+Number(l.grade));a.href=gradeURL();area.append(a);
+}
+function openFlashcards(){
+ const l=identity();if(!l)return openGuest();
+ const n=Number(l.grade),cards=n<=2?[["What is 5 + 4?","9"],["What is the opposite of hot?","Cold"],["What color do you get from red and blue?","Purple"]]:[["What is 7 × 8?","56"],["What is a synonym for joyful?","Happy"],["What is one way to conserve water?","Turn off the tap when not in use"]];
+ const area=modalUI("My Flashcards","Practice a few quick cards. These are optional games, not official assessments.");
+ let at=0,flipped=false;const face=mk("p","","");
+ face.style.cssText="text-align:center;font-size:26px!important;min-height:90px;padding:20px;border:1px solid #b48b45;border-radius:7px;background:#f1ecdf";
+ const actions=mk("div","kep-modal-actions"),flip=mk("button","","Show Answer"),next=mk("button","secondary","Next Card");
+ const paint=()=>{face.textContent=cards[at][flipped?1:0];flip.textContent=flipped?"Show Question":"Show Answer"};
+ flip.addEventListener("click",()=>{flipped=!flipped;paint()});next.addEventListener("click",()=>{at=(at+1)%cards.length;flipped=false;paint()});
+ actions.append(flip,next);area.append(face,actions);paint();
+}
+function openMathGame(){
+ const l=identity();if(!l)return openGuest();
+ const area=modalUI("Number Quest","A tiny optional number game for your learning break. It does not affect grades.");
+ const n=Number(l.grade),x=3+n,y=2+n,correct=x+y,choices=[correct,correct+2,correct-1];
+ const q=mk("p","",x+" + "+y+" = ?");q.style.fontSize="27px";q.style.textAlign="center";area.append(q);
+ const row=mk("div","kep-math");for(const v of choices){const b=mk("button","",String(v));b.type="button";b.addEventListener("click",()=>status(area,v===correct?"Correct! Great thinking.":"Try again—you can do it!"));row.append(b)}area.append(row);
+}
+function openWhiteboard(){
+ const l=identity();if(!l)return openGuest();
+ const area=modalUI("My Whiteboard","Draw a picture, diagram, or math idea. Use Save Picture to save it onto this device.");
+ const canvas=mk("canvas","kep-canvas");canvas.width=900;canvas.height=400;area.append(canvas);const ctx=canvas.getContext("2d");if(!ctx)return status(area,"Drawing is not supported in this browser.");
+ ctx.fillStyle="#ffffff";ctx.fillRect(0,0,900,400);ctx.strokeStyle="#202724";ctx.lineWidth=5;ctx.lineCap="round";
+ let drawing=false;
+ const pt=e=>{const rect=canvas.getBoundingClientRect();return {x:(e.clientX-rect.left)*canvas.width/rect.width,y:(e.clientY-rect.top)*canvas.height/rect.height}};
+ canvas.addEventListener("pointerdown",e=>{drawing=true;canvas.setPointerCapture(e.pointerId);const p=pt(e);ctx.beginPath();ctx.moveTo(p.x,p.y)});
+ canvas.addEventListener("pointermove",e=>{if(!drawing)return;const p=pt(e);ctx.lineTo(p.x,p.y);ctx.stroke()});
+ for(const event of ["pointerup","pointercancel","lostpointercapture"])canvas.addEventListener(event,()=>{drawing=false});
+ const controls=mk("div","kep-modal-actions"),clear=mk("button","secondary","Clear"),saveImg=mk("button","","Save Picture");
+ clear.type=saveImg.type="button";clear.addEventListener("click",()=>{ctx.fillStyle="#fff";ctx.fillRect(0,0,900,400)});
+ saveImg.addEventListener("click",()=>{const a=d.createElement("a");a.download="my-elementary-whiteboard.png";a.href=canvas.toDataURL("image/png");a.click()});
+ controls.append(clear,saveImg);area.append(controls);
+}
+function openGallery(){
+ const area=modalUI("My Creative Corner","Draw, write, or collect ideas. This space is for creativity, not grades.");
+ const actions=mk("div","kep-modal-actions");
+ const draw=mk("button","","Open Whiteboard"),journal=mk("button","secondary","Open Creative Journal");
+ draw.addEventListener("click",openWhiteboard);journal.addEventListener("click",()=>openStorageTool("creative","My Creative Journal","Write about an artwork, a story idea, or a new invention."));
+ actions.append(draw,journal);area.append(actions);
+}
+const actions=[
+ ["Edit Profile","look"],["Class Progress","studio"],["Schedule","schedule"],["KlasaiPeer","peer"],
+ ["Yearbook","yearbook"],["Creative Tools","creative"],["Student Portfolio","studio"],["Customize Background","look"],
+ ["Daily Lessons","today"],["Grades","grade"],["Games","games"],["Manage Classes","classes"],
+ ["Journal","journal"],["Flashcards","flashcards"],["Study Notes","notes"],["Whiteboard","whiteboard"]
+];
+function act(action){
+ if(action==="look"){const l=identity();if(!l)return openGuest();
+  if(!$("adultConfirm")?.checked){const area=modalUI("Grown-Up Confirmation","Please check the grown-up confirmation in My Profile Tools before changing a child's picture or colors.");const ok=mk("button","","Close");ok.addEventListener("click",()=>modal.close());area.append(ok);return}
+  return w.KhaemenesUniversalProfileLookEditor?.open("edit")}
+ if(action==="studio")return navigate("#academyStudio");
+ if(action==="today")return navigate("#nextSteps");
+ if(action==="classes")return navigate("#pinned");
+ if(action==="grade"){if(!identity())return openGuest();return w.location.assign(gradeURL())}
+ if(action==="schedule")return openSchedule();
+ if(action==="journal")return openStorageTool("journal","My Journal","Write about your day, your favorite discoveries, or something you learned.");
+ if(action==="notes")return openStorageTool("notes","My Study Notes","Keep helpful ideas and study reminders for this grade.");
+ if(action==="yearbook")return openStorageTool("yearbook","My Yearbook Memories","Capture a favorite school moment, drawing idea, or personal milestone.");
+ if(action==="peer"){const area=modalUI("KlasaiPeer","Your future learning companion is being prepared. You can use Flashcards and Study Notes now.");const b=mk("button","","Open Flashcards");b.addEventListener("click",openFlashcards);area.append(b);return}
+ if(action==="creative")return openGallery();
+ if(action==="games")return openMathGame();
+ if(action==="flashcards")return openFlashcards();
+ if(action==="whiteboard")return openWhiteboard();
+}
+function navigate(hash){const target=d.querySelector(hash);if(target){target.scrollIntoView({behavior:"smooth",block:"start"});target.setAttribute("tabindex","-1");target.focus({preventScroll:true})}}
+function contrast(color){
+ const v=[1,3,5].map(i=>parseInt(color.slice(i,i+2),16)/255).map(x=>x<=.04045?x/12.92:((x+.055)/1.055)**2.4),lum=.2126*v[0]+.7152*v[1]+.0722*v[2];
+ return lum>.18?"#202724":"#fff8e9"
+}
+function refresh(){
+ const root=$(ID),l=identity(),card=d.querySelector("main .card.hero"),face=$("portrait"),name=$("childName");if(!root||!card||!face||!name)return;
+ let v={};if(l)try{const extra=JSON.parse(value("khaemenes.elementary.profile.decor.v1:"+encodeURIComponent(l.id))||"null");if(extra?.learnerId===l.id&&extra.schema==="khaemenes.elementary-decoration.v1")v=extra}catch{}
+ const frame=v.frame||"",ink=v.cardColor&&/^#[0-9a-f]{6}$/i.test(v.cardColor)?contrast(v.cardColor):"";
+ card.classList.add("kep-card-enhanced");card.style.backgroundColor=v.cardColor||"";card.style.backgroundImage=v.cardColor?"none":"";
+ card.style.color=ink;
+ for(const el of card.querySelectorAll(".eyebrow,#childStage"))el.style.color=ink;
+ name.style.color=ink;
+ name.style.setProperty("font-family",FONTS[v.nameFont]||FONTS.academy,"important");
+ name.style.setProperty("font-weight","400","important");
+ face.style.clipPath=SHAPES[frame]||"none";
+ face.style.borderRadius=frame?(frame==="circle"||frame==="oval"?"50%":frame==="square"||frame==="rectangle"?"7px":"0"):"";
+ face.style.width=frame?(frame==="rectangle"?"190px":frame==="oval"?"160px":"145px"):"";
+ face.style.height=frame?(frame==="rectangle"?"130px":frame==="oval"?"170px":"145px"):"";
+ if(!face.querySelector("img")&&v.badge){
+  let nativeAvatar="";
+  if(l)try{const native=JSON.parse(value("khaemenes_elementary_visual_profile_v1:"+encodeURIComponent(l.id))||"{}");nativeAvatar=native?.avatar||"🌟"}catch{}
+  if(!v.sourceAvatar||v.sourceAvatar===nativeAvatar)face.textContent=v.badge;
+ }
+ const note=root.querySelector(".kep-foot");if(note)note.textContent=l?"Grade "+Number(l.grade)+" · Your tools and decorations stay with this learner on this device.":"Explore the tools. Choose a registered learner in the Family Portal to save personal work.";
+ root.querySelectorAll(".kep-tool").forEach(b=>{b.disabled=false});
+}
+function mount(){
+ if($(ID)){refresh();return true}
+ const hero=d.querySelector("main .card.hero"),guardian=$("adultConfirm");
+ if(!hero||!guardian||!w.KhaemenesUniversalProfileLookEditor?.registered?.()||!adapter())return false;
+ mountStyle();
+ const root=mk("section");root.id=ID;root.setAttribute("aria-labelledby","kepHeading");
+ const intro=mk("div","kep-heading");
+ intro.append(mk("p","eyebrow","MY ELEMENTARY PROFILE"),mk("h2","","My Profile Tools"),mk("p","","Make your page your own, keep ideas, explore subjects and build wonderful learning habits."));
+ root.append(intro);
+ const consentBox=mk("div","kep-guardian"),guardianLabel=guardian.closest("label");
+ if(guardianLabel)consentBox.append(guardianLabel);
+ root.append(consentBox);
+ const tiles=mk("div","kep-tiles");
+ for(const [label,action] of actions){
+  const b=mk("button","kep-tool",label);b.type="button";b.dataset.profileTool=action;b.addEventListener("click",()=>{currentOpener=b;act(action)});tiles.append(b)
+ }
+ root.append(tiles,mk("p","kep-foot","Your decorations are saved to this device. Family and academic records stay in their existing systems."));
+ hero.insertAdjacentElement("afterend",root);
+ refresh();return true;
+}
+w[KEY]=Object.freeze({version:"1.0",mount,refresh});
+if(d.readyState==="loading")d.addEventListener("DOMContentLoaded",mount,{once:true});else mount();
+for(const event of ["khaemenes-family-changed","khaemenes-learner-placement-changed","khaemenes-elementary-universal-look-updated","pageshow"])w.addEventListener(event,()=>{mount();refresh()});
+})();
