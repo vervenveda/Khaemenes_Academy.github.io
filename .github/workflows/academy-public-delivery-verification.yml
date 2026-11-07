@@ -6,6 +6,8 @@ on:
     paths:
       - 'scripts/verify-public-academy-routes.mjs'
       - '.github/workflows/academy-public-delivery-verification.yml'
+  schedule:
+    - cron: "23 9 * * *"
   workflow_dispatch:
 
 permissions:
