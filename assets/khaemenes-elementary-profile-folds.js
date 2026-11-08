@@ -7,6 +7,7 @@
 const d=document,w=window,KEY="KhaemenesElementaryProfileFolds";
 if(w[KEY])return;
 const FOLD_CLASS="kep-fold",CONTENT_CLASS="kep-fold-content";
+const expectedFolds=["kepFoldTools","kepFoldToday","kepFoldSubjects","kepFoldMilestone","kepFoldPassport"];
 const definitions=[
  {selector:"#khaemenesElementaryProfileTools",id:"kepFoldTools",title:"Show or hide my profile tools",open:true,tools:true},
  {selector:"main .grid > section.card:has(#nextSteps)",id:"kepFoldToday",title:"Today · Next · Review",open:true},
@@ -84,9 +85,26 @@ function mount(){
  },true);
  w.addEventListener("hashchange",revealHash);
  w.addEventListener("pageshow",revealHash);
- mounted=true;revealHash();
- return true;
+ mounted=expectedFolds.every(id=>!!d.getElementById(id));
+ if(mounted)revealHash();
+ return mounted;
 }
-w[KEY]=Object.freeze({version:"1.0.0",mount,reveal:id=>revealElement(d.getElementById(id))});
-if(d.readyState==="loading")d.addEventListener("DOMContentLoaded",mount,{once:true});else mount();
+function state(){
+ return expectedFolds.map(id=>{const el=d.getElementById(id);return {id,present:!!el,open:el?.open===true}});
+}
+const observer=new MutationObserver(records=>{
+ if(mounted){observer.disconnect();return}
+ if(records.some(r=>[...r.addedNodes].some(n=>n.nodeType===1&&(n.id==="khaemenesElementaryProfileTools"||n.querySelector?.("#khaemenesElementaryProfileTools"))))){
+  if(mount())observer.disconnect();
+ }
+});
+function start(){
+ if(mount())return;
+ // The tool entry can mount after DOMContentLoaded on slower devices.
+ // Observe only additions to main, stop as soon as five folds are installed.
+ const main=d.querySelector("main");
+ if(main)observer.observe(main,{childList:true,subtree:true});
+}
+w[KEY]=Object.freeze({version:"1.1.0",mount,reveal:id=>revealElement(d.getElementById(id)),state});
+if(d.readyState==="loading")d.addEventListener("DOMContentLoaded",start,{once:true});else start();
 })();
