@@ -242,8 +242,15 @@ function refresh(){
  const ink=customColor?contrast(customColor):"#162d51";
  card.classList.add("kep-card-enhanced");
  card.dataset.kepCustomColor=customColor?"true":"false";
- card.style.backgroundColor=customColor||"";
- card.style.backgroundImage=customColor?"none":"";
+ // A student's selected color must override older important card-theme CSS.
+ // No selection returns authority to the cream default presentation stylesheet.
+ if(customColor){
+  card.style.setProperty("background-color",customColor,"important");
+  card.style.setProperty("background-image","none","important");
+ }else{
+  card.style.removeProperty("background-color");
+  card.style.removeProperty("background-image");
+ }
  card.style.color=ink;
  for(const el of card.querySelectorAll(".eyebrow,#childStage"))el.style.color=ink;
  name.style.color=ink;
