@@ -41,6 +41,20 @@ const cssInventory=()=>{
  const c=[...d.querySelectorAll('link[rel="stylesheet"]')].map(e=>e.getAttribute("href")||"");
  return c.map(x=>x.split("/").pop().split("?")[0]).filter(x=>/profile|elementary|vnv/i.test(x));
 };
+const heroStyleEvidence=()=>{
+ const hero=query("elementary:hero")[0];if(!hero)return ["Hero: MISSING"];
+ const c=getComputedStyle(hero),state=hero.dataset.kepCustomColor,computed=c.backgroundColor;
+ const expected="rgb(255, 248, 233)";
+ return [
+  "Enhancement mounted: "+hero.classList.contains("kep-card-enhanced"),
+  "Appearance mode: "+(state==="true"?"STUDENT-SELECTED CARD COLOR":state==="false"?"DEFAULT CREAM":"UNMARKED"),
+  "Inline background: "+(hero.style.backgroundColor||"(unset)"),
+  "Computed background: "+computed,
+  "Computed background image: "+c.backgroundImage.slice(0,120),
+  "Unexpected default background: "+(state==="false"&&computed!==expected?"YES — CSS CASCADE SUSPECT":"not demonstrated"),
+  "No appearance records or storage were inspected"
+ ];
+};
 const conflictNotes=()=>{
  const notes=[];
  if(query("vnvHeaderAutoPopulate").length&&query("elementary:local-header").length)notes.push("DUAL HEADER CANDIDATE: shared VNV header + local Elementary header");
@@ -69,7 +83,7 @@ const display=()=>{
   panel.append(h,close,copy,pre);d.body.append(panel);
  }
  const report="Current DOM (no student data):\n"+targets.map(row).join("\n")+
- "\n\nPotential conflicts:\n"+conflictNotes().join("\n")+
+ "\n\nPotential conflicts:\n"+conflictNotes().join("\n")+"\n\nHero appearance evidence (no student data):\n"+heroStyleEvidence().join("\n")+
  "\n\nLoaded relevant scripts:\n"+scriptInventory().join("\n")+
  "\n\nProfile stylesheets:\n"+cssInventory().join("\n")+
  "\n\nEvent timeline:\n"+traces.slice(-18).join("\n");
@@ -112,5 +126,5 @@ w.addEventListener("error",e=>{
  else if(e.message)record("JS ERROR: "+String(e.message).slice(0,140));
 },true);
 w.addEventListener("unhandledrejection",e=>record("PROMISE REJECTION: "+String(e.reason?.message||"unknown").slice(0,140)));
-w.KhaemenesElementaryChromeAudit=Object.freeze({version:"1.0.0",snapshot:()=>targets.map(row),events:()=>traces.slice(),conflicts:conflictNotes});
+w.KhaemenesElementaryChromeAudit=Object.freeze({version:"1.0.0",snapshot:()=>targets.map(row),events:()=>traces.slice(),conflicts:conflictNotes,heroStyle:heroStyleEvidence});
 })();
