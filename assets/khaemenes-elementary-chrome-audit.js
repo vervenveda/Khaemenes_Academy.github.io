@@ -17,7 +17,13 @@ const d=document,w=window,targets=[
  ["Hero action row","kepHeroActionsBelow"],
  ["Profile tool section","khaemenesElementaryProfileTools"],
  ["Four tool families","elementary:tool-groups"],
- ["Original editor panel","kepOriginalPictureTools"]
+ ["Original editor panel","kepOriginalPictureTools"],
+ ["Fold all controls","kepFoldQuickControls"],
+ ["Profile tools fold","kepFoldTools"],
+ ["Today fold","kepFoldToday"],
+ ["Pinned subjects fold","kepFoldSubjects"],
+ ["Next grade fold","kepFoldMilestone"],
+ ["Learning Passport fold","kepFoldPassport"]
 ];
 const traces=[];let panel=null,pre=null,queued=false,closed=false;
 const elapsed=()=>Math.round(performance.now())+"ms";
@@ -34,7 +40,7 @@ const row=([name,id])=>{
 };
 const scriptInventory=()=>{
  const files=[...d.scripts].map(e=>e.getAttribute("src")||"").filter(Boolean);
- const p=/(vnv-333-ticker|vnv-ticker-autopopulate|vnv-ecosystem-toolbar|khaemenes-student-profile-v2|khaemenes-student-profile-ui-v2|khaemenes-universal-profile-look-editor|khaemenes-elementary-look-adapter|khaemenes-elementary-profile-enhancement)/;
+ const p=/(vnv-333-ticker|vnv-ticker-autopopulate|vnv-ecosystem-toolbar|khaemenes-student-profile-v2|khaemenes-student-profile-ui-v2|khaemenes-universal-profile-look-editor|khaemenes-elementary-look-adapter|khaemenes-elementary-profile-enhancement|khaemenes-elementary-profile-folds)/;
  return files.filter(x=>p.test(x)).map(x=>x.split("/").pop().split("?")[0]).map(n=>n+" ×"+files.filter(x=>x.split("/").pop().split("?")[0]===n).length).filter((x,i,a)=>a.indexOf(x)===i);
 };
 const cssInventory=()=>{
@@ -58,6 +64,12 @@ const heroStyleEvidence=()=>{
   "Selected color overridden: "+(selectedMismatch?"YES — computed color differs from inline selection":"no"),
   "No appearance records or storage were inspected"
  ];
+};
+const foldEvidence=()=>{
+ const api=w.KhaemenesElementaryProfileFolds;
+ const ids=["kepFoldTools","kepFoldToday","kepFoldSubjects","kepFoldMilestone","kepFoldPassport"];
+ const state=ids.map(id=>{const el=d.getElementById(id);return id+": "+(el?(el.open?"OPEN":"CLOSED"):"MISSING")});
+ return ["Module: "+(api?.version||"not mounted"),"URL anchor: "+(w.location.hash||"(none)"),...state];
 };
 const conflictNotes=()=>{
  const notes=[];
@@ -93,7 +105,7 @@ const display=()=>{
  }
  const report="Current DOM (no student data):\n"+targets.map(row).join("\n")+
  "\n\nPotential conflicts:\n"+conflictNotes().join("\n")+"\n\nHero appearance evidence (no student data):\n"+heroStyleEvidence().join("\n")+
- "\n\nLoaded relevant scripts:\n"+scriptInventory().join("\n")+
+ "\n\nAccordion state:\n"+foldEvidence().join("\n")+"\n\nLoaded relevant scripts:\n"+scriptInventory().join("\n")+
  "\n\nProfile stylesheets:\n"+cssInventory().join("\n")+
  "\n\nEvent timeline:\n"+traces.slice(-18).join("\n");
  pre.textContent=report;
@@ -135,5 +147,5 @@ w.addEventListener("error",e=>{
  else if(e.message)record("JS ERROR: "+String(e.message).slice(0,140));
 },true);
 w.addEventListener("unhandledrejection",e=>record("PROMISE REJECTION: "+String(e.reason?.message||"unknown").slice(0,140)));
-w.KhaemenesElementaryChromeAudit=Object.freeze({version:"1.0.0",snapshot:()=>targets.map(row),events:()=>traces.slice(),conflicts:conflictNotes,heroStyle:heroStyleEvidence});
+w.KhaemenesElementaryChromeAudit=Object.freeze({version:"1.0.0",snapshot:()=>targets.map(row),events:()=>traces.slice(),conflicts:conflictNotes,heroStyle:heroStyleEvidence,folds:foldEvidence});
 })();
