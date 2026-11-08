@@ -45,6 +45,9 @@ const heroStyleEvidence=()=>{
  const hero=query("elementary:hero")[0];if(!hero)return ["Hero: MISSING"];
  const c=getComputedStyle(hero),state=hero.dataset.kepCustomColor,computed=c.backgroundColor;
  const expected="rgb(255, 248, 233)";
+ const inline=hero.style.backgroundColor||"";
+ const normalized=(value)=>{const temp=d.createElement("span");temp.style.color=value;return temp.style.color.trim().replace(/\s+/g,"");};
+ const selectedMismatch=state==="true"&&inline&&normalized(inline)!==normalized(computed);
  return [
   "Enhancement mounted: "+hero.classList.contains("kep-card-enhanced"),
   "Appearance mode: "+(state==="true"?"STUDENT-SELECTED CARD COLOR":state==="false"?"DEFAULT CREAM":"UNMARKED"),
@@ -52,6 +55,7 @@ const heroStyleEvidence=()=>{
   "Computed background: "+computed,
   "Computed background image: "+c.backgroundImage.slice(0,120),
   "Unexpected default background: "+(state==="false"&&computed!==expected?"YES — CSS CASCADE SUSPECT":"not demonstrated"),
+  "Selected color overridden: "+(selectedMismatch?"YES — computed color differs from inline selection":"no"),
   "No appearance records or storage were inspected"
  ];
 };
@@ -60,6 +64,11 @@ const conflictNotes=()=>{
  if(query("vnvHeaderAutoPopulate").length&&query("elementary:local-header").length)notes.push("DUAL HEADER CANDIDATE: shared VNV header + local Elementary header");
  if(query("vnv333NetworkTicker").length>1||query("vnvTickerAutoPopulate").length>1)notes.push("DUPLICATE TICKER NODE");
  if(query("vnvEcosystemUtilityDock").length>1)notes.push("DUPLICATE UTILITY RAIL");
+ const auto=query("vnvTickerAutoPopulate")[0],header=query("vnvHeaderAutoPopulate")[0];
+ if(auto&&header&&auto.getBoundingClientRect().height>0&&header.getBoundingClientRect().height>0){
+  const ar=auto.getBoundingClientRect(),hr=header.getBoundingClientRect();
+  if(hr.top < ar.bottom-1 && hr.bottom > ar.top+1)notes.push("STICKY HEADER OVERLAPS AUTO TICKER by "+Math.round(ar.bottom-hr.top)+"px");
+ }
  if(query("elementary:tool-groups").length!==4)notes.push("TOOL GROUPS: expected four; actual "+query("elementary:tool-groups").length);
  const hero=query("elementary:hero")[0],actions=query("kepHeroActionsBelow")[0];
  if(hero&&actions&&hero.contains(actions))notes.push("HERO ACTIONS STILL INSIDE CARD");
