@@ -777,3 +777,88 @@ body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools .kep
 body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools .kep-group .kep-tool:nth-child(4n+3){
  background:#cf372e!important;color:#fff8e9!important;
 }
+
+/* ================================================================
+   ELEMENTARY TITLE HERO / READING & CORNER STANDARD — V7
+   Grade 09 organization, Elementary personality. Pure presentation.
+   Keep the child hero, native editor, appearance frames and evidence intact.
+   ================================================================ */
+body[data-profile-stage="elementary"] main>.elementary-page-title-hero{
+ position:relative;
+ max-width:100%;
+ margin:0 0 26px;
+ padding:clamp(33px,4.4vw,55px) clamp(22px,4vw,46px);
+ background:#fff8e9;
+ border:2px solid #157e91;
+ border-top:9px solid #2874b5;
+ border-bottom:7px solid #d89d28;
+ border-radius:7px;
+ text-align:center;
+ box-shadow:none;
+}
+body[data-profile-stage="elementary"] main>.elementary-page-title-hero .eyebrow{
+ color:#194f7b!important;
+ font:400 16px/1.5 Cinzel,Georgia,serif!important;
+ letter-spacing:.06em!important;
+ text-transform:uppercase;
+ margin:0 auto 9px;
+}
+body[data-profile-stage="elementary"] main>.elementary-page-title-hero h1{
+ color:#174b88!important;
+ font:400 clamp(33px,4.3vw,49px)/1.22 Cinzel,Georgia,serif!important;
+ margin:0 auto 14px;
+ letter-spacing:0;
+ overflow-wrap:anywhere;
+}
+body[data-profile-stage="elementary"] main>.elementary-page-title-hero p.muted{
+ color:#354d4d!important;
+ font:400 18px/1.65 Nunito,"Avenir Next",Arial,sans-serif!important;
+ margin:0 auto;
+ max-width:850px;
+}
+/* Exactly one corners standard for UI surfaces. Never flatten intentionally
+   circular portraits or student-selected photo-frame silhouettes. */
+body[data-profile-stage="elementary"] main :is(.card,.notice,.activity,.kep-group,.kep-adventure,.kep-advanced,#khaemenesElementaryProfileTools,.elementary-page-title-hero,.kep-hero-actions-below :is(button,a.button),.kep-tool,.kep-adventure-button,.kep-backup :is(button,label),input,select,textarea,button,a.button){
+ border-radius:7px!important;
+}
+body[data-profile-stage="elementary"] main .card.hero.kep-card-enhanced{
+ border-radius:7px!important;
+}
+body[data-profile-stage="elementary"] main .card.hero.kep-card-enhanced>div:last-child{
+ border-radius:7px!important;
+}
+/* Text minimum for Elementary main profile and its locally added mini tools.
+   Titles are deliberately governed separately and remain larger. */
+body[data-profile-stage="elementary"] main :is(p,li,label,summary,small,button,input,select,textarea,option,output,legend,figcaption,dt,dd,.status,.muted,.eyebrow,.pill,.kep-tool,.kep-foot,.kep-group-title),
+body[data-profile-stage="elementary"] main :is(a,a.button,.activity,.notice){
+ font-size:max(16px,1rem)!important;
+ font-weight:400;
+}
+body[data-profile-stage="elementary"] main :is(h2,h3,h4,h5,h6){
+ font-size:max(20px,1.25rem);
+ font-weight:400;
+}
+body[data-profile-stage="elementary"] :is(header,nav,footer) :is(a,button,small,span,p){
+ font-size:max(16px,1rem);
+}
+body[data-profile-stage="elementary"] #kepDialog :is(p,label,button,a,textarea,small,span,output){
+ font-size:max(16px,1rem)!important;
+}
+body[data-profile-stage="elementary"] #kepDialog :is(button,input,textarea){
+ border-radius:7px!important;
+}
+@media(max-width:520px){
+ body[data-profile-stage="elementary"] main>.elementary-page-title-hero{
+  padding:30px 17px;
+  margin-bottom:20px;
+ }
+ body[data-profile-stage="elementary"] main>.elementary-page-title-hero h1{
+  font-size:clamp(30px,7vw,38px)!important;
+ }
+}
+@media print{
+ body[data-profile-stage="elementary"] main>.elementary-page-title-hero{
+  border:1px solid #444;
+  background:#fff;
+ }
+}
