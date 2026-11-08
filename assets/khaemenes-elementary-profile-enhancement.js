@@ -82,14 +82,88 @@ function openStorageTool(type,title,description){
  controls.append(saveBtn,copy);area.append(controls);
 }
 function openGuest(){const area=modalUI("Choose My Learner","This is a safe preview. Choose an enrolled learner in the Family Portal to use personal tools.");const a=mk("a");a.href=A+"family/";a.textContent="Open Family Portal";a.className="kep-tool";area.append(a)}
+// Read the existing Elementary pins only. No inferred school-day timetable.
+function readPinnedSubjects(l){
+ if(identity()?.id!==l.id)return {items:[],valid:false};
+ try{
+  const pinKey="khaemenes_elementary_profile_pins_v1:"+encodeURIComponent(l.id);
+  const raw=w.localStorage.getItem(pinKey);
+  const ids=raw===null?[]:JSON.parse(raw);
+  if(!Array.isArray(ids))return {items:[],valid:false};
+  const options=[...($("subjectSelect")?.options||[])].filter(o=>o.value);
+  const available=new Map(options.map(o=>[o.value,o.textContent||o.value]));
+  const items=[...new Set(ids.filter(v=>typeof v==="string"))].filter(v=>available.has(v)).map(v=>({id:v,title:available.get(v)}));
+  return {items,valid:true};
+ }catch{return {items:[],valid:false}}
+}
 function openSchedule(){
  const l=identity();if(!l)return openGuest();
- const area=modalUI("My Learning Schedule","Start with the subjects you've pinned. Open your registered grade to see the official daily lesson sequence.");
- const select=$("subjectSelect"),subjects=[...select?.options||[]].map(o=>o.textContent).filter(x=>x&&x!=="Choose a subject");
- const list=d.createElement("ol");
- for(const item of subjects){const li=mk("li","",item);li.style.fontSize="18px";list.append(li)}
- area.append(list);
- const a=mk("a","kep-tool","Open My Grade "+Number(l.grade));a.href=gradeURL();area.append(a);
+ const area=modalUI("My Learning Schedule","Your currently pinned Elementary subjects are shown below. These are favorites, not a fixed school-day timetable. Your grade's course engine controls the actual lesson sequence.");
+ const pins=readPinnedSubjects(l);
+ const heading=mk("h3","","My Pinned Subjects");heading.style.fontSize="22px";area.append(heading);
+ if(!pins.valid)status(area,"Saved pins cannot be read. No changes were made.");
+ else if(!pins.items.length)area.append(mk("p","","No favorite subjects pinned yet. Open Manage Classes to choose some."));
+ else{
+  const list=mk("ol");list.style.cssText="padding-left:25px;display:grid;gap:10px";
+  for(const item of pins.items){const li=mk("li","",item.title);li.style.fontSize="18px";list.append(li)}
+  area.append(list);
+ }
+ const controls=mk("div","kep-modal-actions");
+ const edit=mk("button","secondary","Manage My Classes");edit.type="button";edit.addEventListener("click",()=>{modal.close();navigate("#pinned")});
+ const grade=mk("a","kep-tool","Open Grade "+Number(l.grade));grade.href=gradeURL();
+ controls.append(edit,grade);area.append(controls);
+}
+function elementaryContinuation(l){
+ // Read-only summary API, scoped to the selected learner's registered grade.
+ if(identity()?.id!==l.id)return [];
+ let rows=[];try{rows=w.KhaemenesLearningContinuation?.readLearner?.(l.id)||[]}catch{return []}
+ if(!Array.isArray(rows))return [];
+ return rows.filter(x=>{
+  if(!x||x.learnerId!==l.id||String(x.stage).toLowerCase()!=="elementary")return false;
+  const grade=String(x.grade||"").toLowerCase().replace(/^grade[- ]?/,"");
+  return grade===l.grade||grade===String(Number(l.grade));
+ }).slice(0,30);
+}
+function safeElementaryContinuationLink(href,l){
+ try{
+  const url=new URL(href,V);
+  const prefix="/Khaemenes_Elementary.github.io/grades/grade-"+l.grade+"/";
+  return url.protocol==="https:"&&url.origin==="https://vervenveda.com"&&url.pathname.startsWith(prefix)?url.href:null;
+ }catch{return null}
+}
+function openClassProgress(){
+ const l=identity();if(!l)return openGuest();
+ const area=modalUI("My Class Progress","This view reads Academy continuation summaries for your selected Elementary grade. It never changes assessments, scores, grades, or lesson locks.");
+ const data=elementaryContinuation(l);
+ const heading=mk("h3","","Grade "+Number(l.grade)+" · Learning Progress");heading.style.fontSize="22px";area.append(heading);
+ if(!w.KhaemenesLearningContinuation?.readLearner){
+  status(area,"The continuation summary service is unavailable. Your academic records have not changed.");
+ }else if(!data.length){
+  area.append(mk("p","","No course progress has been reported to the Academy continuation summary for this learner and grade yet. This does not mean no lessons were completed."));
+ }else{
+  const summary=mk("p","",data.length+" course summary "+(data.length===1?"is":"are")+" currently available. Results below are reported snapshots, not verified transcripts.");area.append(summary);
+  const list=mk("div");list.style.cssText="display:grid;gap:12px";
+  for(const item of data){
+   const card=mk("section");card.style.cssText="border:1px solid #b7a989;border-radius:7px;padding:14px;background:#fffaf1";
+   const title=mk("h3","",String(item.courseTitle||item.subject||"Course").slice(0,120));
+   title.style.cssText="font:400 21px/1.4 Cinzel,Georgia,serif;color:#202724;margin:0 0 8px";
+   card.append(title);
+   const reported=typeof item.progress?.percent==="number"?item.progress.percent:null;
+   const count=typeof item.progress?.completed==="number"&&typeof item.progress?.total==="number"?item.progress.completed+" of "+item.progress.total+" activities reported":"Activity count not reported";
+   const details=mk("p","", "Status: "+String(item.status||"not reported")+" · "+count+(reported===null?"":" · "+reported+"% reported"));
+   details.style.margin="0 0 8px";card.append(details);
+   const mastery=item.mastery?.mastered===true?"Mastery flag reported":typeof item.mastery?.best==="number"?"Best reported checkpoint: "+item.mastery.best+"%":"No mastery result reported";
+   card.append(mk("p","",mastery));
+   const link=safeElementaryContinuationLink(item.nextHref,l);
+   if(link){const a=mk("a","kep-tool","Continue This Course");a.href=link;card.append(a)}
+   list.append(card);
+  }
+  area.append(list);
+ }
+ const actions=mk("div","kep-modal-actions");
+ const portfolio=mk("button","secondary","Open My Learning Passport");portfolio.type="button";portfolio.addEventListener("click",()=>{modal.close();navigate("#academyStudio")});
+ const grade=mk("a","kep-tool","Open Registered Grade");grade.href=gradeURL();
+ actions.append(portfolio,grade);area.append(actions);
 }
 function openFlashcards(){
  const l=identity();if(!l)return openGuest();
@@ -132,7 +206,7 @@ function openGallery(){
  actions.append(draw,journal);area.append(actions);
 }
 const actions=[
- ["Edit Profile","look"],["Class Progress","studio"],["Schedule","schedule"],["KlasaiPeer","peer"],
+ ["Edit Profile","look"],["Class Progress","progress"],["Schedule","schedule"],["KlasaiPeer","peer"],
  ["Yearbook","yearbook"],["Creative Tools","creative"],["Student Portfolio","studio"],["Customize Background","look"],
  ["Daily Lessons","today"],["Grades","grade"],["Games","games"],["Manage Classes","classes"],
  ["Journal","journal"],["Flashcards","flashcards"],["Study Notes","notes"],["Whiteboard","whiteboard"]
@@ -141,6 +215,7 @@ function act(action){
  if(action==="look"){const l=identity();if(!l)return openGuest();
   if(!$("adultConfirm")?.checked){const area=modalUI("Grown-Up Confirmation","Please check the grown-up confirmation in My Profile Tools before changing a child's picture or colors.");const ok=mk("button","","Close");ok.addEventListener("click",()=>modal.close());area.append(ok);return}
   return w.KhaemenesUniversalProfileLookEditor?.open("edit")}
+ if(action==="progress")return openClassProgress();
  if(action==="studio")return navigate("#academyStudio");
  if(action==="today")return navigate("#nextSteps");
  if(action==="classes")return navigate("#pinned");
