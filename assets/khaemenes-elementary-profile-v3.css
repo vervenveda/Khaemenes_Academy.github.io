@@ -322,3 +322,248 @@ body[data-profile-stage="elementary"] main :is(input,select,textarea){
  body[data-profile-stage="elementary"] main .grid>.card{background:#fff!important;color:#202724!important;box-shadow:none}
  body[data-profile-stage="elementary"] main .card.hero{border:2px solid #202724;box-shadow:none}
 }
+
+/* ================================================================
+   ELEMENTARY LEARNING HOME — BALANCED MID-TONE PALETTE / V4
+   No pastels, no charcoal-colored feature blocks.
+   Crisp parchment page, medium-vivid buttons and card framing.
+   Never apply the patchwork artwork to the page background.
+   ================================================================ */
+body[data-profile-stage="elementary"]{
+ --kep-turquoise:#167c86;
+ --kep-cobalt:#276eb1;
+ --kep-red:#be4837;
+ --kep-yellow:#dfa536;
+ --kep-orange:#c97537;
+ --kep-cream:#fff8e9;
+}
+body[data-profile-stage="elementary"][data-theme="parchment"]{
+ background:#fff8e9!important;
+ background-image:none!important;
+ background-attachment:scroll!important;
+}
+body[data-profile-stage="elementary"] main{
+ width:min(100%,1160px);
+ max-width:1160px;
+ background:#fff8e9;
+ border-left:1px solid #d5cbb9;
+ border-right:1px solid #d5cbb9;
+ padding-inline:clamp(18px,3.5vw,44px);
+}
+body[data-profile-stage="elementary"] main>.eyebrow,
+body[data-profile-stage="elementary"] main>h1,
+body[data-profile-stage="elementary"] main>p.muted:first-of-type{
+ text-align:center;
+}
+body[data-profile-stage="elementary"] main .card.hero{
+ background:#276eb1;
+ color:#fff8e9;
+ border:2px solid #28546f;
+ border-left:9px solid #dfa536;
+ border-right:9px solid #be4837;
+ border-bottom:7px solid #167c86;
+ box-shadow:0 7px 0 rgba(39,110,177,.1);
+ min-height:230px;
+}
+body[data-profile-stage="elementary"] main .card.hero .portrait{
+ width:180px; height:180px;
+ max-width:100%;
+ border:6px solid #fff8e9;
+ outline:3px solid #dfa536;
+ border-radius:7px;
+ box-shadow:0 4px 0 #24527c;
+ font-size:76px;
+}
+body[data-profile-stage="elementary"] main .card.hero h2{
+ font-size:clamp(28px,3vw,37px);
+ font-weight:400;
+ line-height:1.2;
+}
+body[data-profile-stage="elementary"] main .card.hero .actions .kep-hero-edit,
+body[data-profile-stage="elementary"] main .card.hero .actions .kep-hero-start{
+ min-height:51px;
+ font:400 17px/1.4 Nunito,Arial,sans-serif;
+ border:2px solid #fff8e9;
+ border-radius:7px;
+ box-shadow:none;
+}
+body[data-profile-stage="elementary"] main .card.hero .actions .kep-hero-edit{
+ background:#fff8e9;color:#202724;
+}
+body[data-profile-stage="elementary"] main .card.hero .actions .kep-hero-start{
+ background:#dfa536;color:#202724;
+}
+body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools{
+ border:2px solid #28546f;
+ border-top:9px solid #276eb1;
+ border-right:9px solid #167c86;
+ border-bottom:9px solid #be4837;
+ background:#fffaf1;
+ box-shadow:0 8px 0 rgba(39,110,177,.08);
+ padding:clamp(22px,3vw,35px);
+}
+body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools .kep-heading h2{
+ color:#23577e;
+}
+body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools .kep-groups{
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:16px;
+}
+body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools .kep-group{
+ min-width:0;
+ border:2px solid #d4c9b7;
+ border-radius:7px;
+ padding:14px;
+ background:#fff8e9;
+}
+body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools .kep-group-title{
+ font:400 22px/1.3 Cinzel,Georgia,serif;
+ text-align:center;
+ margin:0 0 12px;
+ color:#202724;
+}
+body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools .kep-group .kep-tiles{
+ background:transparent;
+ border:0;
+ border-radius:0;
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ padding:0;
+ gap:9px;
+}
+body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools .kep-group .kep-tool{
+ border:1px solid rgba(32,39,36,.5)!important;
+ box-shadow:none!important;
+ min-height:57px;
+ padding:9px 10px;
+ font:400 17px/1.35 Nunito,Arial,sans-serif!important;
+ transform:none;
+}
+body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools .kep-group-school{
+ border-top:8px solid #276eb1;
+}
+body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools .kep-group-learning{
+ border-top:8px solid #167c86;
+}
+body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools .kep-group-create{
+ border-top:8px solid #be4837;
+}
+body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools .kep-group-personal{
+ border-top:8px solid #dfa536;
+}
+body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools .kep-group-school .kep-tool{
+ background:#276eb1!important;color:#fff8e9!important;
+}
+body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools .kep-group-learning .kep-tool{
+ background:#167c86!important;color:#fff8e9!important;
+}
+body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools .kep-group-create .kep-tool{
+ background:#be4837!important;color:#fff8e9!important;
+}
+body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools .kep-group-personal .kep-tool{
+ background:#dfa536!important;color:#202724!important;
+}
+body[data-profile-stage="elementary"] main :is(.kep-adventure,.kep-advanced){
+ border:2px solid #d2b878;
+ border-radius:7px;
+ background:#fffaf1;
+ padding:clamp(19px,3vw,27px);
+ margin:22px auto;
+}
+body[data-profile-stage="elementary"] main .kep-adventure{
+ border-left:8px solid #276eb1;
+ border-top:8px solid #dfa536;
+}
+body[data-profile-stage="elementary"] main .kep-adventure :is(h2,.kep-adventure-eyebrow){
+ color:#23577e;
+}
+body[data-profile-stage="elementary"] main .kep-adventure h2{
+ font:400 clamp(26px,3vw,33px)/1.3 Cinzel,Georgia,serif;
+ margin:6px 0 11px;
+}
+body[data-profile-stage="elementary"] main .kep-adventure :is(p,button){
+ font:400 17px/1.5 Nunito,Arial,sans-serif;
+}
+body[data-profile-stage="elementary"] main .kep-adventure-links{
+ display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin-top:16px;
+}
+body[data-profile-stage="elementary"] main .kep-adventure-button{
+ min-height:54px;
+ padding:10px;
+ color:#fff8e9;
+ border:1px solid #3b5258;
+ border-radius:7px;
+ background:#276eb1;
+}
+body[data-profile-stage="elementary"] main .kep-adventure-button:nth-child(2){background:#167c86}
+body[data-profile-stage="elementary"] main .kep-adventure-button:nth-child(3){background:#be4837}
+body[data-profile-stage="elementary"] main .kep-adventure-button:nth-child(4){background:#dfa536;color:#202724}
+body[data-profile-stage="elementary"] main .kep-advanced{
+ border-left:8px solid #167c86;
+}
+body[data-profile-stage="elementary"] main .kep-advanced summary{
+ cursor:pointer;font:400 20px/1.45 Cinzel,Georgia,serif;
+ color:#202724;padding:6px;
+}
+body[data-profile-stage="elementary"] main .kep-advanced-panels{
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:16px;
+ margin:15px 0;
+}
+body[data-profile-stage="elementary"] main .kep-advanced-panels>.card{
+ min-width:0;box-shadow:none;
+ background:#fff8e9;
+ border:2px solid #baab8c;
+}
+body[data-profile-stage="elementary"] main .grid>.card{
+ border:2px solid #b9ab8e;
+ background:#fffaf1;
+ box-shadow:none;
+}
+body[data-profile-stage="elementary"] main .grid>.card:nth-child(4n+1){
+ background:#fffaf1;border-top:9px solid #dfa536;color:#202724;
+}
+body[data-profile-stage="elementary"] main .grid>.card:nth-child(4n+2){
+ background:#fffaf1;border-top:9px solid #167c86;color:#202724;
+}
+body[data-profile-stage="elementary"] main .grid>.card:nth-child(4n+3){
+ background:#fffaf1;border-top:9px solid #276eb1;color:#202724;
+}
+body[data-profile-stage="elementary"] main .grid>.card:nth-child(4n+4){
+ background:#fffaf1;border-top:9px solid #be4837;color:#202724;
+}
+body[data-profile-stage="elementary"] main .grid>.card .actions :is(button,a.button){
+ background:#276eb1;color:#fff8e9;
+ border:1px solid #28546f;box-shadow:none;
+}
+body[data-profile-stage="elementary"] main .grid>.card:nth-child(2n) .actions :is(button,a.button){
+ background:#167c86;color:#fff8e9;
+}
+body[data-profile-stage="elementary"] main .grid>.card .actions :is(button,a.button).secondary{
+ background:#fff8e9;color:#202724;border:1px solid #315c49;
+}
+body[data-profile-stage="elementary"] main #gradePreview,
+body[data-profile-stage="elementary"] main #academyStudio{
+ background:#fffaf1;color:#202724;
+ border:2px solid #baab8e;
+}
+body[data-profile-stage="elementary"] main #gradePreview{border-top:9px solid #be4837}
+body[data-profile-stage="elementary"] main #academyStudio{border-top:9px solid #276eb1}
+body[data-profile-stage="elementary"] main :is(.kep-adventure,.kep-advanced,.kep-group,.grid>.card) :is(p,li,small,summary,label){
+ font-size:16px;line-height:1.55;
+}
+@media(max-width:780px){
+ body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools .kep-groups{grid-template-columns:1fr}
+ body[data-profile-stage="elementary"] main .kep-advanced-panels{grid-template-columns:1fr}
+ body[data-profile-stage="elementary"] main .kep-adventure-links{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:480px){
+ body[data-profile-stage="elementary"] main .card.hero .portrait{width:145px;height:145px}
+ body[data-profile-stage="elementary"] main .kep-adventure-links{grid-template-columns:1fr}
+}
+@media print{
+ body[data-profile-stage="elementary"] main .kep-advanced{display:block}
+ body[data-profile-stage="elementary"] main .kep-adventure{display:none}
+}
