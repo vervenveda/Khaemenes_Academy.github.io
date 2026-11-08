@@ -862,3 +862,79 @@ body[data-profile-stage="elementary"] #kepDialog :is(button,input,textarea){
   background:#fff;
  }
 }
+
+/* ================================================================
+   ELEMENTARY PROFILE COLLAPSIBLE PANELS — V8
+   Native details preserve original section IDs, controls and event handlers.
+   Hero remains immediately visible; long sections are compact by default.
+   ================================================================ */
+body[data-profile-stage="elementary"] main #kepFoldQuickControls{
+ display:flex;align-items:center;justify-content:flex-end;gap:11px;flex-wrap:wrap;
+ margin:17px 0 9px;padding:10px 0;
+}
+body[data-profile-stage="elementary"] main #kepFoldQuickControls span{
+ margin-right:auto;color:#274c60;font:400 18px/1.4 Nunito,Arial,sans-serif;
+}
+body[data-profile-stage="elementary"] main #kepFoldQuickControls button{
+ border:1px solid #255b75;border-radius:7px;background:#fff8e9;color:#202724;
+ min-height:46px;padding:9px 14px;font:400 16px/1.4 Nunito,Arial,sans-serif;
+}
+body[data-profile-stage="elementary"] main .kep-fold{
+ display:block;width:100%;min-width:0;
+}
+body[data-profile-stage="elementary"] main .kep-fold>.kep-fold-summary{
+ display:flex;align-items:center;gap:12px;
+ min-height:54px;padding:10px 12px;
+ border:1px solid #aebec0;border-left:6px solid #167c86;border-radius:7px;
+ background:#fff8e9;color:#202724;
+ font:400 19px/1.4 Nunito,Arial,sans-serif;
+ cursor:pointer;list-style:none;
+}
+body[data-profile-stage="elementary"] main .kep-fold>.kep-fold-summary::-webkit-details-marker{display:none}
+body[data-profile-stage="elementary"] main .kep-fold>.kep-fold-summary::after{
+ content:"+";display:grid;place-items:center;
+ flex:none;margin-left:auto;width:30px;height:30px;
+ border:1px solid #899c9f;border-radius:7px;background:#fff;color:#202724;
+ font:400 22px/1 Nunito,Arial,sans-serif;
+}
+body[data-profile-stage="elementary"] main .kep-fold[open]>.kep-fold-summary::after{content:"−"}
+body[data-profile-stage="elementary"] main .kep-fold>.kep-fold-summary h2{
+ margin:0;font:400 clamp(20px,2.1vw,24px)/1.35 Cinzel,Georgia,serif!important;
+ color:#23496c;
+}
+body[data-profile-stage="elementary"] main .kep-fold>.kep-fold-summary:focus-visible,
+body[data-profile-stage="elementary"] main #kepFoldQuickControls button:focus-visible{
+ outline:3px solid #bc8a24;outline-offset:3px;
+}
+body[data-profile-stage="elementary"] main .kep-fold>.kep-fold-content{
+ padding:17px 4px 6px;min-width:0;
+}
+body[data-profile-stage="elementary"] main .kep-fold:not([open])>.kep-fold-content{display:none}
+body[data-profile-stage="elementary"] main .grid>.card:has(>.kep-fold){
+ height:auto;min-height:86px;
+}
+body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools>.kep-fold>.kep-fold-summary{
+ background:#e8f5f2;border-left-color:#276eb1;
+}
+body[data-profile-stage="elementary"] main #khaemenesElementaryProfileTools>.kep-fold>.kep-fold-content{
+ padding:18px 0 0;
+}
+body[data-profile-stage="elementary"] main #gradePreview>.kep-fold>.kep-fold-summary{border-left-color:#dfa536}
+body[data-profile-stage="elementary"] main #academyStudio>.kep-fold>.kep-fold-summary{border-left-color:#be4837}
+body[data-profile-stage="elementary"] main #gradePreview>.kep-fold>.kep-fold-content,
+body[data-profile-stage="elementary"] main #academyStudio>.kep-fold>.kep-fold-content{
+ padding:19px 3px 4px;
+}
+body[data-profile-stage="elementary"] main :is(#academyStudio,#gradePreview,#nextSteps,#pinned,#profileStudio){
+ scroll-margin-top:155px;
+}
+@media(max-width:620px){
+ body[data-profile-stage="elementary"] main #kepFoldQuickControls{justify-content:center}
+ body[data-profile-stage="elementary"] main #kepFoldQuickControls span{width:100%;text-align:center}
+ body[data-profile-stage="elementary"] main .kep-fold>.kep-fold-summary{padding:10px 9px}
+}
+@media print{
+ body[data-profile-stage="elementary"] main #kepFoldQuickControls{display:none}
+ body[data-profile-stage="elementary"] main .kep-fold>.kep-fold-content{display:block!important}
+ body[data-profile-stage="elementary"] main .kep-fold>.kep-fold-summary::after{display:none}
+}
