@@ -230,7 +230,7 @@ function act(action){
  if(action==="flashcards")return openFlashcards();
  if(action==="whiteboard")return openWhiteboard();
 }
-function navigate(hash){const target=d.querySelector(hash);if(target){target.scrollIntoView({behavior:"smooth",block:"start"});target.setAttribute("tabindex","-1");target.focus({preventScroll:true})}}
+function navigate(hash){const target=d.querySelector(hash);if(target){w.KhaemenesElementaryProfileFolds?.reveal?.(target.id);target.scrollIntoView({behavior:"smooth",block:"start"});target.setAttribute("tabindex","-1");target.focus({preventScroll:true})}}
 function contrast(color){
  const v=[1,3,5].map(i=>parseInt(color.slice(i,i+2),16)/255).map(x=>x<=.04045?x/12.92:((x+.055)/1.055)**2.4),lum=.2126*v[0]+.7152*v[1]+.0722*v[2];
  return lum>.18?"#202724":"#fff8e9"
