@@ -238,8 +238,12 @@ function contrast(color){
 function refresh(){
  const root=$(ID),l=identity(),card=d.querySelector("main .card.hero"),face=$("portrait"),name=$("childName");if(!root||!card||!face||!name)return;
  let v={};if(l)try{const extra=JSON.parse(value("khaemenes.elementary.profile.decor.v1:"+encodeURIComponent(l.id))||"null");if(extra?.learnerId===l.id&&extra.schema==="khaemenes.elementary-decoration.v1")v=extra}catch{}
- const frame=v.frame||"",ink=v.cardColor&&/^#[0-9a-f]{6}$/i.test(v.cardColor)?contrast(v.cardColor):"";
- card.classList.add("kep-card-enhanced");card.style.backgroundColor=v.cardColor||"";card.style.backgroundImage=v.cardColor?"none":"";
+ const frame=v.frame||"",customColor=typeof v.cardColor==="string"&&/^#[0-9a-f]{6}$/i.test(v.cardColor)?v.cardColor:"";
+ const ink=customColor?contrast(customColor):"#162d51";
+ card.classList.add("kep-card-enhanced");
+ card.dataset.kepCustomColor=customColor?"true":"false";
+ card.style.backgroundColor=customColor||"";
+ card.style.backgroundImage=customColor?"none":"";
  card.style.color=ink;
  for(const el of card.querySelectorAll(".eyebrow,#childStage"))el.style.color=ink;
  name.style.color=ink;
@@ -359,6 +363,21 @@ function mount(){
   heroActions.prepend(edit);
   const start=mk("button","kep-hero-start","Start Today's Learning");start.type="button";start.addEventListener("click",()=>act("today"));
   heroActions.insertBefore(start,edit.nextSibling);
+ }
+ // Reparent the *existing* two Academy links and their handlers, rather than
+ // cloning, hiding, or changing any course/portfolio destinations.
+ if(heroActions&&!$("kepHeroActionsBelow")){
+  heroActions.id="kepHeroActionsBelow";
+  heroActions.classList.add("kep-hero-actions-below");
+  hero.insertAdjacentElement("afterend",heroActions);
+  const first=heroActions.querySelector("#firstStepLink");
+  if(first){first.classList.add("kep-first-step");first.textContent="Today's First Step";}
+  const portfolio=[...heroActions.querySelectorAll("a")].find(a=>a.getAttribute("href")==="#academyStudio");
+  if(portfolio){portfolio.classList.add("kep-full-profile");portfolio.textContent="My Full Learning Profile";}
+  const editor=heroActions.querySelector("#kepHeroEdit");
+  const begin=heroActions.querySelector(".kep-hero-start");
+  if(editor)editor.textContent="Edit My Profile";
+  if(begin)begin.textContent="Start Today's Learning";
  }
  refresh();return true;
 }
