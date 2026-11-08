@@ -229,12 +229,62 @@ function mount(){
  const consentBox=mk("div","kep-guardian"),guardianLabel=guardian.closest("label");
  if(guardianLabel)consentBox.append(guardianLabel);
  root.append(consentBox);
- const tiles=mk("div","kep-tiles");
- for(const [label,action] of actions){
-  const b=mk("button","kep-tool",label);b.type="button";b.dataset.profileTool=action;b.addEventListener("click",()=>{currentOpener=b;act(action)});tiles.append(b)
+ const groups=[
+  ["My School Day","school",["Daily Lessons","Schedule","Manage Classes","Grades"]],
+  ["My Learning","learning",["Class Progress","Student Portfolio","Study Notes","Flashcards"]],
+  ["My Creative World","create",["Creative Tools","Whiteboard","Games","Yearbook"]],
+  ["My Profile & Friends","personal",["Edit Profile","Customize Background","Journal","KlasaiPeer"]]
+ ];
+ const toolActions=new Map(actions);
+ const grouped=mk("div","kep-groups");
+ for(const [groupName,tone,items] of groups){
+  const group=mk("section","kep-group kep-group-"+tone);
+  const h=mk("h3","kep-group-title",groupName);group.append(h);
+  const tiles=mk("div","kep-tiles");
+  for(const label of items){
+   const action=toolActions.get(label);
+   const b=mk("button","kep-tool",label);b.type="button";b.dataset.profileTool=action;
+   b.addEventListener("click",()=>{currentOpener=b;act(action)});
+   tiles.append(b);
+  }
+  group.append(tiles);grouped.append(group);
  }
- root.append(tiles);decorateBackup(root);root.append(mk("p","kep-foot","Your decorations are saved to this device. Family and academic records stay in their existing systems."));
+ root.append(grouped);decorateBackup(root);root.append(mk("p","kep-foot","Your decorations are saved to this device. Family and academic records stay in their existing systems."));
  hero.insertAdjacentElement("afterend",root);
+ // Add navigational overview without duplicating or altering official learning state.
+ const adventure=mk("section","kep-adventure");
+ adventure.id="kepAdventureToday";adventure.setAttribute("aria-labelledby","kepAdventureHeading");
+ adventure.append(mk("p","kep-adventure-eyebrow","TODAY'S DISCOVERIES"),mk("h2","","My Adventure Today"),
+  mk("p","","Follow your own learning trail. Your lessons, pinned subjects and achievements still belong to their original Academy systems."));
+ const nav=mk("div","kep-adventure-links");
+ const shortcuts=[["Start My Lesson","#nextSteps"],["My Favorite Subjects","#pinned"],["My Learning Passport","#academyStudio"],["Visit My Grade",null]];
+ for(const [label,hash] of shortcuts){
+  const btn=mk("button","kep-adventure-button",label);btn.type="button";
+  btn.addEventListener("click",()=>{if(hash)navigate(hash);else if(identity())w.location.assign(gradeURL());else openGuest()});
+  nav.append(btn);
+ }
+ adventure.append(nav);
+ root.insertAdjacentElement("afterend",adventure);
+ // Preserve the legacy editor's DOM and handlers as an optional advanced panel.
+ // The guardian checkbox remains at the top beside the new universal editor.
+ const oldPicture=$("avatars")?.closest("section.card");
+ const oldBackground=$("themes")?.closest("section.card");
+ if(oldPicture&&oldBackground&&!$("kepOriginalPictureTools")){
+  const advanced=mk("details","kep-advanced");advanced.id="kepOriginalPictureTools";
+  advanced.append(mk("summary","","Original Picture, Garden Colors & Backup Tools"));
+  const explanation=mk("p","","Your original photo controls, Kindergarten picture transfer, themes, import/export and printing are all preserved here.");
+  const panels=mk("div","kep-advanced-panels");panels.append(oldPicture,oldBackground);
+  advanced.append(explanation,panels);
+  adventure.insertAdjacentElement("afterend",advanced);
+ }
+ // Add explicit quick actions beside the existing hero actions.
+ const heroActions=hero.querySelector(".actions");
+ if(heroActions&&!$("kepHeroEdit")){
+  const edit=mk("button","kep-hero-edit","Edit My Profile");edit.id="kepHeroEdit";edit.type="button";edit.addEventListener("click",()=>act("look"));
+  heroActions.prepend(edit);
+  const start=mk("button","kep-hero-start","Start Today's Learning");start.type="button";start.addEventListener("click",()=>act("today"));
+  heroActions.insertBefore(start,edit.nextSibling);
+ }
  refresh();return true;
 }
 w[KEY]=Object.freeze({version:"1.0",mount,refresh});
