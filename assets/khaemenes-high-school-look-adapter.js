@@ -92,4 +92,5 @@ const adapter=Object.freeze({
 if(!core.register(adapter))return;
 g.KhaemenesHighUniversalLookAdapter=adapter;
  adapter.refresh();
+window.addEventListener("khaemenes-family-changed",()=>adapter.refresh());
 })();
