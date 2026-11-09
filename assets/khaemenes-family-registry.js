@@ -165,11 +165,27 @@
   }
 
   function load(){return normalizeRegistry(readJSON(KEYS.registry,emptyRegistry()))}
-  function save(registry){const r=normalizeRegistry(registry);r.updatedAt=now();writeJSON(KEYS.registry,r);return clone(r)}
+  function save(registry){
+    const r=normalizeRegistry(registry);r.updatedAt=now();
+    // Browser storage is provisional, but must never report success if the
+    // durable local write was rejected, truncated, or could not be read back.
+    if(!writeJSON(KEYS.registry,r))throw new Error("local-registry-write-failed");
+    const confirmed=readJSON(KEYS.registry,null);
+    if(!confirmed||JSON.stringify(confirmed)!==JSON.stringify(r))throw new Error("local-registry-readback-failed");
+    return clone(r);
+  }
   function audit(action,details={}){const entries=readJSON(KEYS.audit,[]);entries.push({at:now(),action:clean(action,80),details:clone(details)});writeJSON(KEYS.audit,entries.slice(-300))}
 
   function activeIds(){return {familyId:readJSON(KEYS.activeFamily,null),adultId:readJSON(KEYS.activeAdult,null),learnerId:readJSON(KEYS.activeLearner,null)}}
-  function setActive({familyId=null,adultId=null,learnerId=null}={}){if(familyId)writeJSON(KEYS.activeFamily,familyId);if(adultId)writeJSON(KEYS.activeAdult,adultId);if(learnerId)writeJSON(KEYS.activeLearner,learnerId);global.dispatchEvent(new CustomEvent("khaemenes-family-changed",{detail:activeIds()}));return activeIds()}
+  function setActive({familyId=null,adultId=null,learnerId=null}={}){
+    // Selection is not authentication. Verify each requested local pointer.
+    for(const [key,value] of [[KEYS.activeFamily,familyId],[KEYS.activeAdult,adultId],[KEYS.activeLearner,learnerId]]){
+      if(!value)continue;
+      if(!writeJSON(key,value)||readJSON(key,null)!==value)throw new Error("local-active-selection-save-failed");
+    }
+    global.dispatchEvent(new CustomEvent("khaemenes-family-changed",{detail:activeIds()}));
+    return activeIds();
+  }
 
   function createFamily({displayName="",adultName="",adultRole="parent"}={}){
     const registry=load(),familyId=id("fam"),adultId=id("adult");
@@ -179,6 +195,36 @@
     save(registry);setActive({familyId,adultId});audit("family.created",{familyId,adultId});return {familyId,adultId};
   }
 
+  // Provisional onboarding is one registry mutation: never strand a new family
+  // between family, learner, and local adult-access writes.
+  function createFamilyIntake({displayName="",adultName="",adultRole="parent",nickname="",grade=null}={}){
+    const r=load(),name=clean(displayName,80),adult=clean(adultName,80),child=clean(nickname,40);
+    if(!name||!adult)throw new Error("intake-names-required");
+    const norm=s=>String(s||"").trim().toLocaleLowerCase();
+    if(Object.values(r.families).some(f=>norm(f.displayName)===norm(name)&&
+      (f.adultIds||[]).some(a=>norm(r.adults[a]?.displayName)===norm(adult))))
+      throw new Error("intake-local-duplicate");
+    const placement=child?canonicalPlacement({grade,stage:stageForGrade(grade)}):null;
+    if(child&&(!normalizeGrade(grade)||!placement?.grade))throw new Error("intake-grade-invalid");
+    const familyId=id("fam"),adultId=id("adult"),learnerId=child?id("learner"):null;
+    const stamp=now(),role=ADULT_ROLES.includes(adultRole)?adultRole:"other-authorized-adult";
+    r.families[familyId]={familyId,displayName:name,adultIds:[adultId],learnerIds:learnerId?[learnerId]:[],createdAt:stamp,updatedAt:stamp};
+    r.adults[adultId]={adultId,displayName:adult,role,familyIds:[familyId],familyGuidePreference:clean(readJSON(KEYS.legacyParentGuide,""),80)||"supportive",accountState:"local-profile",createdAt:stamp,updatedAt:stamp};
+    r.memberships[`${familyId}:${adultId}`]={familyId,adultId,status:"active",role,joinedAt:stamp};
+    if(learnerId){
+      const accountId=id("learneracct");
+      r.learners[learnerId]={learnerId,accountId,familyId,nickname:child,stage:placement.stage,grade:placement.grade,ageBand:"",interests:[],mentorId:ARCHAEMENES_ID,mentorIdentity:null,guardianRelease:null,linkedAdultId:null,selfDirectedAdult:false,accountState:"local-parent-managed",createdAt:stamp,updatedAt:stamp};
+      const preset=PERMISSION_PRESETS["co-guardian"];
+      r.learnerAdultAccess[`${learnerId}:${adultId}`]={familyId,adultId,learnerId,permissionPreset:"co-guardian",permissions:[...preset.permissions],status:"active",grantedAt:stamp,updatedAt:stamp};
+    }
+    save(r); // One verified registry write; no incomplete local learner linkage.
+    // Active pointers are convenience selectors, not proof of authorization.
+    try{setActive({familyId,adultId,learnerId})}catch{
+      audit("intake.local-selection-incomplete",{familyId,adultId,learnerId});
+    }
+    audit("intake.family-created-local",{familyId,adultId,learnerId});
+    return {familyId,adultId,learnerId,accountState:"local-provisional"};
+  }
   function addAdultLocal({familyId,displayName,role="parent",permissionPreset="co-guardian",learnerIds=[]}={}){
     const registry=load();if(!registry.families[familyId])throw new Error("family-not-found");
     const adultId=id("adult");
@@ -417,7 +463,7 @@
   function auditLog(){return clone(readJSON(KEYS.audit,[]))}
   function status(){const registry=load(),ids=activeIds();return {version:VERSION,origin:global.location?.origin||"",recommendedSharedOrigin:/^https:\/\/vervenveda\.com$/i.test(global.location?.origin||""),families:Object.keys(registry.families).length,adults:Object.keys(registry.adults).length,learners:Object.keys(registry.learners).length,active:ids,activeLearner:getLearner(ids.learnerId),activeAdult:getAdult(ids.adultId),adultLearner:getAdultLearner(ids.adultId),mentorAuthority:"academy-archaemenes"}}
 
-  global.KhaemenesFamilyRegistry=Object.freeze({version:VERSION,keys:KEYS,stages:STAGES,grades:GRADES,gradeMeta:GRADE_META,adultRoles:ADULT_ROLES,permissionPresets:PERMISSION_PRESETS,mentorId:ARCHAEMENES_ID,mentorAuthority:"academy-archaemenes",normalizeStage,normalizeGrade,stageForGrade,gradeAllowedForStage,canonicalPlacement,destinationFor,mentorExpression,load,save,status,activeIds,setActive,createFamily,addAdultLocal,registerLearner,registerAdultLearner,getAdultLearner,grantAdultAccess,revokeAdultAccess,canAdult,getFamily,getAdult,getLearner,adultAccessForLearner,migrateLegacyPreschool,updateLearnerStage,updateLearnerGrade,updateLearnerPlacement,authorizeKindergartenLearner,revokeKindergartenAuthorization,learnerDestination,exportFamily,validateFamilyExport,restoreFamilyExport,auditLog});
+  global.KhaemenesFamilyRegistry=Object.freeze({version:VERSION,keys:KEYS,stages:STAGES,grades:GRADES,gradeMeta:GRADE_META,adultRoles:ADULT_ROLES,permissionPresets:PERMISSION_PRESETS,mentorId:ARCHAEMENES_ID,mentorAuthority:"academy-archaemenes",normalizeStage,normalizeGrade,stageForGrade,gradeAllowedForStage,canonicalPlacement,destinationFor,mentorExpression,load,save,status,activeIds,setActive,createFamily,createFamilyIntake,addAdultLocal,registerLearner,registerAdultLearner,getAdultLearner,grantAdultAccess,revokeAdultAccess,canAdult,getFamily,getAdult,getLearner,adultAccessForLearner,migrateLegacyPreschool,updateLearnerStage,updateLearnerGrade,updateLearnerPlacement,authorizeKindergartenLearner,revokeKindergartenAuthorization,learnerDestination,exportFamily,validateFamilyExport,restoreFamilyExport,auditLog});
 
   try{
     const rawExisting=readJSON(KEYS.registry,null);
