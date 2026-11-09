@@ -1,0 +1,20 @@
+name: NAIB Fictional Family Sandbox
+on:
+  push:
+    paths:
+      - academy/testing/families/index.html
+      - tests/naib-family-sandbox.test.cjs
+      - .github/workflows/naib-family-sandbox.yml
+  workflow_dispatch:
+jobs:
+  isolated-sandbox-tests:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate fictional sandbox
+        run: node --test tests/naib-family-sandbox.test.cjs
