@@ -40,3 +40,20 @@ The High School profile picture editor provides learner-scoped photos, adjustabl
 3. Test and deploy Pre-K, Kindergarten and Elementary separately, retaining existing learner data.
 4. Verify Middle School and Higher Learning owner selection and new shared editor entry.
 5. Keep High School photo editor unchanged until the dedicated Feature 2 audit.
+
+## Parent / Guardian Profile (additional pass)
+
+The canonical parent profile is the Family Hub section rendered by `assets/khaemenes-family-parent-profile-hero.js`. Its existing adapter `assets/khaemenes-family-parent-look-adapter.js` already uses the universal Picture & Colors Studio and adult-scoped keys:
+- `khaemenes.parent.profile.appearance.v1:<adultId>`
+- `khaemenes.parent.profile.photo.v1:<adultId>`
+
+Changes in this review candidate:
+- Enforce an explicit allowlist for all editable appearance fields and accepted profile photo data; reject malformed inputs and ignore unrelated properties.
+- Confirm parent identity before commit and again after write; read back all changed values before reporting success. Attempt to restore previous local values on write/readback failure.
+- Preserve separate adult appearance records and keep parent data out of learner photo keys and academic records.
+- Correct the oval preview proportions on the Parent Profile Hero to make it distinguishable from the circle.
+- Harden the fallback editor against delayed photo decoding, partial saves, stale selected-adult context and lost keyboard focus.
+- Update the Family Hub script versions so the parent adapter, hero and shared studio are reviewed together.
+- Add `assets/khaemenes-family-parent-look-adapter.test.cjs` for a synthetic two-adult isolation, input validation, local write, rollback and removal test.
+
+Remaining: full real-browser adult switching, image processing, local storage quota and modal accessibility tests. A locally selected adult is not proof of legal guardianship or authenticated parent authority. Parent sign-in / T03 remain uncommissioned and are not modified by this change.
