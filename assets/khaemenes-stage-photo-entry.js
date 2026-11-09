@@ -48,7 +48,9 @@
   const open=document.createElement("button");open.type="button";open.textContent="Customize My Picture";
   open.style.cssText="min-height:44px;padding:9px 14px;border:1px solid #b48b45;border-radius:7px;background:#243038;color:#fff8e9;font:400 16px/1.4 Nunito,Arial,sans-serif;cursor:pointer";
   open.addEventListener("click",()=>{if(!selected(stage))return;editor.open("picture")});
-  controls.append(heading,note,open);wrap.append(portrait,controls);
+  const yearbook=d.createElement("button");yearbook.type="button";yearbook.textContent="Open My Yearbook";yearbook.style.cssText="min-height:44px;padding:9px 14px;border:1px solid #b48b45;border-radius:7px;background:#243038;color:#fff8e9;font:400 16px/1.4 Nunito,Arial,sans-serif;cursor:pointer";
+yearbook.addEventListener("click",()=>{const l=selected(stage);if(l)global.KhaemenesYearbookProfileImages?.openYearbook?.(l.learnerId)});
+controls.append(heading,note,open,yearbook);wrap.append(portrait,controls);
   const adapter={
   allowYearbook:true,
    getIdentity(){const l=selected(stage);return l?{id:l.learnerId,displayName:l.nickname||"Learner"}:null},
