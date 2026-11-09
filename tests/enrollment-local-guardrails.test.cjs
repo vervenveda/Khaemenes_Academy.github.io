@@ -43,3 +43,21 @@ test("portal uses one intake, and enrollment identifies provisional status",()=>
  assert.match(form,/duplicate=family\.learners\.find/);
  assert.match(form,/not verified or cloud-synced/);
 });
+
+test("four-step guardian intake is local-only and does not collect credentials or documents",()=>{
+ const form=fs.readFileSync(path.join(root,"family/enroll/index.html"),"utf8");
+ for(const step of [1,2,3,4])assert.match(form,new RegExp('data-intake-step="'+step+'"'));
+ assert.match(form,/intakeAcknowledgment/);
+ assert.match(form,/Create Provisional Family Profile/);
+ assert.match(form,/guardian relationship was not saved|grantAdultAccess/);
+ assert.match(form,/This is not verified Academy enrollment/);
+ assert.match(form,/A matching family and adult already exist/);
+ assert.doesNotMatch(form,/<input[^>]*type="password"/i);
+ assert.doesNotMatch(form,/<input[^>]*type="file"/i);
+});
+test("enrollment inline script parses as valid JavaScript",()=>{
+ const form=fs.readFileSync(path.join(root,"family/enroll/index.html"),"utf8");
+ const blocks=[...form.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/gi)].map(m=>m[1]);
+ assert.ok(blocks.length);
+ blocks.forEach((code,i)=>new vm.Script(code,{filename:"inline-"+i+".js"}));
+});
