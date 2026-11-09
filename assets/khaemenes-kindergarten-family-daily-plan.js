@@ -34,6 +34,8 @@
  const dateKey=()=>{const t=new Date();return [String(t.getFullYear()).padStart(4,"0"),String(t.getMonth()+1).padStart(2,"0"),String(t.getDate()).padStart(2,"0")].join("-")};
  function normalize(v,id){
   const items=Array.isArray(v?.activities)?[...new Set(v.activities.filter(x=>allow.has(x)))].slice(0,6):[...DEFAULT];
+  // Older untouched five-card default plans gain the sixth Music Time card.
+  if(items.join("|")==="read|numbers|create|move|kindness")items.push("music");
   const done={};
   if(v?.done&&typeof v.done==="object"&&!Array.isArray(v.done)){
    for(const [day,arr] of Object.entries(v.done).slice(-14)){
