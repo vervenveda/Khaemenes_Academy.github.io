@@ -19,6 +19,7 @@ const adult=()=>{try{const identity=adapter?.getIdentity?.();return identity&&ty
 const lum=hex=>{const ch=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);return .2126*ch[0]+.7152*ch[1]+.0722*ch[2]};
 const inkFor=hex=>{const bg=lum(hex),light=lum("#fff8e9"),dark=lum("#202724"),r=(a,b)=>(Math.max(a,b)+.05)/(Math.min(a,b)+.05);return r(bg,dark)>=r(bg,light)?"#202724":"#fff8e9"};
 let selected=null,photo="",stagedPhoto=null,owner=null,opener=null,dialog=null,badgeTouched=false;
+let editorEpoch=0; // Prevent an older in-flight image from changing a reopened editor.
 function existing(id){
  let v={};try{v=adapter?.readLook?.(id)||{}}catch{}
  const frame=FRAMES.some(x=>x.id===v.frame)?v.frame:"circle";
@@ -50,7 +51,7 @@ function style(){
 #kplsDialog .kpls-picture img{width:100%;height:100%;object-fit:cover}
 #kplsDialog .kpls-controls{min-width:0}
 #kplsDialog .kpls-options{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:7px;margin-bottom:7px}
-#kplsDialog .kpls-choice{display:flex;align-items:center;justify-content:center;height:41px;min-height:41px;width:100%;padding:4px;border:1px solid #9f8150;border-radius:7px;background:#202724;color:#fff8e9;font:400 23px/1.2 "Apple Color Emoji",Georgia,serif;cursor:pointer}
+#kplsDialog .kpls-choice{display:flex;align-items:center;justify-content:center;height:44px;min-height:44px;width:100%;padding:4px;border:1px solid #9f8150;border-radius:7px;background:#202724;color:#fff8e9;font:400 23px/1.2 "Apple Color Emoji",Georgia,serif;cursor:pointer}
 #kplsDialog .kpls-choice[aria-pressed=true]{outline:3px solid #9f8150;outline-offset:2px}
 #kplsDialog .kpls-frame-options{grid-template-columns:repeat(5,minmax(0,1fr))}
 #kplsDialog .kpls-frame-options button{font:400 16px/1.3 Nunito,Arial,sans-serif;padding:7px 5px}
@@ -113,14 +114,14 @@ function build(){
  $("kplsFile").addEventListener("change",async()=>{
   const f=$("kplsFile").files?.[0];$("kplsFile").value="";if(!f)return;
   if(!["image/jpeg","image/png","image/webp"].includes(f.type)||f.size===0||f.size>4*1024*1024){setStatus("Select a JPG, PNG, or WebP under 4 MB.");return;}
-  const target=owner,url=URL.createObjectURL(f);
+  const target=owner,requestEpoch=++editorEpoch,url=URL.createObjectURL(f);
   try{const img=new Image();await new Promise((ok,fail)=>{img.onload=ok;img.onerror=fail;img.src=url;});if(!img.naturalWidth||!img.naturalHeight)throw Error("Invalid image");
    const canvas=d.createElement("canvas");canvas.width=canvas.height=240;const ctx=canvas.getContext("2d");if(!ctx)throw Error("Canvas unavailable");
    const side=Math.min(img.naturalWidth,img.naturalHeight);ctx.drawImage(img,(img.naturalWidth-side)/2,(img.naturalHeight-side)/2,side,side,0,0,240,240);
    let encoded="";const ceiling=Number.isFinite(adapter?.maxPhotoChars)?Math.max(20000,Math.min(400000,adapter.maxPhotoChars)):400000;
    for(const quality of [.78,.64,.50,.38]){encoded=canvas.toDataURL("image/jpeg",quality);if(encoded.length<ceiling)break}
    if(encoded.length>=ceiling)throw Error("Image too large");
-   if(owner!==target||adult()?.id!==target){setStatus("Profile selection changed; reopen the editor.");return}
+   if(!dialog.open||editorEpoch!==requestEpoch||owner!==target||adult()?.id!==target){return}
    stagedPhoto=encoded;render();setStatus("Photo preview ready. Save My Look to keep it.");
   }catch{setStatus("Unable to process this picture. Existing photo remains unchanged.")}
   finally{URL.revokeObjectURL(url)}
@@ -138,7 +139,7 @@ function build(){
   adapter?.refresh?.();
   dialog.close();
  });
- dialog.addEventListener("close",()=>{selected=null;photo="";stagedPhoto=null;owner=null;badgeTouched=false;opener?.focus?.();opener=null});
+ dialog.addEventListener("close",()=>{editorEpoch++;selected=null;photo="";stagedPhoto=null;owner=null;badgeTouched=false;if(opener?.isConnected)opener.focus({preventScroll:true});opener=null});
  return dialog;
 }
 function render(){
@@ -162,7 +163,7 @@ function render(){
 }
 function open(mode="edit"){
  const a=adult();if(!a)return false;
- build();owner=a.id;selected=existing(owner);photo=photoFor(owner);stagedPhoto=null;badgeTouched=false;opener=d.activeElement;
+ build();editorEpoch++;owner=a.id;selected=existing(owner);photo=photoFor(owner);stagedPhoto=null;badgeTouched=false;opener=d.activeElement;
  $("kplsTitle").textContent=mode==="picture"?"Customize My Picture":mode==="background"?"Customize My Background":"Edit My Profile";
  $("kplsDisplay").value=selected.displayName||a.displayName||"";
  $("kplsNameFont").value=selected.nameFont;
