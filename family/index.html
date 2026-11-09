@@ -497,6 +497,37 @@ function elementaryPublishedOverview(learner,records){
     ${latest.stale?'<p class="snapshot-meta">This course summary is outdated. Reopen the source course to refresh it.</p>':""}
   </section>`;
 }
+function earlyLearningMatches(snapshot,learner){
+  if(snapshot?.learnerId!==learner?.learnerId)return false;
+  if(learner.stage==="preschool"&&learner.grade==="pre-k")
+    return snapshot.stage==="preschool"&&snapshot.courseId==="preschool-adventure-garden"&&(!snapshot.grade||snapshot.grade==="Pre-K");
+  if(learner.stage==="kindergarten"&&learner.grade==="k")
+    return snapshot.stage==="kindergarten"&&snapshot.courseId==="khaemenes-kindergarten-formal-path"&&(!snapshot.grade||snapshot.grade==="K");
+  return false;
+}
+function earlyLearningOverview(learner,records){
+  if(!["preschool","kindergarten"].includes(learner?.stage))return "";
+  const isPreK=learner.stage==="preschool",title=isPreK?"Pre-K · Family Exploration":"Kindergarten · Family Learning";
+  const matches=records.filter(s=>earlyLearningMatches(s,learner));
+  if(!matches.length){
+    const explanation=isPreK?"No linked Pre-K adventure summary has been published in this browser. Guest play is not assigned to a student.":"No learner-linked Kindergarten progress summary has been published here. This does not mean no lessons or reading activities have been completed.";
+    return `<section class="family-high-overview" aria-label="Early learning family report"><h4>${title}</h4><p class="snapshot-meta">${explanation}</p></section>`;
+  }
+  const latest=matches.reduce((a,b)=>(Date.parse(a.updatedAt||"")>Date.parse(b.updatedAt||"")?a:b));
+  const completed=latest.progress?.completed,total=latest.progress?.total;
+  const count=Number.isFinite(completed)&&Number.isFinite(total)&&total>0
+    ?(isPreK?`${completed} of ${total} activities explored`:`${completed} of ${total} learning units with reported mastery`)
+    :(isPreK?"Exploration count unavailable":"Weekly mastery count unavailable");
+  return `<section class="family-high-overview" aria-label="Early learning family report">
+    <h4>${title}</h4>
+    <p class="snapshot-meta">Family-facing browser-local activity summary · Reported ${esc(latest.updatedAt?new Date(latest.updatedAt).toLocaleString():"date unavailable")}. This is not an official school grade, attendance record or transcript.</p>
+    <p><strong>${isPreK?"Exploration":"Learning milestones"}:</strong> ${esc(count)}</p>
+    <p><strong>Next suggested activity:</strong> ${esc(latest.nextTitle||"Not yet reported")}</p>
+    ${latest.family?.needsAction?`<p class="snapshot-action"><strong>Family participation requested:</strong> ${esc(latest.family.summary||latest.family.label||"Please review the activity")}</p>`:""}
+    ${latest.stale?'<p class="snapshot-meta">A newer activity may have occurred. Open the learning page to refresh this summary.</p>':""}
+    <p class="snapshot-meta">${isPreK?"Exploration is optional, playful, and never scored as mastery.":"Only the existing Kindergarten course reports formal mastery; reading and developmental activities may be tracked separately."}</p>
+  </section>`;
+}
 function learnerProgress(l,adult){
   if(!adult||!R?.canAdult?.(adult.adultId,l.learnerId,"progress.view")){
     return `<article class="snapshot-learner"><h3>${esc(l.nickname||"Learner")}</h3><p class="snapshot-meta">Progress view is not enabled for this adult.</p></article>`;
@@ -504,14 +535,14 @@ function learnerProgress(l,adult){
   const snapshots=C?.readLearner?.(l.learnerId)||[];
   const summary=C?.summarize?.(l.learnerId)||null;
   if(!snapshots.length){
-    const middle=middlePublishedOverview(l,[])+elementaryPublishedOverview(l,[]);
+    const middle=middlePublishedOverview(l,[])+elementaryPublishedOverview(l,[])+earlyLearningOverview(l,[]);
     return `<article class="snapshot-learner"><h3>${esc(l.nickname||"Learner")}</h3><p class="snapshot-meta">No course continuation snapshot has been published yet. Existing records remain unchanged; snapshots appear as school courses adopt the shared continuation contract.</p><div class="actions"><a class="btn" href="${esc(learnerProfileDestination(l))}" data-learner-profile="${esc(l.learnerId)}">Open Student Schedule &amp; Profile</a></div>${middle}</article>`;
   }
-  const gradeSnapshots=l.stage==="elementary"?snapshots.filter(s=>elementaryGradeMatches(s,l)):(l.stage==="middle"?snapshots.filter(s=>middleGradeMatches(s,l)):(l.stage==="high"?snapshots.filter(s=>!s.grade||String(s.grade).replace(/^grade[- ]?/i,"").padStart(2,"0")===String(l.grade)):snapshots));
+  const gradeSnapshots=["preschool","kindergarten"].includes(l.stage)?snapshots.filter(s=>earlyLearningMatches(s,l)):(l.stage==="elementary"?snapshots.filter(s=>elementaryGradeMatches(s,l)):(l.stage==="middle"?snapshots.filter(s=>middleGradeMatches(s,l)):(l.stage==="high"?snapshots.filter(s=>!s.grade||String(s.grade).replace(/^grade[- ]?/i,"").padStart(2,"0")===String(l.grade)):snapshots)));
   const bars=/^(?:grade[\\s-]*)?0?9$/i.test(String(l.grade||""))?familyGradeNineBars(gradeSnapshots):familyPublishedProgressBars(gradeSnapshots);
-  const overview=highSchoolPublishedOverview(l,snapshots)+middlePublishedOverview(l,snapshots)+elementaryPublishedOverview(l,snapshots);
+  const overview=highSchoolPublishedOverview(l,snapshots)+middlePublishedOverview(l,snapshots)+elementaryPublishedOverview(l,snapshots)+earlyLearningOverview(l,snapshots);
   const courses=gradeSnapshots.slice(0,6).map(s=>`<article class="snapshot-course"><strong>${esc(s.courseTitle||s.courseId)}</strong><small>${esc(s.nextTitle||s.summary||"Next learning step")}</small><span class="snapshot-status">${esc(statusLabel(s.status))}</span>${s.stale?`<div class="snapshot-action"><strong>Progress changed in the course.</strong> Reopen the course to refresh this next-step summary before relying on it.</div>`:""}${s.mastery?.best!==null&&s.mastery?.best!==undefined?`<small>Best mastery: ${esc(s.mastery.best)}% · target ${esc(s.mastery.threshold||80)}%</small>`:""}${s.family?.needsAction?`<div class="snapshot-action"><strong>Family attention</strong>${esc(s.family.summary||s.family.label||"Review this learning step.")}</div>`:""}<div class="actions">${s.nextHref?`<button class="btn" type="button" data-open-next="${esc(s.nextHref)}" data-learner-id="${esc(l.learnerId)}">${s.stale?"Refresh in Course":"Open Next Step"}</button>`:""}</div></article>`).join("");
-  return `<article class="snapshot-learner"><h3>${esc(l.nickname||"Learner")}</h3><p class="snapshot-meta">${esc(["middle","elementary"].includes(l.stage)?gradeSnapshots.length:(summary?.courses||snapshots.length))} course snapshot${(["middle","elementary"].includes(l.stage)?gradeSnapshots.length:(summary?.courses||snapshots.length))===1?"":"s"} · ${esc(summary?.needsFamilyAction||0)} need family attention</p><div class="actions"><a class="btn" href="${esc(learnerProfileDestination(l))}" data-learner-profile="${esc(l.learnerId)}">Open Student Schedule &amp; Profile</a></div>${overview}${bars}<div class="snapshot-grid">${courses}</div></article>`;
+  return `<article class="snapshot-learner"><h3>${esc(l.nickname||"Learner")}</h3><p class="snapshot-meta">${esc(["preschool","kindergarten","middle","elementary"].includes(l.stage)?gradeSnapshots.length:(summary?.courses||snapshots.length))} course snapshot${(["preschool","kindergarten","middle","elementary"].includes(l.stage)?gradeSnapshots.length:(summary?.courses||snapshots.length))===1?"":"s"} · ${esc(summary?.needsFamilyAction||0)} need family attention</p><div class="actions"><a class="btn" href="${esc(learnerProfileDestination(l))}" data-learner-profile="${esc(l.learnerId)}">Open Student Schedule &amp; Profile</a></div>${overview}${bars}<div class="snapshot-grid">${courses}</div></article>`;
 }
 /* Grade 09 browser-local daily report; parent permission is mandatory. */
 function gradeNineDailyReport(l,adult){
