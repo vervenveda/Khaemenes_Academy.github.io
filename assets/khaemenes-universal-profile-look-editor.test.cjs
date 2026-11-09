@@ -4,6 +4,7 @@
 const assert=require("node:assert/strict"),fs=require("node:fs"),path=require("node:path"),vm=require("node:vm");
 const source=fs.readFileSync(path.join(__dirname,"khaemenes-universal-profile-look-editor.js"),"utf8");
 const elements=new Map();
+let dialogHTML="";
 function element(tag="div"){
  const listeners={};
  const node={tagName:tag,children:[],dataset:{},attributes:{},value:"",hidden:false,open:false,
@@ -21,7 +22,7 @@ function element(tag="div"){
  };
  let markup="";
  Object.defineProperty(node,"innerHTML",{get(){return markup},set(v){
-  markup=v;
+  markup=v;dialogHTML=v;
   for(const m of v.matchAll(/id="([^"]+)"/g))elements.set(m[1],element());
   elements.set("kplsPreview",element());
  }});
@@ -58,7 +59,7 @@ const expectedButtonNames={
  kplsOpenYearbook:"Open Yearbook",
  kplsRemoveHero:"Clear Background"
 };
-const dialogHTML=elements.get("kplsDialog").innerHTML;
+
 for(const [id,name] of Object.entries(expectedButtonNames)){
  assert.ok(dialogHTML.includes('id="'+id+'" aria-label='));
  assert.ok(dialogHTML.includes(">"+name+"</button>"),"short single-line label "+id);
