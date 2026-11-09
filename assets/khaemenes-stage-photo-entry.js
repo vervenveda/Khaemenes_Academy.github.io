@@ -55,7 +55,7 @@ controls.append(heading,note,open,yearbook);wrap.append(portrait,controls);
   const adapter={
   allowYearbook:true,
    getIdentity(){const l=selected(stage);return l?{id:l.learnerId,displayName:l.nickname||"Learner"}:null},
-   readLook(id){return snapshot(stage,id)?.look||{}},
+   readLook(id){return selected(stage)?.learnerId===id?snapshot(stage,id)?.look||{}:{}},
    readPhoto(id){return selected(stage)?.learnerId===id?snapshot(stage,id)?.photo||"":""},
    readHeroImage(id){return selected(stage)?.learnerId===id?snapshot(stage,id)?.heroImage||"":""},
    maxPhotoChars:180000,
