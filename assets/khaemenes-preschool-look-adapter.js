@@ -25,6 +25,7 @@ function record(id){
 }
 function extras(id){const e=record(id)?.universalLook;return e&&typeof e==="object"&&!Array.isArray(e)?e:{}}
 const adapter=Object.freeze({
+  allowYearbook:true,
  showDisplayName:false,
  maxPhotoChars:180000,
  getIdentity:identity,
