@@ -5,7 +5,7 @@
 (function(w,d){"use strict";
 if(w.KhaemenesProfileCreativeRail)return;
 const ROOT="https://vervenveda.com/Academy-Yearbook.github.io/";
-const ids={preschool:"khaePrekUniversalLookEntry",elementary:"elementaryPageTitleHero",kindergarten:"kinderToolbarPictureEditor",middle:"middleEnrolledTools",higher:"higherProfilePhotoEntry"};
+const ids={preschool:"accountNote",elementary:"elementaryPageTitleHero",kindergarten:"kinderToolbarPictureEditor",middle:"middleEnrolledTools",higher:"higherProfilePhotoEntry"};
 const supported=new Set(Object.keys(ids));
 const activeLearner=()=>{try{
  const l=w.KhaemenesFamilyRegistry?.getLearner?.()||w.KhaemenesStudentProfileV2?.activeLearner?.();
