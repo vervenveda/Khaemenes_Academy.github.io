@@ -28,6 +28,22 @@ button:disabled{opacity:.5;cursor:not-allowed}.notice{border-left:4px solid var(
 <section><h2>Sandbox controls</h2><p><strong>Environment:</strong> Test only, never verified.</p><p>Active fictional family: <span id="active">None</span></p><p id="counts">0 families · 0 learners</p>
 <button class="danger" id="reset">Reset testing session</button><button class="secondary" id="export">Export test summary</button>
 <p><small>Reset and retire affect this sandbox only. Production registry and Academy learning records are never opened.</small></p></section></div>
+<section id="cutoverSimulation" aria-labelledby="cutoverTitle">
+<h2 id="cutoverTitle">Parent Account &amp; T03 Cutover Simulator</h2>
+<p><strong>SIMULATION ONLY.</strong> This panel never authenticates an adult, sends data to STOS, allocates a cloud account, or verifies a launch gate. It uses fictional identities and in-memory session models.</p>
+<div class="grid">
+<div><label for="simAdult">Fictional adult</label><select id="simAdult"></select>
+<button id="simSignIn" type="button">Simulate Sign-In</button>
+<button id="simSignOut" type="button" class="secondary">Simulate Sign-Out</button>
+<button id="simExpire" type="button" class="secondary">Simulate Session Expiry</button>
+<p id="simSession" role="status" aria-live="polite">No simulated session</p></div>
+<div><h3>Isolated acceptance checks</h3>
+<p>Tests: session expiry, multi-adult families, invitations, guardian revocation, recovery, migration conflicts, cross-device restoration, offline fallback, and rollback.</p>
+<button id="runCutoverTests" type="button">Run Synthetic Tests</button>
+<p id="cutoverResults" role="status" aria-live="polite">Not run. Real T03 gates: 0 verified.</p><div id="simGateCoverage" aria-live="polite"><p>Gate mapping not run. Simulator results are not protected-service evidence.</p></div>
+</div></div>
+<p><small>These scenario checks are not evidence of live STOS, Wend, OHMIC, Account Cloud storage, or cross-device commissioning. No passwords, tokens, emails, or student records are requested.</small></p>
+</section>
 <section><h2>Fictional family roster</h2><div id="roster" aria-live="polite"></div></section>
 <p id="message" role="status" aria-live="polite"></p></main><footer>Khaemenes Academy · NAIB Engineering Sandbox · No cloud allocation</footer>
 <script>
@@ -40,7 +56,7 @@ const norm=s=>clean(s,80).toLocaleLowerCase();
 const uid=()=> "sandbox_"+(crypto.randomUUID?.()||Math.random().toString(36).slice(2));
 let state=empty();
 function load(){try{const x=JSON.parse(sessionStorage.getItem(KEY)||"null");if(x?.version===1&&Array.isArray(x.families)&&x.families.length<=100)state=x}catch{}}
-function save(next){try{sessionStorage.setItem(KEY,JSON.stringify(next));state=next;render();return true}catch{say("Sandbox session write failed; no change recorded.");return false}}
+function save(next){try{const serialized=JSON.stringify(next);sessionStorage.setItem(KEY,serialized);if(sessionStorage.getItem(KEY)!==serialized)throw Error("sandbox-readback-failed");state=next;render();return true}catch{say("Sandbox session write could not be verified; no change recorded.");return false}}
 function say(s){$("message").textContent=s}
 function addFamily(name,adult,role){
  name=clean(name,80);adult=clean(adult,80);
@@ -65,8 +81,264 @@ function retire(id){
  const remaining=state.families.filter(f=>f.id!==id);
  if(save({...state,families:remaining,active:state.active===id?(remaining[0]?.id||null):state.active}))say("Test family retired; actual family records untouched.");
 }
+// All simulated identities, sessions and permissions are local to this script invocation.
+// They confer no authority on Academy records and are never sent to a server.
+let simulatedSession=null;
+function simulatedAdults(){
+ return state.families.map(f=>({adultId:"mock-adult:"+f.id,familyId:f.id,label:f.adult+" — "+f.name}));
+}
+function updateSimControls(){
+ const select=$("simAdult"), prior=select.value, adults=simulatedAdults();
+ select.replaceChildren();
+ const placeholder=document.createElement("option");placeholder.value="";placeholder.textContent="Choose a fictional adult";select.append(placeholder);
+ for(const a of adults){const option=document.createElement("option");option.value=a.adultId;option.textContent=a.label;select.append(option)}
+ if(adults.some(a=>a.adultId===prior))select.value=prior;
+ const stillValid=simulatedSession&&adults.some(a=>a.adultId===simulatedSession.adultId&&a.familyId===simulatedSession.familyId);
+ if(!stillValid)simulatedSession=null;
+ $("simSession").textContent=simulatedSession?"SIMULATED SESSION — "+(adults.find(a=>a.adultId===simulatedSession.adultId)?.label||"fictional adult"):"No simulated session";
+}
+// Test-only models. No real authorization, credentials, or remote persistence.
+const simulatedFamilyFlows=Object.freeze({
+ registerAdult(family,adult){
+  if(!family?.familyId||!adult?.adultId)return {ok:false,reason:"missing-identity"};
+  if((family.adults||[]).some(x=>x.adultId===adult.adultId))return {ok:false,reason:"duplicate-adult"};
+  return {ok:true,family:{...family,adults:[...(family.adults||[]),{adultId:adult.adultId}]}};
+ },
+ issueInvite({familyId,learnerId,inviterAuthorized,code,expiresAt}){
+  if(!inviterAuthorized||!familyId||!learnerId||!code)return {ok:false,reason:"not-authorized"};
+  return {ok:true,invite:{familyId,learnerId,code,expiresAt,used:false,revoked:false}};
+ },
+ acceptInvite(invite,{code,authenticatedAdultId,now=0}){
+  if(!invite||invite.revoked||invite.used||now>=invite.expiresAt||!authenticatedAdultId||invite.code!==code)
+   return {ok:false,reason:"invalid-invitation"};
+  return {ok:true,invite:{...invite,used:true},grant:{adultId:authenticatedAdultId,familyId:invite.familyId,learnerId:invite.learnerId,allow:true}};
+ },
+ revokeGrant(grant,actorAuthorized){
+  if(!actorAuthorized||!grant)return {ok:false,reason:"not-authorized"};
+  return {ok:true,grant:{...grant,allow:false,revoked:true}};
+ },
+ recoveryRequest(_claimedIdentifier){
+  return {ok:true,publicMessage:"If an eligible account exists, recovery instructions will be provided."};
+ },
+ recoveryChallenge({issuedAt,expiresAt,used=false},now){
+  return now>=issuedAt&&now<expiresAt&&!used;
+ },
+ migrationPreview(local,canonical){
+  if(!local?.familyId||!Array.isArray(local.learners))return {ok:false,reason:"invalid-local"};
+  if(canonical.some(f=>f.familyId===local.familyId))return {ok:false,reason:"conflict-hold"};
+  const learnerIds=local.learners.map(l=>l.learnerId);
+  if(learnerIds.some(id=>!id)||new Set(learnerIds).size!==learnerIds.length)
+   return {ok:false,reason:"duplicate-learners"};
+  return {ok:true,preview:{familyId:local.familyId,learnerIds}};
+ },
+ migrate(local,canonical,{approved=false,interrupt=false}={}){
+  const plan=this.migrationPreview(local,canonical);
+  if(!plan.ok)return {ok:false,reason:plan.reason,canonical};
+  if(!approved)return {ok:false,reason:"approval-required",canonical};
+  if(interrupt)return {ok:false,reason:"interrupted-hold",canonical};
+  return {ok:true,canonical:[...canonical,{familyId:plan.preview.familyId,learnerIds:[...plan.preview.learnerIds]}]};
+ }
+});
+// Cross-device cases use invented in-memory canonical records only.
+const simulatedRestoration=Object.freeze({
+ restore({session,canonical,grants=[],online=true,clock=0}={}){
+  if(!online)return {ok:false,state:"OFFLINE / LOCAL FALLBACK",reason:"offline",learners:[]};
+  if(!session||clock>=session.expiresAt||!session.adultId)
+   return {ok:false,state:"SESSION EXPIRED",reason:"session-unverified",learners:[]};
+  if(!Array.isArray(canonical)||!Array.isArray(grants))
+   return {ok:false,state:"SERVICE UNAVAILABLE",reason:"invalid-source",learners:[]};
+  // The server is the only real authority; this simulates the projected result.
+  const allowed=new Set(grants.filter(g=>g?.adultId===session.adultId&&g.familyId===session.familyId&&g.allow===true)
+    .map(g=>g.learnerId));
+  const family=canonical.find(f=>f?.familyId===session.familyId);
+  if(!family)return {ok:false,state:"ACCESS DENIED",reason:"family-not-authorized",learners:[]};
+  const learners=(Array.isArray(family.learners)?family.learners:[])
+    .filter(l=>allowed.has(l?.learnerId))
+    .map(l=>({learnerId:l.learnerId,grade:l.grade}));
+  return {ok:true,state:"SIGNED IN — SIMULATED",familyId:family.familyId,learners};
+ },
+ reconcile({local,canonical,online=true,approved=false}={}){
+  if(!online)return {ok:false,state:"OFFLINE / LOCAL FALLBACK",reason:"offline-no-sync",canonical};
+  if(!local||!canonical||local.familyId!==canonical.familyId)
+   return {ok:false,state:"CONFLICT / MIGRATION HOLD",reason:"identity-mismatch",canonical};
+  if(!Number.isSafeInteger(canonical.recordVersion)||!Number.isSafeInteger(local.baseVersion))
+   return {ok:false,state:"CONFLICT / MIGRATION HOLD",reason:"missing-version",canonical};
+  if(local.baseVersion!==canonical.recordVersion)
+   return {ok:false,state:"CONFLICT / MIGRATION HOLD",status:409,reason:"stale-version",canonical};
+  if(!approved)return {ok:false,state:"REVIEW REQUIRED",reason:"approval-required",canonical};
+  const permitted=["familyLabel"];const changes=local.changes||{};
+  if(Object.keys(changes).some(key=>!permitted.includes(key))||typeof changes.familyLabel!=="string"||changes.familyLabel.length>80)
+   return {ok:false,state:"REJECTED",reason:"non-permitted-field",canonical};
+  const next={...canonical,familyLabel:changes.familyLabel,recordVersion:canonical.recordVersion+1};
+  return {ok:true,state:"SIMULATED SYNC",canonical:next};
+ }
+});
+const simulatedAuth=Object.freeze({
+ signIn(adult,valid=true){return valid&&adult?{adultId:adult.adultId,familyId:adult.familyId,expiresAt:1000}:null},
+ authorize(session,familyId,learnerId,grant,clock=0){
+  return Boolean(session&&clock<session.expiresAt&&session.familyId===familyId&&grant?.adultId===session.adultId&&grant?.learnerId===learnerId&&grant?.allow===true);
+ },
+ claim(local,server){
+  if(!local?.familyId)return {ok:false,reason:"missing-identity"};
+  if(server.some(x=>x.familyId===local.familyId))return {ok:false,reason:"duplicate-family"};
+  return {ok:true,record:{familyId:local.familyId}};
+ },
+ update(record,baseVersion){
+  if(!record||baseVersion!==record.recordVersion)return {ok:false,status:409};
+  return {ok:true,recordVersion:record.recordVersion+1};
+ }
+});
+const GATE_SCENARIOS=Object.freeze({
+ G01:[],G02:[],
+ G03:["synthetic sign-in creates session","invalid sign-in fails"],
+ G04:["guardian without explicit grant denied","cross-family request denied","new device hides unrelated learners","protected identity and mastery fields rejected"],
+ G05:["expired session denied","expired session cannot restore a family","guardian revocation removes permission"],
+ G06:["second adult receives a distinct identity","invitation grants only intended learner","invitation replay and expiry rejected","unauthorized revocation rejected"],
+ G07:["duplicate family claim held","unapproved migration held","interrupted migration keeps source and destination","replayed migration does not duplicate family"],
+ G08:["stale version receives conflict","fresh version increments","stale local edits cannot overwrite canonical record","explicitly approved current revision updates only allowed field"],
+ G09:["recovery hides whether account exists","expired and used recovery challenge rejected"],
+ G10:["new device restores the same authorized learner","offline fallback never claims protected access","offline local edits cannot sync automatically"],
+ G11:[],
+ G12:["rollback leaves canonical object unchanged","interrupted migration keeps source and destination"]
+});
+function runSyntheticCutoverTests(){
+ const a={adultId:"synthetic-adult-A",familyId:"synthetic-family-A"};
+ const b={adultId:"synthetic-adult-B",familyId:"synthetic-family-B"};
+ const session=simulatedAuth.signIn(a);
+ const grant={adultId:a.adultId,learnerId:"synthetic-learner-A",allow:true};
+ const tests=[
+  ["synthetic sign-in creates session",Boolean(session)],
+  ["invalid sign-in fails",simulatedAuth.signIn(a,false)===null],
+  ["permitted learner view",simulatedAuth.authorize(session,a.familyId,grant.learnerId,grant)],
+  ["guardian without explicit grant denied",!simulatedAuth.authorize(simulatedAuth.signIn(b),a.familyId,grant.learnerId,grant)],
+  ["cross-family request denied",!simulatedAuth.authorize(session,b.familyId,grant.learnerId,grant)],
+  ["expired session denied",!simulatedAuth.authorize(session,a.familyId,grant.learnerId,grant,1000)],
+  ["duplicate family claim held",simulatedAuth.claim({familyId:a.familyId},[{familyId:a.familyId}]).reason==="duplicate-family"],
+  ["stale version receives conflict",simulatedAuth.update({recordVersion:3},2).status===409],
+  ["fresh version increments",simulatedAuth.update({recordVersion:3},3).recordVersion===4],
+  ["rollback leaves canonical object unchanged",(()=>{const record={familyId:a.familyId,recordVersion:3};simulatedAuth.update(record,2);return record.recordVersion===3})()],
+  ["second adult receives a distinct identity",(()=>{
+   const first={familyId:a.familyId,adults:[{adultId:a.adultId}]};
+   const next=simulatedFamilyFlows.registerAdult(first,{adultId:"guardian-A"});
+   return next.ok&&next.family.adults.length===2&&first.adults.length===1&&next.family.adults[0].adultId!==next.family.adults[1].adultId;
+  })()],
+  ["duplicate adult rejected",!simulatedFamilyFlows.registerAdult({familyId:a.familyId,adults:[{adultId:a.adultId}]},a).ok],
+  ["unauthorized invitation rejected",!simulatedFamilyFlows.issueInvite({familyId:a.familyId,learnerId:grant.learnerId,inviterAuthorized:false,code:"synthetic",expiresAt:10}).ok],
+  ["invitation grants only intended learner",(()=>{
+   const issued=simulatedFamilyFlows.issueInvite({familyId:a.familyId,learnerId:grant.learnerId,inviterAuthorized:true,code:"synthetic",expiresAt:10});
+   const accepted=simulatedFamilyFlows.acceptInvite(issued.invite,{code:"synthetic",authenticatedAdultId:"guardian-A",now:3});
+   return accepted.ok&&accepted.grant.learnerId===grant.learnerId&&accepted.grant.adultId==="guardian-A"&&accepted.invite.used;
+  })()],
+  ["invitation replay and expiry rejected",(()=>{
+   const inv={familyId:a.familyId,learnerId:grant.learnerId,code:"synthetic",expiresAt:10,used:true,revoked:false};
+   return !simulatedFamilyFlows.acceptInvite(inv,{code:"synthetic",authenticatedAdultId:"guardian-A",now:3}).ok
+      &&!simulatedFamilyFlows.acceptInvite({...inv,used:false},{code:"synthetic",authenticatedAdultId:"guardian-A",now:10}).ok;
+  })()],
+  ["invitation mismatch rejected",!simulatedFamilyFlows.acceptInvite({familyId:a.familyId,learnerId:grant.learnerId,code:"synthetic",expiresAt:10},{code:"incorrect",authenticatedAdultId:"guardian-A",now:3}).ok],
+  ["guardian revocation removes permission",(()=>{
+   const oldGrant={adultId:a.adultId,learnerId:grant.learnerId,allow:true};
+   const result=simulatedFamilyFlows.revokeGrant(oldGrant,true);
+   return result.ok&&!simulatedAuth.authorize(session,a.familyId,grant.learnerId,result.grant)&&oldGrant.allow;
+  })()],
+  ["unauthorized revocation rejected",!simulatedFamilyFlows.revokeGrant(grant,false).ok],
+  ["recovery hides whether account exists",simulatedFamilyFlows.recoveryRequest("synthetic-existing").publicMessage===simulatedFamilyFlows.recoveryRequest("synthetic-missing").publicMessage],
+  ["expired and used recovery challenge rejected",(()=>{
+   const c={issuedAt:0,expiresAt:10,used:false};
+   return simulatedFamilyFlows.recoveryChallenge(c,9)&&!simulatedFamilyFlows.recoveryChallenge(c,10)&&!simulatedFamilyFlows.recoveryChallenge({...c,used:true},9);
+  })()],
+  ["unapproved migration held",(()=>{
+   const canonical=[],local={familyId:a.familyId,learners:[{learnerId:grant.learnerId}]};
+   const result=simulatedFamilyFlows.migrate(local,canonical);
+   return result.reason==="approval-required"&&canonical.length===0;
+  })()],
+  ["interrupted migration keeps source and destination",(()=>{
+   const canonical=[],local={familyId:a.familyId,learners:[{learnerId:grant.learnerId}]};
+   const result=simulatedFamilyFlows.migrate(local,canonical,{approved:true,interrupt:true});
+   return result.reason==="interrupted-hold"&&canonical.length===0&&local.learners.length===1;
+  })()],
+  ["replayed migration does not duplicate family",(()=>{
+   const local={familyId:a.familyId,learners:[{learnerId:grant.learnerId}]};
+   const once=simulatedFamilyFlows.migrate(local,[],{approved:true});
+   const twice=simulatedFamilyFlows.migrate(local,once.canonical,{approved:true});
+   return once.ok&&!twice.ok&&twice.reason==="conflict-hold"&&twice.canonical.length===1;
+  })()],
+  ["duplicate learner IDs block migration",!simulatedFamilyFlows.migrationPreview({familyId:a.familyId,learners:[{learnerId:grant.learnerId},{learnerId:grant.learnerId}]},[]).ok],
+  ["new device restores the same authorized learner",(()=>{
+    const data=[{familyId:a.familyId,learners:[{learnerId:grant.learnerId,grade:"09"}]}];
+    const restored=simulatedRestoration.restore({session:simulatedAuth.signIn(a),canonical:data,grants:[{...grant,familyId:a.familyId}]});
+    return restored.ok&&restored.familyId===a.familyId&&restored.learners.length===1&&restored.learners[0].grade==="09";
+  })()],
+  ["new device hides unrelated learners",(()=>{
+    const data=[{familyId:a.familyId,learners:[{learnerId:grant.learnerId,grade:"09"},{learnerId:"synthetic-learner-private",grade:"10"}]}];
+    const result=simulatedRestoration.restore({session:simulatedAuth.signIn(a),canonical:data,grants:[{...grant,familyId:a.familyId}]});
+    return result.ok&&result.learners.length===1&&result.learners.every(x=>x.learnerId!== "synthetic-learner-private");
+  })()],
+  ["new device with no grant sees no learners",(()=>{
+    const result=simulatedRestoration.restore({session:simulatedAuth.signIn(a),canonical:[{familyId:a.familyId,learners:[{learnerId:grant.learnerId}]}],grants:[]});
+    return result.ok&&result.learners.length===0;
+  })()],
+  ["wrong family cannot be restored",!simulatedRestoration.restore({session:simulatedAuth.signIn(b),canonical:[{familyId:a.familyId,learners:[]}],grants:[{...grant,familyId:a.familyId}]}).ok],
+  ["expired session cannot restore a family",!simulatedRestoration.restore({session:simulatedAuth.signIn(a),clock:1000,canonical:[{familyId:a.familyId,learners:[]}],grants:[]}).ok],
+  ["offline fallback never claims protected access",(()=>{
+    const result=simulatedRestoration.restore({session:simulatedAuth.signIn(a),canonical:[{familyId:a.familyId,learners:[]}],grants:[],online:false});
+    return !result.ok&&result.state==="OFFLINE / LOCAL FALLBACK"&&result.learners.length===0;
+  })()],
+  ["offline local edits cannot sync automatically",(()=>{
+    const canonical={familyId:a.familyId,recordVersion:4,familyLabel:"Old"};
+    const result=simulatedRestoration.reconcile({local:{familyId:a.familyId,baseVersion:4,changes:{familyLabel:"New"}},canonical,approved:true,online:false});
+    return !result.ok&&result.reason==="offline-no-sync"&&canonical.recordVersion===4;
+  })()],
+  ["stale local edits cannot overwrite canonical record",(()=>{
+    const canonical={familyId:a.familyId,recordVersion:5,familyLabel:"Server"};
+    const result=simulatedRestoration.reconcile({local:{familyId:a.familyId,baseVersion:4,changes:{familyLabel:"Local"}},canonical,approved:true});
+    return !result.ok&&result.status===409&&canonical.familyLabel==="Server"&&canonical.recordVersion===5;
+  })()],
+  ["explicitly approved current revision updates only allowed field",(()=>{
+    const canonical={familyId:a.familyId,recordVersion:5,familyLabel:"Old",institutionalId:"unchanged"};
+    const result=simulatedRestoration.reconcile({local:{familyId:a.familyId,baseVersion:5,changes:{familyLabel:"Updated"}},canonical,approved:true});
+    return result.ok&&result.canonical.familyLabel==="Updated"&&result.canonical.recordVersion===6&&result.canonical.institutionalId==="unchanged"&&canonical.familyLabel==="Old";
+  })()],
+  ["protected identity and mastery fields rejected",(()=>{
+    const canonical={familyId:a.familyId,recordVersion:5,familyLabel:"Original"};
+    const unsafe=["learnerId","masteryPercent","permissions","recordVersion"];
+    return unsafe.every(k=>!simulatedRestoration.reconcile({local:{familyId:a.familyId,baseVersion:5,changes:{familyLabel:"New",[k]:"forged"}},canonical,approved:true}).ok)&&canonical.familyLabel==="Original";
+  })()],
+  ["unapproved current local edits remain pending",(()=>{
+    const canonical={familyId:a.familyId,recordVersion:4,familyLabel:"Server"};
+    const result=simulatedRestoration.reconcile({local:{familyId:a.familyId,baseVersion:4,changes:{familyLabel:"Local"}},canonical});
+    return !result.ok&&result.reason==="approval-required"&&canonical.familyLabel==="Server";
+  })()],
+  ["mismatched family identities cannot reconcile",!simulatedRestoration.reconcile({local:{familyId:b.familyId,baseVersion:4,changes:{familyLabel:"Spoof"}},canonical:{familyId:a.familyId,recordVersion:4},approved:true}).ok]
+ ];
+ const passed=tests.filter(([,ok])=>ok).length;
+ const observed=new Map(tests), coverageRoot=$("simGateCoverage");
+ coverageRoot.replaceChildren();
+ const heading=document.createElement("strong");
+ heading.textContent="Simulated gate coverage only — live T03: 0/12 verified";
+ coverageRoot.append(heading);
+ const coverageList=document.createElement("ul");
+ for(const [gate,names] of Object.entries(GATE_SCENARIOS)){
+  const missing=names.filter(name=>!observed.has(name));
+  const valid=names.length>0&&missing.length===0;
+  const pass=valid&&names.every(name=>observed.get(name)===true);
+  const item=document.createElement("li");
+  item.textContent=gate+" · "+(valid?(pass?"MODELED PASS":"MODELED FAIL"):"NOT MODELED")+
+    " · "+names.length+" scenario references"+(missing.length?" · INVALID MAPPING":"")+" · LIVE UNVERIFIED";
+  coverageList.append(item);
+ }
+ coverageRoot.append(coverageList);
+ const root=$("cutoverResults");root.replaceChildren();
+ const summary=document.createElement("strong");summary.textContent="Synthetic scenarios: "+passed+"/"+tests.length+" passed · Live T03 gates: 0 verified";root.append(summary);
+ const list=document.createElement("ul");for(const [name,ok] of tests){const item=document.createElement("li");item.textContent=(ok?"PASS: ":"FAIL: ")+name;list.append(item)}root.append(list);
+ return {passed,total:tests.length};
+}
+$("simSignIn").onclick=()=>{const adult=simulatedAdults().find(a=>a.adultId===$("simAdult").value);simulatedSession=simulatedAuth.signIn(adult);updateSimControls();say(simulatedSession?"Fictional sign-in simulated. No authentication occurred.":"Choose a fictional adult first.")};
+$("simSignOut").onclick=()=>{simulatedSession=null;updateSimControls();say("Simulated session cleared; actual accounts untouched.")};
+$("simExpire").onclick=()=>{if(simulatedSession)simulatedSession.expiresAt=0;simulatedSession=null;updateSimControls();say("Simulated session expired; actual accounts untouched.")};
+$("runCutoverTests").onclick=()=>{const result=runSyntheticCutoverTests();say("Synthetic checks "+result.passed+"/"+result.total+"; no T03 gate certified.")};
 function render(){
  $("active").textContent=state.families.find(f=>f.id===state.active)?.name||"None";
+ updateSimControls();
  $("counts").textContent=state.families.length+" families · "+state.families.reduce((n,f)=>n+f.learners.length,0)+" fictional learners";
  const root=$("roster");root.replaceChildren();
  if(!state.families.length){const p=document.createElement("p");p.textContent="Create a fictional family or add the three sample families to begin.";root.append(p)}
