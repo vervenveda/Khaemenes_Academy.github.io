@@ -38,7 +38,7 @@ button:disabled{opacity:.5;cursor:not-allowed}.notice{border-left:4px solid var(
 <button id="simExpire" type="button" class="secondary">Simulate Session Expiry</button>
 <p id="simSession" role="status" aria-live="polite">No simulated session</p></div>
 <div><h3>Isolated acceptance checks</h3>
-<p>Tests: session expiry, multi-adult families, invitations, guardian revocation, recovery, migration conflicts, interruption, and rollback.</p>
+<p>Tests: session expiry, multi-adult families, invitations, guardian revocation, recovery, migration conflicts, cross-device restoration, offline fallback, and rollback.</p>
 <button id="runCutoverTests" type="button">Run Synthetic Tests</button>
 <p id="cutoverResults" role="status" aria-live="polite">Not run. Real T03 gates: 0 verified.</p>
 </div></div>
@@ -139,6 +139,40 @@ const simulatedFamilyFlows=Object.freeze({
   return {ok:true,canonical:[...canonical,{familyId:plan.preview.familyId,learnerIds:[...plan.preview.learnerIds]}]};
  }
 });
+// Cross-device cases use invented in-memory canonical records only.
+const simulatedRestoration=Object.freeze({
+ restore({session,canonical,grants=[],online=true,clock=0}={}){
+  if(!online)return {ok:false,state:"OFFLINE / LOCAL FALLBACK",reason:"offline",learners:[]};
+  if(!session||clock>=session.expiresAt||!session.adultId)
+   return {ok:false,state:"SESSION EXPIRED",reason:"session-unverified",learners:[]};
+  if(!Array.isArray(canonical)||!Array.isArray(grants))
+   return {ok:false,state:"SERVICE UNAVAILABLE",reason:"invalid-source",learners:[]};
+  // The server is the only real authority; this simulates the projected result.
+  const allowed=new Set(grants.filter(g=>g?.adultId===session.adultId&&g.familyId===session.familyId&&g.allow===true)
+    .map(g=>g.learnerId));
+  const family=canonical.find(f=>f?.familyId===session.familyId);
+  if(!family)return {ok:false,state:"ACCESS DENIED",reason:"family-not-authorized",learners:[]};
+  const learners=(Array.isArray(family.learners)?family.learners:[])
+    .filter(l=>allowed.has(l?.learnerId))
+    .map(l=>({learnerId:l.learnerId,grade:l.grade}));
+  return {ok:true,state:"SIGNED IN — SIMULATED",familyId:family.familyId,learners};
+ },
+ reconcile({local,canonical,online=true,approved=false}={}){
+  if(!online)return {ok:false,state:"OFFLINE / LOCAL FALLBACK",reason:"offline-no-sync",canonical};
+  if(!local||!canonical||local.familyId!==canonical.familyId)
+   return {ok:false,state:"CONFLICT / MIGRATION HOLD",reason:"identity-mismatch",canonical};
+  if(!Number.isSafeInteger(canonical.recordVersion)||!Number.isSafeInteger(local.baseVersion))
+   return {ok:false,state:"CONFLICT / MIGRATION HOLD",reason:"missing-version",canonical};
+  if(local.baseVersion!==canonical.recordVersion)
+   return {ok:false,state:"CONFLICT / MIGRATION HOLD",status:409,reason:"stale-version",canonical};
+  if(!approved)return {ok:false,state:"REVIEW REQUIRED",reason:"approval-required",canonical};
+  const permitted=["familyLabel"];const changes=local.changes||{};
+  if(Object.keys(changes).some(key=>!permitted.includes(key))||typeof changes.familyLabel!=="string"||changes.familyLabel.length>80)
+   return {ok:false,state:"REJECTED",reason:"non-permitted-field",canonical};
+  const next={...canonical,familyLabel:changes.familyLabel,recordVersion:canonical.recordVersion+1};
+  return {ok:true,state:"SIMULATED SYNC",canonical:next};
+ }
+});
 const simulatedAuth=Object.freeze({
  signIn(adult,valid=true){return valid&&adult?{adultId:adult.adultId,familyId:adult.familyId,expiresAt:1000}:null},
  authorize(session,familyId,learnerId,grant,clock=0){
@@ -215,7 +249,53 @@ function runSyntheticCutoverTests(){
    const twice=simulatedFamilyFlows.migrate(local,once.canonical,{approved:true});
    return once.ok&&!twice.ok&&twice.reason==="conflict-hold"&&twice.canonical.length===1;
   })()],
-  ["duplicate learner IDs block migration",!simulatedFamilyFlows.migrationPreview({familyId:a.familyId,learners:[{learnerId:grant.learnerId},{learnerId:grant.learnerId}]},[]).ok]
+  ["duplicate learner IDs block migration",!simulatedFamilyFlows.migrationPreview({familyId:a.familyId,learners:[{learnerId:grant.learnerId},{learnerId:grant.learnerId}]},[]).ok],
+  ["new device restores the same authorized learner",(()=>{
+    const data=[{familyId:a.familyId,learners:[{learnerId:grant.learnerId,grade:"09"}]}];
+    const restored=simulatedRestoration.restore({session:simulatedAuth.signIn(a),canonical:data,grants:[{...grant,familyId:a.familyId}]});
+    return restored.ok&&restored.familyId===a.familyId&&restored.learners.length===1&&restored.learners[0].grade==="09";
+  })()],
+  ["new device hides unrelated learners",(()=>{
+    const data=[{familyId:a.familyId,learners:[{learnerId:grant.learnerId,grade:"09"},{learnerId:"synthetic-learner-private",grade:"10"}]}];
+    const result=simulatedRestoration.restore({session:simulatedAuth.signIn(a),canonical:data,grants:[{...grant,familyId:a.familyId}]});
+    return result.ok&&result.learners.length===1&&result.learners.every(x=>x.learnerId!== "synthetic-learner-private");
+  })()],
+  ["new device with no grant sees no learners",(()=>{
+    const result=simulatedRestoration.restore({session:simulatedAuth.signIn(a),canonical:[{familyId:a.familyId,learners:[{learnerId:grant.learnerId}]}],grants:[]});
+    return result.ok&&result.learners.length===0;
+  })()],
+  ["wrong family cannot be restored",!simulatedRestoration.restore({session:simulatedAuth.signIn(b),canonical:[{familyId:a.familyId,learners:[]}],grants:[{...grant,familyId:a.familyId}]}).ok],
+  ["expired session cannot restore a family",!simulatedRestoration.restore({session:simulatedAuth.signIn(a),clock:1000,canonical:[{familyId:a.familyId,learners:[]}],grants:[]}).ok],
+  ["offline fallback never claims protected access",(()=>{
+    const result=simulatedRestoration.restore({session:simulatedAuth.signIn(a),canonical:[{familyId:a.familyId,learners:[]}],grants:[],online:false});
+    return !result.ok&&result.state==="OFFLINE / LOCAL FALLBACK"&&result.learners.length===0;
+  })()],
+  ["offline local edits cannot sync automatically",(()=>{
+    const canonical={familyId:a.familyId,recordVersion:4,familyLabel:"Old"};
+    const result=simulatedRestoration.reconcile({local:{familyId:a.familyId,baseVersion:4,changes:{familyLabel:"New"}},canonical,approved:true,online:false});
+    return !result.ok&&result.reason==="offline-no-sync"&&canonical.recordVersion===4;
+  })()],
+  ["stale local edits cannot overwrite canonical record",(()=>{
+    const canonical={familyId:a.familyId,recordVersion:5,familyLabel:"Server"};
+    const result=simulatedRestoration.reconcile({local:{familyId:a.familyId,baseVersion:4,changes:{familyLabel:"Local"}},canonical,approved:true});
+    return !result.ok&&result.status===409&&canonical.familyLabel==="Server"&&canonical.recordVersion===5;
+  })()],
+  ["explicitly approved current revision updates only allowed field",(()=>{
+    const canonical={familyId:a.familyId,recordVersion:5,familyLabel:"Old",institutionalId:"unchanged"};
+    const result=simulatedRestoration.reconcile({local:{familyId:a.familyId,baseVersion:5,changes:{familyLabel:"Updated"}},canonical,approved:true});
+    return result.ok&&result.canonical.familyLabel==="Updated"&&result.canonical.recordVersion===6&&result.canonical.institutionalId==="unchanged"&&canonical.familyLabel==="Old";
+  })()],
+  ["protected identity and mastery fields rejected",(()=>{
+    const canonical={familyId:a.familyId,recordVersion:5,familyLabel:"Original"};
+    const unsafe=["learnerId","masteryPercent","permissions","recordVersion"];
+    return unsafe.every(k=>!simulatedRestoration.reconcile({local:{familyId:a.familyId,baseVersion:5,changes:{familyLabel:"New",[k]:"forged"}},canonical,approved:true}).ok)&&canonical.familyLabel==="Original";
+  })()],
+  ["unapproved current local edits remain pending",(()=>{
+    const canonical={familyId:a.familyId,recordVersion:4,familyLabel:"Server"};
+    const result=simulatedRestoration.reconcile({local:{familyId:a.familyId,baseVersion:4,changes:{familyLabel:"Local"}},canonical});
+    return !result.ok&&result.reason==="approval-required"&&canonical.familyLabel==="Server";
+  })()],
+  ["mismatched family identities cannot reconcile",!simulatedRestoration.reconcile({local:{familyId:b.familyId,baseVersion:4,changes:{familyLabel:"Spoof"}},canonical:{familyId:a.familyId,recordVersion:4},approved:true}).ok]
  ];
  const passed=tests.filter(([,ok])=>ok).length;
  const root=$("cutoverResults");root.replaceChildren();
