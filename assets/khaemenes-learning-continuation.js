@@ -40,7 +40,10 @@
   function write(store){
     try{
       store.updatedAt=new Date().toISOString();
-      native.setItem.call(global.localStorage,KEY,JSON.stringify(store));
+      const serialized=JSON.stringify(store);
+      native.setItem.call(global.localStorage,KEY,serialized);
+      // Report success only when the browser returns the exact bytes just saved.
+      if(native.getItem.call(global.localStorage,KEY)!==serialized)return false;
       global.dispatchEvent(new CustomEvent("khaemenes-learning-continuation-changed",{detail:{updatedAt:store.updatedAt}}));
       return true;
     }catch{return false}
@@ -108,7 +111,7 @@
     }
     learner.updatedAt=snapshot.updatedAt;
     store.learners[snapshot.learnerId]=learner;
-    write(store);
+    if(!write(store))throw new Error("learning-continuation-save-unverified");
     return Object.freeze({...snapshot});
   }
   function newestTimestamp(value,depth=0){
