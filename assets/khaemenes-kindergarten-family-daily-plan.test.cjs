@@ -26,7 +26,8 @@ assert.equal(plan.today("kid-a").activities.length,3);
 assert.equal(plan.configure("kid-a",["read","read"]),false,"duplicates rejected");
 assert.equal(plan.configure("kid-a",["invalid"]),false,"unapproved activities rejected");
 assert.equal(plan.configure("kid-a",[]),false,"empty plan rejected");
-assert.equal(plan.configure("kid-a",["read","create","move","music","quiet","kindness"]),false,"more than 5 rejected");
+assert.equal(plan.configure("kid-a",["read","create","move","music","quiet","kindness"]),true,"six activities supported");
+assert.equal(plan.configure("kid-a",["read","create","move","music","quiet","kindness","numbers"]),false,"more than 6 rejected");
 assert.equal(plan.checkIn("kid-a","read"),true);
 assert.equal(plan.today("kid-a").activities.find(x=>x.id==="read").checked,true);
 assert.equal(plan.checkIn("kid-a","read",false),true);
@@ -38,7 +39,7 @@ assert.equal(plan.configure("kid-a",["music"]),false,"foreign family adult denie
 adultId="adult-a";allow=false;
 assert.equal(plan.configure("kid-a",["music"]),false,"adult without education manage denied");
 allow=true;learnerId="kid-b";
-assert.equal(plan.today("kid-b").activities.length,5,"independent default for sibling");
+assert.equal(plan.today("kid-b").activities.length,6,"independent default for sibling");
 assert.equal(plan.today("kid-a"),null,"selection cannot inspect sibling");
 assert.equal(plan.checkIn("kid-a","read"),false,"selection cannot write sibling");
 learnerId="older";
