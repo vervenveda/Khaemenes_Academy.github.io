@@ -253,6 +253,15 @@ body footer.footer .family-footer-links a:focus-visible{outline:3px solid #edcd9
 </style>
 <!-- Scoped Family Center contrast stylesheet; canonical authoring source lives in private Account Cloud. -->
 <link rel="stylesheet" href="../assets/khaemenes-family-contrast-v1.css?v=20261107">
+<style id="family-high-school-published-overview-20261109">
+#workspace .family-high-overview{margin:18px 0;padding:17px;border:1px solid #bfb6a5;border-radius:7px;background:#f8f4eb;text-align:left}
+#workspace .family-high-overview h4{margin:0 0 10px;font:400 24px/1.35 Cinzel,Georgia,serif;color:#263b32}
+#workspace .family-high-overview p,#workspace .family-high-overview span{font-size:16px;line-height:1.55}
+#workspace .family-high-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:13px 0}
+#workspace .family-high-metrics>div{padding:10px;border:1px solid #d4caba;border-radius:7px;background:#fffdf8;text-align:center}
+#workspace .family-high-metrics strong{display:block;font-size:24px;font-weight:400;color:#253e35}
+@media(max-width:720px){#workspace .family-high-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
 </head>
 <body data-i18n-no-online>
 <a class="skip" href="#workspace">Skip to family workspace</a>
@@ -402,6 +411,34 @@ function familyPublishedProgressBars(records){
     return '<div class="family-reported-row"><span>'+label+'</span>'+track+'<span>'+(r.stale?"Refresh required":ok?n+"%":"Not reported")+'</span></div>';
   }).join("")+'</div>';
 }
+function highSchoolPublishedOverview(learner,snapshots){
+  if(learner?.stage!=="high"||!["09","10","11","12"].includes(String(learner.grade||"")))return "";
+  const current=snapshots.filter(s=>{
+    const reportedGrade=String(s.grade||"").replace(/^grade[- ]?/i,"").padStart(2,"0");
+    return !s.grade||reportedGrade===String(learner.grade);
+  });
+  const prior=snapshots.length-current.length;
+  const last=current.reduce((v,x)=>Math.max(v,Date.parse(x.updatedAt||"")||0),0);
+  const fmt=last?new Date(last).toLocaleString():"Not yet reported";
+  const stale=current.filter(x=>x.stale).length;
+  const attention=current.filter(x=>x.family?.needsAction||x.status==="mastery"||x.status==="corrections").length;
+  const completed=current.filter(x=>x.status==="complete").length;
+  const topics=[...new Set(current.map(x=>String(x.subject||"").trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+  const matching=rx=>current.filter(x=>rx.test([x.subject,x.courseTitle,x.courseId].join(" ")));
+  const math=matching(/\b(math|algebra|geometry|calculus|precalc|trigonometry)\b/i);
+  const languages=matching(/\b(french|spanish|german|mandarin|japanese|arabic|russian|foreign language|world language)\b/i);
+  const coursesText=arr=>arr.length?arr.map(x=>esc(x.courseTitle||x.courseId)).join(", "):"Not reported";
+  return `<section class="family-high-overview" aria-label="Published high school course overview">
+    <h4>Grade ${esc(learner.grade)} · Published Learning Overview</h4>
+    <p class="snapshot-meta">Browser-local course summaries only · Last report: ${esc(fmt)}. These are not official grades, a transcript, or a complete school schedule.</p>
+    <div class="family-high-metrics"><div><strong>${current.length}</strong><span>Published courses</span></div><div><strong>${completed}</strong><span>Reported complete</span></div><div><strong>${attention}</strong><span>Review signals</span></div><div><strong>${stale}</strong><span>Refresh needed</span></div></div>
+    <p><strong>Subjects reported:</strong> ${topics.length?topics.map(esc).join(" · "):"None supplied in course snapshots"}</p>
+    <p><strong>Mathematics pathway:</strong> ${coursesText(math)}</p>
+    <p><strong>World language:</strong> ${coursesText(languages)}</p>
+    ${prior?`<p class="snapshot-meta">${prior} snapshot(s) from another grade are excluded from this grade overview; original records were not changed.</p>`:""}
+    ${!current.length?'<p class="snapshot-meta">No course reports match the learner\'s current grade. Open the student profile for available classes; do not assume an empty report means no coursework.</p>':""}
+  </section>`;
+}
 function learnerProgress(l,adult){
   if(!adult||!R?.canAdult?.(adult.adultId,l.learnerId,"progress.view")){
     return `<article class="snapshot-learner"><h3>${esc(l.nickname||"Learner")}</h3><p class="snapshot-meta">Progress view is not enabled for this adult.</p></article>`;
@@ -411,9 +448,11 @@ function learnerProgress(l,adult){
   if(!snapshots.length){
     return `<article class="snapshot-learner"><h3>${esc(l.nickname||"Learner")}</h3><p class="snapshot-meta">No course continuation snapshot has been published yet. Existing records remain unchanged; snapshots appear as school courses adopt the shared continuation contract.</p><div class="actions"><a class="btn" href="${esc(learnerProfileDestination(l))}" data-learner-profile="${esc(l.learnerId)}">Open Student Schedule &amp; Profile</a></div></article>`;
   }
-  const bars=/^(?:grade[\s-]*)?0?9$/i.test(String(l.grade||""))?familyGradeNineBars(snapshots):familyPublishedProgressBars(snapshots);
-  const courses=snapshots.slice(0,6).map(s=>`<article class="snapshot-course"><strong>${esc(s.courseTitle||s.courseId)}</strong><small>${esc(s.nextTitle||s.summary||"Next learning step")}</small><span class="snapshot-status">${esc(statusLabel(s.status))}</span>${s.stale?`<div class="snapshot-action"><strong>Progress changed in the course.</strong> Reopen the course to refresh this next-step summary before relying on it.</div>`:""}${s.mastery?.best!==null&&s.mastery?.best!==undefined?`<small>Best mastery: ${esc(s.mastery.best)}% · target ${esc(s.mastery.threshold||80)}%</small>`:""}${s.family?.needsAction?`<div class="snapshot-action"><strong>Family attention</strong>${esc(s.family.summary||s.family.label||"Review this learning step.")}</div>`:""}<div class="actions">${s.nextHref?`<button class="btn" type="button" data-open-next="${esc(s.nextHref)}" data-learner-id="${esc(l.learnerId)}">${s.stale?"Refresh in Course":"Open Next Step"}</button>`:""}</div></article>`).join("");
-  return `<article class="snapshot-learner"><h3>${esc(l.nickname||"Learner")}</h3><p class="snapshot-meta">${esc(summary?.courses||snapshots.length)} course snapshot${(summary?.courses||snapshots.length)===1?"":"s"} · ${esc(summary?.needsFamilyAction||0)} need family attention</p><div class="actions"><a class="btn" href="${esc(learnerProfileDestination(l))}" data-learner-profile="${esc(l.learnerId)}">Open Student Schedule &amp; Profile</a></div>${bars}<div class="snapshot-grid">${courses}</div></article>`;
+  const gradeSnapshots=l.stage==="high"?snapshots.filter(s=>!s.grade||String(s.grade).replace(/^grade[- ]?/i,"").padStart(2,"0")===String(l.grade)):snapshots;
+  const bars=/^(?:grade[\\s-]*)?0?9$/i.test(String(l.grade||""))?familyGradeNineBars(gradeSnapshots):familyPublishedProgressBars(gradeSnapshots);
+  const overview=highSchoolPublishedOverview(l,snapshots);
+  const courses=gradeSnapshots.slice(0,6).map(s=>`<article class="snapshot-course"><strong>${esc(s.courseTitle||s.courseId)}</strong><small>${esc(s.nextTitle||s.summary||"Next learning step")}</small><span class="snapshot-status">${esc(statusLabel(s.status))}</span>${s.stale?`<div class="snapshot-action"><strong>Progress changed in the course.</strong> Reopen the course to refresh this next-step summary before relying on it.</div>`:""}${s.mastery?.best!==null&&s.mastery?.best!==undefined?`<small>Best mastery: ${esc(s.mastery.best)}% · target ${esc(s.mastery.threshold||80)}%</small>`:""}${s.family?.needsAction?`<div class="snapshot-action"><strong>Family attention</strong>${esc(s.family.summary||s.family.label||"Review this learning step.")}</div>`:""}<div class="actions">${s.nextHref?`<button class="btn" type="button" data-open-next="${esc(s.nextHref)}" data-learner-id="${esc(l.learnerId)}">${s.stale?"Refresh in Course":"Open Next Step"}</button>`:""}</div></article>`).join("");
+  return `<article class="snapshot-learner"><h3>${esc(l.nickname||"Learner")}</h3><p class="snapshot-meta">${esc(summary?.courses||snapshots.length)} course snapshot${(summary?.courses||snapshots.length)===1?"":"s"} · ${esc(summary?.needsFamilyAction||0)} need family attention</p><div class="actions"><a class="btn" href="${esc(learnerProfileDestination(l))}" data-learner-profile="${esc(l.learnerId)}">Open Student Schedule &amp; Profile</a></div>${overview}${bars}<div class="snapshot-grid">${courses}</div></article>`;
 }
 /* Grade 09 browser-local daily report; parent permission is mandatory. */
 function gradeNineDailyReport(l,adult){
@@ -545,7 +584,7 @@ window.addEventListener("khaemenes-learning-continuation-changed",render);
 window.addEventListener("storage",event=>{
   const key=String(event.key||"");
   if(key==="khaemenes_family_registry_v1"||key.startsWith("khaemenes_active_")||
-     key.startsWith("khaemenes-grade09-daily-parent-report-v1:")||key.includes("learning_continuation"))render();
+     key.startsWith("khaemenes-grade09-daily-parent-report-v1:")||key===C?.storageKey)render();
 });
 window.addEventListener("pageshow",render);
 window.addEventListener("load",render);
