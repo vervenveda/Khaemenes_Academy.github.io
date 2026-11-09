@@ -123,3 +123,19 @@ test("high school parent overview is learner scoped and shows no invented scores
  const scripts=[...html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)].map(m=>m[1]);
  for(const [index,script] of scripts.entries())new vm.Script(script,{filename:"family-inline-"+index+".js"});
 });
+
+test("Middle School reports are matched to learner and registered grade",()=>{
+ const html=fs.readFileSync(path.join(root,"family/index.html"),"utf8");
+ assert.match(html,/function middleGradeMatches\(snapshot,learner\)/);
+ assert.match(html,/function middlePublishedOverview\(learner,records\)/);
+ assert.match(html,/snapshot\.courseId!==expected/);
+ assert.match(html,/snapshot\?\.learnerId!==learner\.learnerId/);
+ assert.match(html,/Sixth Grade/);
+ assert.match(html,/Seventh Grade/);
+ assert.match(html,/Eighth Grade/);
+ assert.match(html,/middlePublishedOverview\(l,snapshots\)/);
+ assert.match(html,/No matching Middle School course summary/);
+ assert.match(html,/Not an official transcript or complete record/);
+ const scripts=[...html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)].map(m=>m[1]);
+ scripts.forEach((script,i)=>new vm.Script(script,{filename:"family-inline-"+i+".js"}));
+});
