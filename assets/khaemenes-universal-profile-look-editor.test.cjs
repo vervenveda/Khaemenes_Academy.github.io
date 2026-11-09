@@ -66,6 +66,14 @@ for(const [id,name] of Object.entries(expectedButtonNames)){
 }
 assert.ok(source.includes("#kplsDialog #kplsYearbookSources{display:grid;grid-template-columns:minmax(0,1fr)"),"Yearbook controls are vertically stacked horizontal buttons");
 assert.ok(source.includes("white-space:nowrap;overflow:hidden;text-overflow:ellipsis"),"Yearbook labels cannot wrap into multiple lines");
+const finalActions={kplsRemove:"Remove Picture",kplsResetColor:"Reset Color",kplsSave:"Save My Look"};
+for(const [id,name] of Object.entries(finalActions)){
+ assert.ok(dialogHTML.includes('id="'+id+'" aria-label='),"final action has accessible description");
+ assert.ok(dialogHTML.includes(">"+name+"</button>"),"short final action label "+id);
+}
+assert.ok(source.includes("#kplsDialog #kplsFinalActions{display:grid;grid-template-columns:minmax(0,1fr)"),"Final controls use full-width rows");
+assert.ok(source.includes("#kplsDialog #kplsFinalActions .kpls-action{display:flex;align-items:center;justify-content:center;width:100%"),"Final buttons are horizontal and centered");
+assert.ok(source.includes("white-space:nowrap;word-break:normal;overflow-wrap:normal"),"Final buttons cannot wrap into multiple lines");
 
 colors[8].trigger("click");
 elements.get("kplsSave").trigger("click");
