@@ -1,0 +1,23 @@
+name: Enrollment Local Guardrails
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - audit/enrollment-guardrails-2026-11-09
+    paths:
+      - assets/khaemenes-family-registry.js
+      - family/index.html
+      - family/enroll/index.html
+      - tests/enrollment-local-guardrails.test.cjs
+      - .github/workflows/enrollment-local-guardrails.yml
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/enrollment-local-guardrails.test.cjs
