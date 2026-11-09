@@ -110,3 +110,16 @@ test("Family Center scopes learner changes to current family and disables unveri
  const scripts=[...html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)].map(m=>m[1]);
  for(const [index,script] of scripts.entries())new vm.Script(script,{filename:"family-inline-"+index+".js"});
 });
+
+test("high school parent overview is learner scoped and shows no invented scores",()=>{
+ const html=fs.readFileSync(path.join(root,"family/index.html"),"utf8");
+ assert.match(html,/function highSchoolPublishedOverview\(learner,snapshots\)/);
+ assert.match(html,/Grade .*Published Learning Overview/);
+ assert.match(html,/These are not official grades, a transcript, or a complete school schedule/);
+ assert.match(html,/Mathematics pathway/);
+ assert.match(html,/World language/);
+ assert.match(html,/snapshot\(s\) from another grade|snapshot\(s\) from another grade/);
+ assert.match(html,/key===C\?\.storageKey/);
+ const scripts=[...html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)].map(m=>m[1]);
+ for(const [index,script] of scripts.entries())new vm.Script(script,{filename:"family-inline-"+index+".js"});
+});
