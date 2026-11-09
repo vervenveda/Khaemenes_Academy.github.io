@@ -38,7 +38,7 @@ button:disabled{opacity:.5;cursor:not-allowed}.notice{border-left:4px solid var(
 <button id="simExpire" type="button" class="secondary">Simulate Session Expiry</button>
 <p id="simSession" role="status" aria-live="polite">No simulated session</p></div>
 <div><h3>Isolated acceptance checks</h3>
-<p>Tests: session expiry, separate guardian permissions, cross-family isolation, duplicate claiming, version conflicts, and rollback.</p>
+<p>Tests: session expiry, multi-adult families, invitations, guardian revocation, recovery, migration conflicts, interruption, and rollback.</p>
 <button id="runCutoverTests" type="button">Run Synthetic Tests</button>
 <p id="cutoverResults" role="status" aria-live="polite">Not run. Real T03 gates: 0 verified.</p>
 </div></div>
@@ -97,6 +97,48 @@ function updateSimControls(){
  if(!stillValid)simulatedSession=null;
  $("simSession").textContent=simulatedSession?"SIMULATED SESSION — "+(adults.find(a=>a.adultId===simulatedSession.adultId)?.label||"fictional adult"):"No simulated session";
 }
+// Test-only models. No real authorization, credentials, or remote persistence.
+const simulatedFamilyFlows=Object.freeze({
+ registerAdult(family,adult){
+  if(!family?.familyId||!adult?.adultId)return {ok:false,reason:"missing-identity"};
+  if((family.adults||[]).some(x=>x.adultId===adult.adultId))return {ok:false,reason:"duplicate-adult"};
+  return {ok:true,family:{...family,adults:[...(family.adults||[]),{adultId:adult.adultId}]}};
+ },
+ issueInvite({familyId,learnerId,inviterAuthorized,code,expiresAt}){
+  if(!inviterAuthorized||!familyId||!learnerId||!code)return {ok:false,reason:"not-authorized"};
+  return {ok:true,invite:{familyId,learnerId,code,expiresAt,used:false,revoked:false}};
+ },
+ acceptInvite(invite,{code,authenticatedAdultId,now=0}){
+  if(!invite||invite.revoked||invite.used||now>=invite.expiresAt||!authenticatedAdultId||invite.code!==code)
+   return {ok:false,reason:"invalid-invitation"};
+  return {ok:true,invite:{...invite,used:true},grant:{adultId:authenticatedAdultId,familyId:invite.familyId,learnerId:invite.learnerId,allow:true}};
+ },
+ revokeGrant(grant,actorAuthorized){
+  if(!actorAuthorized||!grant)return {ok:false,reason:"not-authorized"};
+  return {ok:true,grant:{...grant,allow:false,revoked:true}};
+ },
+ recoveryRequest(_claimedIdentifier){
+  return {ok:true,publicMessage:"If an eligible account exists, recovery instructions will be provided."};
+ },
+ recoveryChallenge({issuedAt,expiresAt,used=false},now){
+  return now>=issuedAt&&now<expiresAt&&!used;
+ },
+ migrationPreview(local,canonical){
+  if(!local?.familyId||!Array.isArray(local.learners))return {ok:false,reason:"invalid-local"};
+  if(canonical.some(f=>f.familyId===local.familyId))return {ok:false,reason:"conflict-hold"};
+  const learnerIds=local.learners.map(l=>l.learnerId);
+  if(learnerIds.some(id=>!id)||new Set(learnerIds).size!==learnerIds.length)
+   return {ok:false,reason:"duplicate-learners"};
+  return {ok:true,preview:{familyId:local.familyId,learnerIds}};
+ },
+ migrate(local,canonical,{approved=false,interrupt=false}={}){
+  const plan=this.migrationPreview(local,canonical);
+  if(!plan.ok)return {ok:false,reason:plan.reason,canonical};
+  if(!approved)return {ok:false,reason:"approval-required",canonical};
+  if(interrupt)return {ok:false,reason:"interrupted-hold",canonical};
+  return {ok:true,canonical:[...canonical,{familyId:plan.preview.familyId,learnerIds:[...plan.preview.learnerIds]}]};
+ }
+});
 const simulatedAuth=Object.freeze({
  signIn(adult,valid=true){return valid&&adult?{adultId:adult.adultId,familyId:adult.familyId,expiresAt:1000}:null},
  authorize(session,familyId,learnerId,grant,clock=0){
@@ -127,7 +169,53 @@ function runSyntheticCutoverTests(){
   ["duplicate family claim held",simulatedAuth.claim({familyId:a.familyId},[{familyId:a.familyId}]).reason==="duplicate-family"],
   ["stale version receives conflict",simulatedAuth.update({recordVersion:3},2).status===409],
   ["fresh version increments",simulatedAuth.update({recordVersion:3},3).recordVersion===4],
-  ["rollback leaves canonical object unchanged",(()=>{const record={familyId:a.familyId,recordVersion:3};simulatedAuth.update(record,2);return record.recordVersion===3})()]
+  ["rollback leaves canonical object unchanged",(()=>{const record={familyId:a.familyId,recordVersion:3};simulatedAuth.update(record,2);return record.recordVersion===3})()],
+  ["second adult receives a distinct identity",(()=>{
+   const first={familyId:a.familyId,adults:[{adultId:a.adultId}]};
+   const next=simulatedFamilyFlows.registerAdult(first,{adultId:"guardian-A"});
+   return next.ok&&next.family.adults.length===2&&first.adults.length===1&&next.family.adults[0].adultId!==next.family.adults[1].adultId;
+  })()],
+  ["duplicate adult rejected",!simulatedFamilyFlows.registerAdult({familyId:a.familyId,adults:[{adultId:a.adultId}]},a).ok],
+  ["unauthorized invitation rejected",!simulatedFamilyFlows.issueInvite({familyId:a.familyId,learnerId:grant.learnerId,inviterAuthorized:false,code:"synthetic",expiresAt:10}).ok],
+  ["invitation grants only intended learner",(()=>{
+   const issued=simulatedFamilyFlows.issueInvite({familyId:a.familyId,learnerId:grant.learnerId,inviterAuthorized:true,code:"synthetic",expiresAt:10});
+   const accepted=simulatedFamilyFlows.acceptInvite(issued.invite,{code:"synthetic",authenticatedAdultId:"guardian-A",now:3});
+   return accepted.ok&&accepted.grant.learnerId===grant.learnerId&&accepted.grant.adultId==="guardian-A"&&accepted.invite.used;
+  })()],
+  ["invitation replay and expiry rejected",(()=>{
+   const inv={familyId:a.familyId,learnerId:grant.learnerId,code:"synthetic",expiresAt:10,used:true,revoked:false};
+   return !simulatedFamilyFlows.acceptInvite(inv,{code:"synthetic",authenticatedAdultId:"guardian-A",now:3}).ok
+      &&!simulatedFamilyFlows.acceptInvite({...inv,used:false},{code:"synthetic",authenticatedAdultId:"guardian-A",now:10}).ok;
+  })()],
+  ["invitation mismatch rejected",!simulatedFamilyFlows.acceptInvite({familyId:a.familyId,learnerId:grant.learnerId,code:"synthetic",expiresAt:10},{code:"incorrect",authenticatedAdultId:"guardian-A",now:3}).ok],
+  ["guardian revocation removes permission",(()=>{
+   const oldGrant={adultId:a.adultId,learnerId:grant.learnerId,allow:true};
+   const result=simulatedFamilyFlows.revokeGrant(oldGrant,true);
+   return result.ok&&!simulatedAuth.authorize(session,a.familyId,grant.learnerId,result.grant)&&oldGrant.allow;
+  })()],
+  ["unauthorized revocation rejected",!simulatedFamilyFlows.revokeGrant(grant,false).ok],
+  ["recovery hides whether account exists",simulatedFamilyFlows.recoveryRequest("synthetic-existing").publicMessage===simulatedFamilyFlows.recoveryRequest("synthetic-missing").publicMessage],
+  ["expired and used recovery challenge rejected",(()=>{
+   const c={issuedAt:0,expiresAt:10,used:false};
+   return simulatedFamilyFlows.recoveryChallenge(c,9)&&!simulatedFamilyFlows.recoveryChallenge(c,10)&&!simulatedFamilyFlows.recoveryChallenge({...c,used:true},9);
+  })()],
+  ["unapproved migration held",(()=>{
+   const canonical=[],local={familyId:a.familyId,learners:[{learnerId:grant.learnerId}]};
+   const result=simulatedFamilyFlows.migrate(local,canonical);
+   return result.reason==="approval-required"&&canonical.length===0;
+  })()],
+  ["interrupted migration keeps source and destination",(()=>{
+   const canonical=[],local={familyId:a.familyId,learners:[{learnerId:grant.learnerId}]};
+   const result=simulatedFamilyFlows.migrate(local,canonical,{approved:true,interrupt:true});
+   return result.reason==="interrupted-hold"&&canonical.length===0&&local.learners.length===1;
+  })()],
+  ["replayed migration does not duplicate family",(()=>{
+   const local={familyId:a.familyId,learners:[{learnerId:grant.learnerId}]};
+   const once=simulatedFamilyFlows.migrate(local,[],{approved:true});
+   const twice=simulatedFamilyFlows.migrate(local,once.canonical,{approved:true});
+   return once.ok&&!twice.ok&&twice.reason==="conflict-hold"&&twice.canonical.length===1;
+  })()],
+  ["duplicate learner IDs block migration",!simulatedFamilyFlows.migrationPreview({familyId:a.familyId,learners:[{learnerId:grant.learnerId},{learnerId:grant.learnerId}]},[]).ok]
  ];
  const passed=tests.filter(([,ok])=>ok).length;
  const root=$("cutoverResults");root.replaceChildren();
