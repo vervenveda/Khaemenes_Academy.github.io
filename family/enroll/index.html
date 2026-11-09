@@ -219,17 +219,22 @@ function render(){
       const nickname=document.getElementById("intakeNickname").value.trim(),grade=document.getElementById("intakeGrade").value;
       if(nickname&&!R.gradeMeta[grade]){fail("Choose a valid requested grade.");return}
       const submit=document.getElementById("createFamily");submit.disabled=true;
+      // One verified local transaction creates family, adult, optional learner,
+      // and provisional access together. Never retry by making a second family.
       let created;
-      try{created=R.createFamily({displayName:familyName,adultName,adultRole})}
-      catch(e){submit.disabled=false;fail("The family profile could not be saved and confirmed on this device. No official account was created.");return}
-      if(nickname){
-        try{
-          const learner=R.registerLearner({familyId:created.familyId,nickname,grade,stage:R.gradeMeta[grade].stage});
-          R.grantAdultAccess({familyId:created.familyId,adultId:created.adultId,learnerId:learner.learnerId,permissionPreset:"co-guardian"});
-        }catch(e){
-          alert("The provisional family profile was saved, but the learner connection could not be completed. Open the Family Portal to review and finish linking the learner; do not create another family.");
-          render();return;
-        }
+      try{created=R.createFamilyIntake({displayName:familyName,adultName,adultRole,nickname,grade:nickname?grade:null})}
+      catch(e){
+        submit.disabled=false;
+        const duplicate=e?.message==="intake-local-duplicate";
+        fail(duplicate
+          ?"A matching family and adult already exist on this device. Open the Family Portal to continue that record; do not create another family."
+          :"The provisional family could not be confirmed on this device. Check the Family Portal for an existing record before trying again.");
+        return;
+      }
+      if(R.activeIds?.().familyId!==created.familyId||R.activeIds?.().adultId!==created.adultId){
+        fail("Your provisional family and learner details were saved together, but this browser could not select the family. Open the Family Portal to recover the existing profile; do not create another family.");
+        submit.disabled=false;
+        return;
       }
       render();
     };
