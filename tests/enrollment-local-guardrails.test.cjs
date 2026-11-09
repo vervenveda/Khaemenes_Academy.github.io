@@ -165,3 +165,14 @@ test("Pre-K and Kindergarten family summaries are learner scoped and not invente
  const scripts=[...html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)].map(m=>m[1]);
  scripts.forEach((s,i)=>new vm.Script(s,{filename:"family-inline-"+i+".js"}));
 });
+
+test("Pre-K daily activity observations reach the parent view only through learner-scoped records",()=>{
+ const html=fs.readFileSync(path.join(root,"family/index.html"),"utf8");
+ assert.match(html,/function preKFamilyDayReadOnly\(learner\)/);
+ assert.match(html,/record\.learnerId!==learner\.learnerId/);
+ assert.match(html,/khaemenes\.prek\.family-day\.v1:/);
+ assert.match(html,/Adult-assisted browser-local reflections/);
+ assert.match(html,/const familyDay=preKFamilyDayReadOnly\(learner\)/);
+ const inline=[...html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)].map(x=>x[1]);
+ inline.forEach((code,i)=>new vm.Script(code,{filename:"family-inline-"+i+".js"}));
+});
