@@ -164,9 +164,13 @@ async function restoreFile(file){
   const message=previewText(check)+"\n\nRestore this family on this browser?\n\nOther family identities are preserved. The current version of this family is saved automatically so you can undo the restore.";
   if(!global.confirm(message))return {restored:false,cancelled:true};
   // Never overwrite an existing local family when its rollback snapshot cannot be confirmed.
-  const hasCurrentFamily=Boolean(R()?.getFamily?.());
-  const rollbackSaved=hasCurrentFamily?saveRollback():false;
-  if(hasCurrentFamily&&!rollbackSaved)throw new Error("restore-blocked-local-rollback-unverified");
+  const targetFamilyId=check.summary?.familyId;
+  const targetExists=Boolean(targetFamilyId&&R()?.load?.()?.families?.[targetFamilyId]);
+  const activeFamilyId=R()?.activeIds?.()?.familyId;
+  if(targetExists&&activeFamilyId!==targetFamilyId)
+    throw new Error("restore-blocked-select-target-family-first");
+  const rollbackSaved=targetExists?saveRollback():false;
+  if(targetExists&&!rollbackSaved)throw new Error("restore-blocked-local-rollback-unverified");
   const result=R().restoreFamilyExport(check.familyExport);
   setStatus(rollbackSaved
     ?"Family restored. A pre-restore rollback snapshot is available on this browser."
