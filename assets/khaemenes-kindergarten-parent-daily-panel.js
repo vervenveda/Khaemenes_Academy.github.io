@@ -11,7 +11,7 @@
   section.style.cssText="width:min(94%,1100px);margin:22px auto;padding:22px;border:1px solid #b48b45;border-radius:7px;background:#fffaf0;color:#243038;font:400 16px/1.5 Nunito,Arial,sans-serif";
   const title=d.createElement("h2");title.id="khaeKinderFamilyDailyTitle";title.textContent="Kindergarten · Family Daily Plan";
   title.style.cssText="font:400 clamp(25px,3vw,34px)/1.25 Cinzel,Georgia,serif;margin:0 0 9px";
-  const introduction=d.createElement("p");introduction.textContent="Choose up to five playful daily activities for your Kindergarten learner. Check-ins celebrate participation only; official lesson mastery stays in the curriculum.";
+  const introduction=d.createElement("p");introduction.textContent="Choose up to six playful daily activities for your Kindergarten learner. Check-ins celebrate participation only; official lesson mastery stays in the curriculum.";
   const notice=d.createElement("p");notice.textContent="This is a local family-helper panel, not a verified parent sign-in or cloud record. Changes on one browser are not automatically available on another.";
   notice.style.cssText="font-size:16px;max-width:850px";
   const selected=d.createElement("label");selected.textContent="Kindergarten learner";
@@ -55,14 +55,14 @@
    status.textContent=!all.length?"No Kindergarten learner in the active family. Enroll or select one first.":
     !matching?"Select this learner in your Family workspace first. Switching this menu does not switch learner identity.":
     !permitted?"Local adult selection does not have education.manage permission for this learner.":
-    "Choose 1–5 activities. The learner sees the updated plan on this browser.";
+    "Choose 1–6 activities. The learner sees the updated plan on this browser.";
   }
   picker.onchange=render;
   save.onclick=()=>{
    const id=picker.value;
    if(id!==r()?.activeIds?.()?.learnerId||p()?.adultAllowed?.(id)!==true){render();return}
    const ids=[...activities.querySelectorAll('input:checked')].map(x=>x.value);
-   if(ids.length<1||ids.length>5){status.textContent="Choose between one and five activities.";return}
+   if(ids.length<1||ids.length>6){status.textContent="Choose between one and six activities.";return}
    status.textContent=p()?.configure?.(id,ids)?"Family activity choices saved on this browser.":"Could not save: verify the selected local adult and learner.";
   };
   g.addEventListener("khaemenes-family-changed",render);
