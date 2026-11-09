@@ -16,6 +16,7 @@ function makeNode(){
  return {
   dataset:{},style:{},children:[],hidden:false,textContent:"",
   setAttribute(k,v){this[k]=String(v)},
+  addEventListener(){},
   append(...items){this.children.push(...items)},
   replaceChildren(){this.children=[]}
  };
@@ -56,4 +57,4 @@ higher.setLearner({stage:"higher",selfDirectedAdult:false,learnerId:"fictional-s
 assert.equal(higher.adapter.getIdentity(),null);
 assert.equal(higher.host.children[0].hidden,true);
 assert.ok([...middle.store.entries.keys()].every(k=>k.startsWith("khaemenes.stage.profile.look.v1:")));
-console.log("PASS 14 stage-photo entry isolation and local appearance checks (synthetic only)");
+console.log("PASS stage-photo entry isolation and local appearance checks (synthetic only)");
