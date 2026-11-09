@@ -439,6 +439,36 @@ function highSchoolPublishedOverview(learner,snapshots){
     ${!current.length?'<p class="snapshot-meta">No course reports match the learner\'s current grade. Open the student profile for available classes; do not assume an empty report means no coursework.</p>':""}
   </section>`;
 }
+function middleGradeMatches(snapshot,learner){
+  if(learner?.stage!=="middle"||!["06","07","08"].includes(String(learner.grade||"")))return false;
+  const expected="middle-grade-"+learner.grade;
+  if(snapshot?.learnerId!==learner.learnerId||snapshot.courseId!==expected||snapshot.stage!=="middle")return false;
+  // Support records published before canonical grade codes were introduced.
+  const names={"06":"Sixth Grade","07":"Seventh Grade","08":"Eighth Grade"};
+  return !snapshot.grade||snapshot.grade===learner.grade||snapshot.grade===names[learner.grade];
+}
+function middlePublishedOverview(learner,records){
+  if(learner?.stage!=="middle"||!["06","07","08"].includes(String(learner.grade||"")))return "";
+  const items=records.filter(s=>middleGradeMatches(s,learner));
+  if(!items.length)return `<section class="family-high-overview" aria-label="Middle School published report">
+    <h4>Grade ${esc(learner.grade)} · Family Learning Report</h4>
+    <p class="snapshot-meta">No matching Middle School course summary has been published on this browser. This does not mean the student has made no progress. Open the correct grade to view source records.</p>
+  </section>`;
+  const last=items.reduce((a,b)=>(Date.parse(a.updatedAt||"")>Date.parse(b.updatedAt||"")?a:b));
+  const finished=last.progress?.completed,whole=last.progress?.total;
+  const completed=Number.isFinite(finished)&&Number.isFinite(whole)&&whole>0?`${finished} of ${whole} recorded weeks meet the mastery target`:"Weekly mastery totals not reported";
+  const attention=items.filter(x=>x.family?.needsAction).length;
+  const stale=items.filter(x=>x.stale).length;
+  return `<section class="family-high-overview" aria-label="Middle School published report">
+    <h4>Grade ${esc(learner.grade)} · Family Learning Report</h4>
+    <p class="snapshot-meta">Read-only, browser-local course reporting · Last published ${esc(last.updatedAt?new Date(last.updatedAt).toLocaleString():"Not reported")}. Not an official transcript or complete record.</p>
+    <div class="family-high-metrics"><div><strong>${items.length}</strong><span>Published summaries</span></div><div><strong>${attention}</strong><span>Family review items</span></div><div><strong>${stale}</strong><span>Refresh needed</span></div><div><strong>${esc(last.status==="complete"?"Complete":"Active")}</strong><span>Latest report state</span></div></div>
+    <p><strong>Weekly mastery:</strong> ${esc(completed)}</p>
+    <p><strong>Next reported step:</strong> ${esc(last.nextTitle||"Not reported")}</p>
+    ${last.family?.needsAction?`<p class="snapshot-action">Family review: ${esc(last.family.summary||last.family.label||"Review requested")}</p>`:""}
+    ${last.stale?'<p class="snapshot-meta">This course report is out of date. Reopen the course to publish a fresh summary.</p>':""}
+  </section>`;
+}
 function learnerProgress(l,adult){
   if(!adult||!R?.canAdult?.(adult.adultId,l.learnerId,"progress.view")){
     return `<article class="snapshot-learner"><h3>${esc(l.nickname||"Learner")}</h3><p class="snapshot-meta">Progress view is not enabled for this adult.</p></article>`;
@@ -446,13 +476,14 @@ function learnerProgress(l,adult){
   const snapshots=C?.readLearner?.(l.learnerId)||[];
   const summary=C?.summarize?.(l.learnerId)||null;
   if(!snapshots.length){
-    return `<article class="snapshot-learner"><h3>${esc(l.nickname||"Learner")}</h3><p class="snapshot-meta">No course continuation snapshot has been published yet. Existing records remain unchanged; snapshots appear as school courses adopt the shared continuation contract.</p><div class="actions"><a class="btn" href="${esc(learnerProfileDestination(l))}" data-learner-profile="${esc(l.learnerId)}">Open Student Schedule &amp; Profile</a></div></article>`;
+    const middle=middlePublishedOverview(l,[]);
+    return `<article class="snapshot-learner"><h3>${esc(l.nickname||"Learner")}</h3><p class="snapshot-meta">No course continuation snapshot has been published yet. Existing records remain unchanged; snapshots appear as school courses adopt the shared continuation contract.</p><div class="actions"><a class="btn" href="${esc(learnerProfileDestination(l))}" data-learner-profile="${esc(l.learnerId)}">Open Student Schedule &amp; Profile</a></div>${middle}</article>`;
   }
-  const gradeSnapshots=l.stage==="high"?snapshots.filter(s=>!s.grade||String(s.grade).replace(/^grade[- ]?/i,"").padStart(2,"0")===String(l.grade)):snapshots;
+  const gradeSnapshots=l.stage==="middle"?snapshots.filter(s=>middleGradeMatches(s,l)):(l.stage==="high"?snapshots.filter(s=>!s.grade||String(s.grade).replace(/^grade[- ]?/i,"").padStart(2,"0")===String(l.grade)):snapshots);
   const bars=/^(?:grade[\\s-]*)?0?9$/i.test(String(l.grade||""))?familyGradeNineBars(gradeSnapshots):familyPublishedProgressBars(gradeSnapshots);
-  const overview=highSchoolPublishedOverview(l,snapshots);
+  const overview=highSchoolPublishedOverview(l,snapshots)+middlePublishedOverview(l,snapshots);
   const courses=gradeSnapshots.slice(0,6).map(s=>`<article class="snapshot-course"><strong>${esc(s.courseTitle||s.courseId)}</strong><small>${esc(s.nextTitle||s.summary||"Next learning step")}</small><span class="snapshot-status">${esc(statusLabel(s.status))}</span>${s.stale?`<div class="snapshot-action"><strong>Progress changed in the course.</strong> Reopen the course to refresh this next-step summary before relying on it.</div>`:""}${s.mastery?.best!==null&&s.mastery?.best!==undefined?`<small>Best mastery: ${esc(s.mastery.best)}% · target ${esc(s.mastery.threshold||80)}%</small>`:""}${s.family?.needsAction?`<div class="snapshot-action"><strong>Family attention</strong>${esc(s.family.summary||s.family.label||"Review this learning step.")}</div>`:""}<div class="actions">${s.nextHref?`<button class="btn" type="button" data-open-next="${esc(s.nextHref)}" data-learner-id="${esc(l.learnerId)}">${s.stale?"Refresh in Course":"Open Next Step"}</button>`:""}</div></article>`).join("");
-  return `<article class="snapshot-learner"><h3>${esc(l.nickname||"Learner")}</h3><p class="snapshot-meta">${esc(summary?.courses||snapshots.length)} course snapshot${(summary?.courses||snapshots.length)===1?"":"s"} · ${esc(summary?.needsFamilyAction||0)} need family attention</p><div class="actions"><a class="btn" href="${esc(learnerProfileDestination(l))}" data-learner-profile="${esc(l.learnerId)}">Open Student Schedule &amp; Profile</a></div>${overview}${bars}<div class="snapshot-grid">${courses}</div></article>`;
+  return `<article class="snapshot-learner"><h3>${esc(l.nickname||"Learner")}</h3><p class="snapshot-meta">${esc(l.stage==="middle"?gradeSnapshots.length:(summary?.courses||snapshots.length))} course snapshot${(l.stage==="middle"?gradeSnapshots.length:(summary?.courses||snapshots.length))===1?"":"s"} · ${esc(summary?.needsFamilyAction||0)} need family attention</p><div class="actions"><a class="btn" href="${esc(learnerProfileDestination(l))}" data-learner-profile="${esc(l.learnerId)}">Open Student Schedule &amp; Profile</a></div>${overview}${bars}<div class="snapshot-grid">${courses}</div></article>`;
 }
 /* Grade 09 browser-local daily report; parent permission is mandatory. */
 function gradeNineDailyReport(l,adult){
