@@ -68,5 +68,19 @@ function choose(id,commit){
  }).catch(()=>{status.textContent="Yearbook unavailable on this browser. Current photo is unchanged."});
  return true;
 }
-w.KhaemenesYearbookProfileImages=Object.freeze({version:"1",owner,publish,available,choose});
+function openYearbook(id){
+ if(!id||owner()!==id)return false;
+ const opener=d.activeElement,dialog=d.createElement("dialog");dialog.setAttribute("aria-label","My Academy Yearbook Studio");
+ dialog.style.cssText="box-sizing:border-box;width:min(1140px,calc(100vw - 18px));height:92dvh;max-height:92dvh;margin:auto;padding:0;overflow:hidden;background:#243038;color:#fff8e9;border:2px solid #b48b45;border-radius:7px";
+ const container=d.createElement("div");container.style.cssText="display:flex;flex-direction:column;height:100%";
+ const header=d.createElement("div");header.style.cssText="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 14px;background:#243038;color:#fff8e9";
+ const title=d.createElement("h2");title.textContent="My Yearbook";title.style.cssText="font:400 23px/1.3 Cinzel,Georgia,serif;margin:0";
+ const close=d.createElement("button");close.type="button";close.textContent="Close Yearbook";close.style.cssText="min-height:44px;padding:8px 14px;border:1px solid #b48b45;border-radius:7px;background:#fff8e9;color:#243038;font:400 16px Nunito,Arial,sans-serif";
+ close.onclick=()=>dialog.close();header.append(title,close);
+ const note=d.createElement("p");note.textContent="Select a photo in Yearbook and choose Make Available to My Profile. Then return to your profile editor and choose it from My Yearbook.";note.style.cssText="margin:0;padding:9px 12px;background:#f5e8ce;color:#243038;font:400 16px/1.45 Nunito,Arial,sans-serif";
+ const frame=d.createElement("iframe");frame.src="https://vervenveda.com/Academy-Yearbook.github.io/";frame.title="Academy Yearbook photo generator";frame.loading="lazy";frame.referrerPolicy="strict-origin-when-cross-origin";frame.style.cssText="display:block;width:100%;flex:1;min-height:0;border:0";
+ dialog.addEventListener("close",()=>{dialog.remove();if(opener?.isConnected)opener.focus({preventScroll:true})},{once:true});
+ container.append(header,note,frame);dialog.append(container);d.body.append(dialog);dialog.showModal();close.focus();return true;
+}
+w.KhaemenesYearbookProfileImages=Object.freeze({version:"1.1",owner,publish,available,choose,openYearbook});
 })(window,document);
