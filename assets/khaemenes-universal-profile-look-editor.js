@@ -107,7 +107,7 @@ function build(){
  for(const frame of FRAMES){const b=mk("button","kpls-choice",frame.label);b.type="button";b.dataset.frame=frame.id;b.addEventListener("click",()=>{selected.frame=frame.id;render();setStatus("Frame selected. Save My Look to keep it.");});$("kplsFrames").append(b)}
  for(const color of COLORS){const b=mk("button","kpls-choice");b.type="button";b.dataset.color=color;b.style.setProperty("--swatch",color);b.setAttribute("aria-label","Choose background color "+color);b.addEventListener("click",()=>{selected.cardColor=color;render();setStatus("Background selected. Save My Look to keep it.");});$("kplsColors").append(b)}
  $("kplsClose").addEventListener("click",()=>dialog.close());
- $("kplsRemove").addEventListener("click",()=>{stagedPhoto="";render();setStatus("Picture will be removed when you save.");});
+ $("kplsRemove").addEventListener("click",()=>{editorEpoch++;stagedPhoto="";render();setStatus("Picture will be removed when you save.");});
  $("kplsResetColor").addEventListener("click",()=>{selected.cardColor="";render();setStatus("Original background selected. Save to apply.");});
  $("kplsDisplay").addEventListener("input",()=>{if(selected){selected.displayName=$("kplsDisplay").value.slice(0,70);render();}});
  $("kplsNameFont").addEventListener("change",()=>{if(selected){selected.nameFont=$("kplsNameFont").value;render();setStatus("Name font selected. Save My Look to keep it.");}});
