@@ -85,8 +85,9 @@ const features=[
  ["Family Records", "#family-records-controls"],
  ["Manage Learners", "enroll/#existing"],
  ["Parent Resources", "#family-involvement"],
- ["Customize Background", "background"],
- ["Customize Picture", "picture"]
+ ["Edit Background", "background"],
+ ["Edit Profile Photo", "picture"],
+ ["Yearbook", "yearbook"]
 ];
 function mount(){
  const node=byId(ID);if(node)return node;
@@ -166,8 +167,28 @@ function dialog(){
  });
  return box;
 }
+function openParentYearbook(){
+ const a=adult();if(!a)return false;
+ let dialog=byId("kphParentYearbookDialog");
+ if(!dialog){
+  dialog=d.createElement("dialog");dialog.id="kphParentYearbookDialog";
+  dialog.setAttribute("aria-label","Family Yearbook");
+  dialog.style.cssText="box-sizing:border-box;width:min(1120px,96vw);height:90dvh;max-height:90dvh;padding:0;overflow:hidden;border:2px solid #b48b45;border-radius:7px;background:#f4f0e7";
+  const shell=d.createElement("div");shell.style.cssText="display:flex;flex-direction:column;height:100%";
+  const bar=d.createElement("div");bar.style.cssText="display:flex;justify-content:space-between;align-items:center;padding:11px 15px;background:#243038;color:#fff8e9";
+  const heading=d.createElement("h2");heading.textContent="My Family Yearbook";heading.style.cssText="font:400 24px Cinzel,Georgia,serif;color:#fff8e9;margin:0";
+  const close=d.createElement("button");close.type="button";close.textContent="Close Yearbook";close.style.cssText="min-height:44px;padding:9px 14px;background:#fff8e9;color:#243038;border-radius:7px;font-size:16px";
+  close.addEventListener("click",()=>dialog.close());bar.append(heading,close);
+  const notice=d.createElement("p");notice.textContent="This Yearbook is shared within this browser, not yet protected by a parent or student account. Viewing images does not automatically copy them into anyone's profile.";
+  notice.style.cssText="margin:0;padding:9px 13px;background:#fff9ef;color:#243038;font:400 16px/1.5 Nunito,Arial,sans-serif";
+  const frame=d.createElement("iframe");frame.src="https://vervenveda.com/Academy-Yearbook.github.io/";frame.title="Academy Family Yearbook";frame.style.cssText="width:100%;flex:1;min-height:0;border:0";
+  shell.append(bar,notice,frame);dialog.append(shell);d.body.append(dialog);
+ }
+ if(!dialog.open)dialog.showModal();return true;
+}
 function openEditor(which){
  const a=adult();if(!a)return;
+ if(which==="yearbook"){openParentYearbook();return}
  const studio=g.KhaemenesFamilyParentLookStudio;
  if(studio?.open){studio.open(which);return}
  const look=appearance(a.adultId),box=dialog();
