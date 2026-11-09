@@ -11,7 +11,8 @@ const E=id=>encodeURIComponent(id),ks={
  badge:id=>"khaemenes.grade09.profile.badge:"+E(id),
  photo:id=>"khaemenes.grade09.profile.photo:"+E(id),
  sections:id=>"khaemenes.grade09.profile.background.sections.v1:"+E(id),
- page:id=>"khaemenes.grade09.profile.background:"+E(id)
+ page:id=>"khaemenes.grade09.profile.background:"+E(id),
+ hero:id=>"khaemenes.grade09.profile.yearbook.hero:"+E(id)
 };
 const read=k=>{try{return g.localStorage.getItem(k)}catch{return null}};
 const restore=(k,v)=>{if(v===null)g.localStorage.removeItem(k);else g.localStorage.setItem(k,v)};
@@ -28,6 +29,7 @@ const identity=()=>{try{
 const settings=id=>{try{const v=JSON.parse(read(ks.sections(id))||"{}");return v&&typeof v==="object"&&!Array.isArray(v)?v:{}}catch{return {}}};
 const adapter=Object.freeze({
  showDisplayName:false,
+ allowYearbook:true,
  getIdentity:identity,
  readLook(id){
   if(identity()?.id!==id)return {};
@@ -41,6 +43,7 @@ const adapter=Object.freeze({
   if(!options.includes(badge))badge="★";
   return {displayName:"",badge,frame:frame||"circle",background:"parchment",cardColor:custom,nameFont:["academy","friendly","classic","modern","handwriting"].includes(setting.nameFont)?setting.nameFont:"academy"};
  },
+ readHeroImage(id){if(identity()?.id!==id)return "";const hero=read(ks.hero(id));return typeof hero==="string"&&hero.length<180000&&/^data:image\/jpeg;base64,[a-z0-9+/=]+$/i.test(hero)?hero:""},
  readPhoto(id){
   if(identity()?.id!==id)return "";
   const current=read(ks.photo(id));if(current)return current;
@@ -50,14 +53,15 @@ const adapter=Object.freeze({
   }
   return "";
  },
- commit({id,look,photo}){
+ commit({id,look,photo,heroImage=null}){
   if(identity()?.id!==id||!g.KhaemenesGrade09Design?.read||!g.KhaemenesGrade09Design?.write)return false;
   const current=g.KhaemenesGrade09Design.read();
   if(!current||typeof current!=="object")return false;
   const supported=["rectangle","square","circle","oval","rhombus","heart","star","octagon","semicircle","kite"];
   if(!supported.includes(look?.frame)||!["academy","friendly","classic","modern","handwriting"].includes(look?.nameFont))return false;
+  if(heroImage!==null&&!(heroImage===""||(typeof heroImage==="string"&&heroImage.length<180000&&/^data:image\/jpeg;base64,[a-z0-9+/=]+$/i.test(heroImage))))return false;
   const legacyKey=grade!=="09"?"khaemenes.grade"+String(Number(grade))+".profile.appearance:"+E(id):null;
-  const old={};for(const key of [ks.badge(id),ks.photo(id),ks.sections(id),...(legacyKey?[legacyKey]:[])])old[key]=read(key);
+  const old={};for(const key of [ks.badge(id),ks.photo(id),ks.hero(id),ks.sections(id),...(legacyKey?[legacyKey]:[])])old[key]=read(key);
   const nextSections=settings(id);
   const identitySetting=nextSections.identity&&typeof nextSections.identity==="object"?nextSections.identity:{};
   const newSections={...nextSections,identity:{...identitySetting,mode:look.cardColor?"custom":(identitySetting.mode==="page"?"page":"default"),color:look.cardColor||"#f4f0e7",nameFont:look.nameFont}};
@@ -71,6 +75,7 @@ const adapter=Object.freeze({
      if(legacyKey&&old[legacyKey]){const oldLegacy=JSON.parse(old[legacyKey]);if(oldLegacy&&typeof oldLegacy==="object"&&Object.hasOwn(oldLegacy,"photo")){const newer={...oldLegacy};delete newer.photo;g.localStorage.setItem(legacyKey,JSON.stringify(newer))}}
     }else g.localStorage.setItem(ks.photo(id),photo)
    }
+   if(heroImage!==null){if(heroImage)g.localStorage.setItem(ks.hero(id),heroImage);else g.localStorage.removeItem(ks.hero(id))}
    if(identity()?.id!==id)throw Error("Identity switched");
    if(g.KhaemenesGrade09Design.write({...current,avatarShape:look.frame})!==true)throw Error("Frame write failed");
    g.dispatchEvent(new Event("khaemenes-grade09-design-changed"));
@@ -82,8 +87,9 @@ const adapter=Object.freeze({
    return false;
   }
  },
- refresh(){g.dispatchEvent(new Event("khaemenes-high-profile-appearance-changed"))}
+ refresh(){const id=identity()?.id,hero=id?read(ks.hero(id)):"";const target=d.querySelector(".grade09-local-masthead .hero");if(target){if(hero&&hero.length<180000&&/^data:image\/jpeg;base64,[a-z0-9+/=]+$/i.test(hero)){target.style.setProperty("background-image",`linear-gradient(rgba(36,48,56,.70),rgba(36,48,56,.78)),url("${hero}")`,"important");target.style.setProperty("background-size","cover","important");target.style.setProperty("background-position","center","important")}else target.style.removeProperty("background-image")};g.dispatchEvent(new Event("khaemenes-high-profile-appearance-changed"))}
 });
 if(!core.register(adapter))return;
 g.KhaemenesHighUniversalLookAdapter=adapter;
+ adapter.refresh();
 })();
