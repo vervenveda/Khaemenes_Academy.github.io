@@ -125,7 +125,7 @@ async function downloadVerifiedBackup(){
     const envelope=await createEnvelope();
     const date=envelope.createdAt.slice(0,10);
     downloadJson(envelope,"khaemenes-family-backup-"+date+".json");
-    setStatus("Verified family backup downloaded. Keep a second copy somewhere safe.");
+    setStatus("Checksum-verified JSON backup downloaded. NOT ENCRYPTED: store privately and restrict access.");
     return envelope;
   }catch(error){
     setStatus(error?.message==="secure-digest-unavailable"
@@ -147,7 +147,8 @@ function previewText(check){
     "Adults: "+(s.adults||0),
     "Learners: "+(s.learners||0),
     "Exported: "+(check.createdAt?new Date(check.createdAt).toLocaleString():"Unknown"),
-    "Integrity: "+(check.verified?"SHA-256 verified":"Legacy backup — structurally valid but no checksum")
+    "Integrity: "+(check.verified?"SHA-256 checksum verified (NOT encrypted or authenticated)":"Legacy backup — structurally valid but no checksum"),
+    "Privacy: This backup may expose family and learner details if shared."
   ].join("\n");
 }
 async function readFile(file){
@@ -162,9 +163,14 @@ async function restoreFile(file){
   if(!check.ok)throw new Error(check.reason);
   const message=previewText(check)+"\n\nRestore this family on this browser?\n\nOther family identities are preserved. The current version of this family is saved automatically so you can undo the restore.";
   if(!global.confirm(message))return {restored:false,cancelled:true};
-  saveRollback();
+  // Never overwrite an existing local family when its rollback snapshot cannot be confirmed.
+  const hasCurrentFamily=Boolean(R()?.getFamily?.());
+  const rollbackSaved=hasCurrentFamily?saveRollback():false;
+  if(hasCurrentFamily&&!rollbackSaved)throw new Error("restore-blocked-local-rollback-unverified");
   const result=R().restoreFamilyExport(check.familyExport);
-  setStatus("Family restored successfully. A pre-restore rollback snapshot is available on this browser.",true);
+  setStatus(rollbackSaved
+    ?"Family restored. A pre-restore rollback snapshot is available on this browser."
+    :"Family restored to this browser. No pre-existing family snapshot was available.",true);
   updateUndo();
   global.dispatchEvent(new CustomEvent("khaemenes-family-backup-restored",{detail:{familyId:result.familyId,verified:Boolean(check.verified)}}));
   return {...result,verified:Boolean(check.verified)};
@@ -175,8 +181,9 @@ function undoLastRestore(){
   if(!last?.familyExport){setStatus("No rollback snapshot is available.");return false}
   if(!global.confirm("Restore the family snapshot saved immediately before the last backup restore?"))return false;
   const result=R().restoreFamilyExport(last.familyExport);
-  list.pop();write(ROLLBACK_KEY,list);
-  setStatus("The pre-restore family snapshot has been restored.",true);
+  list.pop();
+  if(!write(ROLLBACK_KEY,list))setStatus("Family restored, but rollback history could not be updated. Review your backup copies.");
+  else setStatus("The pre-restore family snapshot has been restored.",true);
   updateUndo();
   global.dispatchEvent(new CustomEvent("khaemenes-family-backup-undo",{detail:{familyId:result.familyId}}));
   return true;
