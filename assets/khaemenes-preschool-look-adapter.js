@@ -12,6 +12,12 @@ const FRAMES=new Set(["rectangle","square","circle","oval","rhombus","heart","st
 const NAME_FONTS=new Set(["academy","friendly","classic","modern","handwriting"]);
 const key=id=>VISUAL+encodeURIComponent(id);
 const raw=k=>{try{return w.localStorage.getItem(k)}catch{return null}};
+const heroKey=id=>"khaemenes.preschool.yearbook.hero:"+encodeURIComponent(id);
+const heroValid=v=>v===""||(typeof v==="string"&&v.length<180000&&v.startsWith("data:image/jpeg;base64,")&&new RegExp("^[A-Za-z0-9+/=]+$").test(v.slice(23)));
+function applyHero(){const id=identity()?.id,source=id?raw(heroKey(id)):null,el=d.querySelector(".profile-hero");if(!el)return;
+ if(source&&heroValid(source)){el.style.setProperty("background-image",`linear-gradient(rgba(244,240,231,.76),rgba(244,240,231,.84)),url("${source}")`,"important");el.style.setProperty("background-size","cover","important");el.style.setProperty("background-position","center","important")}
+ else el.style.removeProperty("background-image")}
+
 const identity=()=>{try{
  if(w.location.origin!=="https://vervenveda.com")return null;
  const r=w.KhaemenesFamilyRegistry,l=r?.getLearner?.();
@@ -26,6 +32,7 @@ function record(id){
 function extras(id){const e=record(id)?.universalLook;return e&&typeof e==="object"&&!Array.isArray(e)?e:{}}
 const adapter=Object.freeze({
  showDisplayName:false,
+ allowYearbook:true,
  maxPhotoChars:180000,
  getIdentity:identity,
  readLook(id){
@@ -34,11 +41,13 @@ const adapter=Object.freeze({
   const legacyFrame={diamond:"rhombus",hexagon:"octagon"};
   return {displayName:"",background:"parchment",badge:BADGES.has(x.badge)?x.badge:"★",frame:FRAMES.has(x.frame)?x.frame:(legacyFrame[old?.frame]||old?.frame||"square"),cardColor:COLS.has(x.cardColor)?x.cardColor:"",nameFont:NAME_FONTS.has(x.nameFont)?x.nameFont:"academy"};
  },
+ readHeroImage(id){if(identity()?.id!==id)return "";const x=raw(heroKey(id));return x&&heroValid(x)?x:""},
  readPhoto(id){if(identity()?.id!==id)return "";const p=record(id)?.photo;return typeof p==="string"&&/^data:image\/jpeg;base64,[a-z0-9+/=]+$/i.test(p)&&p.length<180000?p:""},
- commit({id,look,photo,badgeTouched}){
+ commit({id,look,photo,badgeTouched,heroImage=null}){
   if(identity()?.id!==id||!approval())return false;
   if(!FRAMES.has(look?.frame)||!BADGES.has(look?.badge)||look.cardColor&&!COLS.has(look.cardColor)||!NAME_FONTS.has(look?.nameFont))return false;
-  const before=raw(key(id)),old=record(id);
+  if(heroImage!==null&&!heroValid(heroImage))return false;
+  const before=raw(key(id)),beforeHero=raw(heroKey(id)),old=record(id);
   if(old===null)return false;
   if(photo!==null&&photo!==""&&(!/^data:image\/jpeg;base64,[a-z0-9+/=]+$/i.test(photo)||photo.length>=180000))return false;
   // Carry the stage's original frame as a harmless fallback. Rich frame belongs
@@ -50,16 +59,19 @@ const adapter=Object.freeze({
    universalLook:{badge:badgeTouched===true?look.badge:(old.universalLook?.badge||""),frame:look.frame,cardColor:look.cardColor||"",nameFont:look.nameFont}};
   try{
    w.localStorage.setItem(key(id),JSON.stringify(updated));
+   if(heroImage!==null){if(heroImage)w.localStorage.setItem(heroKey(id),heroImage);else w.localStorage.removeItem(heroKey(id))}
    if(identity()?.id!==id||!approval())throw Error("Profile selection or adult approval changed");
    w.dispatchEvent(new CustomEvent("khaemenes-prek-universal-look-updated",{detail:{learnerId:id}}));
    return true;
   }catch{
-   try{if(before===null)w.localStorage.removeItem(key(id));else w.localStorage.setItem(key(id),before)}catch{}
+   try{if(before===null)w.localStorage.removeItem(key(id));else w.localStorage.setItem(key(id),before);if(beforeHero===null)w.localStorage.removeItem(heroKey(id));else w.localStorage.setItem(heroKey(id),beforeHero)}catch{}
    return false;
   }
  },
- refresh(){w.KhaemenesPreschoolUniversalLookEntry?.refresh?.()}
+ refresh(){w.KhaemenesPreschoolUniversalLookEntry?.refresh?.();applyHero()}
 });
 if(!core.register(adapter))return;
 w.KhaemenesPreschoolUniversalLookAdapter=adapter;
+ adapter.refresh();
+window.addEventListener("khaemenes-family-changed",()=>adapter.refresh());
 })();
