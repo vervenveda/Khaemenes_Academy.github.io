@@ -113,6 +113,74 @@ main.shell.grid>.academy-curriculum-directory{grid-column:1/-1!important}
 </style>
 </head>
 <body data-i18n-no-online data-vnv-header-title="Family Enrollment" data-vnv-header-subtitle="Khaemenes Academy · Enrollment & Placement">
+
+<!-- Opt-in, read-only chrome and intake diagnostics: ?chrome_audit=1 -->
+<script id="familyEnrollmentChromeProbe">
+(()=>{
+"use strict";
+if(!new URLSearchParams(location.search).has("chrome_audit")||window.KhaemenesFamilyEnrollmentChromeAudit)return;
+const targets=[["333 ticker","vnv333NetworkTicker"],["Auto ticker","vnvTickerAutoPopulate"],["VNV header","vnvHeaderAutoPopulate"],["Branched menu","vnvEnrichedMenuOverlay"]];
+const events=[];let panel=null,output=null,scheduled=false,lastView="",lastChrome="";
+const time=()=>Math.round(performance.now())+"ms";
+function summary(name,id){
+ const list=document.querySelectorAll('[id="'+id+'"]'),el=list[0];
+ if(!el)return name+": MISSING";
+ const css=getComputedStyle(el),r=el.getBoundingClientRect();
+ const visible=el.isConnected&&css.display!=="none"&&css.visibility!=="hidden"&&Number(css.opacity)>0&&r.width>0&&r.height>0;
+ return name+": "+list.length+" · "+(visible?"PRESENT":"HIDDEN")+" · "+Math.round(r.width)+"×"+Math.round(r.height)+" @ "+Math.round(r.x)+","+Math.round(r.y)+" · "+css.position+" · parent "+(el.parentElement?.tagName||"?");
+}
+function view(){
+ const pane=document.getElementById("familyPane");
+ if(!pane)return "Family Pane: MISSING";
+ const steps=pane.querySelectorAll("[data-intake-step]").length;
+ const active=[...pane.querySelectorAll("[data-intake-step]")].filter(e=>!e.hidden).map(e=>e.dataset.intakeStep);
+ const existing=Boolean(pane.querySelector(".notice.ok"));
+ return "Family Pane: "+(steps===4?"FOUR-STEP INTAKE":existing?"EXISTING FAMILY VIEW":"OTHER OR INITIALIZING")+" · steps "+steps+" · active "+(active.join(",")||"none")+" · create button "+Boolean(document.getElementById("createFamily"))+" · learner button "+Boolean(document.getElementById("addLearner"));
+}
+function push(s){events.push(time()+" "+s);if(events.length>55)events.shift();schedule()}
+function draw(){
+ if(!document.body)return;
+ if(!panel){
+  panel=document.createElement("aside");panel.id="familyEnrollmentChromeAuditPanel";
+  panel.setAttribute("aria-label","Family enrollment read-only diagnostics");
+  panel.style.cssText="position:fixed!important;z-index:2147483647!important;left:8px;bottom:8px;width:min(760px,calc(100vw - 16px));max-height:52vh;overflow:auto;padding:13px 15px;border:2px solid #b48b45;border-radius:7px;background:#243038!important;color:#fff8e9!important;font:400 14px/1.45 ui-monospace,monospace!important;box-shadow:0 12px 40px #0009";
+  const title=document.createElement("strong");title.textContent="Family Enrollment · Chrome + Intake Audit";title.style.cssText="display:block;color:#fff8e9;font-size:16px;margin-bottom:8px";
+  const close=document.createElement("button");close.type="button";close.textContent="Close diagnostics";close.style.cssText="background:#fff8e9;color:#243038;border:0;border-radius:7px;padding:7px 10px;margin-bottom:8px";
+  close.onclick=()=>{panel.remove();panel=null;output=null};
+  output=document.createElement("pre");output.style.cssText="font:inherit;white-space:pre-wrap;overflow-wrap:anywhere;margin:0;color:#fff8e9;background:transparent";
+  panel.append(title,close,output);document.body.append(panel);
+ }
+ output.textContent="Current DOM (no family data):\n"+view()+"\n"+targets.map(([n,id])=>summary(n,id)).join("\n")+"\n\nEvent timeline:\n"+events.slice(-24).join("\n");
+}
+function schedule(){if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;draw()})}
+function inspect(){
+ const v=view(),ch=targets.map(([n,id])=>summary(n,id)).join("|");
+ if(v!==lastView){lastView=v;push("VIEW "+v)}
+ if(ch!==lastChrome){lastChrome=ch;push("CHROME change")}
+ schedule();
+}
+function start(){
+ const observer=new MutationObserver(records=>{
+  const relevant=records.some(r=>{const e=r.target;if(e.closest?.("#familyEnrollmentChromeAuditPanel"))return false;
+   if(r.type==="attributes")return r.attributeName==="hidden"||targets.some(([,id])=>e.id===id);
+   return [...r.addedNodes,...r.removedNodes].some(n=>n.nodeType===1&&(n.id==="familyPane"||n.id==="learnerPane"||targets.some(([,id])=>n.id===id||n.querySelector?.("#"+id))||n.closest?.("#familyPane")));
+  });
+  if(relevant)inspect();
+ });
+ observer.observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:["style","hidden","class","aria-hidden"]});
+ push("Probe started");inspect();
+}
+if(document.body)start();else document.addEventListener("DOMContentLoaded",start,{once:true});
+window.addEventListener("load",()=>{push("window load");inspect()},{once:true});
+window.addEventListener("pageshow",()=>{push("pageshow");inspect()});
+window.addEventListener("error",e=>{
+ if(e.target?.tagName==="SCRIPT")push("SCRIPT LOAD ERROR: "+(e.target.src||"").split("/").pop());
+ else if(e.message)push("JS ERROR: "+String(e.message).slice(0,170));
+},true);
+window.addEventListener("unhandledrejection",e=>push("PROMISE REJECTION: "+String(e.reason?.message||"unknown").slice(0,150)));
+window.KhaemenesFamilyEnrollmentChromeAudit=Object.freeze({version:"1.0.0",snapshot:()=>[view(),...targets.map(([n,id])=>summary(n,id))],events:()=>events.slice()});
+})();
+</script>
 <section class="hero shell"><div class="eyebrow">Enrollment & Placement</div><h1>Khaemenes Academy</h1><h2 class="academy-page-subtitle">Enrollment &amp; Learning Pathways</h2><p>Begin the right learning path.</p><p>Create or open a family profile, register each K–12 learner with an exact grade, or begin an adult learning path through Khaemenes Higher Learning.</p></section>
 
 <main class="shell grid">
