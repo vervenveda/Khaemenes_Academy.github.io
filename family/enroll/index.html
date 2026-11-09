@@ -101,6 +101,16 @@ main.shell.grid>.academy-curriculum-directory{grid-column:1/-1!important}
 @media print{.enrollment-official-footer{padding:12px;color:#243038;background:#fff}.enrollment-official-footer nav{display:none}}
 
 </style>
+<style id="khae-enrollment-provisional-intake-20261109">
+  #familyPane .intake-step{margin:15px 0;padding:17px;border:1px solid #c5b494;border-radius:7px;background:#fffdf8}
+  #familyPane .intake-step[hidden],#familyPane .intake-nav [hidden]{display:none!important}
+  #familyPane .intake-step h3{margin:0 0 13px;font:400 24px/1.3 Cinzel,Georgia,serif;color:#243038}
+  #familyPane .intake-step p,#familyPane .intake-consent,#intakeProgress{font-size:16px;line-height:1.55;color:#243038}
+  #familyPane .intake-consent{display:flex;align-items:flex-start;gap:11px}
+  #familyPane .intake-consent input{width:21px;height:21px;flex:none;margin-top:3px}
+  #familyPane .intake-nav{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+  #familyPane .intake-nav button{min-height:48px;font-size:16px}
+</style>
 </head>
 <body data-i18n-no-online data-vnv-header-title="Family Enrollment" data-vnv-header-subtitle="Khaemenes Academy · Enrollment & Placement">
 <section class="hero shell"><div class="eyebrow">Enrollment & Placement</div><h1>Khaemenes Academy</h1><h2 class="academy-page-subtitle">Enrollment &amp; Learning Pathways</h2><p>Begin the right learning path.</p><p>Create or open a family profile, register each K–12 learner with an exact grade, or begin an adult learning path through Khaemenes Higher Learning.</p></section>
@@ -146,29 +156,113 @@ function render(){
   const family=R?.getFamily?.()||null,fp=document.getElementById("familyPane"),lp=document.getElementById("learnerPane"),ap=document.getElementById("adultPane");
   if(!R){fp.innerHTML='<div class="notice">Enrollment could not open completely. Return to the Academy home and try again.</div>';lp.innerHTML="";ap.innerHTML="";return}
   if(!family){
-    fp.innerHTML=`<div class="field"><label>Family display name</label><input id="familyName" placeholder="Example: Pearl Family"></div><div class="field"><label>First adult display name</label><input id="adultName" placeholder="Adult name"></div><div class="field"><label>Adult role</label><select id="adultRole"><option value="parent">Parent</option><option value="guardian">Guardian</option><option value="caregiver">Caregiver</option><option value="educator">Authorized educator</option><option value="other-authorized-adult">Other authorized adult</option></select></div><div class="actions"><button class="btn green" id="createFamily" type="button">Create Family Profile</button></div>`;
-    lp.innerHTML='<div class="notice">Create the family profile first, then add each K–12 learner separately.</div>';
-    ap.innerHTML='<div class="notice">Adults studying for themselves may use the Adult Learning enrollment page.</div><div class="actions"><a class="btn secondary" href="../../adult/enroll/">Adult Learning</a></div>';
-    document.getElementById("createFamily").addEventListener("click",()=>{const familyName=document.getElementById("familyName").value.trim(),adultName=document.getElementById("adultName").value.trim();if(!familyName||!adultName){alert("Enter a family name and first adult name.");return}R.createFamily({displayName:familyName,adultName,adultRole:document.getElementById("adultRole").value});render()});
+    // Provisional intake: no credential, legal-document, birth-date, or unverified email storage.
+    fp.innerHTML=`
+      <div class="notice" role="status">Local family setup only. This is not verified Academy enrollment and does not allocate Mother or Baby Cloud storage.</div>
+      <p id="intakeProgress" role="status" aria-live="polite">Step 1 of 4 — Parent or Guardian</p>
+      <section class="intake-step" data-intake-step="1" aria-labelledby="intakeGuardianTitle">
+        <h3 id="intakeGuardianTitle">1 · Parent or Guardian</h3>
+        <div class="field"><label for="familyName">Family display name</label><input id="familyName" maxlength="80" autocomplete="off" placeholder="Your family's name"></div>
+        <div class="field"><label for="adultName">Adult preferred or display name</label><input id="adultName" maxlength="80" autocomplete="off" placeholder="The name you'd like shown"></div>
+        <div class="field"><label for="adultRole">Your relationship to the learner</label><select id="adultRole"><option value="parent">Parent</option><option value="guardian">Legal guardian</option><option value="caregiver">Caregiver</option><option value="educator">Authorized educator</option><option value="other-authorized-adult">Other authorized adult</option></select></div>
+        <p>Legal identity, including single-name identities, will be handled through the protected verification service when it is available. A selected role is not proof of guardianship.</p>
+      </section>
+      <section class="intake-step" data-intake-step="2" hidden aria-labelledby="intakeContactTitle">
+        <h3 id="intakeContactTitle">2 · Contact and Recovery</h3>
+        <p>Guardian email verification, secure sign-in, and account recovery are not connected yet. We will request verified contact details through a protected service when it is ready.</p>
+        <p><strong>Do not enter</strong> passwords, PINs, Social Security numbers, birth certificates, or identity documents here.</p>
+      </section>
+      <section class="intake-step" data-intake-step="3" hidden aria-labelledby="intakeLearnerTitle">
+        <h3 id="intakeLearnerTitle">3 · Link Your First Learner</h3>
+        <p>Optional now. Children share the family profile but keep separate student IDs and grade pathways. You can add more learners after creating the family.</p>
+        <div class="field"><label for="intakeNickname">Student preferred name (optional)</label><input id="intakeNickname" maxlength="40" placeholder="Learner name" autocomplete="off"></div>
+        <div class="field"><label for="intakeGrade">Requested grade</label><select id="intakeGrade">${gradeOptions()}</select></div>
+        <p>This is a requested local pathway, not an authoritative placement decision.</p>
+      </section>
+      <section class="intake-step" data-intake-step="4" hidden aria-labelledby="intakePrivacyTitle">
+        <h3 id="intakePrivacyTitle">4 · Privacy and Confirmation</h3>
+        <p>Information entered here stays in this browser's provisional Academy family registry. Anyone with access to this browser may be able to access this local profile. Back up your family record privately; lesson grades have separate storage.</p>
+        <p>Creating a family record does not verify adult identity, guardianship, consent, age, enrollment, or cloud synchronization. No optional paid storage is activated.</p>
+        <label class="intake-consent"><input type="checkbox" id="intakeAcknowledgment"> I understand this creates a provisional local family profile, not a verified school account or completed parental-consent process.</label>
+      </section>
+      <p id="intakeError" class="notice" role="alert" aria-live="assertive" hidden></p>
+      <div class="actions intake-nav"><button class="btn secondary" id="intakeBack" type="button" hidden>Previous</button><button class="btn green" id="intakeNext" type="button">Continue</button><button class="btn green" id="createFamily" type="button" hidden>Create Provisional Family Profile</button></div>`;
+    lp.innerHTML='<div class="notice">Complete provisional family setup first. The first learner can be linked during Step 3 or added afterward.</div>';
+    ap.innerHTML='<div class="notice">Adults studying for themselves may use the separate Higher Learning pathway.</div><div class="actions"><a class="btn secondary" href="../../adult/enroll/">Adult Learning</a></div>';
+    let step=1;
+    const error=document.getElementById("intakeError");
+    const fail=message=>{error.hidden=false;error.textContent=message};
+    const validateGuardian=()=>{
+      const familyName=document.getElementById("familyName").value.trim(),adultName=document.getElementById("adultName").value.trim();
+      if(!familyName||!adultName){fail("Enter a family display name and adult display name.");return false}
+      const existing=Object.values(R.load?.()?.families||{}).some(f=>{
+        const names=(f.adultIds||[]).map(id=>R.load?.()?.adults?.[id]?.displayName||"");
+        return String(f.displayName||"").trim().toLocaleLowerCase()===familyName.toLocaleLowerCase()&&names.some(n=>n.trim().toLocaleLowerCase()===adultName.toLocaleLowerCase())
+      });
+      if(existing){fail("A matching family and adult already exist on this device. Return to the Family Portal to select your existing family. No new record was created.");return false}
+      return true;
+    };
+    const draw=()=>{
+      for(const section of fp.querySelectorAll("[data-intake-step]"))section.hidden=Number(section.dataset.intakeStep)!==step;
+      document.getElementById("intakeProgress").textContent="Step "+step+" of 4 — "+["Parent or Guardian","Contact and Recovery","Link Learner","Privacy and Confirmation"][step-1];
+      document.getElementById("intakeBack").hidden=step===1;
+      document.getElementById("intakeNext").hidden=step===4;
+      document.getElementById("createFamily").hidden=step!==4;
+      error.hidden=true;error.textContent="";
+    };
+    document.getElementById("intakeBack").onclick=()=>{step=Math.max(1,step-1);draw()};
+    document.getElementById("intakeNext").onclick=()=>{if(step===1&&!validateGuardian())return;step=Math.min(4,step+1);draw()};
+    document.getElementById("createFamily").onclick=()=>{
+      if(step!==4||!validateGuardian())return;
+      if(!document.getElementById("intakeAcknowledgment").checked){fail("Please acknowledge the local-only privacy notice before continuing.");return}
+      const familyName=document.getElementById("familyName").value.trim(),adultName=document.getElementById("adultName").value.trim(),adultRole=document.getElementById("adultRole").value;
+      const nickname=document.getElementById("intakeNickname").value.trim(),grade=document.getElementById("intakeGrade").value;
+      if(nickname&&!R.gradeMeta[grade]){fail("Choose a valid requested grade.");return}
+      const submit=document.getElementById("createFamily");submit.disabled=true;
+      // One verified local transaction creates family, adult, optional learner,
+      // and provisional access together. Never retry by making a second family.
+      let created;
+      try{created=R.createFamilyIntake({displayName:familyName,adultName,adultRole,nickname,grade:nickname?grade:null})}
+      catch(e){
+        submit.disabled=false;
+        const duplicate=e?.message==="intake-local-duplicate";
+        fail(duplicate
+          ?"A matching family and adult already exist on this device. Open the Family Portal to continue that record; do not create another family."
+          :"The provisional family could not be confirmed on this device. Check the Family Portal for an existing record before trying again.");
+        return;
+      }
+      if(R.activeIds?.().familyId!==created.familyId||R.activeIds?.().adultId!==created.adultId){
+        fail("Your provisional family and learner details were saved together, but this browser could not select the family. Open the Family Portal to recover the existing profile; do not create another family.");
+        submit.disabled=false;
+        return;
+      }
+      render();
+    };
+    draw();
     return;
   }
 
-  fp.innerHTML=`<div class="notice ok"><strong>${esc(family.displayName)}</strong><br>${family.adults.length} adult${family.adults.length===1?"":"s"} · ${family.learners.length} learner${family.learners.length===1?"":"s"}</div><div class="actions"><a class="btn secondary" href="../">Open Family Hub</a></div>`;
+  fp.innerHTML=`<div class="notice"><strong>Provisional family profile — stored on this device, not verified or cloud-synced.</strong></div><div class="notice ok"><strong>${esc(family.displayName)}</strong><br>${family.adults.length} adult${family.adults.length===1?"":"s"} · ${family.learners.length} learner${family.learners.length===1?"":"s"}</div><div class="actions"><a class="btn secondary" href="../">Open Family Hub</a></div>`;
 
-  lp.innerHTML=`<div class="field"><label>Learner first name or nickname</label><input id="nickname" placeholder="Learner"></div><div class="field"><label>Exact grade placement</label><select id="grade">${gradeOptions()}</select></div><div class="actions"><button class="btn green" id="addLearner" type="button">Register K–12 Learner</button></div><div class="notice">Each learner receives an individual Academy Student ID and keeps a separate learning path.</div><div id="existing" style="margin-top:18px"></div>`;
+  lp.innerHTML=`<div class="field"><label>Learner first name or nickname</label><input id="nickname" placeholder="Learner"></div><div class="field"><label>Exact grade placement</label><select id="grade">${gradeOptions()}</select></div><div class="actions"><button class="btn green" id="addLearner" type="button">Register K–12 Learner</button></div><div class="notice">Each learner receives a provisional local identifier and a separate learning path. This does not create a verified Mother Cloud account.</div><div id="existing" style="margin-top:18px"></div>`;
   document.getElementById("addLearner").addEventListener("click",()=>{
     const nickname=document.getElementById("nickname").value.trim(),grade=document.getElementById("grade").value;
     if(!nickname){alert("Enter a learner name or nickname.");return}
-    const meta=R.gradeMeta[grade];let learner=R.registerLearner({familyId:family.familyId,nickname,stage:meta.stage,grade});
-    const adult=R.getAdult();if(adult)R.grantAdultAccess({familyId:family.familyId,adultId:adult.adultId,learnerId:learner.learnerId,permissionPreset:"co-guardian"});
+    const meta=R.gradeMeta[grade];if(!meta){alert("Choose a valid grade before continuing.");return}
+    const duplicate=family.learners.find(l=>!l.selfDirectedAdult&&l.grade===grade&&String(l.nickname||"").trim().toLocaleLowerCase()===nickname.toLocaleLowerCase());
+    if(duplicate){alert("A learner with that name and grade already exists in this local family. Review the existing learner instead of creating a duplicate.");return}
+    let learner;
+    try{learner=R.registerLearner({familyId:family.familyId,nickname,stage:meta.stage,grade})}
+    catch(error){alert("The learner's local profile could not be saved or verified. No official enrollment occurred.");return}
+    const adult=R.getAdult();if(adult)try{R.grantAdultAccess({familyId:family.familyId,adultId:adult.adultId,learnerId:learner.learnerId,permissionPreset:"co-guardian"})}catch(error){alert("The local guardian relationship was not saved. This learner is not verified or officially enrolled; review the family record.");render();return}
     try{IDs?.ensureLearner?.(learner.learnerId);learner=R.getLearner(learner.learnerId)}catch{}
-    R.setActive?.({familyId:family.familyId,learnerId:learner.learnerId});
+    try{R.setActive?.({familyId:family.familyId,learnerId:learner.learnerId})}catch(error){alert("The learner profile was saved locally, but selection could not be confirmed. Please review the Family Portal.");render();return}
     render();
     const pane=document.getElementById("learnerPane");
     if(pane){
       const notice=document.createElement("section");notice.id="learnerAddedNotice";notice.className="notice ok";notice.setAttribute("role","status");notice.setAttribute("aria-live","polite");
-      const heading=document.createElement("strong");heading.textContent=learner.nickname+" is registered for "+meta.label+".";
-      const detail=document.createElement("p");detail.textContent="This learner is now selected. Add another learner to this family, or finish and open the selected learner's pathway.";
+      const heading=document.createElement("strong");heading.textContent=learner.nickname+" has a provisional local profile for "+meta.label+".";
+      const detail=document.createElement("p");detail.textContent="Saved on this device only — not verified or officially enrolled. Add another learner or continue to free lessons while secure enrollment is being prepared.";
       const actions=document.createElement("div");actions.className="actions";
       const addAnother=document.createElement("button");addAnother.type="button";addAnother.className="btn secondary";addAnother.textContent="Add Another Learner";
       addAnother.addEventListener("click",()=>{const input=document.getElementById("nickname");input?.focus();input?.scrollIntoView({behavior:"smooth",block:"center"})});
