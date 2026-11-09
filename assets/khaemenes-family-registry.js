@@ -165,7 +165,7 @@
   }
 
   function load(){return normalizeRegistry(readJSON(KEYS.registry,emptyRegistry()))}
-  function save(registry){const r=normalizeRegistry(registry);r.updatedAt=now();writeJSON(KEYS.registry,r);return clone(r)}
+  function save(registry){const r=normalizeRegistry(registry);r.updatedAt=now();if(!writeJSON(KEYS.registry,r))throw new Error("family-registry-storage-write-failed");const stored=readJSON(KEYS.registry,null);if(!stored||stored.updatedAt!==r.updatedAt||JSON.stringify(stored)!==JSON.stringify(r))throw new Error("family-registry-storage-readback-failed");return clone(r)}
   function audit(action,details={}){const entries=readJSON(KEYS.audit,[]);entries.push({at:now(),action:clean(action,80),details:clone(details)});writeJSON(KEYS.audit,entries.slice(-300))}
 
   function activeIds(){return {familyId:readJSON(KEYS.activeFamily,null),adultId:readJSON(KEYS.activeAdult,null),learnerId:readJSON(KEYS.activeLearner,null)}}
