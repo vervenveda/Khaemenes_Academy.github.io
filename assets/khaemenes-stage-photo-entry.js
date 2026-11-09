@@ -50,6 +50,7 @@
   open.addEventListener("click",()=>{if(!selected(stage))return;editor.open("picture")});
   controls.append(heading,note,open);wrap.append(portrait,controls);
   const adapter={
+  allowYearbook:true,
    getIdentity(){const l=selected(stage);return l?{id:l.learnerId,displayName:l.nickname||"Learner"}:null},
    readLook(id){return snapshot(stage,id)?.look||{}},
    readPhoto(id){return snapshot(stage,id)?.photo||""},
