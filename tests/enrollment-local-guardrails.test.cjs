@@ -4,11 +4,11 @@ const test=require("node:test"),assert=require("node:assert/strict");
 const fs=require("node:fs"),path=require("node:path"),vm=require("node:vm");
 const root=path.resolve(__dirname,"..");
 const src=fs.readFileSync(path.join(root,"assets/khaemenes-family-registry.js"),"utf8");
-function harness({failWrite=false,loseReadback=false}={}){
+function harness({failWrite=false,loseReadback=false,failActive=false}={}){
  const data=new Map(),events=[];
  const store={
    getItem(key){return loseReadback&&key==="khaemenes_family_registry_v1"?null:data.get(key)??null},
-   setItem(key,value){if(failWrite)throw Error("storage-blocked");data.set(key,String(value))},
+   setItem(key,value){if(failWrite||(failActive&&key==="khaemenes_active_family_v1"))throw Error("storage-blocked");data.set(key,String(value))},
    removeItem(key){data.delete(key)}
  };
  const global={localStorage:store,crypto:{randomUUID:()=>"test-"+String(data.size)+"-"+String(events.length)},location:{origin:"https://example.invalid"},dispatchEvent:e=>events.push(e.type),CustomEvent:class {constructor(type,options){this.type=type;this.detail=options?.detail}},addEventListener:()=>{}};
@@ -49,7 +49,7 @@ test("four-step guardian intake is local-only and does not collect credentials o
  for(const step of [1,2,3,4])assert.match(form,new RegExp('data-intake-step="'+step+'"'));
  assert.match(form,/intakeAcknowledgment/);
  assert.match(form,/Create Provisional Family Profile/);
- assert.match(form,/guardian relationship was not saved|grantAdultAccess/);
+ assert.match(form,/createFamilyIntake/);
  assert.match(form,/This is not verified Academy enrollment/);
  assert.match(form,/A matching family and adult already exist/);
  assert.doesNotMatch(form,/<input[^>]*type="password"/i);
@@ -60,4 +60,40 @@ test("enrollment inline script parses as valid JavaScript",()=>{
  const blocks=[...form.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)].map(m=>m[1]);
  assert.ok(blocks.length);
  blocks.forEach((code,i)=>new vm.Script(code,{filename:"inline-"+i+".js"}));
+});
+
+test("single-write intake creates linked family, adult, learner and provisional access",()=>{
+ const {registry,data}=harness();
+ const created=registry.createFamilyIntake({displayName:"Sample Family",adultName:"Caregiver",adultRole:"caregiver",nickname:"Scholar",grade:"09"});
+ const stored=JSON.parse(data.get(registry.keys.registry));
+ assert.equal(Object.keys(stored.families).length,1);
+ assert.equal(Object.keys(stored.learners).length,1);
+ assert.deepEqual(stored.families[created.familyId].learnerIds,[created.learnerId]);
+ assert.equal(stored.learners[created.learnerId].grade,"09");
+ assert.equal(stored.learnerAdultAccess[created.learnerId+":"+created.adultId].status,"active");
+ assert.match(stored.learners[created.learnerId].accountState,/^local-/);
+ assert.equal(registry.activeIds().familyId,created.familyId);
+ assert.throws(()=>registry.createFamilyIntake({displayName:"Sample Family",adultName:"Caregiver"}),/intake-local-duplicate/);
+ assert.equal(Object.keys(registry.load().families).length,1);
+});
+test("failed registry write creates no partial family or learner",()=>{
+ const {registry}=harness({failWrite:true});
+ assert.throws(()=>registry.createFamilyIntake({displayName:"Sample",adultName:"Adult",nickname:"Scholar",grade:"09"}),/local-registry-write-failed/);
+ assert.equal(Object.keys(registry.load().families).length,0);
+ assert.equal(Object.keys(registry.load().learners).length,0);
+});
+test("failed active selection keeps complete saved intake recoverable",()=>{
+ const {registry}=harness({failActive:true});
+ const created=registry.createFamilyIntake({displayName:"Sample",adultName:"Adult",nickname:"Scholar",grade:"09"});
+ const stored=registry.load();
+ assert.ok(stored.families[created.familyId]);
+ assert.ok(stored.learners[created.learnerId]);
+ assert.ok(stored.learnerAdultAccess[created.learnerId+":"+created.adultId]);
+ assert.notEqual(registry.activeIds().familyId,created.familyId);
+ assert.throws(()=>registry.createFamilyIntake({displayName:"Sample",adultName:"Adult"}),/intake-local-duplicate/);
+});
+test("intake grade is validated before any registry save",()=>{
+ const {registry}=harness();
+ assert.throws(()=>registry.createFamilyIntake({displayName:"Sample",adultName:"Adult",nickname:"Scholar",grade:"invalid"}),/intake-grade-invalid/);
+ assert.equal(Object.keys(registry.load().families).length,0);
 });
