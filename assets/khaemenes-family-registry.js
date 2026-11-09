@@ -415,10 +415,19 @@
     const familyLearnerIds=arr(family?.learnerIds,200);
     for(const id of familyAdultIds)if(!adultIds.has(id))errors.push("family-adult-reference-missing");
     for(const id of familyLearnerIds)if(!learnerIds.has(id))errors.push("family-learner-reference-missing");
+    if(new Set(familyAdultIds).size!==familyAdultIds.length||familyAdultIds.length!==adultIds.size)errors.push("family-adult-reference-mismatch");
+    if(new Set(familyLearnerIds).size!==familyLearnerIds.length||familyLearnerIds.length!==learnerIds.size)errors.push("family-learner-reference-mismatch");
+    const seenAccess=new Set();
+    const permitted=new Set(Object.values(PERMISSION_PRESETS).flatMap(p=>p.permissions));
     for(const record of access){
+      const adultId=clean(record?.adultId,180),learnerId=clean(record?.learnerId,180),key=`${learnerId}:${adultId}`;
       if(clean(record?.familyId,180)!==familyId)errors.push("access-family-mismatch");
-      if(!adultIds.has(clean(record?.adultId,180)))errors.push("access-adult-reference-missing");
-      if(!learnerIds.has(clean(record?.learnerId,180)))errors.push("access-learner-reference-missing");
+      if(!adultIds.has(adultId))errors.push("access-adult-reference-missing");
+      if(!learnerIds.has(learnerId))errors.push("access-learner-reference-missing");
+      if(seenAccess.has(key))errors.push("duplicate-access-reference");
+      seenAccess.add(key);
+      if(!["active","revoked"].includes(record?.status))errors.push("invalid-access-status");
+      if(!Array.isArray(record?.permissions)||record.permissions.some(p=>!permitted.has(p)))errors.push("unknown-access-permission");
     }
     return Object.freeze({
       ok:errors.length===0,
