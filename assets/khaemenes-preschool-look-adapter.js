@@ -73,4 +73,5 @@ const adapter=Object.freeze({
 if(!core.register(adapter))return;
 w.KhaemenesPreschoolUniversalLookAdapter=adapter;
  adapter.refresh();
+window.addEventListener("khaemenes-family-changed",()=>adapter.refresh());
 })();
