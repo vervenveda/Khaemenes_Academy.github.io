@@ -139,3 +139,16 @@ test("Middle School reports are matched to learner and registered grade",()=>{
  const scripts=[...html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)].map(m=>m[1]);
  scripts.forEach((script,i)=>new vm.Script(script,{filename:"family-inline-"+i+".js"}));
 });
+
+test("Elementary Grade 1–5 reporting requires matching learner, course and grade",()=>{
+ const html=fs.readFileSync(path.join(root,"family/index.html"),"utf8");
+ assert.match(html,/function elementaryGradeMatches\(snapshot,learner\)/);
+ assert.match(html,/snapshot\?\.learnerId!==learner\.learnerId/);
+ assert.match(html,/snapshot\.courseId!==id/);
+ for(const label of ["First Grade","Second Grade","Third Grade","Fourth Grade","Fifth Grade"])assert.ok(html.includes(label));
+ assert.match(html,/Grade 01 academic reporting is pending/);
+ assert.match(html,/No matching Elementary course summary/);
+ assert.match(html,/This is not an official transcript or the entire student record/);
+ const scripts=[...html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)].map(x=>x[1]);
+ scripts.forEach((code,i)=>new vm.Script(code,{filename:"family-inline-"+i+".js"}));
+});
