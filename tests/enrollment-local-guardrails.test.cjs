@@ -152,3 +152,16 @@ test("Elementary Grade 1–5 reporting requires matching learner, course and gra
  const scripts=[...html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)].map(x=>x[1]);
  scripts.forEach((code,i)=>new vm.Script(code,{filename:"family-inline-"+i+".js"}));
 });
+
+test("Pre-K and Kindergarten family summaries are learner scoped and not invented grades",()=>{
+ const html=fs.readFileSync(path.join(root,"family/index.html"),"utf8");
+ assert.match(html,/function earlyLearningMatches\(snapshot,learner\)/);
+ assert.match(html,/snapshot\?\.learnerId!==learner\?\.learnerId/);
+ assert.match(html,/preschool-adventure-garden/);
+ assert.match(html,/khaemenes-kindergarten-formal-path/);
+ assert.match(html,/Guest play is not assigned to a student/);
+ assert.match(html,/Exploration is optional, playful, and never scored as mastery/);
+ assert.match(html,/const bars=l\.stage==="preschool"\?"":/);
+ const scripts=[...html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)].map(m=>m[1]);
+ scripts.forEach((s,i)=>new vm.Script(s,{filename:"family-inline-"+i+".js"}));
+});
