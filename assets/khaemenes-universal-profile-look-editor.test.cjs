@@ -52,6 +52,20 @@ for(const swatch of colors){
  assert.ok(swatch.attributes["aria-label"]?.includes(swatch.dataset.color));
 }
 assert.equal(elements.get("kplsFrames").children.length,10);
+const expectedButtonNames={
+ kplsYearbookPhoto:"Yearbook Photo",
+ kplsYearbookHero:"Yearbook Background",
+ kplsOpenYearbook:"Open Yearbook",
+ kplsRemoveHero:"Clear Background"
+};
+const dialogHTML=elements.get("kplsDialog").innerHTML;
+for(const [id,name] of Object.entries(expectedButtonNames)){
+ assert.ok(dialogHTML.includes('id="'+id+'" aria-label='));
+ assert.ok(dialogHTML.includes(">"+name+"</button>"),"short single-line label "+id);
+}
+assert.ok(source.includes("#kplsDialog #kplsYearbookSources{display:grid;grid-template-columns:minmax(0,1fr)"),"Yearbook controls are vertically stacked horizontal buttons");
+assert.ok(source.includes("white-space:nowrap;overflow:hidden;text-overflow:ellipsis"),"Yearbook labels cannot wrap into multiple lines");
+
 colors[8].trigger("click");
 elements.get("kplsSave").trigger("click");
 assert.equal(stored.look.cardColor,colors[8].dataset.color);
