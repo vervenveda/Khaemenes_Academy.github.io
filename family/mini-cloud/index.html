@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer"><meta name="color-scheme" content="light">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'nonce-AcademyFamilyPreviewV1'; style-src 'nonce-AcademyFamilyPreviewV1'; img-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Khaemenes Academy · Family Mini Cloud Preview</title>
+<style nonce="AcademyFamilyPreviewV1">
+:root{--char:#202b28;--cream:#fff8e9;--paper:#f4eee3;--ink:#27312d;--line:#c7b99f;--gold:#bda171;--green:#315c49}
+*{box-sizing:border-box}html{font-size:16px}body{margin:0;background:var(--paper);color:var(--ink);font:400 18px/1.6 Nunito,Arial,sans-serif}h1,h2,h3{font-family:Cinzel,Georgia,serif;font-weight:400;line-height:1.28}h1{font-size:clamp(34px,4.5vw,52px);margin:13px 0 12px;letter-spacing:.012em}h2{font-size:clamp(25px,3vw,30px);margin:0 0 16px}h3{font-size:22px;margin:0 0 8px}
+.top{background:var(--char);color:var(--cream);border-bottom:3px solid var(--gold)}.wrap{width:min(1180px,calc(100% - 36px));margin-inline:auto}.top .wrap{padding:48px 0 44px;display:flex;flex-direction:column;align-items:center;text-align:center}.eyebrow{font:400 16px/1.6 Cinzel,Georgia,serif;letter-spacing:.06em;color:#dec798;margin:0}.subtitle{max-width:760px;margin:0 auto;font-size:18px;color:#f1e8d8}.status-strip{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:25px}.tag{border:1px solid #ae9870;color:var(--cream);border-radius:7px;padding:8px 14px;font-size:16px;line-height:1.5}.tag-muted{border-color:#8c938b;color:#e9e6de}
+.notice{margin:20px 0;padding:18px 22px;border:1px solid #c8bda8;border-left:3px solid var(--gold);border-radius:7px;background:#fffaf0;font-size:16px}.notice strong{font-weight:600}.alert{border:1px solid var(--line);border-radius:7px;background:#fffcf5;padding:14px 18px;margin:22px auto 0;max-width:900px;font-size:16px;white-space:pre-wrap;text-align:center}.alert[data-error=true]{border-color:#9b4a4a;color:#792d2d}
+.panel{background:#fffbf3;border:1px solid var(--line);border-radius:7px;padding:24px;min-width:0}.panel p{margin:0 0 16px}.login{max-width:760px;margin:24px auto 30px;padding:38px 46px 36px;border:2px solid #c4b292;box-shadow:0 12px 35px rgba(34,40,34,.065);text-align:center}.login h2{margin:10px 0 15px}.login p{max-width:610px;margin:0 auto 18px;font-size:17px}.login-icon{display:grid;place-items:center;width:68px;height:68px;border:1px solid #c2a873;border-radius:50%;color:#735d3f;background:#f3eddf;margin:0 auto 16px}.login-icon svg{width:31px;height:31px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.login-form{max-width:470px;margin:26px auto 0;text-align:left}.login-form .actions{display:grid;grid-template-columns:1fr;gap:10px;margin-top:14px}.login-form button{width:100%}.login .muted{font-size:16px;color:#526056;margin-top:18px}
+button,.btn{min-height:48px;padding:11px 16px;border:1px solid var(--char);border-radius:7px;background:var(--char);color:var(--cream);font:400 16px/1.45 Nunito,Arial,sans-serif;cursor:pointer;transition:background .15s ease}button:hover:not(:disabled){background:#394a42}button:disabled{opacity:.57;cursor:not-allowed}.secondary{background:#fffbf3;color:var(--char)}.secondary:hover:not(:disabled){background:#eae3d7}input,select,textarea{width:100%;max-width:100%;min-height:48px;border:1px solid #7b8378;border-radius:7px;background:white;color:var(--ink);padding:10px 12px;font:400 17px/1.5 Nunito,Arial,sans-serif}textarea{resize:vertical;min-height:138px}label{display:block;font-size:17px;margin:10px 0 7px}
+.privacy{max-width:900px;margin:0 auto 42px}.privacy h2{text-align:center;margin-bottom:9px}.privacy .intro{text-align:center;font-size:17px;max-width:740px;margin:0 auto 22px}.privacy-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.privacy-item{border:1px solid var(--line);border-radius:7px;background:#fffcf6;padding:22px 17px;text-align:center}.privacy-item svg{width:28px;height:28px;stroke:#4b5e4e;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.privacy-item h3{font:400 19px/1.4 Cinzel,Georgia,serif;margin:10px 0 8px}.privacy-item p{font-size:16px;margin:0;color:#4c594f}.privacy-disclaimer{margin:16px auto 0;max-width:800px;font-size:16px;text-align:center;color:#48574f}
+.layout{display:grid;grid-template-columns:265px minmax(0,1fr);gap:20px;margin:24px 0 42px}.sidebar button{width:100%;margin:4px 0}.sidebar .side-note{font-size:16px;color:#48574c;margin-top:16px}.records{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}.record{background:white;border:1px solid var(--line);padding:17px;border-radius:7px;min-width:0}.record h3{overflow-wrap:anywhere}.record small{font-size:16px;color:#495b4f}.record button{margin-top:10px;margin-right:6px}.muted{color:#4a5a50;font-size:16px}.divider{border-top:1px solid var(--line);margin:22px 0}.form-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}.hidden,[hidden]{display:none!important}.scope{padding-left:22px;margin:7px 0}.scope li{margin:3px 0}footer{text-align:center;background:var(--char);color:var(--cream);padding:28px 18px;font-size:16px;line-height:1.65}footer .footer-note{display:block;color:#e4ddce}a{color:inherit}:focus-visible{outline:3px solid #b48b45;outline-offset:3px}
+@media(max-width:780px){.top .wrap{padding:36px 0}.wrap{width:min(100% - 28px,1180px)}.layout{grid-template-columns:1fr}.records,.form-row,.privacy-grid{grid-template-columns:1fr}.panel{padding:18px}.login{padding:30px 20px}.privacy-item{padding:17px}.status-strip{gap:9px}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><p class="eyebrow">Khaemenes Academy · Verve N Veda</p><h1>Family Mini Cloud</h1><p class="subtitle">Your family's private educational workspace. Beautifully organized, encrypted on this device, and reserved for Academy learning records.</p><div class="status-strip" aria-label="Vault capabilities"><span class="tag">Local encrypted vault</span><span class="tag">Academy-only records</span><span class="tag tag-muted">STOS T03 sync: Not connected</span></div></div></header>
+<div class="wrap">
+
+<div id="alert" class="alert" role="status" aria-live="polite">No vault opened. Create or unlock a local encrypted vault to begin.</div>
+<section aria-labelledby="unlockTitle" class="panel login" id="locked">
+<div class="login-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><path d="M12 14v3"/></svg></div>
+<h2 id="unlockTitle">Welcome to Your Family Vault</h2>
+<p>A private place for educational memories, portfolios, and family learning records. Your records are encrypted in this browser and are not silently uploaded.</p>
+<div class="login-form"><label for="password">Vault passphrase</label><input autocomplete="new-password" id="password" minlength="12" placeholder="At least 12 characters" type="password"/><div class="actions"><button id="unlock">Open My Family Vault</button><button class="secondary" id="importBefore">Restore Encrypted Backup</button></div></div>
+<p class="muted">New here? Enter a passphrase of at least 12 characters to create a local vault. Keep it safe: this preview cannot recover a lost passphrase. Export an encrypted backup regularly.</p>
+</section>
+<section class="privacy" aria-labelledby="privacyTitle">
+<h2 id="privacyTitle">Your Privacy &amp; Protection</h2>
+<p class="intro">The Family Mini Cloud is built around personal ownership, clear storage boundaries, and honest recovery information.</p>
+<div class="privacy-grid">
+<div class="privacy-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg><h3>Private by Design</h3><p>Your records are encrypted locally in this browser. There is no automatic cloud upload.</p></div>
+<div class="privacy-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10H3Z"/><path d="M9 20v-7h6v7"/></svg><h3>Academy Records</h3><p>Designed only for Khaemenes Academy and Verve N Veda education and family continuity.</p></div>
+<div class="privacy-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18h12a4 4 0 0 0 0-8 6 6 0 0 0-11.6-1.6A5 5 0 0 0 6 18Z"/><path d="m8 8 8 8M16 8l-8 8"/></svg><h3>Recovery Status</h3><p>STOS T03 is not connected. An encrypted export is your separate recovery copy.</p></div>
+</div><p class="privacy-disclaimer">Purpose restricted: not a general file-hosting service. Uploaded file origins are not independently verified in this preview. Local browser data can be lost if browser storage is cleared.</p>
+</section>
+<div class="layout hidden" id="workspace">
+<aside class="panel sidebar" aria-label="Mini Cloud tools"><h2>Cloud Directory</h2><button id="showAll">All Approved Records</button><button id="showFamily">Family Records</button><button id="showScholar">Scholars</button><button id="showAcademic">Academic Evidence</button><button id="showPortfolio">Portfolios</button><button id="showVnv">VNV Materials</button><div class="divider"></div><button id="backup">Export Encrypted Backup</button><button id="restore" class="secondary">Restore Encrypted Backup</button><button id="lock" class="secondary">Lock Vault</button><p class="side-note"><strong>Local status:</strong> Encrypted on this device.<br><strong>Remote backup:</strong> Not synchronized.<br><strong>Transcript:</strong> Source evidence only; no official transcript generator.</p></aside>
+<main class="panel" id="main"><h2>My Family Cloud</h2><p id="listingTitle">Approved Academy and Verve N Veda records</p><div class="form-row"><div><label for="recordCategory">Record category</label><select id="recordCategory"><option value="family">Family records</option><option value="scholar">Scholar record</option><option value="academic">Verified academic evidence (uploaded copy)</option><option value="portfolio">Academy portfolio</option><option value="vnv">Verve N Veda material</option></select></div><div><label for="recordTitle">Record title</label><input id="recordTitle" maxlength="120" placeholder="e.g. Family learning plan"></div></div><label for="recordNote">Record notes (encrypted)</label><textarea id="recordNote" maxlength="200000" placeholder="Enter approved family or educational notes. Do not enter passwords or passcodes."></textarea><div class="actions"><button id="saveNote">Save Encrypted Note</button><button id="attach">Attach Academy File</button></div><p class="muted">Attachments: PDF, TXT, MD, CSV, JSON, PNG, JPEG, WebP, DOCX, ODT, ODS and ODP. Prototype maximum: 5 MiB per file; this is not a commercial storage allowance. HTML/JavaScript execution is not supported.</p><div class="divider"></div><h2>Encrypted Records</h2><p class="muted" id="recordCount">0 records</p><div id="records" class="records" aria-live="polite"></div></main>
+</div>
+</div>
+<input type="file" id="attachInput" hidden accept=".pdf,.txt,.md,.csv,.json,.png,.jpg,.jpeg,.webp,.docx,.odt,.ods,.odp">
+<input type="file" id="restoreInput" hidden accept=".json,.khaevault">
+<footer>Khaemenes Academy · Sovereign Mini Cloud · Local-only engineering preview<br>Account Cloud T03, authenticated synchronization, and production recovery remain uncommissioned.</footer>
+<script nonce="AcademyFamilyPreviewV1">
+(()=>{'use strict';
+const DB='khaemenes-family-mini-cloud-preview-v1', STORE='encrypted', RECOVERY='pre_restore_recovery', SENT='__vault_check__', LIMIT=5*1024*1024, ITERATIONS=310000;
+const CATS={family:'Family records',scholar:'Scholar record',academic:'Academic evidence',portfolio:'Academy portfolio',vnv:'VNV materials'};
+const extOk=/\.(pdf|txt|md|csv|json|png|jpe?g|webp|docx|odt|ods|odp)$/i;
+const $=id=>document.getElementById(id), text=(id,v)=>{$(id).textContent=v}, alertStatus=(v,bad=false)=>{text('alert',v);$('alert').dataset.error=String(bad)};
+let db=null,key=null,filter='all';
+const te=new TextEncoder(),td=new TextDecoder();
+const b64=a=>{let s='';const u=new Uint8Array(a);for(let i=0;i<u.length;i+=8192)s+=String.fromCharCode(...u.subarray(i,i+8192));return btoa(s)};
+const from64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+const rand=n=>crypto.getRandomValues(new Uint8Array(n));
+function req(r){return new Promise((ok,no)=>{r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)})}
+function txDone(t){return new Promise((ok,no)=>{t.oncomplete=()=>ok();t.onabort=()=>no(t.error||Error('Storage transaction aborted'));t.onerror=()=>no(t.error||Error('Storage transaction failed'))})}
+async function openDB(){if(db)return db;const r=indexedDB.open(DB,2);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains(STORE))r.result.createObjectStore(STORE,{keyPath:'id'});if(!r.result.objectStoreNames.contains(RECOVERY))r.result.createObjectStore(RECOVERY,{keyPath:'id'})};db=await req(r);db.onversionchange=()=>{db.close();db=null};return db}
+async function get(id){const d=await openDB();return req(d.transaction(STORE,'readonly').objectStore(STORE).get(id))}
+async function getAll(){const d=await openDB();return req(d.transaction(STORE,'readonly').objectStore(STORE).getAll())}
+async function put(obj){const d=await openDB(),t=d.transaction(STORE,'readwrite');t.objectStore(STORE).put(obj);await txDone(t)}
+async function remove(id){const d=await openDB(),t=d.transaction(STORE,'readwrite');t.objectStore(STORE).delete(id);await txDone(t)}
+async function derive(p,salt){const raw=await crypto.subtle.importKey('raw',te.encode(p),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:ITERATIONS,hash:'SHA-256'},raw,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
+async function seal(data){if(!key)throw Error('Vault locked');const iv=rand(12),cipher=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,te.encode(JSON.stringify(data)));return {iv:b64(iv),cipher:b64(cipher)}}
+async function unseal(rec){if(!key)throw Error('Vault locked');return JSON.parse(td.decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:from64(rec.iv)},key,from64(rec.cipher))))}
+function show(open){$('locked').classList.toggle('hidden',open);$('workspace').classList.toggle('hidden',!open)}
+async function unlock(){try{const p=$('password').value;if(p.length<12)throw Error('Enter a passphrase of at least 12 characters.');const marker=await get(SENT);if(!marker){const salt=rand(16);key=await derive(p,salt);const record=await seal({type:'sentinel',text:'KHAEMENES_LOCAL_VAULT_V1'});await put({id:SENT,salt:b64(salt),...record,createdAt:new Date().toISOString()});alertStatus('New encrypted local vault created. Export a recovery backup after adding records.')}else{key=await derive(p,from64(marker.salt));const plain=await unseal(marker);if(plain.text!=='KHAEMENES_LOCAL_VAULT_V1')throw Error('Invalid vault sentinel');alertStatus('Vault unlocked. Records are encrypted on this device; STOS synchronization is not active.')} $('password').value='';show(true);await render()}catch(e){key=null;alertStatus('Unable to unlock: '+(e.name==='OperationError'?'Incorrect passphrase or damaged vault.':e.message),true)}}
+async function storeData(data){const now=new Date().toISOString();const record={id:crypto.randomUUID(),createdAt:now,updatedAt:now,...await seal(data)};await put(record);return record}
+async function saveNote(){try{const title=$('recordTitle').value.trim(),body=$('recordNote').value,category=$('recordCategory').value;if(!title||!body.trim())throw Error('Enter a title and a note.');if(!CATS[category])throw Error('Unsupported record category.');await storeData({kind:'note',title,body,category,createdAt:new Date().toISOString(),origin:'user-entered-unverified'});$('recordTitle').value='';$('recordNote').value='';await render();alertStatus('Encrypted note saved locally. No STOS backup has been made.')}catch(e){alertStatus('Save failed: '+e.message,true)}}
+async function upload(file){try{if(!file||!extOk.test(file.name))throw Error('Only approved education document/image formats are supported.');if(file.size>LIMIT)throw Error('File exceeds this prototype\'s 5 MiB per-file technical limit.');const category=$('recordCategory').value;if(!CATS[category])throw Error('Unsupported category.');const bytes=await file.arrayBuffer();await storeData({kind:'file',title:file.name,category,content:b64(bytes),mime:file.type||'application/octet-stream',size:bytes.byteLength,origin:'user-upload-unverified'});await render();alertStatus('File encrypted and saved locally. No remote copy exists.')}catch(e){alertStatus('Upload failed: '+e.message,true)}}
+function downloadBlob(blob,name){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000)}
+async function exportBackup(){try{if(!key)throw Error('Unlock vault first.');const data=await getAll(),marker=data.find(r=>r.id===SENT);if(!marker)throw Error('Vault has no valid sentinel.');const payload={format:'khaemenes-encrypted-local-vault',version:1,createdAt:new Date().toISOString(),cipher:'AES-256-GCM',kdf:'PBKDF2-SHA256',iterations:ITERATIONS,records:data};downloadBlob(new Blob([JSON.stringify(payload)],{type:'application/json'}),'khaemenes-family-encrypted-backup.khaevault');alertStatus('Encrypted backup downloaded. Store it safely and keep the passphrase separately. This is not a STOS sync confirmation.')}catch(e){alertStatus('Backup failed: '+e.message,true)}}
+function validBackup(x){
+ if(!x||x.format!=='khaemenes-encrypted-local-vault'||x.version!==1||x.cipher!=='AES-256-GCM'||x.kdf!=='PBKDF2-SHA256'||x.iterations!==ITERATIONS||!Array.isArray(x.records)||x.records.length<1||x.records.length>10000)throw Error('Unsupported or invalid backup format.');
+ const ids=new Set();
+ for(const r of x.records){
+  if(!r||typeof r!=='object'||Array.isArray(r)||typeof r.id!=='string'||r.id.length<1||r.id.length>100||ids.has(r.id)||typeof r.iv!=='string'||typeof r.cipher!=='string'||r.cipher.length<20||r.cipher.length>20_000_000||!/^[A-Za-z0-9+/]+={0,2}$/.test(r.cipher)||!/^[A-Za-z0-9+/]+={0,2}$/.test(r.iv))throw Error('Invalid encrypted record in backup.');
+  ids.add(r.id);
+  if(from64(r.iv).byteLength!==12||from64(r.cipher).byteLength<16)throw Error('Invalid encrypted record dimensions.');
+  if(r.id===SENT){if(typeof r.salt!=='string'||!/^[A-Za-z0-9+/]+={0,2}$/.test(r.salt)||from64(r.salt).byteLength!==16)throw Error('Missing or invalid vault recovery metadata.');}
+ }
+ const sentinel=x.records.find(r=>r.id===SENT);
+ if(!sentinel)throw Error('Missing vault recovery sentinel.');
+ return sentinel;
+}
+async function validateBackupRecords(records,candidate){
+ const names=new Set(Object.keys(CATS));
+ for(const r of records){
+  const raw=await crypto.subtle.decrypt({name:'AES-GCM',iv:from64(r.iv)},candidate,from64(r.cipher));
+  const obj=JSON.parse(td.decode(raw));
+  if(!obj||typeof obj!=='object'||Array.isArray(obj))throw Error('Backup contains an invalid decrypted record.');
+  if(r.id===SENT){if(obj.type!=='sentinel'||obj.text!=='KHAEMENES_LOCAL_VAULT_V1')throw Error('Backup sentinel content mismatch.');continue;}
+  if((obj.kind!=='note'&&obj.kind!=='file')||!names.has(obj.category)||typeof obj.title!=='string'||!obj.title.trim()||obj.title.length>512)throw Error('Backup contains unsupported academic data.');
+  if(obj.kind==='note'&&(typeof obj.body!=='string'||obj.body.length>8_000_000))throw Error('Backup note is invalid.');
+  if(obj.kind==='file'&&(typeof obj.content!=='string'||obj.content.length>8_000_000||!/^[A-Za-z0-9+/]*={0,2}$/.test(obj.content)||typeof obj.size!=='number'||obj.size>LIMIT||obj.size<0||from64(obj.content).byteLength!==obj.size))throw Error('Backup file is invalid.');
+ }
+}
+async function restore(file){
+ try{
+  if(!file||file.size>50*1024*1024)throw Error('Backup exceeds 50 MiB prototype restore limit.');
+  const data=JSON.parse(await file.text()),sentinel=validBackup(data);
+  const p=prompt('Enter the passphrase for the backup being restored:');
+  if(p===null)return;
+  if(p.length<12)throw Error('A valid backup passphrase is required.');
+  const candidate=await derive(p,from64(sentinel.salt));
+  await validateBackupRecords(data.records,candidate);
+  const existing=await getAll();
+  if(existing.length&&!confirm('All backup records passed authentication. This will REPLACE your current local vault. A transactional encrypted pre-restore snapshot will be retained locally, but is NOT an independent device backup. Have you also exported your existing vault to a safe location?'))return;
+  const d=await openDB(),t=d.transaction([STORE,RECOVERY],'readwrite');
+  const records=t.objectStore(STORE);
+  if(existing.length)t.objectStore(RECOVERY).put({id:'latest-pre-restore',capturedAt:new Date().toISOString(),records:existing});
+  records.clear();
+  for(const r of data.records)records.put(r);
+  await txDone(t);
+  key=candidate;
+  show(true);
+  await render();
+  alertStatus('All backup records authenticated and restored. An encrypted pre-restore snapshot is held locally when prior records existed. STOS synchronization is NOT connected.');
+ }catch(e){alertStatus('Restore rejected before replacement or transaction failed: '+(e.name==='OperationError'?'Incorrect passphrase or corrupted encrypted record.':e.message),true)}
+}
+async function render(){if(!key)return;const rows=(await getAll()).filter(r=>r.id!==SENT);const arr=[];for(const r of rows){try{const d=await unseal(r);if(d&&CATS[d.category]&&(filter==='all'||d.category===filter))arr.push({meta:r,data:d})}catch{arr.push({meta:r,error:'Unreadable encrypted record'})}}const host=$('records');host.replaceChildren();text('recordCount',`${arr.length} visible record(s). Sync status: not connected.`);if(!arr.length){const p=document.createElement('p');p.className='muted';p.textContent='No records in this category yet.';host.append(p);return}for(const item of arr){const box=document.createElement('article');box.className='record';const h=document.createElement('h3');h.textContent=item.data?.title||'Encrypted record unavailable';const small=document.createElement('small');small.textContent=item.data?`${CATS[item.data.category]} · ${item.data.kind==='file'?'Attached file':'Encrypted note'}`:item.error;box.append(h,small);if(item.data){const dl=document.createElement('button');dl.textContent=item.data.kind==='file'?'Download File':'Read Note';dl.onclick=()=>{if(item.data.kind==='file'){downloadBlob(new Blob([from64(item.data.content)],{type:item.data.mime}),item.data.title.replace(/[\\/\0]/g,'_'))}else{const p=box.querySelector('.record-body');if(p){p.remove()}else{const q=document.createElement('p');q.className='record-body';q.textContent=item.data.body;box.append(q)}}};const del=document.createElement('button');del.textContent='Delete';del.className='secondary';del.onclick=async()=>{if(!confirm(`Delete local record "${item.data.title}"? Export a backup first if needed.`))return;try{await remove(item.meta.id);await render();alertStatus('Local encrypted record deleted.')}catch(e){alertStatus('Delete failed: '+e.message,true)}};box.append(dl,del)}host.append(box)}}
+function chooseFilter(next){filter=next;text('listingTitle',next==='all'?'Approved Academy and Verve N Veda records':CATS[next]);render().catch(e=>alertStatus('Could not load records: '+e.message,true))}
+$('unlock').onclick=unlock;$('password').addEventListener('keydown',e=>{if(e.key==='Enter')unlock()});$('saveNote').onclick=saveNote;$('attach').onclick=()=>$('attachInput').click();$('attachInput').onchange=e=>{const file=e.target.files?.[0];if(file)upload(file);e.target.value=''};$('backup').onclick=exportBackup;$('restore').onclick=$('importBefore').onclick=()=>$('restoreInput').click();$('restoreInput').onchange=e=>{const f=e.target.files?.[0];if(f)restore(f);e.target.value=''};$('lock').onclick=()=>{key=null;show(false);$('password').value='';$('recordTitle').value='';$('recordNote').value='';$('records').replaceChildren();alertStatus('Vault locked. In-memory encryption key released from application state.')};for(const [id,c] of [['showAll','all'],['showFamily','family'],['showScholar','scholar'],['showAcademic','academic'],['showPortfolio','portfolio'],['showVnv','vnv']])$(id).onclick=()=>chooseFilter(c);window.addEventListener('pagehide',()=>{key=null});if(!crypto?.subtle||!indexedDB){alertStatus('This browser context does not provide Web Crypto and IndexedDB. Use a supported secure context; do not store sensitive records here.',true);$('unlock').disabled=true}
+})();
+</script>
+</body></html>
