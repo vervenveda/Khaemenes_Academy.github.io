@@ -27,6 +27,7 @@ const identity=()=>{try{
 }catch{return null}};
 const settings=id=>{try{const v=JSON.parse(read(ks.sections(id))||"{}");return v&&typeof v==="object"&&!Array.isArray(v)?v:{}}catch{return {}}};
 const adapter=Object.freeze({
+ allowYearbook:true,
  showDisplayName:false,
  getIdentity:identity,
  readLook(id){
