@@ -505,13 +505,33 @@ function earlyLearningMatches(snapshot,learner){
     return snapshot.stage==="kindergarten"&&snapshot.courseId==="khaemenes-kindergarten-formal-path"&&(!snapshot.grade||snapshot.grade==="K");
   return false;
 }
+function preKFamilyDayReadOnly(learner){
+ if(learner?.stage!=="preschool"||learner.grade!=="pre-k"||!learner.learnerId)return "";
+ const key="khaemenes.prek.family-day.v1:"+encodeURIComponent(learner.learnerId);
+ let record=null;
+ try{record=JSON.parse(localStorage.getItem(key)||"null")}catch{}
+ if(record?.schema!=="khaemenes.prek.family-day.v1"||record.learnerId!==learner.learnerId||
+    !record.days||typeof record.days!=="object"||Array.isArray(record.days))return "";
+ const dates=Object.keys(record.days).filter(d=>/^\\d{4}-\\d{2}-\\d{2}$/.test(d)).sort().reverse();
+ const recentDate=dates.find(d=>typeof record.days[d]?.observation==="string"&&record.days[d].observation.trim());
+ const note=recentDate?String(record.days[recentDate].observation).slice(0,240):"";
+ const now=new Date(),today=[now.getFullYear(),String(now.getMonth()+1).padStart(2,"0"),String(now.getDate()).padStart(2,"0")].join("-");
+ const checks=record.days[today]?.checks;
+ const checked=["story","create","move","connect"].filter(k=>checks?.[k]===true).length;
+ if(!note&&!checks)return "";
+ return '<section class="family-high-overview" aria-label="Pre-K family learning moments"><h4>Our Day &amp; Learning Keepsakes</h4>'
+  +(checks?'<p><strong>Today:</strong> '+checked+' of 4 family activities marked as explored.</p>':'')
+  +(note?'<p><strong>Family note · '+esc(recentDate)+':</strong> '+esc(note)+'</p>':'')
+  +'<p class="snapshot-meta">Adult-assisted browser-local reflections. Not grades, verified attendance or academic assessments.</p></section>';
+}
 function earlyLearningOverview(learner,records){
   if(!["preschool","kindergarten"].includes(learner?.stage))return "";
   const isPreK=learner.stage==="preschool",title=isPreK?"Pre-K · Family Exploration":"Kindergarten · Family Learning";
   const matches=records.filter(s=>earlyLearningMatches(s,learner));
+  const familyDay=preKFamilyDayReadOnly(learner);
   if(!matches.length){
     const explanation=isPreK?"No linked Pre-K adventure summary has been published in this browser. Guest play is not assigned to a student.":"No learner-linked Kindergarten progress summary has been published here. This does not mean no lessons or reading activities have been completed.";
-    return `<section class="family-high-overview" aria-label="Early learning family report"><h4>${title}</h4><p class="snapshot-meta">${explanation}</p></section>`;
+    return `<section class="family-high-overview" aria-label="Early learning family report"><h4>${title}</h4><p class="snapshot-meta">${explanation}</p></section>${familyDay}`;
   }
   const latest=matches.reduce((a,b)=>(Date.parse(a.updatedAt||"")>Date.parse(b.updatedAt||"")?a:b));
   const completed=latest.progress?.completed,total=latest.progress?.total;
@@ -526,7 +546,7 @@ function earlyLearningOverview(learner,records){
     ${latest.family?.needsAction?`<p class="snapshot-action"><strong>Family participation requested:</strong> ${esc(latest.family.summary||latest.family.label||"Please review the activity")}</p>`:""}
     ${latest.stale?'<p class="snapshot-meta">A newer activity may have occurred. Open the learning page to refresh this summary.</p>':""}
     <p class="snapshot-meta">${isPreK?"Exploration is optional, playful, and never scored as mastery.":"Only the existing Kindergarten course reports formal mastery; reading and developmental activities may be tracked separately."}</p>
-  </section>`;
+  </section>${familyDay}`;
 }
 function learnerProgress(l,adult){
   if(!adult||!R?.canAdult?.(adult.adultId,l.learnerId,"progress.view")){
