@@ -1,0 +1,19 @@
+name: Family Connection Preparation
+on:
+  push:
+    paths:
+      - family/index.html
+      - tests/family-connection-readiness.test.cjs
+      - .github/workflows/family-connection-readiness.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  safe-family-connection:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/family-connection-readiness.test.cjs
