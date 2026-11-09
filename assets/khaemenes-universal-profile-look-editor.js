@@ -55,7 +55,7 @@ function style(){
 #kplsDialog .kpls-choice[aria-pressed=true]{outline:3px solid #9f8150;outline-offset:2px}
 #kplsDialog .kpls-frame-options{grid-template-columns:repeat(5,minmax(0,1fr))}
 #kplsDialog .kpls-frame-options button{font:400 16px/1.3 Nunito,Arial,sans-serif;padding:7px 5px}
-#kplsDialog .kpls-color-options .kpls-choice{height:36px;min-height:36px;background:var(--swatch);color:transparent;border:2px solid #202724}
+#kplsDialog .kpls-color-options .kpls-choice{height:44px;min-height:44px;background:var(--swatch);color:transparent;border:2px solid #202724}
 #kplsDialog .kpls-inputs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0}
 #kplsDialog .kpls-field{display:grid;gap:5px}
 #kplsDialog .kpls-field[hidden]{display:none}
@@ -90,8 +90,8 @@ function style(){
  #kplsDialog .kpls-top{margin-bottom:4px}
  #kplsDialog h3{margin:7px 0 4px}
  #kplsDialog .kpls-preview{min-height:260px}
- #kplsDialog .kpls-choice{height:36px;min-height:36px}
- #kplsDialog .kpls-color-options .kpls-choice{height:30px;min-height:30px}
+ #kplsDialog .kpls-choice{height:44px;min-height:44px}
+ #kplsDialog .kpls-color-options .kpls-choice{height:44px;min-height:44px}
  #kplsDialog .kpls-inputs{margin:7px 0}
  #kplsDialog .kpls-action-row{margin-top:7px}
 }
