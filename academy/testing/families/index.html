@@ -40,7 +40,7 @@ button:disabled{opacity:.5;cursor:not-allowed}.notice{border-left:4px solid var(
 <div><h3>Isolated acceptance checks</h3>
 <p>Tests: session expiry, multi-adult families, invitations, guardian revocation, recovery, migration conflicts, cross-device restoration, offline fallback, and rollback.</p>
 <button id="runCutoverTests" type="button">Run Synthetic Tests</button>
-<p id="cutoverResults" role="status" aria-live="polite">Not run. Real T03 gates: 0 verified.</p>
+<p id="cutoverResults" role="status" aria-live="polite">Not run. Real T03 gates: 0 verified.</p><div id="simGateCoverage" aria-live="polite"><p>Gate mapping not run. Simulator results are not protected-service evidence.</p></div>
 </div></div>
 <p><small>These scenario checks are not evidence of live STOS, Wend, OHMIC, Account Cloud storage, or cross-device commissioning. No passwords, tokens, emails, or student records are requested.</small></p>
 </section>
@@ -188,6 +188,19 @@ const simulatedAuth=Object.freeze({
   return {ok:true,recordVersion:record.recordVersion+1};
  }
 });
+const GATE_SCENARIOS=Object.freeze({
+ G01:[],G02:[],
+ G03:["synthetic sign-in creates session","invalid sign-in fails"],
+ G04:["guardian without explicit grant denied","cross-family request denied","new device hides unrelated learners","protected identity and mastery fields rejected"],
+ G05:["expired session denied","expired session cannot restore a family","guardian revocation removes permission"],
+ G06:["second adult receives a distinct identity","invitation grants only intended learner","invitation replay and expiry rejected","unauthorized revocation rejected"],
+ G07:["duplicate family claim held","unapproved migration held","interrupted migration keeps source and destination","replayed migration does not duplicate family"],
+ G08:["stale version receives conflict","fresh version increments","stale local edits cannot overwrite canonical record","explicitly approved current revision updates only allowed field"],
+ G09:["recovery hides whether account exists","expired and used recovery challenge rejected"],
+ G10:["new device restores the same authorized learner","offline fallback never claims protected access","offline local edits cannot sync automatically"],
+ G11:[],
+ G12:["rollback leaves canonical object unchanged","interrupted migration keeps source and destination"]
+});
 function runSyntheticCutoverTests(){
  const a={adultId:"synthetic-adult-A",familyId:"synthetic-family-A"};
  const b={adultId:"synthetic-adult-B",familyId:"synthetic-family-B"};
@@ -298,6 +311,22 @@ function runSyntheticCutoverTests(){
   ["mismatched family identities cannot reconcile",!simulatedRestoration.reconcile({local:{familyId:b.familyId,baseVersion:4,changes:{familyLabel:"Spoof"}},canonical:{familyId:a.familyId,recordVersion:4},approved:true}).ok]
  ];
  const passed=tests.filter(([,ok])=>ok).length;
+ const observed=new Map(tests), coverageRoot=$("simGateCoverage");
+ coverageRoot.replaceChildren();
+ const heading=document.createElement("strong");
+ heading.textContent="Simulated gate coverage only — live T03: 0/12 verified";
+ coverageRoot.append(heading);
+ const coverageList=document.createElement("ul");
+ for(const [gate,names] of Object.entries(GATE_SCENARIOS)){
+  const missing=names.filter(name=>!observed.has(name));
+  const valid=names.length>0&&missing.length===0;
+  const pass=valid&&names.every(name=>observed.get(name)===true);
+  const item=document.createElement("li");
+  item.textContent=gate+" · "+(valid?(pass?"MODELED PASS":"MODELED FAIL"):"NOT MODELED")+
+    " · "+names.length+" scenario references"+(missing.length?" · INVALID MAPPING":"")+" · LIVE UNVERIFIED";
+  coverageList.append(item);
+ }
+ coverageRoot.append(coverageList);
  const root=$("cutoverResults");root.replaceChildren();
  const summary=document.createElement("strong");summary.textContent="Synthetic scenarios: "+passed+"/"+tests.length+" passed · Live T03 gates: 0 verified";root.append(summary);
  const list=document.createElement("ul");for(const [name,ok] of tests){const item=document.createElement("li");item.textContent=(ok?"PASS: ":"FAIL: ")+name;list.append(item)}root.append(list);
