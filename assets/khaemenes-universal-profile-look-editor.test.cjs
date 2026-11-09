@@ -4,6 +4,7 @@
 const assert=require("node:assert/strict"),fs=require("node:fs"),path=require("node:path"),vm=require("node:vm");
 const source=fs.readFileSync(path.join(__dirname,"khaemenes-universal-profile-look-editor.js"),"utf8");
 const elements=new Map();
+let dialogHTML="";
 function element(tag="div"){
  const listeners={};
  const node={tagName:tag,children:[],dataset:{},attributes:{},value:"",hidden:false,open:false,
@@ -21,7 +22,7 @@ function element(tag="div"){
  };
  let markup="";
  Object.defineProperty(node,"innerHTML",{get(){return markup},set(v){
-  markup=v;
+  markup=v;dialogHTML=v;
   for(const m of v.matchAll(/id="([^"]+)"/g))elements.set(m[1],element());
   elements.set("kplsPreview",element());
  }});
@@ -52,6 +53,20 @@ for(const swatch of colors){
  assert.ok(swatch.attributes["aria-label"]?.includes(swatch.dataset.color));
 }
 assert.equal(elements.get("kplsFrames").children.length,10);
+const expectedButtonNames={
+ kplsYearbookPhoto:"Yearbook Photo",
+ kplsYearbookHero:"Yearbook Background",
+ kplsOpenYearbook:"Open Yearbook",
+ kplsRemoveHero:"Clear Background"
+};
+
+for(const [id,name] of Object.entries(expectedButtonNames)){
+ assert.ok(dialogHTML.includes('id="'+id+'" aria-label='));
+ assert.ok(dialogHTML.includes(">"+name+"</button>"),"short single-line label "+id);
+}
+assert.ok(source.includes("#kplsDialog #kplsYearbookSources{display:grid;grid-template-columns:minmax(0,1fr)"),"Yearbook controls are vertically stacked horizontal buttons");
+assert.ok(source.includes("white-space:nowrap;overflow:hidden;text-overflow:ellipsis"),"Yearbook labels cannot wrap into multiple lines");
+
 colors[8].trigger("click");
 elements.get("kplsSave").trigger("click");
 assert.equal(stored.look.cardColor,colors[8].dataset.color);
