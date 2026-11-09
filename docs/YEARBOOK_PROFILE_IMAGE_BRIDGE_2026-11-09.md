@@ -37,3 +37,12 @@ Status: review-branch candidate, NOT deployed
 2. Review/publish the canonical Yearbook application, verifying the new opt-in action against the bridge.
 3. Review/publish each campus's learner editor integrations one grade/stage at a time, checking the script version URLs and local picture restoration.
 4. Do not merge to production or commission STOS/T03 without separate user authorization.
+
+## Verification continuation — 2026-11-09
+
+- High School shared photo component now increments a photo-operation revision when an ordinary upload starts, a Yearbook selection starts, an image is removed, or a selected learner changes. Old asynchronous image decodes are discarded. Its persistent Grade 9–12 wiring test checks the cancellation guards.
+- The Middle/Higher stage Yearbook launcher was found to use an undefined `d` variable; corrected to the actual document object and versioned on both dependent campus pages.
+- The stage-photo regression now executes the Yearbook launch button, proves it uses the currently selected learner ID, and rejects launches after changing to an ineligible profile. **22 synthetic assertions passed** after repair.
+- Parent-specific photo adapter regression remains passing and has no Yearbook opt-in.
+- High School wiring tests and Yearbook bridge isolated tests pass; these are not full browser tests. Chromium is available in a local shell but no installed Playwright package and GitHub review branches cannot be fetched directly from that environment. Interactive browser verification of the actual integrated branches is still required.
+- Review-branch changes only: no merge, release, T03 activation, or actual learner data change.
