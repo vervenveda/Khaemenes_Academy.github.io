@@ -174,7 +174,26 @@
     if(!confirmed||JSON.stringify(confirmed)!==JSON.stringify(r))throw new Error("local-registry-readback-failed");
     return clone(r);
   }
-  function audit(action,details={}){const entries=readJSON(KEYS.audit,[]);entries.push({at:now(),action:clean(action,80),details:clone(details)});writeJSON(KEYS.audit,entries.slice(-300))}
+  function audit(action,details={}){
+    const label=clean(action,80);
+    try{
+      // Never replace unreadable existing audit history with a new empty log.
+      const raw=global.localStorage.getItem(KEYS.audit);
+      const entries=raw===null?[]:JSON.parse(raw);
+      if(!Array.isArray(entries))throw new Error("family-audit-invalid-history");
+      entries.push({at:now(),action:label,details:clone(details)});
+      const next=entries.slice(-300);
+      const serialized=JSON.stringify(next);
+      if(!writeJSON(KEYS.audit,next)||global.localStorage.getItem(KEYS.audit)!==serialized)
+        throw new Error("family-audit-readback-failed");
+      return true;
+    }catch{
+      // The primary family mutation may already be committed. Do not undo it.
+      // Notify listeners without exposing family identifiers or learner details.
+      global.dispatchEvent(new CustomEvent("khaemenes-family-audit-write-failed",{detail:{action:label}}));
+      return false;
+    }
+  }
 
   function activeIds(){return {familyId:readJSON(KEYS.activeFamily,null),adultId:readJSON(KEYS.activeAdult,null),learnerId:readJSON(KEYS.activeLearner,null)}}
   function setActive({familyId=null,adultId=null,learnerId=null}={}){
