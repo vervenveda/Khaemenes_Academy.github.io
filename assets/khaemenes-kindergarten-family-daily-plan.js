@@ -16,7 +16,7 @@
   Object.freeze({id:"quiet",label:"Quiet reset",icon:"🌙",hint:"Rest, breathe or reflect"})
  ]);
  const allow=new Set(ACTIVITIES.map(a=>a.id));
- const DEFAULT=Object.freeze(["read","numbers","create","move","kindness"]);
+ const DEFAULT=Object.freeze(["read","numbers","create","move","kindness","music"]);
  const safeId=id=>typeof id==="string"&&id.length>=1&&id.length<=180&&/^[a-zA-Z0-9_:-]+$/.test(id);
  const registry=()=>g.KhaemenesFamilyRegistry;
  const selected=()=>registry()?.getLearner?.()||null;
@@ -33,12 +33,12 @@
  const read=id=>{try{return JSON.parse(g.localStorage.getItem(key(id))||"null")}catch{return null}};
  const dateKey=()=>{const t=new Date();return [String(t.getFullYear()).padStart(4,"0"),String(t.getMonth()+1).padStart(2,"0"),String(t.getDate()).padStart(2,"0")].join("-")};
  function normalize(v,id){
-  const items=Array.isArray(v?.activities)?[...new Set(v.activities.filter(x=>allow.has(x)))].slice(0,5):[...DEFAULT];
+  const items=Array.isArray(v?.activities)?[...new Set(v.activities.filter(x=>allow.has(x)))].slice(0,6):[...DEFAULT];
   const done={};
   if(v?.done&&typeof v.done==="object"&&!Array.isArray(v.done)){
    for(const [day,arr] of Object.entries(v.done).slice(-14)){
     if(/^\d{4}-\d{2}-\d{2}$/.test(day)&&Array.isArray(arr))
-      done[day]=[...new Set(arr.filter(x=>items.includes(x)))].slice(0,5);
+      done[day]=[...new Set(arr.filter(x=>items.includes(x)))].slice(0,6);
    }
   }
   return {schema:"khaemenes-kinder-family-daily-v1",learnerId:id,activities:items.length?items:[...DEFAULT],done};
@@ -60,7 +60,7 @@
   }catch{return false}
  }
  function configure(id,ids){
-  if(!adultAllowed(id)||!Array.isArray(ids)||ids.length<1||ids.length>5||
+  if(!adultAllowed(id)||!Array.isArray(ids)||ids.length<1||ids.length>6||
      new Set(ids).size!==ids.length||ids.some(x=>!allow.has(x)))return false;
   const rec=state(id);if(!rec)return false;
   rec.activities=ids.slice();
