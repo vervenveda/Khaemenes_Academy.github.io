@@ -57,7 +57,7 @@ test("four-step guardian intake is local-only and does not collect credentials o
 });
 test("enrollment inline script parses as valid JavaScript",()=>{
  const form=fs.readFileSync(path.join(root,"family/enroll/index.html"),"utf8");
- const blocks=[...form.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/gi)].map(m=>m[1]);
+ const blocks=[...form.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)].map(m=>m[1]);
  assert.ok(blocks.length);
  blocks.forEach((code,i)=>new vm.Script(code,{filename:"inline-"+i+".js"}));
 });
