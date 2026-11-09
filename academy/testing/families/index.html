@@ -28,6 +28,22 @@ button:disabled{opacity:.5;cursor:not-allowed}.notice{border-left:4px solid var(
 <section><h2>Sandbox controls</h2><p><strong>Environment:</strong> Test only, never verified.</p><p>Active fictional family: <span id="active">None</span></p><p id="counts">0 families · 0 learners</p>
 <button class="danger" id="reset">Reset testing session</button><button class="secondary" id="export">Export test summary</button>
 <p><small>Reset and retire affect this sandbox only. Production registry and Academy learning records are never opened.</small></p></section></div>
+<section id="cutoverSimulation" aria-labelledby="cutoverTitle">
+<h2 id="cutoverTitle">Parent Account &amp; T03 Cutover Simulator</h2>
+<p><strong>SIMULATION ONLY.</strong> This panel never authenticates an adult, sends data to STOS, allocates a cloud account, or verifies a launch gate. It uses fictional identities and in-memory session models.</p>
+<div class="grid">
+<div><label for="simAdult">Fictional adult</label><select id="simAdult"></select>
+<button id="simSignIn" type="button">Simulate Sign-In</button>
+<button id="simSignOut" type="button" class="secondary">Simulate Sign-Out</button>
+<button id="simExpire" type="button" class="secondary">Simulate Session Expiry</button>
+<p id="simSession" role="status" aria-live="polite">No simulated session</p></div>
+<div><h3>Isolated acceptance checks</h3>
+<p>Tests: session expiry, separate guardian permissions, cross-family isolation, duplicate claiming, version conflicts, and rollback.</p>
+<button id="runCutoverTests" type="button">Run Synthetic Tests</button>
+<p id="cutoverResults" role="status" aria-live="polite">Not run. Real T03 gates: 0 verified.</p>
+</div></div>
+<p><small>These scenario checks are not evidence of live STOS, Wend, OHMIC, Account Cloud storage, or cross-device commissioning. No passwords, tokens, emails, or student records are requested.</small></p>
+</section>
 <section><h2>Fictional family roster</h2><div id="roster" aria-live="polite"></div></section>
 <p id="message" role="status" aria-live="polite"></p></main><footer>Khaemenes Academy · NAIB Engineering Sandbox · No cloud allocation</footer>
 <script>
@@ -40,7 +56,7 @@ const norm=s=>clean(s,80).toLocaleLowerCase();
 const uid=()=> "sandbox_"+(crypto.randomUUID?.()||Math.random().toString(36).slice(2));
 let state=empty();
 function load(){try{const x=JSON.parse(sessionStorage.getItem(KEY)||"null");if(x?.version===1&&Array.isArray(x.families)&&x.families.length<=100)state=x}catch{}}
-function save(next){try{sessionStorage.setItem(KEY,JSON.stringify(next));state=next;render();return true}catch{say("Sandbox session write failed; no change recorded.");return false}}
+function save(next){try{const serialized=JSON.stringify(next);sessionStorage.setItem(KEY,serialized);if(sessionStorage.getItem(KEY)!==serialized)throw Error("sandbox-readback-failed");state=next;render();return true}catch{say("Sandbox session write could not be verified; no change recorded.");return false}}
 function say(s){$("message").textContent=s}
 function addFamily(name,adult,role){
  name=clean(name,80);adult=clean(adult,80);
@@ -65,8 +81,67 @@ function retire(id){
  const remaining=state.families.filter(f=>f.id!==id);
  if(save({...state,families:remaining,active:state.active===id?(remaining[0]?.id||null):state.active}))say("Test family retired; actual family records untouched.");
 }
+// All simulated identities, sessions and permissions are local to this script invocation.
+// They confer no authority on Academy records and are never sent to a server.
+let simulatedSession=null;
+function simulatedAdults(){
+ return state.families.map(f=>({adultId:"mock-adult:"+f.id,familyId:f.id,label:f.adult+" — "+f.name}));
+}
+function updateSimControls(){
+ const select=$("simAdult"), prior=select.value, adults=simulatedAdults();
+ select.replaceChildren();
+ const placeholder=document.createElement("option");placeholder.value="";placeholder.textContent="Choose a fictional adult";select.append(placeholder);
+ for(const a of adults){const option=document.createElement("option");option.value=a.adultId;option.textContent=a.label;select.append(option)}
+ if(adults.some(a=>a.adultId===prior))select.value=prior;
+ const stillValid=simulatedSession&&adults.some(a=>a.adultId===simulatedSession.adultId&&a.familyId===simulatedSession.familyId);
+ if(!stillValid)simulatedSession=null;
+ $("simSession").textContent=simulatedSession?"SIMULATED SESSION — "+(adults.find(a=>a.adultId===simulatedSession.adultId)?.label||"fictional adult"):"No simulated session";
+}
+const simulatedAuth=Object.freeze({
+ signIn(adult,valid=true){return valid&&adult?{adultId:adult.adultId,familyId:adult.familyId,expiresAt:1000}:null},
+ authorize(session,familyId,learnerId,grant,clock=0){
+  return Boolean(session&&clock<session.expiresAt&&session.familyId===familyId&&grant?.adultId===session.adultId&&grant?.learnerId===learnerId&&grant?.allow===true);
+ },
+ claim(local,server){
+  if(!local?.familyId)return {ok:false,reason:"missing-identity"};
+  if(server.some(x=>x.familyId===local.familyId))return {ok:false,reason:"duplicate-family"};
+  return {ok:true,record:{familyId:local.familyId}};
+ },
+ update(record,baseVersion){
+  if(!record||baseVersion!==record.recordVersion)return {ok:false,status:409};
+  return {ok:true,recordVersion:record.recordVersion+1};
+ }
+});
+function runSyntheticCutoverTests(){
+ const a={adultId:"synthetic-adult-A",familyId:"synthetic-family-A"};
+ const b={adultId:"synthetic-adult-B",familyId:"synthetic-family-B"};
+ const session=simulatedAuth.signIn(a);
+ const grant={adultId:a.adultId,learnerId:"synthetic-learner-A",allow:true};
+ const tests=[
+  ["synthetic sign-in creates session",Boolean(session)],
+  ["invalid sign-in fails",simulatedAuth.signIn(a,false)===null],
+  ["permitted learner view",simulatedAuth.authorize(session,a.familyId,grant.learnerId,grant)],
+  ["guardian without explicit grant denied",!simulatedAuth.authorize(simulatedAuth.signIn(b),a.familyId,grant.learnerId,grant)],
+  ["cross-family request denied",!simulatedAuth.authorize(session,b.familyId,grant.learnerId,grant)],
+  ["expired session denied",!simulatedAuth.authorize(session,a.familyId,grant.learnerId,grant,1000)],
+  ["duplicate family claim held",simulatedAuth.claim({familyId:a.familyId},[{familyId:a.familyId}]).reason==="duplicate-family"],
+  ["stale version receives conflict",simulatedAuth.update({recordVersion:3},2).status===409],
+  ["fresh version increments",simulatedAuth.update({recordVersion:3},3).recordVersion===4],
+  ["rollback leaves canonical object unchanged",(()=>{const record={familyId:a.familyId,recordVersion:3};simulatedAuth.update(record,2);return record.recordVersion===3})()]
+ ];
+ const passed=tests.filter(([,ok])=>ok).length;
+ const root=$("cutoverResults");root.replaceChildren();
+ const summary=document.createElement("strong");summary.textContent="Synthetic scenarios: "+passed+"/"+tests.length+" passed · Live T03 gates: 0 verified";root.append(summary);
+ const list=document.createElement("ul");for(const [name,ok] of tests){const item=document.createElement("li");item.textContent=(ok?"PASS: ":"FAIL: ")+name;list.append(item)}root.append(list);
+ return {passed,total:tests.length};
+}
+$("simSignIn").onclick=()=>{const adult=simulatedAdults().find(a=>a.adultId===$("simAdult").value);simulatedSession=simulatedAuth.signIn(adult);updateSimControls();say(simulatedSession?"Fictional sign-in simulated. No authentication occurred.":"Choose a fictional adult first.")};
+$("simSignOut").onclick=()=>{simulatedSession=null;updateSimControls();say("Simulated session cleared; actual accounts untouched.")};
+$("simExpire").onclick=()=>{if(simulatedSession)simulatedSession.expiresAt=0;simulatedSession=null;updateSimControls();say("Simulated session expired; actual accounts untouched.")};
+$("runCutoverTests").onclick=()=>{const result=runSyntheticCutoverTests();say("Synthetic checks "+result.passed+"/"+result.total+"; no T03 gate certified.")};
 function render(){
  $("active").textContent=state.families.find(f=>f.id===state.active)?.name||"None";
+ updateSimControls();
  $("counts").textContent=state.families.length+" families · "+state.families.reduce((n,f)=>n+f.learners.length,0)+" fictional learners";
  const root=$("roster");root.replaceChildren();
  if(!state.families.length){const p=document.createElement("p");p.textContent="Create a fictional family or add the three sample families to begin.";root.append(p)}
