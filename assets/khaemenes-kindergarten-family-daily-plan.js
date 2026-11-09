@@ -31,7 +31,7 @@
  }
  const key=id=>PREFIX+encodeURIComponent(id);
  const read=id=>{try{return JSON.parse(g.localStorage.getItem(key(id))||"null")}catch{return null}};
- const dateKey=()=>new Date().toLocaleDateString("en-CA");
+ const dateKey=()=>{const t=new Date();return [String(t.getFullYear()).padStart(4,"0"),String(t.getMonth()+1).padStart(2,"0"),String(t.getDate()).padStart(2,"0")].join("-")};
  function normalize(v,id){
   const items=Array.isArray(v?.activities)?[...new Set(v.activities.filter(x=>allow.has(x)))].slice(0,5):[...DEFAULT];
   const done={};
