@@ -72,4 +72,5 @@ const adapter=Object.freeze({
  refresh(){w.KhaemenesElementaryProfileEnhancement?.refresh?.();applyHero()}
 });
 if(core.register(adapter)){w.KhaemenesElementaryLookAdapter=adapter;adapter.refresh()}
+window.addEventListener("khaemenes-family-changed",()=>adapter.refresh());
 })();
