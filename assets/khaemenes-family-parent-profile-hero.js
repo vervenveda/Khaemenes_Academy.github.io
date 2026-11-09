@@ -11,7 +11,7 @@ const lookKey=id=>"khaemenes.parent.profile.appearance.v1:"+encodeURIComponent(i
 const photoKey=id=>"khaemenes.parent.profile.photo.v1:"+encodeURIComponent(id);
 const SHAPES=["circle","oval","square","rectangle","rhombus","kite","heart","star","octagon","semicircle"];
 const COLORS={charcoal:"#202724",forest:"#315c49",navy:"#263858",burgundy:"#643044",gold:"#a47f2f"};
-let activeId=null,photoUrl=null;
+let activeId=null,photoUrl=null,legacyEditorEpoch=0,legacyOpener=null;
 const byId=id=>d.getElementById(id);
 const read=(key)=>{try{return g.localStorage.getItem(key)}catch{return null}};
 const save=(key,value)=>{try{g.localStorage.setItem(key,value);return true}catch{return false}};
@@ -45,7 +45,7 @@ function styleOnce(){
 #${ID} .kph-identity[data-background=gold] .kph-detail{color:#202724}
 #${ID} .kph-avatar{width:116px;height:116px;display:grid;place-items:center;overflow:hidden;background:#f5e0ad;color:#202724;border:2px solid #b48b45;border-radius:50%;font:400 40px/1 Cinzel,Georgia,serif}
 #${ID} .kph-avatar img{width:100%;height:100%;object-fit:cover}
-#${ID} .kph-avatar[data-shape=oval]{height:124px;width:102px;border-radius:50%}
+#${ID} .kph-avatar[data-shape=oval]{height:106px;width:150px;border-radius:50%}
 #${ID} .kph-avatar[data-shape=square]{border-radius:7px}
 #${ID} .kph-avatar[data-shape=rectangle]{border-radius:7px;width:170px;height:113px}
 #${ID} .kph-avatar[data-shape=semicircle]{border-radius:0;clip-path:polygon(0 100%,0 50%,4% 31%,15% 15%,31% 4%,50% 0,69% 4%,85% 15%,96% 31%,100% 50%,100% 100%)}
@@ -108,6 +108,7 @@ function mount(){
 function update(){
  const section=mount();if(!section)return;
  const a=adult(),id=a?.adultId||null;
+ if(activeId!==id)legacyEditorEpoch++;
  activeId=id;
  const look=appearance(id);
  const label=nameFor(a,look);
@@ -135,10 +136,11 @@ function dialog(){
  box.innerHTML='<h2 id="kphDialogTitle">Customize Parent Profile</h2><p>Save your appearance on this device only. This is separate from your Academy account password and your learners\' academic records.</p><form id="kphEditorForm" method="dialog"><div class="kph-field"><label for="kphDisplayName">Profile display name</label><input id="kphDisplayName" maxlength="70" autocomplete="off"></div><div class="kph-field"><label for="kphBackground">Profile background</label><select id="kphBackground"><option value="charcoal">Charcoal</option><option value="forest">Hunter Green</option><option value="navy">Deep Navy</option><option value="burgundy">Burgundy</option><option value="gold">Mustard Gold</option></select></div><div class="kph-field"><label for="kphFrame">Photo frame</label><select id="kphFrame">'+SHAPES.map(s=>'<option value="'+s+'">'+s.charAt(0).toUpperCase()+s.slice(1)+'</option>').join("")+'</select></div><div class="kph-field"><label for="kphPhotoFile">Choose a photo (JPG, PNG, WebP; up to 4 MB)</label><input id="kphPhotoFile" type="file" accept="image/jpeg,image/png,image/webp"></div><p class="kph-status" id="kphDialogStatus" role="status"></p><div class="kph-buttons"><button type="submit" value="save">Save My Look</button><button type="button" id="kphRemovePhoto" class="kph-secondary">Remove Photo</button><button type="button" id="kphClose" class="kph-secondary">Close</button></div></form>';
  d.body.append(box);
  byId("kphClose").addEventListener("click",()=>box.close());
- byId("kphRemovePhoto").addEventListener("click",()=>{if(!activeId)return;if(erase(photoKey(activeId))){update();byId("kphDialogStatus").textContent="Photo removed from this browser."}});
+ box.addEventListener("close",()=>{legacyEditorEpoch++;if(legacyOpener?.isConnected)legacyOpener.focus({preventScroll:true});legacyOpener=null});
+ byId("kphRemovePhoto").addEventListener("click",()=>{if(!activeId||adult()?.adultId!==activeId)return;legacyEditorEpoch++;byId("kphPhotoFile").value="";if(erase(photoKey(activeId))){update();byId("kphDialogStatus").textContent="Photo removed from this browser."}});
  byId("kphEditorForm").addEventListener("submit",async ev=>{
   ev.preventDefault();
-  const a=adult(),id=a?.adultId;if(!id||id!==activeId){byId("kphDialogStatus").textContent="Select an adult family profile again.";return}
+  const a=adult(),id=a?.adultId,request=++legacyEditorEpoch;if(!id||id!==activeId){byId("kphDialogStatus").textContent="Select an adult family profile again.";return}
   const look={displayName:byId("kphDisplayName").value.trim().slice(0,70),background:byId("kphBackground").value,frame:byId("kphFrame").value};
   if(!Object.hasOwn(COLORS,look.background)||!SHAPES.includes(look.frame)){byId("kphDialogStatus").textContent="Choose a supported background and photo frame.";return}
   const file=byId("kphPhotoFile").files?.[0];
@@ -153,13 +155,18 @@ function dialog(){
     const ctx=canvas.getContext("2d");if(!ctx)throw Error("image unavailable");
     const side=Math.min(image.naturalWidth,image.naturalHeight);
     ctx.drawImage(image,(image.naturalWidth-side)/2,(image.naturalHeight-side)/2,side,side,0,0,240,240);
-    imageData=canvas.toDataURL("image/jpeg",.78);if(imageData.length>=400000)throw Error("compressed photo too large");
+    for(const quality of [.78,.64,.50,.38]){imageData=canvas.toDataURL("image/jpeg",quality);if(imageData.length<400000)break}
+    if(!imageData||imageData.length>=400000)throw Error("compressed photo too large");
    }catch{byId("kphDialogStatus").textContent="Could not prepare this photo. Choose another.";return}
    finally{URL.revokeObjectURL(url)}
   }
-  if(adult()?.adultId!==id){byId("kphDialogStatus").textContent="The selected adult changed. Reopen this editor.";return}
-  if(!save(lookKey(id),JSON.stringify(look))){byId("kphDialogStatus").textContent="Unable to save your look in this browser.";return}
-  if(imageData&&!save(photoKey(id),imageData)){byId("kphDialogStatus").textContent="Profile preferences saved, but the photo could not be stored.";update();return}
+  if(adult()?.adultId!==id||request!==legacyEditorEpoch||!box.open){byId("kphDialogStatus").textContent="The profile selection or picture changed. Reopen this editor.";return}
+  const lookStorageKey=lookKey(id),photoStorageKey=photoKey(id),previousLook=read(lookStorageKey),previousPhoto=read(photoStorageKey),writtenLook=JSON.stringify(look);
+  if(!save(lookStorageKey,writtenLook)||(imageData&&!save(photoStorageKey,imageData))||read(lookStorageKey)!==writtenLook||(imageData&&read(photoStorageKey)!==imageData)){
+   if(previousLook===null)erase(lookStorageKey);else save(lookStorageKey,previousLook);
+   if(previousPhoto===null)erase(photoStorageKey);else save(photoStorageKey,previousPhoto);
+   byId("kphDialogStatus").textContent="Could not save all changes. Your previous appearance was kept.";update();return;
+  }
   byId("kphPhotoFile").value="";
   byId("kphDialogStatus").textContent="Profile look saved on this browser. Cloud sync is not connected.";
   update();
@@ -177,6 +184,7 @@ function openEditor(which){
  byId("kphFrame").value=look.frame;
  byId("kphPhotoFile").value="";
  byId("kphDialogStatus").textContent="No changes have been made.";
+ legacyEditorEpoch++;legacyOpener=d.activeElement;
  if(!box.open&&typeof box.showModal==="function")box.showModal();
 }
 g.KhaemenesFamilyParentHero=Object.freeze({version:"1.1",refresh:update,scope:"browser-local-parent-appearance"});
