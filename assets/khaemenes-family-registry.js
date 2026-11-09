@@ -258,13 +258,27 @@
 
   function grantAdultAccess({registry=null,familyId,adultId,learnerId,permissionPreset="co-guardian",permissions=null,saveAfter=true}={}){
     const r=registry||load();if(!r.families[familyId])throw new Error("family-not-found");if(!r.adults[adultId])throw new Error("adult-not-found");if(!r.learners[learnerId])throw new Error("learner-not-found");
+    if(r.learners[learnerId].familyId!==familyId||!r.families[familyId].learnerIds?.includes(learnerId))throw new Error("learner-family-mismatch");
+    if(!r.adults[adultId].familyIds?.includes(familyId)||!r.families[familyId].adultIds?.includes(adultId)||r.memberships[`${familyId}:${adultId}`]?.status!=="active")throw new Error("adult-family-mismatch");
     const preset=PERMISSION_PRESETS[permissionPreset]||PERMISSION_PRESETS["progress-viewer"];
     r.learnerAdultAccess[`${learnerId}:${adultId}`]={familyId,adultId,learnerId,permissionPreset:PERMISSION_PRESETS[permissionPreset]?permissionPreset:"custom",permissions:Array.isArray(permissions)?arr(permissions,30):[...preset.permissions],status:"active",grantedAt:now(),updatedAt:now()};
     if(saveAfter)save(r);audit("access.granted",{familyId,adultId,learnerId,permissionPreset});return clone(r.learnerAdultAccess[`${learnerId}:${adultId}`]);
   }
 
   function revokeAdultAccess({adultId,learnerId}={}){const registry=load(),key=`${learnerId}:${adultId}`;if(!registry.learnerAdultAccess[key])return false;registry.learnerAdultAccess[key]={...registry.learnerAdultAccess[key],status:"revoked",revokedAt:now(),updatedAt:now()};save(registry);audit("access.revoked",{adultId,learnerId});return true}
-  function canAdult(adultId,learnerId,permission){const access=load().learnerAdultAccess[`${learnerId}:${adultId}`];return Boolean(access&&access.status==="active"&&Array.isArray(access.permissions)&&access.permissions.includes(permission))}
+  // Local relationship verification is a UI guard only, not authenticated server authority.
+  function familyRelationshipValid(r,familyId,adultId,learnerId){
+    const family=r.families[familyId],adult=r.adults[adultId],learner=r.learners[learnerId];
+    return Boolean(family&&adult&&learner&&learner.familyId===familyId&&
+      family.learnerIds?.includes(learnerId)&&family.adultIds?.includes(adultId)&&
+      adult.familyIds?.includes(familyId)&&r.memberships[`${familyId}:${adultId}`]?.status==="active");
+  }
+  function canAdult(adultId,learnerId,permission){
+    const r=load(),access=r.learnerAdultAccess[`${learnerId}:${adultId}`];
+    return Boolean(access&&access.adultId===adultId&&access.learnerId===learnerId&&
+      access.status==="active"&&familyRelationshipValid(r,access.familyId,adultId,learnerId)&&
+      Array.isArray(access.permissions)&&access.permissions.includes(permission));
+  }
   function getFamily(familyId=activeIds().familyId){const registry=load(),family=registry.families[familyId];if(!family)return null;return {...clone(family),adults:(family.adultIds||[]).map(id=>registry.adults[id]).filter(Boolean).map(clone),learners:(family.learnerIds||[]).map(id=>registry.learners[id]).filter(Boolean).map(clone)}}
   function getAdult(adultId=activeIds().adultId){const adult=load().adults[adultId];return adult?clone(adult):null}
   function getLearner(learnerId=activeIds().learnerId){const learner=load().learners[learnerId];return learner?clone(learner):null}
