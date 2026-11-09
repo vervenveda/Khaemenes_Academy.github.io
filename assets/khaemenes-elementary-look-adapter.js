@@ -27,6 +27,7 @@ const approved=()=>d.getElementById("adultConfirm")?.checked===true;
 const original=id=>{const v=decode(key(LEGACY,id));return v&&typeof v==="object"&&!Array.isArray(v)&&v.learnerId===id&&v.schema==="khaemenes.elementary-visual.v1"?v:null};
 const extras=id=>{const v=decode(key(EXTRA,id));return v&&v.schema==="khaemenes.elementary-decoration.v1"&&v.learnerId===id?v:null};
 const adapter=Object.freeze({
+  allowYearbook:true,
  showDisplayName:false,maxPhotoChars:180000,getIdentity:identity,
  readLook(id){
   if(identity()?.id!==id)return {};
