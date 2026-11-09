@@ -97,3 +97,16 @@ test("intake grade is validated before any registry save",()=>{
  assert.throws(()=>registry.createFamilyIntake({displayName:"Sample",adultName:"Adult",nickname:"Scholar",grade:"invalid"}),/intake-grade-invalid/);
  assert.equal(Object.keys(registry.load().families).length,0);
 });
+
+test("Family Center scopes learner changes to current family and disables unverified adult grants",()=>{
+ const html=fs.readFileSync(path.join(root,"family/index.html"),"utf8");
+ assert.match(html,/function localLinkedLearner\(f,id\)/);
+ assert.match(html,/function chooseLocalLearner\(f,id/);
+ assert.match(html,/requireProgress:true/);
+ assert.match(html,/localAdultForFamily\(f\)/);
+ assert.doesNotMatch(html,/R\.addAdultLocal\(\{familyId:f\.familyId/);
+ assert.match(html,/Additional adult access requires verified invitations/);
+ assert.match(html,/addEventListener\("storage"/);
+ const scripts=[...html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)].map(m=>m[1]);
+ for(const [index,script] of scripts.entries())new vm.Script(script,{filename:"family-inline-"+index+".js"});
+});
