@@ -250,13 +250,23 @@
     registry.adults[adultId]={adultId,displayName:clean(displayName,80)||"Authorized Adult",role:ADULT_ROLES.includes(role)?role:"other-authorized-adult",familyIds:[familyId],familyGuidePreference:"supportive",accountState:"local-profile",createdAt:now(),updatedAt:now()};
     registry.families[familyId].adultIds=[...new Set([...(registry.families[familyId].adultIds||[]),adultId])];
     registry.memberships[`${familyId}:${adultId}`]={familyId,adultId,status:"active",role:registry.adults[adultId].role,joinedAt:now()};
+    // Reject invalid links before saving the newly added local adult.
+    for(const learnerId of learnerIds){
+      if(registry.learners[learnerId]?.familyId!==familyId||!registry.families[familyId].learnerIds.includes(learnerId))
+        throw new Error("learner-family-mismatch");
+    }
     for(const learnerId of learnerIds)grantAdultAccess({registry,familyId,adultId,learnerId,permissionPreset,saveAfter:false});
     save(registry);audit("adult.added-local",{familyId,adultId,learnerIds:[...learnerIds]});return clone(registry.adults[adultId]);
   }
 
   function registerLearner({familyId,nickname,stage="preschool",grade=null,ageBand="",interests=[],mentorId=null,mentorIdentity=null,guardianRelease=null,existingLearnerId=null,linkedAdultId=null,selfDirectedAdult=false}={}){
     const registry=load();if(!registry.families[familyId])throw new Error("family-not-found");
-    const learnerId=existingLearnerId||id("learner"),accountId=id("learneracct"),prior=registry.learners[learnerId]||{},placement=canonicalPlacement({stage,grade});
+    // An existing ID may be supplied by a legacy import only when it is unused.
+    // Never repurpose an existing learner record, even within the same family.
+    if(existingLearnerId&&registry.learners[existingLearnerId])throw new Error("learner-id-already-assigned");
+    const learnerId=existingLearnerId||id("learner");
+    if(registry.learners[learnerId])throw new Error("learner-id-already-assigned");
+    const accountId=id("learneracct"),prior={},placement=canonicalPlacement({stage,grade});
     registry.learners[learnerId]={...prior,learnerId,accountId:prior.accountId||accountId,familyId,nickname:clean(nickname,40)||"Learner",stage:placement.stage,grade:placement.grade,ageBand:clean(ageBand,30),interests:arr(interests,30),mentorId:mentorId||prior.mentorId||ARCHAEMENES_ID,mentorIdentity:mentorIdentity?clone(mentorIdentity):(prior.mentorIdentity||null),guardianRelease:guardianRelease?clone(guardianRelease):(prior.guardianRelease||null),linkedAdultId:linkedAdultId||prior.linkedAdultId||null,selfDirectedAdult:Boolean(selfDirectedAdult||prior.selfDirectedAdult),accountState:prior.accountState||(selfDirectedAdult?"local-self-managed":"local-parent-managed"),createdAt:prior.createdAt||now(),updatedAt:now()};
     registry.families[familyId].learnerIds=[...new Set([...(registry.families[familyId].learnerIds||[]),learnerId])];
     save(registry);setActive({familyId,learnerId});audit("learner.registered",{familyId,learnerId,stage:placement.stage,grade:placement.grade,selfDirectedAdult:Boolean(selfDirectedAdult),mentorId:ARCHAEMENES_ID});return getLearner(learnerId);
@@ -266,6 +276,8 @@
     const registry=load();
     const adult=registry.adults[adultId];if(!adult)throw new Error("adult-not-found");
     familyId=familyId||(adult.familyIds||[])[0]||null;if(!familyId||!registry.families[familyId])throw new Error("family-not-found");
+    if(!adult.familyIds?.includes(familyId)||!registry.families[familyId].adultIds?.includes(adultId)||registry.memberships[`${familyId}:${adultId}`]?.status!=="active")
+      throw new Error("adult-family-mismatch");
     const existing=Object.values(registry.learners).find(l=>l?.linkedAdultId===adultId&&l?.selfDirectedAdult===true&&l?.stage==="higher");
     if(existing){setActive({familyId,adultId,learnerId:existing.learnerId});return getLearner(existing.learnerId)}
     const learner=registerLearner({familyId,nickname:clean(nickname,40)||adult.displayName||"Adult Scholar",stage:"higher",grade:null,ageBand:"adult",interests,linkedAdultId:adultId,selfDirectedAdult:true});
@@ -277,13 +289,35 @@
 
   function grantAdultAccess({registry=null,familyId,adultId,learnerId,permissionPreset="co-guardian",permissions=null,saveAfter=true}={}){
     const r=registry||load();if(!r.families[familyId])throw new Error("family-not-found");if(!r.adults[adultId])throw new Error("adult-not-found");if(!r.learners[learnerId])throw new Error("learner-not-found");
+    if(r.learners[learnerId].familyId!==familyId||!r.families[familyId].learnerIds?.includes(learnerId))
+      throw new Error("learner-family-mismatch");
+    if(!r.adults[adultId].familyIds?.includes(familyId)||!r.families[familyId].adultIds?.includes(adultId)||r.memberships[`${familyId}:${adultId}`]?.status!=="active")
+      throw new Error("adult-family-mismatch");
     const preset=PERMISSION_PRESETS[permissionPreset]||PERMISSION_PRESETS["progress-viewer"];
     r.learnerAdultAccess[`${learnerId}:${adultId}`]={familyId,adultId,learnerId,permissionPreset:PERMISSION_PRESETS[permissionPreset]?permissionPreset:"custom",permissions:Array.isArray(permissions)?arr(permissions,30):[...preset.permissions],status:"active",grantedAt:now(),updatedAt:now()};
     if(saveAfter)save(r);audit("access.granted",{familyId,adultId,learnerId,permissionPreset});return clone(r.learnerAdultAccess[`${learnerId}:${adultId}`]);
   }
 
-  function revokeAdultAccess({adultId,learnerId}={}){const registry=load(),key=`${learnerId}:${adultId}`;if(!registry.learnerAdultAccess[key])return false;registry.learnerAdultAccess[key]={...registry.learnerAdultAccess[key],status:"revoked",revokedAt:now(),updatedAt:now()};save(registry);audit("access.revoked",{adultId,learnerId});return true}
-  function canAdult(adultId,learnerId,permission){const access=load().learnerAdultAccess[`${learnerId}:${adultId}`];return Boolean(access&&access.status==="active"&&Array.isArray(access.permissions)&&access.permissions.includes(permission))}
+  function revokeAdultAccess({adultId,learnerId}={}){
+    const registry=load(),key=`${learnerId}:${adultId}`,access=registry.learnerAdultAccess[key];
+    if(!access)return false;
+    if(!familyRelationshipValid(registry,access.familyId,adultId,learnerId))throw new Error("access-family-mismatch");
+    registry.learnerAdultAccess[key]={...access,status:"revoked",revokedAt:now(),updatedAt:now()};
+    save(registry);audit("access.revoked",{adultId,learnerId});return true;
+  }
+  function familyRelationshipValid(r,familyId,adultId,learnerId){
+    return Boolean(r.families[familyId]&&r.adults[adultId]&&r.learners[learnerId]&&
+      r.learners[learnerId].familyId===familyId&&
+      r.families[familyId].learnerIds?.includes(learnerId)&&
+      r.families[familyId].adultIds?.includes(adultId)&&
+      r.adults[adultId].familyIds?.includes(familyId)&&
+      r.memberships[`${familyId}:${adultId}`]?.status==="active");
+  }
+  function canAdult(adultId,learnerId,permission){
+    const r=load(),access=r.learnerAdultAccess[`${learnerId}:${adultId}`];
+    return Boolean(access?.status==="active"&&familyRelationshipValid(r,access.familyId,adultId,learnerId)&&
+      Array.isArray(access.permissions)&&access.permissions.includes(permission));
+  }
   function getFamily(familyId=activeIds().familyId){const registry=load(),family=registry.families[familyId];if(!family)return null;return {...clone(family),adults:(family.adultIds||[]).map(id=>registry.adults[id]).filter(Boolean).map(clone),learners:(family.learnerIds||[]).map(id=>registry.learners[id]).filter(Boolean).map(clone)}}
   function getAdult(adultId=activeIds().adultId){const adult=load().adults[adultId];return adult?clone(adult):null}
   function getLearner(learnerId=activeIds().learnerId){const learner=load().learners[learnerId];return learner?clone(learner):null}
