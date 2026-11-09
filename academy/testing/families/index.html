@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; img-src 'none'; form-action 'none'; base-uri 'none'">
+<title>NAIB · Family Testing Sandbox</title>
+<style>
+:root{--ink:#243038;--cream:#fff8e9;--gold:#b48b45}*{box-sizing:border-box}
+body{margin:0;background:#f3eee4;color:var(--ink);font:400 16px/1.55 "Brandon Grotesque",Nunito,Arial,sans-serif}
+header,footer{text-align:center;background:var(--ink);color:var(--cream);padding:28px 18px;border-bottom:2px solid var(--gold)}
+header p{max-width:760px;margin:8px auto}h1,h2,h3{font-family:Cinzel,Georgia,serif;font-weight:400}h1{font-size:clamp(30px,5vw,44px);margin:8px}
+main{max-width:1100px;margin:28px auto 65px;padding:0 18px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+section{background:#fffdf8;border:1px solid #b6ab98;border-radius:7px;padding:22px;margin:0 0 18px}
+section h2{font-size:24px;margin:0 0 13px}label{display:block;margin:12px 0 5px}
+input,select{display:block;width:100%;font:inherit;min-height:44px;padding:8px 12px;border-radius:7px;border:1px solid #8b928c;background:white;color:var(--ink)}
+button{font:inherit;min-height:44px;padding:9px 13px;border:1px solid var(--ink);border-radius:7px;background:var(--ink);color:var(--cream);margin:7px 7px 5px 0;cursor:pointer}
+button.secondary{background:white;color:var(--ink)}button.danger{background:#702c26;border-color:#702c26}
+button:disabled{opacity:.5;cursor:not-allowed}.notice{border-left:4px solid var(--gold);padding:14px;background:#f9efd9;margin-bottom:22px}
+.record{border:1px solid #cbbda8;border-radius:7px;background:#f7f3eb;padding:15px;margin:12px 0}
+.record h3{font-size:20px;margin:0 0 6px}.record p{margin:5px 0}.record ul{margin:8px 0}
+#message{min-height:28px}small{font-size:16px}@media(max-width:760px){.grid{grid-template-columns:1fr}section{padding:16px}}
+</style></head><body>
+<header><p>NAIB · Khaemenes Academy</p><h1>Family Testing Sandbox</h1><p>Create and retire fictional family accounts without touching actual student or guardian profiles.</p></header>
+<main><div class="notice"><strong>TEST ONLY — not an enrollment service.</strong> This standalone simulator never loads the Academy Family Registry or connects to STOS. All names must be fictional. Test data is held in this tab's session storage and may disappear when the tab closes.</div>
+<div class="grid"><section><h2>Create a fictional family</h2>
+<label for="familyName">Fictional family name</label><input id="familyName" maxlength="80" placeholder="Starling Test Family" autocomplete="off">
+<label for="adultName">Fictional adult name</label><input id="adultName" maxlength="80" placeholder="Morgan Demo" autocomplete="off">
+<label for="adultRole">Simulated relationship</label><select id="adultRole"><option>Parent</option><option>Guardian</option><option>Caregiver</option><option>Educator</option></select>
+<button id="create">Create test family</button><button class="secondary" id="seed">Add 3 sample families</button></section>
+<section><h2>Sandbox controls</h2><p><strong>Environment:</strong> Test only, never verified.</p><p>Active fictional family: <span id="active">None</span></p><p id="counts">0 families · 0 learners</p>
+<button class="danger" id="reset">Reset testing session</button><button class="secondary" id="export">Export test summary</button>
+<p><small>Reset and retire affect this sandbox only. Production registry and Academy learning records are never opened.</small></p></section></div>
+<section><h2>Fictional family roster</h2><div id="roster" aria-live="polite"></div></section>
+<p id="message" role="status" aria-live="polite"></p></main><footer>Khaemenes Academy · NAIB Engineering Sandbox · No cloud allocation</footer>
+<script>
+(()=>{
+"use strict";
+const KEY="naib_family_sandbox_session_v1", $=id=>document.getElementById(id);
+const grades=["pre-k","k",...Array.from({length:12},(_,i)=>String(i+1).padStart(2,"0"))];
+const empty=()=>({version:1,active:null,families:[]}),clean=(s,n)=>String(s||"").trim().slice(0,n);
+const norm=s=>clean(s,80).toLocaleLowerCase();
+const uid=()=> "sandbox_"+(crypto.randomUUID?.()||Math.random().toString(36).slice(2));
+let state=empty();
+function load(){try{const x=JSON.parse(sessionStorage.getItem(KEY)||"null");if(x?.version===1&&Array.isArray(x.families)&&x.families.length<=100)state=x}catch{}}
+function save(next){try{sessionStorage.setItem(KEY,JSON.stringify(next));state=next;render();return true}catch{say("Sandbox session write failed; no change recorded.");return false}}
+function say(s){$("message").textContent=s}
+function addFamily(name,adult,role){
+ name=clean(name,80);adult=clean(adult,80);
+ if(!name||!adult)return say("Enter fictional family and adult names."),false;
+ if(state.families.length>=100)return say("Sandbox limit reached."),false;
+ if(state.families.some(f=>norm(f.name)===norm(name)&&norm(f.adult)===norm(adult)))return say("This fictional family already exists."),false;
+ const f={id:uid(),name,adult,role,learners:[]};
+ if(!save({...state,active:f.id,families:[...state.families,f]}))return false;
+ say("Fictional family added. Academy records were not changed.");return true;
+}
+function addLearner(id,name,grade){
+ name=clean(name,40);const f=state.families.find(f=>f.id===id);
+ if(!f||!name||!grades.includes(grade))return say("Enter a fictional learner name and valid grade."),false;
+ if(f.learners.length>=30)return say("Maximum 30 fictional learners per family."),false;
+ if(f.learners.some(l=>norm(l.name)===norm(name)&&l.grade===grade))return say("Duplicate fictional learner."),false;
+ const next={...state,families:state.families.map(x=>x.id===id?{...x,learners:[...x.learners,{id:uid(),name,grade}]}:x)};
+ if(save(next)){say("Fictional learner linked; no student ID or account issued.");return true}return false
+}
+function retire(id){
+ const f=state.families.find(f=>f.id===id);
+ if(!f||!confirm("Retire "+f.name+" from this TEST sandbox only?"))return;
+ const remaining=state.families.filter(f=>f.id!==id);
+ if(save({...state,families:remaining,active:state.active===id?(remaining[0]?.id||null):state.active}))say("Test family retired; actual family records untouched.");
+}
+function render(){
+ $("active").textContent=state.families.find(f=>f.id===state.active)?.name||"None";
+ $("counts").textContent=state.families.length+" families · "+state.families.reduce((n,f)=>n+f.learners.length,0)+" fictional learners";
+ const root=$("roster");root.replaceChildren();
+ if(!state.families.length){const p=document.createElement("p");p.textContent="Create a fictional family or add the three sample families to begin.";root.append(p)}
+ for(const f of state.families){
+  const card=document.createElement("article");card.className="record";
+  const h=document.createElement("h3");h.textContent=f.name;card.append(h);
+  const p=document.createElement("p");p.textContent=f.adult+" · "+f.role+" · "+f.learners.length+" learner(s)";card.append(p);
+  const list=document.createElement("ul");for(const l of f.learners){const li=document.createElement("li");li.textContent=l.name+" — grade "+l.grade;list.append(li)}card.append(list);
+  const choose=document.createElement("button");choose.className="secondary";choose.textContent=state.active===f.id?"Active fictional family":"Switch family";choose.disabled=state.active===f.id;choose.onclick=()=>{if(save({...state,active:f.id}))say("Changed active fictional family.")};card.append(choose);
+  const remove=document.createElement("button");remove.className="danger";remove.textContent="Retire test family";remove.onclick=()=>retire(f.id);card.append(remove);
+  const fields=document.createElement("div");fields.className="grid";
+  const a=document.createElement("div"),b=document.createElement("div"),label1=document.createElement("label"),label2=document.createElement("label"),name=document.createElement("input"),grade=document.createElement("select");
+  label1.textContent="Fictional learner";label2.textContent="Simulated grade";name.placeholder="Rowan Demo";name.maxLength=40;name.id="name-"+f.id;grade.id="grade-"+f.id;label1.htmlFor=name.id;label2.htmlFor=grade.id;
+  for(const g of grades){const o=document.createElement("option");o.value=g;o.textContent=g;grade.append(o)}
+  a.append(label1,name);b.append(label2,grade);fields.append(a,b);card.append(fields);
+  const add=document.createElement("button");add.textContent="Add fictional learner";add.onclick=()=>{if(addLearner(f.id,name.value,grade.value))name.value=""};card.append(add);root.append(card);
+ }
+}
+$("create").onclick=()=>{if(addFamily($("familyName").value,$("adultName").value,$("adultRole").value)){$("familyName").value="";$("adultName").value=""}};
+$("seed").onclick=()=>{const examples=[["Starling Test Family","Morgan Demo"],["Juniper Mock Family","Avery Sample"],["Copper Practice Family","Taylor Mock"]];let n=0;for(const [f,a] of examples)if(addFamily(f,a,"Parent"))n++;say(n+" fictional sample families added.")};
+$("reset").onclick=()=>{if(confirm("Reset only this NAIB testing session? Real Academy accounts will not be touched.")&&save(empty()))say("Sandbox reset; no real family records changed.")};
+$("export").onclick=()=>{const data={environment:"NAIB TEST ONLY",exported:new Date().toISOString(),families:state.families.map(f=>({name:f.name,adult:f.adult,role:f.role,learners:f.learners.map(l=>({name:l.name,grade:l.grade}))}))};
+ const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="naib-fictional-family-summary.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);say("Test-only summary exported; not an Academy enrollment backup.")};
+load();render();
+})();
+</script></body></html>
