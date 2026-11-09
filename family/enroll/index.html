@@ -149,26 +149,31 @@ function render(){
     fp.innerHTML=`<div class="field"><label>Family display name</label><input id="familyName" placeholder="Example: Pearl Family"></div><div class="field"><label>First adult display name</label><input id="adultName" placeholder="Adult name"></div><div class="field"><label>Adult role</label><select id="adultRole"><option value="parent">Parent</option><option value="guardian">Guardian</option><option value="caregiver">Caregiver</option><option value="educator">Authorized educator</option><option value="other-authorized-adult">Other authorized adult</option></select></div><div class="actions"><button class="btn green" id="createFamily" type="button">Create Family Profile</button></div>`;
     lp.innerHTML='<div class="notice">Create the family profile first, then add each K–12 learner separately.</div>';
     ap.innerHTML='<div class="notice">Adults studying for themselves may use the Adult Learning enrollment page.</div><div class="actions"><a class="btn secondary" href="../../adult/enroll/">Adult Learning</a></div>';
-    document.getElementById("createFamily").addEventListener("click",()=>{const familyName=document.getElementById("familyName").value.trim(),adultName=document.getElementById("adultName").value.trim();if(!familyName||!adultName){alert("Enter a family name and first adult name.");return}R.createFamily({displayName:familyName,adultName,adultRole:document.getElementById("adultRole").value});render()});
+    document.getElementById("createFamily").addEventListener("click",()=>{const familyName=document.getElementById("familyName").value.trim(),adultName=document.getElementById("adultName").value.trim();if(!familyName||!adultName){alert("Enter a family name and first adult name.");return}try{R.createFamily({displayName:familyName,adultName,adultRole:document.getElementById("adultRole").value});render()}catch(error){alert("The local family profile could not be saved. No verified Academy account was created. Check browser storage and try again.")}});
     return;
   }
 
-  fp.innerHTML=`<div class="notice ok"><strong>${esc(family.displayName)}</strong><br>${family.adults.length} adult${family.adults.length===1?"":"s"} · ${family.learners.length} learner${family.learners.length===1?"":"s"}</div><div class="actions"><a class="btn secondary" href="../">Open Family Hub</a></div>`;
+  fp.innerHTML=`<div class="notice"><strong>Provisional family profile — stored on this device, not verified or cloud-synced.</strong></div><div class="notice ok"><strong>${esc(family.displayName)}</strong><br>${family.adults.length} adult${family.adults.length===1?"":"s"} · ${family.learners.length} learner${family.learners.length===1?"":"s"}</div><div class="actions"><a class="btn secondary" href="../">Open Family Hub</a></div>`;
 
-  lp.innerHTML=`<div class="field"><label>Learner first name or nickname</label><input id="nickname" placeholder="Learner"></div><div class="field"><label>Exact grade placement</label><select id="grade">${gradeOptions()}</select></div><div class="actions"><button class="btn green" id="addLearner" type="button">Register K–12 Learner</button></div><div class="notice">Each learner receives an individual Academy Student ID and keeps a separate learning path.</div><div id="existing" style="margin-top:18px"></div>`;
+  lp.innerHTML=`<div class="field"><label>Learner first name or nickname</label><input id="nickname" placeholder="Learner"></div><div class="field"><label>Exact grade placement</label><select id="grade">${gradeOptions()}</select></div><div class="actions"><button class="btn green" id="addLearner" type="button">Register K–12 Learner</button></div><div class="notice">Each learner receives a provisional local identifier and a separate learning path. This does not create a verified Mother Cloud account.</div><div id="existing" style="margin-top:18px"></div>`;
   document.getElementById("addLearner").addEventListener("click",()=>{
     const nickname=document.getElementById("nickname").value.trim(),grade=document.getElementById("grade").value;
     if(!nickname){alert("Enter a learner name or nickname.");return}
-    const meta=R.gradeMeta[grade];let learner=R.registerLearner({familyId:family.familyId,nickname,stage:meta.stage,grade});
-    const adult=R.getAdult();if(adult)R.grantAdultAccess({familyId:family.familyId,adultId:adult.adultId,learnerId:learner.learnerId,permissionPreset:"co-guardian"});
+    const meta=R.gradeMeta[grade];if(!meta){alert("Choose a valid grade before continuing.");return}
+    const duplicate=family.learners.find(l=>!l.selfDirectedAdult&&l.grade===grade&&String(l.nickname||"").trim().toLocaleLowerCase()===nickname.toLocaleLowerCase());
+    if(duplicate){alert("A learner with that name and grade already exists in this local family. Review the existing learner instead of creating a duplicate.");return}
+    let learner;
+    try{learner=R.registerLearner({familyId:family.familyId,nickname,stage:meta.stage,grade})}
+    catch(error){alert("The learner's local profile could not be saved or verified. No official enrollment occurred.");return}
+    const adult=R.getAdult();if(adult)try{R.grantAdultAccess({familyId:family.familyId,adultId:adult.adultId,learnerId:learner.learnerId,permissionPreset:"co-guardian"})}catch(error){alert("The local guardian relationship was not saved. This learner is not verified or officially enrolled; review the family record.");render();return}
     try{IDs?.ensureLearner?.(learner.learnerId);learner=R.getLearner(learner.learnerId)}catch{}
-    R.setActive?.({familyId:family.familyId,learnerId:learner.learnerId});
+    try{R.setActive?.({familyId:family.familyId,learnerId:learner.learnerId})}catch(error){alert("The learner profile was saved locally, but selection could not be confirmed. Please review the Family Portal.");render();return}
     render();
     const pane=document.getElementById("learnerPane");
     if(pane){
       const notice=document.createElement("section");notice.id="learnerAddedNotice";notice.className="notice ok";notice.setAttribute("role","status");notice.setAttribute("aria-live","polite");
-      const heading=document.createElement("strong");heading.textContent=learner.nickname+" is registered for "+meta.label+".";
-      const detail=document.createElement("p");detail.textContent="This learner is now selected. Add another learner to this family, or finish and open the selected learner's pathway.";
+      const heading=document.createElement("strong");heading.textContent=learner.nickname+" has a provisional local profile for "+meta.label+".";
+      const detail=document.createElement("p");detail.textContent="Saved on this device only — not verified or officially enrolled. Add another learner or continue to free lessons while secure enrollment is being prepared.";
       const actions=document.createElement("div");actions.className="actions";
       const addAnother=document.createElement("button");addAnother.type="button";addAnother.className="btn secondary";addAnother.textContent="Add Another Learner";
       addAnother.addEventListener("click",()=>{const input=document.getElementById("nickname");input?.focus();input?.scrollIntoView({behavior:"smooth",block:"center"})});
