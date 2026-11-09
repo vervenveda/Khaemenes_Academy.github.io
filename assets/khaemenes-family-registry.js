@@ -165,11 +165,27 @@
   }
 
   function load(){return normalizeRegistry(readJSON(KEYS.registry,emptyRegistry()))}
-  function save(registry){const r=normalizeRegistry(registry);r.updatedAt=now();writeJSON(KEYS.registry,r);return clone(r)}
+  function save(registry){
+    const r=normalizeRegistry(registry);r.updatedAt=now();
+    // Browser storage is provisional, but must never report success if the
+    // durable local write was rejected, truncated, or could not be read back.
+    if(!writeJSON(KEYS.registry,r))throw new Error("local-registry-write-failed");
+    const confirmed=readJSON(KEYS.registry,null);
+    if(!confirmed||JSON.stringify(confirmed)!==JSON.stringify(r))throw new Error("local-registry-readback-failed");
+    return clone(r);
+  }
   function audit(action,details={}){const entries=readJSON(KEYS.audit,[]);entries.push({at:now(),action:clean(action,80),details:clone(details)});writeJSON(KEYS.audit,entries.slice(-300))}
 
   function activeIds(){return {familyId:readJSON(KEYS.activeFamily,null),adultId:readJSON(KEYS.activeAdult,null),learnerId:readJSON(KEYS.activeLearner,null)}}
-  function setActive({familyId=null,adultId=null,learnerId=null}={}){if(familyId)writeJSON(KEYS.activeFamily,familyId);if(adultId)writeJSON(KEYS.activeAdult,adultId);if(learnerId)writeJSON(KEYS.activeLearner,learnerId);global.dispatchEvent(new CustomEvent("khaemenes-family-changed",{detail:activeIds()}));return activeIds()}
+  function setActive({familyId=null,adultId=null,learnerId=null}={}){
+    // Selection is not authentication. Verify each requested local pointer.
+    for(const [key,value] of [[KEYS.activeFamily,familyId],[KEYS.activeAdult,adultId],[KEYS.activeLearner,learnerId]]){
+      if(!value)continue;
+      if(!writeJSON(key,value)||readJSON(key,null)!==value)throw new Error("local-active-selection-save-failed");
+    }
+    global.dispatchEvent(new CustomEvent("khaemenes-family-changed",{detail:activeIds()}));
+    return activeIds();
+  }
 
   function createFamily({displayName="",adultName="",adultRole="parent"}={}){
     const registry=load(),familyId=id("fam"),adultId=id("adult");
