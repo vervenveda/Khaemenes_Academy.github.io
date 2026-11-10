@@ -385,6 +385,7 @@ body footer.footer .family-footer-links a:focus-visible{outline:3px solid #edcd9
 <script src="https://vervenveda.com/Khaemenes_High.github.io/courses/shared/high-school-eight-class-views.js"></script>
 <script src="../assets/khaemenes-parent-schedule-mirror-v1.js"></script>
 <script src="../assets/khaemenes-parent-learning-pathways-v1.js"></script>
+<script src="../assets/khaemenes-parent-learner-navigation-guard-v1.js"></script>
 <script>
 (() => {
 "use strict";
@@ -500,9 +501,12 @@ function localLinkedLearner(f,id){
 }
 function chooseLocalLearner(f,id,{requireProgress=false}={}){
   const learner=localLinkedLearner(f,id),adult=localAdultForFamily(f);
-  if(!learner)return false;
-  if(requireProgress&&(!adult||!R.canAdult?.(adult.adultId,id,"progress.view")))return false;
-  try{R.setActive({familyId:f.familyId,adultId:adult?.adultId||null,learnerId:learner.learnerId});return true}catch{return false}
+  if(!learner||!adult)return false;
+  // Every route into a child profile or course must be permission checked.
+  if(!R.canAdult?.(adult.adultId,id,"progress.view"))return false;
+  const guard=window.KhaemenesParentLearnerNavigationGuard;
+  const outcome=guard?.select?.(R,f,id);
+  return outcome?.ok===true;
 }
 function learnerCard(l,active){const m=meta(l),ready=l.stage==="higher"||Boolean(l.grade),isActive=l.learnerId===active;return `<article class="learner ${isActive?"active":""}" style="--accent:${m.stage.color}"><div class="stage">${esc(m.stage.label)}${isActive?" · Active":""}</div><h3>${esc(l.nickname)}</h3><small>${esc(m.grade||"Grade selection needed")}${m.school?" · "+esc(m.school):""}</small><p>${ready?"Ready to continue through your Student Profile.":"Choose an exact K–12 grade before continuing to a school pathway."}</p><div class="actions">${isActive?'<span class="btn primary">Active Learner</span>':`<button class="btn" type="button" data-active="${esc(l.learnerId)}">Make Active</button>`}${ready?`<a class="btn dark" href="${esc(learnerProfileDestination(l))}" data-learner-profile="${esc(l.learnerId)}">Open Student Profile</a>`:`<a class="btn dark" href="enroll/">Complete Placement</a>`}<a class="btn" href="enroll/#existing" aria-label="Change grade or review placement for ${esc(l.nickname)}">${ready?"Change Grade / Placement":"Complete Placement"}</a><button class="btn" type="button" data-review-learner-removal="${esc(l.learnerId)}" aria-label="Review learner removal safeguards for ${esc(l.nickname)}">Removal Safeguards</button></div></article>`}
 function renderFamily(f){
