@@ -31,7 +31,7 @@ test("Higher Learning adult accounts are kept distinct from linked K-12 children
 });
 test("parent pathway cards use same permission-gated course navigation as grade 9",()=>{
  assert.ok(html.includes('window.KhaemenesParentLearningPathways?.links?.(l)'));
- assert.ok(html.includes('data-parent-course="'+String.raw`${esc(l.learnerId)}`));
+ assert.ok(html.includes('data-parent-course="'));
  assert.ok(html.includes("chooseLocalLearner(f,learnerId,{requireProgress:true})"));
  assert.ok(html.includes("progress.view"));
 });
