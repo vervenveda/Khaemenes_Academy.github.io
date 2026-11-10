@@ -12,7 +12,7 @@ new vm.Script(contract);
 assert.match(parent,/R\.canAdult\?\.\(adult\.adultId,l\.learnerId,"progress\.view"\)/);
 assert.match(parent,/family\.adults\?\.some/);
 assert.match(parent,/readLearner\?\.\(learner\.learnerId\)/);
-assert.match(parent,/No current course report received/);
+assert.match(parent,/No course report received/);
 assert.match(parent,/No quiz or test scores|Not reported/);
 assert.match(parent,/earned\/possible/);
 assert.doesNotMatch(parent,/localStorage\.setItem|localStorage\.removeItem|\.publish\(/);
