@@ -56,3 +56,21 @@ test("parent mirror never writes grade, mastery, course progress, or storage",()
  assert.ok(!/localStorage|sessionStorage|fetch\(|XMLHttpRequest|\.setItem\(/.test(js));
  assert.ok(html.includes("this does not authorize parent submissions or grading"));
 });
+
+test("High School catalog is available before Family Portal's first render",()=>{
+ const pins=html.indexOf("high-school-course-pins.js");
+ const catalog=html.indexOf("high-school-eight-class.js");
+ const mirror=html.indexOf("khaemenes-parent-schedule-mirror-v1.js");
+ const firstRender=html.indexOf("\nrender();\n})();");
+ assert.ok(pins>0&&catalog>pins&&mirror>catalog&&firstRender>mirror);
+ assert.equal(html.split("high-school-eight-class.js").length-1,1);
+});
+test("legacy next-step navigation rejects unrelated or insecure destinations",()=>{
+ assert.ok(html.includes('allowedHref?.(b.dataset.openNext)'));
+ assert.ok(html.includes('chooseLocalLearner(f,learnerId,{requireProgress:true})'));
+});
+test("parent cards use readable single-line labels and no fabricated course completion",()=>{
+ assert.ok(html.includes(".parent-schedule-course .btn{"));
+ assert.ok(html.includes("font-size:16px;min-height:44px"));
+ assert.ok(html.includes("Course progress appears only when published"));
+});
