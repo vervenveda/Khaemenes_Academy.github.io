@@ -65,3 +65,11 @@ test("generic portal shortcut cannot bypass selecting the linked child",()=>{
  assert.ok(html.includes("Open Selected Student Profile"));
  assert.ok(html.includes('R.canAdult?.(activeAdult.adultId,activeLearner.learnerId,"progress.view")'));
 });
+
+test("Parent Action Center also uses the same guard for learner and mentor shortcuts",()=>{
+ const actions=fs.readFileSync(path.join(__dirname,"../assets/khaemenes-parent-action-center.js"),"utf8");
+ assert.ok(actions.includes("guard?.select?.(R,family,id)"));
+ assert.ok(actions.includes("if(!href||!selectAuthorizedLearner(link.dataset.parentOpenStep))event.preventDefault()"));
+ assert.ok(actions.includes("if(!selectAuthorizedLearner(link.dataset.parentMentor))event.preventDefault()"));
+ assert.ok(!actions.includes('href="../student/" data-parent-profile'));
+});
