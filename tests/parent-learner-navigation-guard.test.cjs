@@ -59,3 +59,9 @@ test("guard grants neither server identity nor student write authority",()=>{
  assert.ok(!/fetch\(|XMLHttpRequest|sessionStorage|localStorage|student.*submit/i.test(src));
  assert.equal(typeof guard.allowed,"function");
 });
+
+test("generic portal shortcut cannot bypass selecting the linked child",()=>{
+ assert.ok(!html.includes('<a class="btn" href="../student/">Open Student Portal</a>'));
+ assert.ok(html.includes("Open Selected Student Profile"));
+ assert.ok(html.includes('R.canAdult?.(activeAdult.adultId,activeLearner.learnerId,"progress.view")'));
+});
