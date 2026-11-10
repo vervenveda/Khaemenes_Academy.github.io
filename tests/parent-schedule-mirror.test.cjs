@@ -74,3 +74,11 @@ test("parent cards use readable single-line labels and no fabricated course comp
  assert.ok(html.includes("font-size:16px;min-height:44px"));
  assert.ok(html.includes("Course progress appears only when published"));
 });
+
+test("unsafe next steps are not rendered as interactive course buttons",()=>{
+ assert.ok(html.includes('window.KhaemenesParentScheduleMirror?.allowedHref?.(s.nextHref)?'));
+});
+test("course snapshot and status text respect minimum readable size",()=>{
+ assert.ok(html.includes('#family-progress :is(.snapshot-meta,.snapshot-course small,.snapshot-status,.snapshot-action){font-size:16px'));
+ assert.ok(html.includes('.parent-schedule-course .btn:focus-visible'));
+});
