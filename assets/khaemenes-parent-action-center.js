@@ -282,7 +282,7 @@ function itemMarkup(item,learnerId){
 function learnerMarkup(l){
   const none='<div class="parent-action-item"><span>Nothing to show in this category right now.</span></div>';
   const renderItems=items=>items.map(item=>itemMarkup(item,l.learnerId)).join("");
-  return '<article class="parent-action-learner"><h4>'+esc(l.nickname)+'</h4><p class="parent-action-meta">'+esc(l.grade?("Grade "+l.grade):l.stage||"Academy learner")+' · '+esc(l.courseCount)+' course snapshot'+(l.courseCount===1?"":"s")+'</p><div class="parent-action-columns"><section class="parent-action-column attention"><h5>Needs attention · '+l.needsAttention+'</h5>'+(renderItems(l.categorized.attention)||none)+'</section><section class="parent-action-column refresh"><h5>Refresh needed · '+l.refreshNeeded+'</h5>'+(renderItems(l.categorized.refresh)||none)+'</section><section class="parent-action-column track"><h5>On track · '+l.onTrack+'</h5>'+(renderItems(l.categorized.track)||none)+'</section><section class="parent-action-column celebrate"><h5>Celebrate · '+l.celebrate+'</h5>'+(renderItems(l.categorized.celebrate)||none)+'</section></div><div class="parent-action-actions"><button type="button" data-parent-select="'+esc(l.learnerId)+'" class="primary">Make Active Learner</button><a href="../student/" data-parent-profile="'+esc(l.learnerId)+'">Open Learner Portal</a><a href="'+MENTOR_URL+'" data-parent-mentor="'+esc(l.learnerId)+'">Ask Archaemenes</a></div></article>';
+  return '<article class="parent-action-learner"><h4>'+esc(l.nickname)+'</h4><p class="parent-action-meta">'+esc(l.grade?("Grade "+l.grade):l.stage||"Academy learner")+' · '+esc(l.courseCount)+' course snapshot'+(l.courseCount===1?"":"s")+'</p><div class="parent-action-columns"><section class="parent-action-column attention"><h5>Needs attention · '+l.needsAttention+'</h5>'+(renderItems(l.categorized.attention)||none)+'</section><section class="parent-action-column refresh"><h5>Refresh needed · '+l.refreshNeeded+'</h5>'+(renderItems(l.categorized.refresh)||none)+'</section><section class="parent-action-column track"><h5>On track · '+l.onTrack+'</h5>'+(renderItems(l.categorized.track)||none)+'</section><section class="parent-action-column celebrate"><h5>Celebrate · '+l.celebrate+'</h5>'+(renderItems(l.categorized.celebrate)||none)+'</section></div><div class="parent-action-actions"><button type="button" data-parent-select="'+esc(l.learnerId)+'" class="primary">Make Active Learner</button><a href="#family-progress">Open Student Schedule &amp; Profile</a><a href="'+MENTOR_URL+'" data-parent-mentor="'+esc(l.learnerId)+'">Ask Archaemenes</a></div></article>';
 }
 function ensureDialog(){
   let d=document.getElementById(DIALOG_ID);
@@ -325,10 +325,21 @@ function render(){
   card.innerHTML='<p class="parent-action-kicker">Parent Action Center</p><h3>Know what needs attention without taking over the learner’s work.</h3><p class="parent-action-intro">This read-only family layer separates genuine learning attention from summaries that simply need refreshing, while keeping optional study review distinct from formal academic concerns. It never changes grades, mastery, placement, or learner identity.</p><div class="parent-action-totals"><div class="parent-action-total"><strong>'+s.totals.needsAttention+'</strong><span>Needs attention</span></div><div class="parent-action-total"><strong>'+s.totals.refreshNeeded+'</strong><span>Refresh needed</span></div><div class="parent-action-total"><strong>'+s.totals.onTrack+'</strong><span>On track</span></div><div class="parent-action-total"><strong>'+s.totals.celebrate+'</strong><span>Celebrate</span></div><div class="parent-action-total"><strong>'+s.totals.dueReview+'</strong><span>Study review due</span></div></div><div class="parent-action-learners">'+s.learners.map(learnerMarkup).join("")+'</div><div class="parent-action-actions"><button type="button" class="primary" data-parent-open-brief>Open Weekly Family Brief</button><button type="button" data-parent-export-brief>Export Brief JSON</button><a href="../teacher-admin/">Teacher / Faculty Support</a></div>';
   card.querySelector("[data-parent-open-brief]")?.addEventListener("click",openBrief);
   card.querySelector("[data-parent-export-brief]")?.addEventListener("click",exportBrief);
-  card.querySelectorAll("[data-parent-select]").forEach(btn=>btn.addEventListener("click",()=>{try{R.setActive({learnerId:btn.dataset.parentSelect});render()}catch{}}));
-  card.querySelectorAll("[data-parent-open-step]").forEach(link=>link.addEventListener("click",event=>{const href=safeStepHref(link.href);if(!href){event.preventDefault();return}try{R.setActive({learnerId:link.dataset.parentOpenStep})}catch{}}));
-  card.querySelectorAll("[data-parent-profile]").forEach(link=>link.addEventListener("click",()=>{try{R.setActive({learnerId:link.dataset.parentProfile})}catch{}}));
-  card.querySelectorAll("[data-parent-mentor]").forEach(link=>link.addEventListener("click",()=>{try{R.setActive({learnerId:link.dataset.parentMentor})}catch{}}));
+  const selectAuthorizedLearner=id=>{
+    const guard=global.KhaemenesParentLearnerNavigationGuard;
+    const family=R.getFamily?.()||null;
+    return guard?.select?.(R,family,id)?.ok===true;
+  };
+  card.querySelectorAll("[data-parent-select]").forEach(btn=>btn.addEventListener("click",()=>{
+    if(selectAuthorizedLearner(btn.dataset.parentSelect))render();
+  }));
+  card.querySelectorAll("[data-parent-open-step]").forEach(link=>link.addEventListener("click",event=>{
+    const href=safeStepHref(link.href);
+    if(!href||!selectAuthorizedLearner(link.dataset.parentOpenStep))event.preventDefault();
+  }));
+  card.querySelectorAll("[data-parent-mentor]").forEach(link=>link.addEventListener("click",event=>{
+    if(!selectAuthorizedLearner(link.dataset.parentMentor))event.preventDefault();
+  }));
   return s;
 }
 let timer=0;function schedule(){clearTimeout(timer);timer=setTimeout(render,80)}
