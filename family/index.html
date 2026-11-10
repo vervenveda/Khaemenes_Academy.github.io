@@ -534,15 +534,15 @@ function bind(f){
     // Selection changes the local learning context, never guardian authority.
     if(!chooseLocalLearner(f,link.dataset.learnerProfile,{requireProgress:true})){event.preventDefault();return}
   }));
-  $("[data-active]").forEach(b=>b.onclick=()=>{if(chooseLocalLearner(f,b.dataset.active))render()});
-  $("[data-parent-course]").forEach(button=>button.addEventListener("click",()=>{
+  document.querySelectorAll("[data-active]").forEach(b=>b.onclick=()=>{if(chooseLocalLearner(f,b.dataset.active))render()});
+  document.querySelectorAll("[data-parent-course]").forEach(button=>button.addEventListener("click",()=>{
     const learnerId=button.dataset.parentCourse,href=window.KhaemenesParentScheduleMirror?.allowedHref?.(button.dataset.parentCourseHref);
     if(!href||!chooseLocalLearner(f,learnerId,{requireProgress:true}))return;
     // Course pages remain separate systems. This navigation does not grant parent
     // academic write authority, impersonation, or a verified cloud session.
     try{location.assign(href)}catch{location.href=href}
   }));
-  $("[data-open-next]").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("[data-open-next]").forEach(b=>b.onclick=()=>{
     const learnerId=b.dataset.learnerId,href=b.dataset.openNext;
     if(!learnerId||!href||!chooseLocalLearner(f,learnerId,{requireProgress:true}))return;
     try{location.assign(href)}catch{location.href=href}
