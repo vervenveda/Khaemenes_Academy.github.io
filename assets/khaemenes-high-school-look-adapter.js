@@ -22,6 +22,10 @@ const identity=()=>{try{
  const data=JSON.parse(read("khaemenes_family_registry_v1")||"null");
  const learner=data?.learners?.[id];
  if(learner?.learnerId!==id||learner.stage!=="high"||String(Number(learner.grade)).padStart(2,"0")!==grade)return null;
+ const activeFamily=JSON.parse(read("khaemenes_active_family_v1")||"null");
+ const family=data?.families?.[learner.familyId];
+ if(!activeFamily||activeFamily!==learner.familyId||family?.familyId!==activeFamily||
+    !Array.isArray(family.learnerIds)||!family.learnerIds.includes(id))return null;
  const linked=g.KhaemenesStudentProfileV2?.activeLearner?.()?.learnerId;
  if(linked&&linked!==id)return null;
  return {id,displayName:learner.displayName||learner.name||"Student"};
