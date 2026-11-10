@@ -5,10 +5,15 @@ const KEY="khaemenes.yearbook.profileChoices.v1:",PAT=/^p_[a-z0-9_]+$/i,DATA=/^d
 function owner(){try{
  const a=w.KhaemenesFamilyRegistry?.getLearner?.()?.learnerId,b=w.KhaemenesStudentProfileV2?.activeLearner?.()?.learnerId;
  if(a&&b&&a!==b)return null;
- if(a||b)return String(a||b);
  const v=JSON.parse(localStorage.getItem("khaemenes_active_learner_v1")||"null"),id=typeof v==="string"?v:v?.learnerId;
  const r=JSON.parse(localStorage.getItem("khaemenes_family_registry_v1")||"null");
- return id&&r?.learners?.[id]?.learnerId===id?id:null;
+ const activeFamily=JSON.parse(localStorage.getItem("khaemenes_active_family_v1")||"null");
+ const learner=id&&r?.learners?.[id];
+ const family=learner&&r?.families?.[learner.familyId];
+ if(!id||learner?.learnerId!==id||!activeFamily||learner.familyId!==activeFamily||
+    family?.familyId!==activeFamily||!Array.isArray(family.learnerIds)||!family.learnerIds.includes(id))return null;
+ if((a&&a!==id)||(b&&b!==id))return null;
+ return id;
 }catch{return null}}
 const key=id=>KEY+encodeURIComponent(id);
 const refs=id=>{try{const a=JSON.parse(localStorage.getItem(key(id))||"[]");return Array.isArray(a)?[...new Set(a.filter(x=>typeof x==="string"&&PAT.test(x)))].slice(0,50):[]}catch{return []}};
@@ -53,7 +58,17 @@ function choose(id,commit){
  const status=d.createElement("p");status.setAttribute("role","status");status.style.fontSize="16px";
  const grid=d.createElement("div");grid.style.cssText="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px";
  const close=d.createElement("button");close.type="button";close.textContent="Close";close.style.cssText="min-height:44px;padding:9px 16px;background:#243038;color:#fff8e9;border-radius:7px;font-size:16px";close.onclick=()=>dlg.close();
- dlg.addEventListener("close",()=>{dlg.remove();if(opener?.isConnected)opener.focus({preventScroll:true})},{once:true});
+ const closeOnLearnerChange=()=>{if(dlg.open&&owner()!==id)dlg.close()};
+ w.addEventListener("khaemenes-family-changed",closeOnLearnerChange);
+ w.addEventListener("pageshow",closeOnLearnerChange);
+ const onStorage=event=>{if(!event.key||["khaemenes_active_learner_v1","khaemenes_active_family_v1","khaemenes_family_registry_v1"].includes(event.key))closeOnLearnerChange()};
+ w.addEventListener("storage",onStorage);
+ dlg.addEventListener("close",()=>{
+  w.removeEventListener("khaemenes-family-changed",closeOnLearnerChange);
+  w.removeEventListener("pageshow",closeOnLearnerChange);
+  w.removeEventListener("storage",onStorage);
+  dlg.remove();if(opener?.isConnected)opener.focus({preventScroll:true});
+ },{once:true});
  dlg.append(title,text,status,grid,close);d.body.append(dlg);dlg.showModal();close.focus();
  available(id).then(list=>{
   if(owner()!==id||!dlg.open){status.textContent="Learner changed. Reopen the picker.";return}
@@ -79,7 +94,18 @@ function openYearbook(id){
  close.onclick=()=>dialog.close();header.append(title,close);
  const note=d.createElement("p");note.textContent="Select a photo in Yearbook and choose Make Available to My Profile. Then return to your profile editor and choose it from My Yearbook.";note.style.cssText="margin:0;padding:9px 12px;background:#f5e8ce;color:#243038;font:400 16px/1.45 Nunito,Arial,sans-serif";
  const frame=d.createElement("iframe");frame.src="https://vervenveda.com/Academy-Yearbook.github.io/";frame.title="Academy Yearbook photo generator";frame.loading="lazy";frame.referrerPolicy="strict-origin-when-cross-origin";frame.style.cssText="display:block;width:100%;flex:1;min-height:0;border:0";
- dialog.addEventListener("close",()=>{dialog.remove();if(opener?.isConnected)opener.focus({preventScroll:true})},{once:true});
+ const closeOnLearnerChange=()=>{if(dialog.open&&owner()!==id)dialog.close()};
+ w.addEventListener("khaemenes-family-changed",closeOnLearnerChange);
+ w.addEventListener("pageshow",closeOnLearnerChange);
+ const onStorage=event=>{if(!event.key||["khaemenes_active_learner_v1","khaemenes_active_family_v1","khaemenes_family_registry_v1"].includes(event.key))closeOnLearnerChange()};
+ w.addEventListener("storage",onStorage);
+ dialog.addEventListener("close",()=>{
+  w.removeEventListener("khaemenes-family-changed",closeOnLearnerChange);
+  w.removeEventListener("pageshow",closeOnLearnerChange);
+  w.removeEventListener("storage",onStorage);
+  frame.src="about:blank";dialog.remove();
+  if(opener?.isConnected)opener.focus({preventScroll:true});
+ },{once:true});
  container.append(header,note,frame);dialog.append(container);d.body.append(dialog);dialog.showModal();close.focus();return true;
 }
 w.KhaemenesYearbookProfileImages=Object.freeze({version:"1.1",owner,publish,available,choose,openYearbook});
