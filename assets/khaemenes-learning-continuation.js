@@ -61,6 +61,20 @@
       mastered:v.mastered===true
     };
   }
+  // Optional locally reported graded items, never inferred from completion or best mastery.
+  // Each item requires an explicit earned/possible score and quiz/test classification.
+  function normalizeAssessments(value){
+    if(!Array.isArray(value))return [];
+    const seen=new Set(),rows=[];
+    for(const x of value.slice(0,240)){
+      const id=clean(x?.id,120),kind=x?.kind;
+      const earned=number(x?.earned,0,100000),possible=number(x?.possible,0,100000);
+      if(!id||(kind!=="quiz"&&kind!=="test")||earned===null||possible===null||possible<=0||earned>possible||seen.has(id))continue;
+      seen.add(id);
+      rows.push({id,kind,earned,possible,title:clean(x.title||id,120),gradedAt:clean(x.gradedAt||"",40)});
+    }
+    return rows;
+  }
   function normalizeSnapshot(input){
     const learnerId=clean(input?.learnerId,120);
     const courseId=clean(input?.courseId,140);
@@ -83,6 +97,7 @@
       summary:clean(input.summary||"",260),
       progress:normalizeProgress(input.progress),
       mastery:normalizeMastery(input.mastery),
+      assessments:normalizeAssessments(input.assessments),
       family:{
         needsAction:input.family?.needsAction===true,
         label:clean(input.family?.label||"",90),
@@ -154,6 +169,7 @@
       courseUpdatedAt:courseUpdated?new Date(courseUpdated).toISOString():null,
       progress:{...snapshot.progress},
       mastery:{...snapshot.mastery},
+      assessments:Array.isArray(snapshot.assessments)?snapshot.assessments.map(x=>({...x})):[],
       family:{...snapshot.family}
     });
   }
