@@ -68,7 +68,9 @@
     const seen=new Set(),rows=[];
     for(const x of value.slice(0,240)){
       const id=clean(x?.id,120),kind=x?.kind;
-      const earned=number(x?.earned,0,100000),possible=number(x?.possible,0,100000);
+      // Reject malformed values; never turn null into 0 or clamp invalid marks.
+      const earned=typeof x?.earned==="number"&&Number.isFinite(x.earned)?x.earned:null;
+      const possible=typeof x?.possible==="number"&&Number.isFinite(x.possible)?x.possible:null;
       if(!id||(kind!=="quiz"&&kind!=="test")||earned===null||possible===null||possible<=0||earned>possible||seen.has(id))continue;
       seen.add(id);
       rows.push({id,kind,earned,possible,title:clean(x.title||id,120),gradedAt:clean(x.gradedAt||"",40)});
