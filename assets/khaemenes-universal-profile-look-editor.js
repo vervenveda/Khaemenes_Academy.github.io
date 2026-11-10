@@ -151,7 +151,7 @@ function build(){
  });
  $("kplsSave").addEventListener("click",()=>{
   const id=adult()?.id;
-  if(!id||id!==owner){setStatus("Choose the correct profile again.");return}
+  if(!dialog?.open||!id||id!==owner){setStatus("Choose the correct profile again.");return}
   const look={...selected,displayName:$("kplsDisplay").value.trim().slice(0,70)};
   if(!FRAMES.some(x=>x.id===look.frame)||!BADGES.includes(look.badge)||!(look.cardColor===""||COLORS.includes(look.cardColor))||!Object.hasOwn(NAME_FONTS,look.nameFont)){setStatus("Choose valid profile options.");return}
   // Existing appearance/photo keys remain unchanged; never touch student or registry storage.
@@ -163,6 +163,16 @@ function build(){
   dialog.close();
  });
  dialog.addEventListener("close",()=>{imageRevision++;selected=null;photo="";stagedPhoto=null;stagedHeroImage=null;owner=null;badgeTouched=false;if(opener?.isConnected)opener.focus({preventScroll:true});opener=null});
+ const closeForIdentityChange=()=>{
+  if(dialog?.open&&(!owner||adult()?.id!==owner)){
+   imageRevision++;dialog.close();
+  }
+ };
+ w.addEventListener("khaemenes-family-changed",closeForIdentityChange);
+ w.addEventListener("pageshow",closeForIdentityChange);
+ w.addEventListener("storage",event=>{
+  if(!event.key||["khaemenes_active_learner_v1","khaemenes_active_family_v1","khaemenes_family_registry_v1"].includes(event.key))closeForIdentityChange();
+ });
  return dialog;
 }
 function render(){
