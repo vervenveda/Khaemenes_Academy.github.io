@@ -1,0 +1,28 @@
+name: Parent Progress and Grades Validation
+on:
+  push:
+    branches: [main]
+    paths:
+      - "family/progress/**"
+      - "family/index.html"
+      - "assets/khaemenes-learning-continuation.js"
+      - "tests/parent-progress-grades.test.cjs"
+      - ".github/workflows/parent-progress-grades-validation.yml"
+  pull_request:
+    paths:
+      - "family/progress/**"
+      - "assets/khaemenes-learning-continuation.js"
+      - "tests/parent-progress-grades.test.cjs"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  parent-progress-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: node tests/parent-progress-grades.test.cjs
