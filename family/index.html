@@ -380,6 +380,7 @@ body footer.footer .family-footer-links a:focus-visible{outline:3px solid #edcd9
 <script src="../assets/khaemenes-family-registry.js"></script>
 <script src="../assets/khaemenes-family-invite-client.js"></script>
 <script src="../assets/khaemenes-learning-continuation.js"></script>
+<script src="../assets/khaemenes-parent-schedule-mirror-v1.js"></script>
 <script>
 (() => {
 "use strict";
@@ -424,6 +425,15 @@ function familyPublishedProgressBars(records){
     return '<div class="family-reported-row"><span>'+label+'</span>'+track+'<span>'+(r.stale?"Refresh required":ok?n+"%":"Not reported")+'</span></div>';
   }).join("")+'</div>';
 }
+function parentScheduleMirror(l,snapshots){
+ const api=window.KhaemenesParentScheduleMirror,cat=window.KhaemenesHighEightClass;
+ const items=api?.rows?.(l,snapshots,{catalog:cat})||[];
+ if(!items.length)return '<p class="snapshot-meta">A detailed parent schedule is not yet available for this grade. Use the student profile for the existing schedule.</p>';
+ return '<section class="parent-student-schedule" aria-label="Student schedule from parent account"><h4>Student Schedule · Parent View</h4><p>These are the same eight subject slots used by High School. Course progress appears only when published; this does not authorize parent submissions or grading.</p><div class="parent-student-schedule-grid">'+items.map(item=>
+  '<article class="parent-schedule-course"><span class="parent-schedule-subject">'+esc(item.label)+'</span><h5>'+esc(item.title)+'</h5><p>'+esc(item.status)+'</p>'+
+  (item.href?'<button class="btn" type="button" data-parent-course="'+esc(l.learnerId)+'" data-parent-course-href="'+esc(item.href)+'">Visit Course</button>':'<span class="snapshot-meta">Course link not available</span>')+
+  '</article>').join("")+'</div></section>';
+}
 function learnerProgress(l,adult){
   if(!adult||!R?.canAdult?.(adult.adultId,l.learnerId,"progress.view")){
     return `<article class="snapshot-learner"><h3>${esc(l.nickname||"Learner")}</h3><p class="snapshot-meta">Progress view is not enabled for this adult.</p></article>`;
@@ -431,11 +441,11 @@ function learnerProgress(l,adult){
   const snapshots=C?.readLearner?.(l.learnerId)||[];
   const summary=C?.summarize?.(l.learnerId)||null;
   if(!snapshots.length){
-    return `<article class="snapshot-learner"><h3>${esc(l.nickname||"Learner")}</h3><p class="snapshot-meta">No course continuation snapshot has been published yet. Existing records remain unchanged; snapshots appear as school courses adopt the shared continuation contract.</p><div class="actions"><a class="btn" href="${esc(learnerProfileDestination(l))}" data-learner-profile="${esc(l.learnerId)}">Open Student Schedule &amp; Profile</a></div></article>`;
+    return `<article class="snapshot-learner"><h3>${esc(l.nickname||"Learner")}</h3><p class="snapshot-meta">No course continuation snapshot has been published yet. Existing records remain unchanged; snapshots appear as school courses adopt the shared continuation contract.</p><div class="actions"><a class="btn" href="${esc(learnerProfileDestination(l))}" data-learner-profile="${esc(l.learnerId)}">Open Student Schedule &amp; Profile</a></div>${parentScheduleMirror(l,snapshots)}</article>`;
   }
   const bars=/^(?:grade[\s-]*)?0?9$/i.test(String(l.grade||""))?familyGradeNineBars(snapshots):familyPublishedProgressBars(snapshots);
   const courses=snapshots.slice(0,6).map(s=>`<article class="snapshot-course"><strong>${esc(s.courseTitle||s.courseId)}</strong><small>${esc(s.nextTitle||s.summary||"Next learning step")}</small><span class="snapshot-status">${esc(statusLabel(s.status))}</span>${s.stale?`<div class="snapshot-action"><strong>Progress changed in the course.</strong> Reopen the course to refresh this next-step summary before relying on it.</div>`:""}${s.mastery?.best!==null&&s.mastery?.best!==undefined?`<small>Best mastery: ${esc(s.mastery.best)}% · target ${esc(s.mastery.threshold||80)}%</small>`:""}${s.family?.needsAction?`<div class="snapshot-action"><strong>Family attention</strong>${esc(s.family.summary||s.family.label||"Review this learning step.")}</div>`:""}<div class="actions">${s.nextHref?`<button class="btn" type="button" data-open-next="${esc(s.nextHref)}" data-learner-id="${esc(l.learnerId)}">${s.stale?"Refresh in Course":"Open Next Step"}</button>`:""}</div></article>`).join("");
-  return `<article class="snapshot-learner"><h3>${esc(l.nickname||"Learner")}</h3><p class="snapshot-meta">${esc(summary?.courses||snapshots.length)} course snapshot${(summary?.courses||snapshots.length)===1?"":"s"} · ${esc(summary?.needsFamilyAction||0)} need family attention</p><div class="actions"><a class="btn" href="${esc(learnerProfileDestination(l))}" data-learner-profile="${esc(l.learnerId)}">Open Student Schedule &amp; Profile</a></div>${bars}<div class="snapshot-grid">${courses}</div></article>`;
+  return `<article class="snapshot-learner"><h3>${esc(l.nickname||"Learner")}</h3><p class="snapshot-meta">${esc(summary?.courses||snapshots.length)} course snapshot${(summary?.courses||snapshots.length)===1?"":"s"} · ${esc(summary?.needsFamilyAction||0)} need family attention</p><div class="actions"><a class="btn" href="${esc(learnerProfileDestination(l))}" data-learner-profile="${esc(l.learnerId)}">Open Student Schedule &amp; Profile</a></div>${parentScheduleMirror(l,snapshots)}${bars}<div class="snapshot-grid">${courses}</div></article>`;
 }
 /* Grade 09 browser-local daily report; parent permission is mandatory. */
 function gradeNineDailyReport(l,adult){
@@ -497,7 +507,16 @@ function renderFamily(f){
   </section>`:"";
   $("#familyApp").innerHTML=`${pinReturnNotice}<div class="metric-grid"><div class="metric"><strong>${esc(f.displayName)}</strong><span>Family</span></div><div class="metric"><strong>${f.learners.length}</strong><span>Learners</span></div><div class="metric"><strong>${f.adults.length}</strong><span>Adults</span></div><div class="metric"><strong>${scholar?"Active":"Optional"}</strong><span>Adult Learning</span></div></div>
   <section><div class="notice" role="note" style="margin-top:22px">To adjust a learner\u2019s grade, choose <strong>Change Grade / Placement</strong> on their card. Grade editing currently uses this browser\u2019s family registry. Verified email passcodes and deletion of learner profiles are not available until the secure family account service is connected; no learner data will be deleted from this page.</div><div class="heading" style="margin-top:38px"><p class="kicker">Every learner has an individual path.</p><h2>Learners</h2><p>Choose the active learner here. Grade placement can be reviewed or changed through Enrollment & Placement.</p></div><div class="learner-grid">${familyLearners.map(l=>learnerCard(l,ids.learnerId)).join("")||'<div class="empty">No K–12 learners yet.</div>'}</div><div class="actions"><a class="btn primary" href="enroll/">Enroll / Add Learner</a><a class="btn" href="../student/">Open Student Portal</a></div></section>
-  <section id="family-progress"><div class="heading" style="margin-top:31px"><p class="kicker">See what comes next without taking over the learner\'s work.</p><h2>Schedules &amp; Progress</h2><p>Grade 09 provides our eight-subject reference model. Other grades are being upgraded toward that standard. Read-only reports show only available, permission-authorized course progress, mastery checkpoints, and next steps. No class times or unreported scores are invented.</p></div><div class="grid">${familyLearners.map(l=>learnerProgress(l,activeAdult)).join("")||'<div class="empty">No K–12 learner progress to show yet.</div>'}</div></section>
+  <section id="family-progress"><style>
+.parent-student-schedule{margin:18px 0;padding:16px;background:#f7f2e8;border:1px solid #b8a681;border-radius:7px}
+.parent-student-schedule h4{margin:0 0 7px;font:400 24px/1.3 Cinzel,Georgia,serif}
+.parent-student-schedule p{font-size:16px}
+.parent-student-schedule-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:11px}
+.parent-schedule-course{background:#fffdf8;border:1px solid #aab5aa;padding:14px;border-radius:7px;min-width:0}
+.parent-schedule-course h5{font:400 19px/1.3 Cinzel,Georgia,serif;margin:7px 0}
+.parent-schedule-subject{font-size:16px;color:#3b5548}
+.parent-schedule-course .btn{display:inline-flex;align-items:center;justify-content:center;font-size:16px;min-height:44px;background:#243038;color:#fff8e9;border-radius:7px}
+</style><div class="heading" style="margin-top:31px"><p class="kicker">See what comes next without taking over the learner\'s work.</p><h2>Schedules &amp; Progress</h2><p>Grade 09 provides our eight-subject reference model. Other grades are being upgraded toward that standard. Read-only reports show only available, permission-authorized course progress, mastery checkpoints, and next steps. No class times or unreported scores are invented.</p></div><div class="grid">${familyLearners.map(l=>learnerProgress(l,activeAdult)).join("")||'<div class="empty">No K–12 learner progress to show yet.</div>'}</div></section>
   <section><div class="heading" style="margin-top:34px"><h2>To Do Today · Daily Family Reports</h2><p>Read-only, browser-local updates for authorized adults. These reports are not emailed or synchronized across devices.</p></div><div class="grid">${familyLearners.map(l=>gradeNineDailyReport(l,activeAdult)).filter(Boolean).join("")||'<div class="empty">No authorized daily reports available on this browser.</div>'}</div></section>
   <div class="grid cols2" style="margin-top:34px">
     <section class="card"><h3>Adults & Family Access</h3><p>Parents, guardians, caregivers, educators, and other authorized adults can be connected to the family learning workspace.</p><div>${f.adults.map(a=>`<div class="adult"><strong>${esc(a.displayName)}</strong><small>${esc(a.role)} · ${a.adultId===ids.adultId?"active adult":"family adult"}</small></div>`).join("")}</div><div class="actions"><button class="btn" id="addAdult" type="button">Additional Adult Access · Pending Verification</button></div></section>
@@ -513,10 +532,17 @@ function bind(f){
   const activeAdult=localAdultForFamily(f);
   document.querySelectorAll("[data-learner-profile]").forEach(link=>link.addEventListener("click",event=>{
     // Selection changes the local learning context, never guardian authority.
-    if(!chooseLocalLearner(f,link.dataset.learnerProfile)){event.preventDefault();return}
+    if(!chooseLocalLearner(f,link.dataset.learnerProfile,{requireProgress:true})){event.preventDefault();return}
   }));
   $("[data-active]").forEach(b=>b.onclick=()=>{if(chooseLocalLearner(f,b.dataset.active))render()});
-  $$("[data-open-next]").forEach(b=>b.onclick=()=>{
+  $("[data-parent-course]").forEach(button=>button.addEventListener("click",()=>{
+    const learnerId=button.dataset.parentCourse,href=window.KhaemenesParentScheduleMirror?.allowedHref?.(button.dataset.parentCourseHref);
+    if(!href||!chooseLocalLearner(f,learnerId,{requireProgress:true}))return;
+    // Course pages remain separate systems. This navigation does not grant parent
+    // academic write authority, impersonation, or a verified cloud session.
+    try{location.assign(href)}catch{location.href=href}
+  }));
+  $("[data-open-next]").forEach(b=>b.onclick=()=>{
     const learnerId=b.dataset.learnerId,href=b.dataset.openNext;
     if(!learnerId||!href||!chooseLocalLearner(f,learnerId,{requireProgress:true}))return;
     try{location.assign(href)}catch{location.href=href}
