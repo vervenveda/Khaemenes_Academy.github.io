@@ -384,6 +384,7 @@ body footer.footer .family-footer-links a:focus-visible{outline:3px solid #edcd9
 <script src="https://vervenveda.com/Khaemenes_High.github.io/courses/shared/high-school-eight-class.js"></script>
 <script src="https://vervenveda.com/Khaemenes_High.github.io/courses/shared/high-school-eight-class-views.js"></script>
 <script src="../assets/khaemenes-parent-schedule-mirror-v1.js"></script>
+<script src="../assets/khaemenes-parent-learning-pathways-v1.js"></script>
 <script>
 (() => {
 "use strict";
@@ -431,7 +432,13 @@ function familyPublishedProgressBars(records){
 function parentScheduleMirror(l,snapshots){
  const api=window.KhaemenesParentScheduleMirror,cat=window.KhaemenesHighEightClass;
  const items=api?.rows?.(l,snapshots,{catalog:cat})||[];
- if(!items.length)return '<p class="snapshot-meta">A detailed parent schedule is not yet available for this grade. Use the student profile for the existing schedule.</p>';
+ if(!items.length){
+  const pathway=window.KhaemenesParentLearningPathways?.links?.(l);
+  if(!pathway||!pathway.links.length)return '<p class="snapshot-meta">This learner’s schedule is not yet available. Verify their placement or open the existing student profile.</p>';
+  return '<section class="parent-student-schedule" aria-label="Learner pathway from parent account"><h4>'+esc(pathway.title)+'</h4><p>'+esc(pathway.notice)+'</p><div class="parent-student-schedule-grid">'+
+    pathway.links.filter(item=>item.href).map(item=>'<article class="parent-schedule-course"><h5>'+esc(item.label)+'</h5><button type="button" class="btn" data-parent-course="'+esc(l.learnerId)+'" data-parent-course-href="'+esc(item.href)+'">Visit '+esc(item.label)+'</button></article>').join("")+
+    '</div></section>';
+ }
  return '<section class="parent-student-schedule" aria-label="Student schedule from parent account"><h4>Student Schedule · Parent View</h4><p>These are the same eight subject slots used by High School. Course progress appears only when published; this does not authorize parent submissions or grading.</p><div class="parent-student-schedule-grid">'+items.map(item=>
   '<article class="parent-schedule-course"><span class="parent-schedule-subject">'+esc(item.label)+'</span><h5>'+esc(item.title)+'</h5><p>'+esc(item.status)+'</p>'+
   (item.href?'<button class="btn" type="button" data-parent-course="'+esc(l.learnerId)+'" data-parent-course-href="'+esc(item.href)+'">Visit Course</button>':'<span class="snapshot-meta">Course link not available</span>')+
