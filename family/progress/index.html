@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="description" content="Khaemenes Academy family class progress and quiz/test summary.">
+<title>Parent Class Progress & Grades · Khaemenes Academy</title>
+<style>
+:root{--charcoal:#243038;--paper:#f4f0e7;--cream:#fff8e9;--gold:#b48b45}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--charcoal);font:400 18px/1.6 "Brandon Grotesque",Nunito,Arial,sans-serif;text-align:center}
+header,footer{background:var(--charcoal);color:var(--cream);padding:22px 16px}
+h1,h2,h3{font-family:Cinzel,Georgia,serif;font-weight:400;line-height:1.3}
+h1{font-size:clamp(33px,6vw,55px);margin:12px auto}h2{font-size:33px}h3{font-size:24px}
+main{max-width:1120px;padding:24px 20px 66px;margin:auto}nav{display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
+nav a{color:inherit}header nav a{color:var(--cream)}
+.card{background:#fffdf8;border:1px solid #cbbfaa;border-radius:7px;padding:22px;margin:20px auto}
+.note{border-left:4px solid var(--gold)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:14px;text-align:left}
+.subject{padding:18px;background:#f6f1e6;border:1px solid #cbbfaa;border-radius:7px}
+.subject h3{margin:0 0 10px;font-size:22px}.subject p{margin:6px 0}
+button,.action{display:inline-flex;justify-content:center;align-items:center;min-height:48px;background:var(--charcoal);color:var(--cream);border:1px solid var(--gold);border-radius:7px;padding:10px 18px;text-decoration:none;font:400 17px/1.4 inherit;cursor:pointer}
+button[aria-pressed="true"]{background:#e7d7b6;color:var(--charcoal)}.actions{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin:18px auto}
+.small{color:#45554c;font-size:16px}a:focus-visible,button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+[hidden]{display:none!important}
+</style></head>
+<body>
+<header><nav aria-label="Breadcrumb"><a href="../">Parent Portal</a><span aria-hidden="true">/</span><span aria-current="page">Class Progress & Grades</span></nav><h1>Class Progress & Grades</h1><p>A read-only family view of locally reported coursework and quiz/test scores.</p></header>
+<main>
+<section class="card note"><h2>Academic record distinction</h2><p>Class completion is not a grade. A quiz/test average appears only if a course has published graded scores with earned and possible points. This browser-based view is not an official transcript, nor a verified cloud sync.</p></section>
+<div id="parentProgressStatus" class="card" role="status" aria-live="polite">Checking authorized family access on this browser.</div>
+<section id="parentProgressWorkspace" hidden>
+ <h2>Choose an authorized learner</h2><div class="actions" id="parentProgressLearners"></div>
+ <div id="parentProgressDetail" aria-live="polite"></div>
+</section>
+<nav class="actions" aria-label="Return links"><a class="action" href="../">Return to Parent Portal</a><a class="action" href="../../">Academy Home</a></nav>
+</main><footer>Khaemenes Academy · Family Learning Center</footer>
+<script src="../../assets/khaemenes-family-registry.js"></script>
+<script src="../../assets/khaemenes-learning-continuation.js"></script>
+<script src="parent-progress.js"></script>
+</body></html>
