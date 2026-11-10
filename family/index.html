@@ -546,7 +546,7 @@ function bind(f){
     try{location.assign(href)}catch{location.href=href}
   }));
   document.querySelectorAll("[data-open-next]").forEach(b=>b.onclick=()=>{
-    const learnerId=b.dataset.learnerId,href=b.dataset.openNext;
+    const learnerId=b.dataset.learnerId,href=window.KhaemenesParentScheduleMirror?.allowedHref?.(b.dataset.openNext);
     if(!learnerId||!href||!chooseLocalLearner(f,learnerId,{requireProgress:true}))return;
     try{location.assign(href)}catch{location.href=href}
   });
