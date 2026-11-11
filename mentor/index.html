@@ -102,6 +102,75 @@ body,.small,.notice,.kv,.route-card,.chat,.visitor-section{font-weight:400}
 #mentorWorkspace :is(.visitor-messages,.messages):focus-visible{outline:2px solid var(--forest);outline-offset:-3px}
 @media(max-width:480px){#mentorWorkspace .visitor-entry{flex-direction:column}#mentorWorkspace .visitor-entry button{min-height:44px}#mentorWorkspace .composer{grid-template-columns:1fr}#mentorWorkspace .composer button{min-height:44px}}
 </style>
+<style id="archaemenes-organized-conversation-v1">
+/* Mentor presentation only; preserve Family Registry, chat IDs, records, and voice logic. */
+:root{--r:7px;--sans:"Brandon Grotesque",Nunito,"Avenir Next",Arial,sans-serif;--serif:Cinzel,Georgia,serif}
+html{scroll-padding-top:95px}
+body{font:400 16px/1.65 var(--sans);color:#243038;background:#f4f0e7}
+.shell{width:min(calc(100% - 32px),1240px)}
+.hero{padding:33px 0 27px!important}
+.hero-grid{grid-template-columns:minmax(180px,220px) minmax(0,1fr)!important;gap:28px!important;align-items:center}
+.archaemenes-living{gap:7px!important}
+.archaemenes-living .owl{width:175px!important;font-size:5.4rem!important;margin-bottom:6px!important;border-width:4px}
+.archaemenes-living :is(select,button,label,.small){font-size:16px!important;line-height:1.5}
+.archaemenes-living :is(button,select){min-height:44px;border-radius:7px}
+.hero h1{font:400 clamp(42px,5vw,66px)/1.15 var(--serif)!important;letter-spacing:0}
+.hero .eyebrow{font:400 clamp(18px,2vw,24px)/1.35 var(--serif)!important;letter-spacing:.04em;color:#71353d}
+.hero .tagline{font:400 20px/1.4 var(--serif)!important;margin-top:9px}
+.hero .lede{font-size:17px!important;line-height:1.6;margin-top:10px!important}
+.identity{margin-top:10px!important}
+.identity .badge{font-size:16px!important;min-height:36px;font-weight:400;border-radius:7px}
+.mentor-hero-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:16px}
+.mentor-hero-actions .btn{font-size:16px!important;min-height:44px}
+#mentorWorkspace{display:grid;grid-template-columns:minmax(0,1.85fr) minmax(280px,.85fr);align-items:start;gap:18px;padding-bottom:42px}
+#mentorWorkspace .panel{min-width:0;border:1px solid #c6af80;border-radius:7px;background:#fffdf8;box-shadow:0 6px 21px rgba(35,48,41,.07)}
+#mentorWorkspace .chat{display:flex;flex-direction:column;overflow:hidden;min-height:500px}
+#learnerConversation{display:flex;flex-direction:column;min-height:0;flex:1}
+#learnerConversation .panel-pad{order:0;background:#f7f0e4;border-bottom:1px solid #d6c4a4}
+#learnerConversation #messages{order:1;flex:1;min-height:350px;height:clamp(350px,47vh,540px);max-height:540px}
+#learnerConversation #quickPrompts{order:2;border-top:1px solid #ded1bb;padding:12px 15px}
+#learnerConversation #composer{order:3;background:#fffdf8;padding:13px 15px 17px}
+#mentorWorkspace #visitorConversation{display:block;flex:1;min-width:0}
+#mentorWorkspace .visitor-panel{display:flex;flex-direction:column;overflow:hidden;background:#fffdf8}
+#mentorWorkspace .visitor-heading{order:0;background:#f7f0e4;border-bottom:1px solid #d6c4a4;padding:18px 20px}
+#mentorWorkspace .visitor-heading .eyebrow{font:400 16px/1.4 var(--serif)!important}
+#mentorWorkspace .visitor-heading h2{font:400 28px/1.35 var(--serif)!important}
+#mentorWorkspace #visitorMessages{order:1;min-height:350px;height:clamp(350px,47vh,540px);max-height:540px;flex:none}
+#mentorWorkspace .visitor-suggestions{order:2;padding:13px 18px;border-top:1px solid #ded1bb}
+#mentorWorkspace .visitor-form{order:3;padding:12px 18px 8px}
+#mentorWorkspace .visitor-privacy{order:4;margin:10px 18px;font-size:16px!important;line-height:1.5}
+#mentorWorkspace .visitor-clear{order:5;align-self:flex-start;margin:0 18px 18px;min-height:44px}
+#mentorWorkspace :is(.small,.notice,.kv,.route-card,.context-note,.visitor-reply,.visitor-user,.msg,.visitor-form label){font-size:16px!important;line-height:1.55}
+#mentorWorkspace :is(.quick button,.visitor-suggestions button,.btn,.visitor-form button,.composer button){font-size:16px!important;min-height:44px;border-radius:7px;font-weight:400!important}
+#mentorWorkspace :is(.visitor-entry input,.composer input){min-height:48px;font-size:16px!important}
+#mentorWorkspace .side-stack{display:grid;align-content:start;gap:12px}
+#mentorWorkspace .side-stack>.panel{padding:17px 18px}
+#mentorWorkspace .side-stack>.panel h3{font:400 24px/1.3 var(--serif);margin:0 0 8px}
+#mentorWorkspace .side-stack .route-card{border-radius:7px;background:#f7f1e6}
+#mentorWorkspace .side-stack .actions{display:flex;gap:8px}
+#mentorWorkspace .side-stack .actions .btn{flex:1 1 130px;min-width:0}
+#mentorWorkspace .side-stack #familyPanel,#mentorWorkspace .side-stack #learnerPanel{border-left:3px solid #b48b45}
+footer{background:#243038;color:#fff8e9!important;text-align:center;padding:27px 16px;font-size:16px!important}
+footer .shell{color:#fff8e9!important;max-width:850px}
+@media(max-width:900px){
+ .hero-grid{grid-template-columns:1fr!important;text-align:center}
+ .hero .lede{margin-inline:auto}
+ .identity,.mentor-hero-actions{justify-content:center}
+ #mentorWorkspace{grid-template-columns:1fr;gap:14px}
+ #mentorWorkspace .side-stack{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #mentorWorkspace .side-stack>.panel:nth-last-child(1){grid-column:1/-1}
+}
+@media(max-width:560px){
+ .hero{padding-top:20px!important}
+ .archaemenes-living .owl{width:145px!important;font-size:4.4rem!important}
+ #mentorWorkspace .side-stack{grid-template-columns:1fr}
+ #mentorWorkspace .side-stack>.panel:nth-last-child(1){grid-column:auto}
+ #mentorWorkspace :is(#visitorMessages,#messages){min-height:300px;height:350px;max-height:410px}
+ #mentorWorkspace .visitor-heading{padding:15px}
+ #mentorWorkspace .visitor-entry{flex-direction:column}
+ #mentorWorkspace .visitor-entry button{min-height:44px}
+}
+</style>
 </head>
 <body data-i18n-no-online>
 <div class="topline">Khaemenes Academy · One Mentor · Family-linked learner continuity</div>
@@ -137,7 +206,7 @@ body,.small,.notice,.kv,.route-card,.chat,.visitor-section{font-weight:400}
       <h1>Archaemenes</h1>
       <p class="tagline">“Wisdom begins with curiosity.”</p>
       <p class="lede" id="heroLede">A patient, observant and thoughtful educational mentor whose expression grows with the learner while preserving one continuous identity.</p>
-      <div class="identity" id="identityBadges"></div>
+      <div class="identity" id="identityBadges"></div><div class="mentor-hero-actions"><a class="btn primary" href="#mentorWorkspace">Begin Conversation</a><a class="btn" href="../family/">Family Profile</a></div>
     </div>
   </div>
 </section>
