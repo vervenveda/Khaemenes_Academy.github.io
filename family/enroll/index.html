@@ -111,6 +111,7 @@ main.shell.grid>.academy-curriculum-directory{grid-column:1/-1!important}
   #familyPane .intake-nav{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
   #familyPane .intake-nav button{min-height:48px;font-size:16px}
 </style>
+<link rel="stylesheet" href="./family-card-directory-v1.css" data-family-card-directory="v1">
 </head>
 <body data-i18n-no-online data-vnv-header-title="Family Enrollment" data-vnv-header-subtitle="Khaemenes Academy · Enrollment & Placement">
 
@@ -310,7 +311,8 @@ function render(){
     return;
   }
 
-  fp.innerHTML=`<div class="notice"><strong>Provisional family profile — stored on this device, not verified or cloud-synced.</strong></div><div class="notice ok"><strong>${esc(family.displayName)}</strong><br>${family.adults.length} adult${family.adults.length===1?"":"s"} · ${family.learners.length} learner${family.learners.length===1?"":"s"}</div><div class="actions"><a class="btn secondary" href="../">Open Family Hub</a></div>`;
+  fp.innerHTML=`<div class="notice"><strong>Provisional family profile — stored on this device, not verified or cloud-synced.</strong></div><div class="notice ok"><strong>${esc(family.displayName)}</strong><br>${family.adults.length} adult${family.adults.length===1?"":"s"} · ${family.learners.filter(l=>!l.selfDirectedAdult).length} K–12 learner${family.learners.filter(l=>!l.selfDirectedAdult).length===1?"":"s"}</div><div id="familyCardMembers" aria-label="Family members and local profile overviews"></div><div class="actions"><a class="btn secondary" href="../">Open Family Hub</a></div>`;
+  window.KhaemenesEnrollmentFamilyCard?.refresh?.();
 
   lp.innerHTML=`<div class="field"><label>Learner first name or nickname</label><input id="nickname" placeholder="Learner"></div><div class="field"><label>Exact grade placement</label><select id="grade">${gradeOptions()}</select></div><div class="actions"><button class="btn green" id="addLearner" type="button">Register K–12 Learner</button></div><div class="notice">Each learner receives a provisional local identifier and a separate learning path. This does not create a verified Mother Cloud account.</div><div id="existing" style="margin-top:18px"></div>`;
   document.getElementById("addLearner").addEventListener("click",()=>{
@@ -367,6 +369,7 @@ render();
 })();
 </script>
 
+<script src="./family-card-directory-v1.js" data-family-card-directory="v1"></script>
 <script src="../../assets/vnv-language.js" defer></script>
 <script src="https://vervenveda.com/assets/vnv-header-autopopulate.js" defer></script>
 <!-- Legacy standalone Beta launcher retired; canonical toolbar includes Beta. -->
