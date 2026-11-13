@@ -120,8 +120,23 @@ function exportFamily(adultId){
  downloadCSV(reportCSV(rows,"Authorized family learner progress"),"khaemenes-family-progress-"+dateStamp()+".csv");
  return {ok:true,message:"Family CSV exported for "+learners.length+" permitted learner(s)."};
 }
+function previewOne(learnerId){
+ const ctx=session();
+ if(!ctx||!C?.readLearner)return {ok:false,message:"Local class reports are unavailable."};
+ const learner=ctx.family.learners.find(l=>l.learnerId===learnerId&&!l.selfDirectedAdult);
+ if(!learner||!allows(ctx.adult,learner))return {ok:false,message:"You do not have local permission to view and export this learner's records."};
+ return {ok:true,rows:learnerRows(learner),scope:"Individual learner"};
+}
+function previewFamily(adultId){
+ const ctx=session();
+ if(!ctx||!C?.readLearner)return {ok:false,message:"Local class reports are unavailable."};
+ if(ctx.adult.adultId!==adultId)return {ok:false,message:"Only the currently selected adult can view this family report."};
+ const learners=ctx.family.learners.filter(l=>!l.selfDirectedAdult&&allows(ctx.adult,l));
+ if(!learners.length)return {ok:false,message:"No learners have both progress-view and export permission for this adult."};
+ return {ok:true,rows:learners.flatMap(learnerRows),scope:"Authorized family learners"};
+}
 window.KhaemenesFamilyProgressExport=Object.freeze({
- version:"1.0.0",canExport:learnerId=>{
+ version:"1.0.0",previewOne,previewFamily,canExport:learnerId=>{
   const c=session();return Boolean(c&&c.family.learners.some(l=>l.learnerId===learnerId&&allows(c.adult,l)));
  },exportOne,exportFamily
 });
