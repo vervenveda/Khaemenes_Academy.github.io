@@ -26,3 +26,18 @@
 .fcd-dialog-actions .fcd-link.primary{background:#202724;color:#fff8e9;-webkit-text-fill-color:#fff8e9}
 .fcd-dialog :is(a,button):focus-visible,#familyPane .fcd-person:focus-visible{outline:3px solid #b8995c;outline-offset:3px}
 @media(max-width:500px){.fcd-facts{grid-template-columns:1fr;gap:2px}.fcd-facts dd{margin-bottom:12px}.fcd-dialog-actions .fcd-link{flex:1 1 100%}}
+
+/* Read-only class grades/completion preview in each authorized family popup. */
+.fcd-progress-section{margin-top:24px;padding-top:21px;border-top:2px solid #b8995c}
+.fcd-progress-title{margin:0 0 9px!important;color:#27302d!important;font:400 24px/1.35 Cinzel,Georgia,serif!important}
+.fcd-progress-note{font:400 16px/1.6 Nunito,Arial,sans-serif!important;color:#536158!important;margin:7px 0 16px!important}
+.fcd-progress-table-scroll{max-width:100%;overflow-x:auto;border:1px solid #d3c6a9;border-radius:7px;background:#fff}
+.fcd-progress-table{border-collapse:collapse;width:100%;min-width:440px;text-align:left;color:#27302d;font:400 16px/1.5 Nunito,Arial,sans-serif}
+.fcd-progress-table caption{padding:12px 14px;text-align:left;color:#536158;font:400 16px Nunito,Arial,sans-serif}
+.fcd-progress-table :is(th,td){padding:11px 12px;border-top:1px solid #e0d6c4;vertical-align:top;overflow-wrap:anywhere}
+.fcd-progress-table th{background:#f7f1e5;color:#27302d;-webkit-text-fill-color:#27302d;font-weight:400}
+.fcd-progress-table tbody tr:nth-child(even){background:#fffdf8}
+.fcd-export-button{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:11px 19px;margin-top:18px;border:1px solid #b8995c;border-radius:7px;background:#202724;color:#fff8e9;-webkit-text-fill-color:#fff8e9;font:400 16px/1.4 Nunito,Arial,sans-serif;cursor:pointer}
+.fcd-export-button:is(:hover,:focus-visible){background:#34463c;color:#fff8e9;-webkit-text-fill-color:#fff8e9}
+.fcd-export-result{margin:12px 0 0;color:#47544b;font:400 16px/1.55 Nunito,Arial,sans-serif}
+@media print{.fcd-export-button{display:none!important}}
