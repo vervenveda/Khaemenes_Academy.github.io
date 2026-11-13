@@ -64,8 +64,17 @@ function learnerRows(learner){
  if(grade==="9"){
   for(const [label,pattern] of SUBJECTS_09){
    const matches=reports.filter(s=>pattern.test(s.courseId));
-   matches.forEach(s=>used.add(s.courseId));
-   rows.push(rowFor(learner,label,recent(matches),"Grade 9 subject pathway (enrollment unverified)"));
+   if(matches.length){
+    // Keep distinct published classes; a learner can take several math/elective courses.
+    const perCourse=new Map();
+    for(const record of matches){const existing=perCourse.get(record.courseId);if(!existing||String(record.updatedAt||"")>String(existing.updatedAt||""))perCourse.set(record.courseId,record)}
+    for(const snap of perCourse.values()){
+     used.add(snap.courseId);
+     rows.push(rowFor(learner,label,snap,"Published Grade 9 class report (enrollment unverified)"));
+    }
+   }else{
+    rows.push(rowFor(learner,label,null,"Grade 9 subject pathway (enrollment unverified)"));
+   }
   }
  }
  for(const snap of reports){
