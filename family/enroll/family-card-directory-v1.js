@@ -81,7 +81,40 @@ function show(kind,id,origin){
   }
   if(permitted(adult,person,"education.manage"))addLink(actions,"Review grade placement","./#learnerPane");
  }
- body.append(actions);dialog.showModal();
+ body.append(actions);
+ // Read-only locally reported grades and completion. Never infer missing marks.
+ const api=window.KhaemenesFamilyProgressExport;
+ const preview=kind==="adult"?api?.previewFamily?.(person.adultId):api?.previewOne?.(person.learnerId);
+ const section=make("section","fcd-progress-section");
+ section.append(make("h4","fcd-progress-title","Class grades & completion"));
+ section.append(make("p","fcd-progress-note","Quiz/test average and course completion are different measurements. Only locally published reports are shown; this is not a verified transcript or confirmed class enrollment."));
+ if(preview?.ok){
+  const holder=make("div","fcd-progress-table-scroll");
+  const table=make("table","fcd-progress-table");
+  const caption=make("caption","","Available class reports");
+  const thead=make("thead",""),header=make("tr","");
+  for(const h of (kind==="adult"?["Learner","Class","Quiz/test grade","Completed","Record"]:["Class","Quiz/test grade","Completed","Record"]))header.append(make("th","",h));
+  thead.append(header);table.append(caption,thead);
+  const tbody=make("tbody","");
+  for(const r of preview.rows){
+   const tr=make("tr","");
+   const cells=kind==="adult"?[r.learner,r.course,r.gradePercent===null?"Not reported":r.gradePercent+"%",r.completedPercent===null?"Not reported":r.completedPercent+"%",r.reporting]:[r.course,r.gradePercent===null?"Not reported":r.gradePercent+"%",r.completedPercent===null?"Not reported":r.completedPercent+"%",r.reporting];
+   for(const cell of cells)tr.append(make("td","",cell));
+   tbody.append(tr);
+  }
+  table.append(tbody);holder.append(table);section.append(holder);
+  const exportButton=make("button","fcd-export-button",kind==="adult"?"Export authorized family report (CSV)":"Export student report (CSV)");
+  exportButton.type="button";
+  const result=make("p","fcd-export-result","");result.setAttribute("role","status");result.setAttribute("aria-live","polite");
+  exportButton.addEventListener("click",()=>{
+   const outcome=kind==="adult"?api?.exportFamily?.(person.adultId):api?.exportOne?.(person.learnerId);
+   result.textContent=outcome?.message||"Export unavailable.";
+  });
+  section.append(exportButton,result);
+ }else{
+  section.append(make("p","fcd-progress-note",preview?.message||"The progress-report module is unavailable. Try reopening the page."));
+ }
+ body.append(section);dialog.showModal();
 }
 function initDialog(){
  if(dialog)return;
