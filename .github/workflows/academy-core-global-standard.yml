@@ -1,0 +1,45 @@
+name: Academy Core Global Standard
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'assets/academy-core-global-standard-v1.js'
+      - 'tools/academy-core-global-standard-audit.mjs'
+      - 'tools/semantic-hierarchy-audit.mjs'
+      - '.github/workflows/academy-core-global-standard.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  normalize:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Academy core global standard
+        run: node tools/academy-core-global-standard-audit.mjs --write
+      - name: Verify Academy core global standard
+        run: node tools/academy-core-global-standard-audit.mjs --check
+      - name: Audit semantic title eyebrow hierarchy
+        run: node tools/semantic-hierarchy-audit.mjs
+      - name: Validate patch
+        run: git diff --check
+      - name: Commit normalization
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "No Academy core pages required global-standard repair."
+            exit 0
+          fi
+          git config user.name "Khaemenes Academy Automation"
+          git config user.email "khaemenesacademy@users.noreply.github.com"
+          git add -A -- ':!node_modules' ':!.git'
+          git commit -m "Standardize Academy core chrome typography and hierarchy"
+          git push
