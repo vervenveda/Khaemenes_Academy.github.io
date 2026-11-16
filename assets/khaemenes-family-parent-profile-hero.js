@@ -37,6 +37,7 @@ function styleOnce(){
 #${ID} .kph-shell{width:min(100%,940px);margin:0 auto}
 #${ID} .kph-intro{text-align:center;margin:0 auto 18px;max-width:800px}
 #${ID} .kph-intro p{margin:0;font:400 18px/1.55 Nunito,Arial,sans-serif}
+#${ID} .kph-instructions{margin:8px auto 0!important;max-width:690px;color:#46534a;font-size:16px!important}
 #${ID} .kph-identity{display:grid;grid-template-columns:126px minmax(0,1fr);align-items:center;gap:19px;min-height:160px;padding:19px 23px;border:1px solid #b48b45;border-radius:7px 7px 0 0;background:#315c49;color:#fff8e9}
 #${ID} .kph-identity[data-background=charcoal]{background:#202724}
 #${ID} .kph-identity[data-background=navy]{background:#263858}
@@ -79,9 +80,9 @@ function styleOnce(){
  d.head.append(s)
 }
 const features=[
- ["Edit Profile", "edit"],
- ["Class Progress", "#family-progress"],
- ["Schedule", "#family-progress"],
+ ["Edit Display Name", "edit"],
+ ["Schedules & Progress", "#family-progress"],
+ ["Daily Family Reports", "#family-progress"],
  ["Family Records", "#family-records-controls"],
  ["Manage Learners", "enroll/#existing"],
  ["Parent Resources", "#family-involvement"],
@@ -91,15 +92,15 @@ const features=[
 function mount(){
  const node=byId(ID);if(node)return node;
  const before=byId("workspace"),after=byId("family-account-readiness");
- if(!before||!after||!before.parentElement||before.previousElementSibling!==after)return null;
+ if(!before||!after||!before.parentElement||before.parentElement!==after.parentElement)return null;
  styleOnce();
  const section=d.createElement("section");section.id=ID;section.setAttribute("aria-label","Parent profile hero and tools");
- section.innerHTML='<div class="kph-shell"><div class="kph-intro"><p>My Family Profile</p></div><div class="kph-identity" id="kphIdentity"><div class="kph-avatar" id="kphAvatar" aria-label="Parent profile picture"><span>P</span></div><div><h2 class="kph-name" id="kphName">Parent / Guardian</h2><p class="kph-detail" id="kphDetail">Local family profile · Account sign-in not connected</p></div></div><nav class="kph-rail" aria-label="Parent Profile Tools"><h3 class="kph-tools-title">My Profile Tools</h3><div class="kph-tools" id="kphToolGrid"></div><p class="kph-note">Personalization stays on this browser; your existing family and course records are not changed.</p></nav></div>';
+ section.innerHTML='<div class="kph-shell"><div class="kph-intro"><p>My Family Profile</p><p class="kph-instructions">Choose a tool once to open its destination. Schedules and reports appear below.</p></div><div class="kph-identity" id="kphIdentity"><div class="kph-avatar" id="kphAvatar" aria-label="Parent profile picture"><span>P</span></div><div><h2 class="kph-name" id="kphName">Parent / Guardian</h2><p class="kph-detail" id="kphDetail">Local family profile · Account sign-in not connected</p></div></div><nav class="kph-rail" aria-label="Parent Profile Tools"><h3 class="kph-tools-title">My Profile Tools</h3><div class="kph-tools" id="kphToolGrid"></div><p class="kph-note">Personalization stays on this browser; your existing family and course records are not changed.</p></nav></div>';
  const grid=section.querySelector("#kphToolGrid");
  for(const [label,dest] of features){
   const control=d.createElement(dest.startsWith("#")||dest.startsWith("enroll/")?"a":"button");
   control.className="kph-tool";control.textContent=label;
-  if(control.tagName==="A")control.href=dest;
+  if(control.tagName==="A"){control.href=dest;control.setAttribute("aria-label",label+" — open family workspace section")}
   else{control.type="button";control.dataset.editor=dest;control.addEventListener("click",()=>openEditor(dest))}
   grid.append(control);
  }
@@ -169,7 +170,7 @@ function dialog(){
 function openEditor(which){
  const a=adult();if(!a)return;
  const studio=g.KhaemenesFamilyParentLookStudio;
- if(studio?.open){studio.open(which);return}
+ if(studio?.open){try{studio.open(which);return}catch(error){console.warn("Parent look studio unavailable; opening local editor.",error)}}
  const look=appearance(a.adultId),box=dialog();
  byId("kphDialogTitle").textContent=which==="picture"?"Customize My Picture":which==="background"?"Customize My Background":"Edit My Parent Profile";
  byId("kphDisplayName").value=look.displayName||a.displayName||"";
