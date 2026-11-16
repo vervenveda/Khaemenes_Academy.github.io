@@ -263,6 +263,13 @@ body footer.footer .family-footer-links a:focus-visible{outline:3px solid #edcd9
 <!-- Scoped Family Center contrast stylesheet; canonical authoring source lives in private Account Cloud. -->
 <link rel="stylesheet" href="../assets/khaemenes-family-contrast-v1.css?v=20261107">
   <script src="/Khaemenes_Academy.github.io/assets/academy-core-global-standard-v1.js" defer data-academy-core-global-standard="16-33-66-chrome-semantics"></script>
+
+<style id="parent-profile-door-20261116">
+.family-hero-actions{grid-template-columns:repeat(5,minmax(0,1fr));max-width:1040px}
+.family-hero-actions a{font-size:16px;min-height:48px}
+@media(max-width:800px){.family-hero-actions{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:440px){.family-hero-actions{grid-template-columns:1fr}}
+</style>
 </head>
 <body data-i18n-no-online>
 <a class="skip" href="#workspace">Skip to family workspace</a>
@@ -282,10 +289,11 @@ body footer.footer .family-footer-links a:focus-visible{outline:3px solid #edcd9
  <p class="kicker">Khaemenes Academy</p><h1 id="family-hero-title">Family Learning Center</h1>
  <p class="family-hero-subtitle">Your Parent Information Hub</p>
  <p class="family-hero-copy">Find your learners, review available schedules and progress, manage family records, and discover ways to support their education.</p>
- <div class="family-hero-actions"><a href="../student/">Student Portal</a><a href="enroll/">Enroll / Update</a><a href="../adult/">Adult Scholar</a><a href="../">Academy Home</a></div>
+ <div class="family-hero-actions"><a href="profile/" style="background:#202724;color:#fff8e9;border-color:#d9b878;font-size:16px;min-height:48px">My Parent Profile</a><a href="../student/">Student Portal</a><a href="enroll/">Enroll / Update</a><a href="../adult/">Adult Scholar</a><a href="../">Academy Home</a></div>
  </div>
 </section>
 <nav class="family-hub-quick-nav shell" aria-label="Parent Information Hub sections">
+ <a href="profile/"><small>My Account</small><strong>Parent Profile</strong><span>Photo and profile tools</span></a>
  <a href="#workspace"><small>My Family</small><strong>Learners</strong><span>Student profiles</span></a>
  <a href="#family-progress"><small>Class Planning</small><strong>Schedules &amp; Progress</strong><span>Reported evidence</span></a>
  <a href="#family-records"><small>Academic Documents</small><strong>Records &amp; Reports</strong><span>Family and course tools</span></a>
@@ -597,13 +605,11 @@ render();
 <script src="../assets/khaemenes-family-final-authorization-ui.js"></script>
 <script src="../assets/khaemenes-terminal03-readiness.js"></script>
 
-<!-- Isolated Grade 09-inspired parent profile hero; placed immediately after Family Account Continuity.
-     The module owns its scoped presentation and parent-only appearance keys. -->
-<script src="../assets/khaemenes-family-parent-profile-hero.js?v=20261107-name-font-v1"></script>
+<!-- Parent photo hero moved to its dedicated family/profile/ landing page; no parent appearance keys or data were changed. -->
 <script src="../assets/khaemenes-kindergarten-family-daily-plan.js?v=20261109-six-adventures-v2"></script>
 <script src="../assets/khaemenes-kindergarten-parent-daily-panel.js?v=20261109-six-adventures-v2"></script>
 <script src="../assets/khaemenes-universal-profile-look-editor.js?v=20261109-all-horizontal-v5"></script>
-<script src="../assets/khaemenes-family-parent-look-adapter.js?v=20261107-universal-v1"></script>
+
 <script src="../assets/khaemenes-account-connection-status.js"></script>
 <script src="../assets/vnv-language.js" defer></script>
 <!-- The canonical ecosystem toolbar includes Beta; no standalone legacy launcher. -->
