@@ -2,6 +2,7 @@
 
 | Date | Type | Entry | State |
 | --- | --- | --- | --- |
+| 2026-11-16 | continuity · pre-intake | [Parent pages ↔ Account Cloud Mac intake contract](logs/2026/11/2026-11-16-parent-account-cloud-preintake.md) | Contract committed; T03/live learner import HOLD |
 | 2026-11-16 | parent UI · header spacing | [Compact Parent Profile header; remove empty charcoal bar](logs/2026/11/2026-11-16-parent-profile-compact-header-no-extra-bar.md) | Source changes committed; live visual acceptance pending |
 | 2026-11-16 | learner UX · modal | [One Family Learning popup per student](logs/2026/11/2026-11-16-per-learner-family-learning-dialogs.md) | Source committed, browser permission acceptance HOLD |
 | 2026-11-16 | header topology · repair | [Parent Profile tickers and official header before hero](logs/2026/11/2026-11-16-parent-profile-header-ticker-topology.md) | Source order corrected; live browser verification pending |
