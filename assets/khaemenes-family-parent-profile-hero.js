@@ -81,11 +81,11 @@ function styleOnce(){
 }
 const features=[
  ["Edit Display Name", "edit"],
- ["Schedules & Progress", "#family-progress"],
- ["Daily Family Reports", "#family-progress"],
- ["Family Records", "#family-records-controls"],
- ["Manage Learners", "enroll/#existing"],
- ["Parent Resources", "#family-involvement"],
+ ["Schedules & Progress", "../#family-progress"],
+ ["Family Records", "../#family-records-controls"],
+ ["Manage Learners", "../enroll/#existing"],
+ ["Parent Support", "../#family-involvement"],
+ ["My Student Profiles", "../#workspace"],
  ["Customize Background", "background"],
  ["Customize Picture", "picture"]
 ];
@@ -98,7 +98,7 @@ function mount(){
  section.innerHTML='<div class="kph-shell"><div class="kph-intro"><p>My Family Profile</p><p class="kph-instructions">Choose a tool once to open its destination. Schedules and reports appear below.</p></div><div class="kph-identity" id="kphIdentity"><div class="kph-avatar" id="kphAvatar" aria-label="Parent profile picture"><span>P</span></div><div><h2 class="kph-name" id="kphName">Parent / Guardian</h2><p class="kph-detail" id="kphDetail">Local family profile · Account sign-in not connected</p></div></div><nav class="kph-rail" aria-label="Parent Profile Tools"><h3 class="kph-tools-title">My Profile Tools</h3><div class="kph-tools" id="kphToolGrid"></div><p class="kph-note">Personalization stays on this browser; your existing family and course records are not changed.</p></nav></div>';
  const grid=section.querySelector("#kphToolGrid");
  for(const [label,dest] of features){
-  const control=d.createElement(dest.startsWith("#")||dest.startsWith("enroll/")?"a":"button");
+  const control=d.createElement(dest.startsWith("#")||dest.startsWith("../")||dest.startsWith("enroll/")?"a":"button");
   control.className="kph-tool";control.textContent=label;
   if(control.tagName==="A"){control.href=dest;control.setAttribute("aria-label",label+" — open family workspace section")}
   else{control.type="button";control.dataset.editor=dest;control.addEventListener("click",()=>openEditor(dest))}
