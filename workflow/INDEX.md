@@ -2,6 +2,7 @@
 
 | Date | Type | Entry | State |
 | --- | --- | --- | --- |
+| 2026-11-16 | hero navigation · accessibility | [Five hero actions, 33/66px hierarchy and readable contrast](logs/2026/11/2026-11-16-parent-portal-hero-type-and-contrast.md) | Source checked; live browser visual verification HOLD |
 | 2026-11-16 | parent UX · conditional feature | [Kindergarten planner on Parent Profile; administration nested under account connection](logs/2026/11/2026-11-16-kindergarten-parent-profile-and-nested-admin.md) | Source committed; runtime acceptance HOLD |
 | 2026-11-16 | UX topology · repair | [Minimal Parent Portal and twelve-feature directory](logs/2026/11/2026-11-16-parent-portal-minimal-front-desk.md) | Source edits committed; live-browser acceptance HOLD |
 | 2026-11-16 | design refinement | [Parent pages use gold accents only](logs/2026/11/2026-11-16-parent-gold-accent-restraint.md) | Neutral stone borders committed; browser review pending |
