@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<html lang="en" data-brand="ka"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="referrer" content="no-referrer"><meta name="robots" content="noindex,nofollow">
 <title>My Parent Profile · Khaemenes Academy</title>
 <meta name="description" content="Family-owned parent profile workspace and appearance tools for Khaemenes Academy.">
@@ -55,10 +55,12 @@ footer{background:#202724;color:var(--cream);text-align:center;padding:26px 16px
 .parent-learning-panel>summary{background:#fffdf8;min-height:76px}
 .parent-learning-panel>summary:hover{background:#fff8e9}
 .parent-learning-panel>summary:focus-visible{outline:3px solid #b48b45;outline-offset:-3px}
-</style></head><body>
-<a class="skip" href="#workspace">Skip to My Parent Profile</a>
-<header><p>KHAEMENES ACADEMY · FAMILY CENTER</p><h1>My Parent Profile</h1><p>Your own family identity and profile tools, separate from the Parent Portal.</p></header>
+</style><link rel="stylesheet" href="../../assets/vnv-ka-parent-canonical-v1.css?v=20261116-01">
+</head><body class="vka-parent-canonical">
+<a class="skip vka-skip" href="#workspace">Skip to My Parent Profile</a>
+<section class="vka-profile-hero" aria-labelledby="parentProfileTitle"><p class="vka-eyebrow">Khaemenes Academy · Family Center</p><h1 id="parentProfileTitle">My Parent Profile</h1><p class="vka-hero-desc">Your family identity and learning tools, separate from the Parent Portal.</p></section>
 <nav class="mainnav" aria-label="Parent Profile navigation"><a href="../">Parent Portal</a><a href="#family-progress">Schedules &amp; Progress</a><a href="../#family-records-controls">Family Records</a><a href="../enroll/#existing">Manage Learners</a><a href="../../">Academy Home</a></nav>
+<div id="vnv-language-rail" role="group" aria-label="Page translation tools"></div>
 <section id="family-account-readiness" aria-hidden="true"></section><main id="workspace">
 <section class="details profile-panels" aria-labelledby="parentProfilePanels">
 <p class="section-eyebrow">A clear view of today's family learning</p>
@@ -95,6 +97,12 @@ footer{background:#202724;color:var(--cream);text-align:center;padding:26px 16px
 <script src="https://vervenveda.com/assets/vnv-333-ticker.js"></script>
 <script src="https://vervenveda.com/assets/vnv-ticker-autopopulate.js" data-vnv-ticker-autopopulate></script>
 <script src="https://vervenveda.com/assets/vnv-header-autopopulate.js"></script>
+<script>
+(()=>{"use strict";
+  window.VNV_TICKER?.autoPopulate({before:"#vnv-language-rail",label:"Parent Profile · Page Quick Links",ariaLabel:"Parent Profile page navigation",max:12,exclude:["#vnv333NetworkTicker a","#vnvTickerAutoPopulate a","a[download]",".vka-skip"]});
+  window.VNV_HEADER?.mount({replaceLegacy:true,title:"My Parent Profile",subtitle:"Khaemenes Academy",icon:"K",home:"https://vervenveda.com/Khaemenes_Academy.github.io/",actions:[{label:"HOME",href:"https://vervenveda.com/"},{label:"DIRECTORY",href:"https://vervenveda.com/#directory"},{label:"ACADEMY",href:"https://vervenveda.com/Khaemenes_Academy.github.io/"}]});
+})();
+</script>
 <script src="https://vervenveda.com/assets/vnv-language.js" defer data-official-vnv-language="true"></script>
 <script src="https://vervenveda.com/assets/vnv-ecosystem-toolbar.js" data-official-vnv-ecosystem-toolbar="true"></script>
 </body></html>
