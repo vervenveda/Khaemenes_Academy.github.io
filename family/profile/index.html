@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="referrer" content="no-referrer"><meta name="robots" content="noindex,nofollow">
+<title>My Parent Profile · Khaemenes Academy</title>
+<meta name="description" content="Family-owned parent profile workspace and appearance tools for Khaemenes Academy.">
+<style>
+:root{--ink:#202724;--gold:#b48b45;--paper:#f4efe6;--cream:#fff8e9;font-family:Nunito,"Avenir Next",Arial,sans-serif;font-size:18px;color:var(--ink);background:var(--paper)}
+*{box-sizing:border-box}body{margin:0;min-width:300px;overflow-x:hidden}a{color:inherit}a:focus-visible,button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:12px;top:12px;z-index:100;background:white;padding:12px}
+header{background:#202724;color:var(--cream);border-bottom:3px solid var(--gold);padding:28px 16px;text-align:center}
+header p{margin:6px auto;max-width:740px}h1,h2,h3{font-family:Cinzel,Georgia,serif;font-weight:400}
+h1{font-size:clamp(33px,5vw,55px);margin:8px 0}h2{font-size:24px}
+.mainnav{display:flex;flex-wrap:wrap;justify-content:center;gap:9px;padding:18px;background:#fffaf0;border-bottom:1px solid var(--gold)}
+.mainnav a,.navcard a{display:inline-flex;align-items:center;justify-content:center;min-height:48px;text-align:center;padding:10px 17px;border:1px solid #202724;border-radius:7px;background:#202724;color:var(--cream);text-decoration:none;font-size:16px}
+#family-account-readiness{height:0;overflow:hidden}
+#workspace{min-height:1px}
+#khaeFamilyParentProfileHero{margin:auto}
+section.details{max-width:980px;padding:24px 18px;margin:0 auto 28px}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.navcard{padding:23px;background:#fffaf0;border:1px solid var(--gold);border-radius:7px;text-align:center}
+.navcard h3{font-size:24px;margin:0 0 10px}.navcard p{line-height:1.6;margin:0 0 18px}
+.notice{margin:12px auto;max-width:900px;text-align:center;line-height:1.6;font-size:16px}
+footer{background:#202724;color:var(--cream);text-align:center;padding:26px 16px}
+@media(max-width:640px){.cards{grid-template-columns:1fr}}
+</style></head><body>
+<a class="skip" href="#workspace">Skip to My Parent Profile</a>
+<header><p>KHAEMENES ACADEMY · FAMILY CENTER</p><h1>My Parent Profile</h1><p>Your own family identity and profile tools, separate from the Parent Portal.</p></header>
+<nav class="mainnav" aria-label="Parent Profile navigation"><a href="../">Parent Portal</a><a href="../#family-progress">Schedules &amp; Progress</a><a href="../#family-records-controls">Family Records</a><a href="../enroll/#existing">Manage Learners</a><a href="../../">Academy Home</a></nav>
+<section id="family-account-readiness" aria-hidden="true"></section><main id="workspace">
+<section class="details" aria-label="Profile status">
+<p id="profileAccess" class="notice" role="status">Checking the currently selected family adult on this browser…</p>
+</section>
+<section class="details" aria-labelledby="parentProfileExplore"><h2 id="parentProfileExplore" style="text-align:center">Family Workspace</h2>
+<div class="cards">
+<article class="navcard"><h3>Learning &amp; Progress</h3><p>Find each learner's course continuation, reported progress and daily family reports.</p><a href="../#family-progress">Open Progress</a></article>
+<article class="navcard"><h3>Family Records</h3><p>Open the Academy's existing family backup and educational documents controls.</p><a href="../#family-records-controls">Open Records</a></article>
+<article class="navcard"><h3>Enrollment &amp; Placement</h3><p>Manage family learners and review school placement without changing academic evidence here.</p><a href="../enroll/#existing">Manage Learners</a></article>
+<article class="navcard"><h3>Parent Involvement</h3><p>Access family guidance and support plans in the Parent Portal.</p><a href="../#family-involvement">Open Support</a></article>
+</div>
+<p class="notice">Profile appearance is saved only in this browser. This page does not verify account sign-in, change family permissions, transmit data, or synchronize records with STOS.</p>
+</section></main>
+<footer>Khaemenes Academy · Verve N Veda · Family-owned learning</footer>
+<script src="../../assets/khaemenes-family-registry.js"></script>
+<script src="../../assets/khaemenes-family-parent-profile-hero.js?v=20261116-standalone-01"></script>
+<script src="../../assets/khaemenes-universal-profile-look-editor.js?v=20261109-all-horizontal-v5"></script>
+<script src="../../assets/khaemenes-family-parent-look-adapter.js?v=20261107-universal-v1"></script>
+<script>
+(()=>{"use strict";const message=document.getElementById("profileAccess");function update(){
+ const R=window.KhaemenesFamilyRegistry;let adult=null,family=null;
+ try{const ids=R?.activeIds?.()||{};adult=R?.getAdult?.(ids.adultId)||null;family=R?.getFamily?.()||null;
+ if(!adult||!family||!family.adultIds?.includes(adult.adultId))adult=null}catch{adult=null}
+ message.textContent=adult?"This browser has a selected family adult. Appearance updates are local only; cloud sign-in is not verified.":"Select an existing family adult in the Parent Portal before using the appearance editor. Existing family and learner records have not been changed.";
+}window.addEventListener("khaemenes-family-changed",update);window.addEventListener("pageshow",update);update()})();
+</script>
+<script src="https://vervenveda.com/assets/vnv-333-ticker.js"></script>
+<script src="https://vervenveda.com/assets/vnv-ticker-autopopulate.js" data-vnv-ticker-autopopulate></script>
+<script src="https://vervenveda.com/assets/vnv-header-autopopulate.js"></script>
+<script src="https://vervenveda.com/assets/vnv-language.js" defer data-official-vnv-language="true"></script>
+<script src="https://vervenveda.com/assets/vnv-ecosystem-toolbar.js" data-official-vnv-ecosystem-toolbar="true"></script>
+</body></html>
