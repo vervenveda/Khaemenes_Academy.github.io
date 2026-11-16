@@ -39,26 +39,49 @@ footer{background:#202724;color:var(--cream);text-align:center;padding:26px 16px
 .parent-report-details summary{cursor:pointer;font-size:16px}
 .panel-footer-link{margin-top:16px}
 .navcard{background:#fffdf8}
-@media(max-width:680px){.parent-learning-grid{grid-template-columns:1fr}}</style></head><body>
+@media(max-width:680px){.parent-learning-grid{grid-template-columns:1fr}}
+.profile-panels{padding-top:15px!important}
+.profile-panels>.section-eyebrow,.profile-connectivity>.section-eyebrow{margin:0 0 8px;text-align:center;font:400 16px/1.5 Nunito,Arial,sans-serif;color:#53664e;letter-spacing:.04em}
+.profile-panels>h2,.profile-connectivity>h2{text-align:center;margin:0 auto 8px;font:400 clamp(24px,3vw,33px)/1.3 Cinzel,Georgia,serif;color:#202724}
+.section-description{font:400 18px/1.55 Nunito,Arial,sans-serif;max-width:780px;text-align:center;margin:0 auto 20px;color:#384b40}
+.profile-connectivity{background:#fffaf0;border:1px solid #d8c29a;border-radius:7px;margin-bottom:32px!important}
+.profile-connectivity .navcard{background:#fffdf8;display:flex;flex-direction:column;align-items:center;gap:2px}
+.profile-connectivity .navcard p{font:400 16px/1.6 Nunito,Arial,sans-serif;color:#35463c}
+.profile-connectivity .navcard a{margin-top:auto;font:400 16px/1.4 Nunito,Arial,sans-serif}
+.profile-privacy{padding:16px;background:#fff8e9;border:1px solid #e2d0ac;border-radius:7px}
+.parent-panel-eyebrow{font:400 16px/1.5 Nunito,Arial,sans-serif!important;letter-spacing:.05em;text-transform:uppercase;color:#53664e;margin:0 0 3px!important}
+.parent-panel-caption{font:400 16px/1.5 Nunito,Arial,sans-serif!important;letter-spacing:0;color:#46564b;margin:4px 0 0 20px!important}
+.parent-learning-panel:first-child{border-color:#b48b45;box-shadow:0 2px 8px rgba(32,39,36,.06)}
+.parent-learning-panel>summary{background:#fffdf8;min-height:76px}
+.parent-learning-panel>summary:hover{background:#fff8e9}
+.parent-learning-panel>summary:focus-visible{outline:3px solid #b48b45;outline-offset:-3px}
+</style></head><body>
 <a class="skip" href="#workspace">Skip to My Parent Profile</a>
 <header><p>KHAEMENES ACADEMY · FAMILY CENTER</p><h1>My Parent Profile</h1><p>Your own family identity and profile tools, separate from the Parent Portal.</p></header>
 <nav class="mainnav" aria-label="Parent Profile navigation"><a href="../">Parent Portal</a><a href="#family-progress">Schedules &amp; Progress</a><a href="../#family-records-controls">Family Records</a><a href="../enroll/#existing">Manage Learners</a><a href="../../">Academy Home</a></nav>
 <section id="family-account-readiness" aria-hidden="true"></section><main id="workspace">
-<section class="details" aria-label="Profile status">
-<p id="profileAccess" class="notice" role="status">Checking the currently selected family adult on this browser…</p>
+<section class="details profile-panels" aria-labelledby="parentProfilePanels">
+<p class="section-eyebrow">A clear view of today's family learning</p>
+<h2 id="parentProfilePanels">Family Learning &amp; Progress</h2>
+<p class="section-description">Daily reports appear first, followed by each learner's profile and available course progress. Open only the information you need.</p>
+<div id="parentProfileLearningPanels"></div>
 </section>
-<section class="details" aria-labelledby="parentProfilePanels"><h2 id="parentProfilePanels" style="text-align:center">My Family Learning Panels</h2><p class="notice">Open the section you need. Learner profiles, reported progress, and daily reports live here.</p><div id="parentProfileLearningPanels"></div></section><section class="details" aria-labelledby="parentProfileExplore"><h2 id="parentProfileExplore" style="text-align:center">Family Workspace</h2>
+<section class="details profile-connectivity" aria-labelledby="parentProfileConnectivity">
+<p class="section-eyebrow">Family identity · Records · Connections</p>
+<h2 id="parentProfileConnectivity">Family Account &amp; Connectivity</h2>
+<p class="section-description">Your family information and essential records remain accessible from your profile. Administrative changes are made in the Parent Portal.</p>
+<p id="profileAccess" class="notice" role="status">Checking the currently selected family adult on this browser…</p>
 <div class="cards">
-<article class="navcard"><h3>Learning &amp; Progress</h3><p>Expand the learner progress and daily reports panels above.</p><a href="#family-progress">Open Progress</a></article>
-<article class="navcard"><h3>Family Records</h3><p>Open the Academy's existing family backup and educational documents controls.</p><a href="../#family-records-controls">Open Records</a></article>
-<article class="navcard"><h3>Enrollment &amp; Placement</h3><p>Manage family learners and review school placement without changing academic evidence here.</p><a href="../enroll/#existing">Manage Learners</a></article>
-<article class="navcard"><h3>Parent Involvement</h3><p>Access family guidance and support plans in the Parent Portal.</p><a href="../#family-involvement">Open Support</a></article>
+<article class="navcard"><h3>Family Identity</h3><p id="profileFamilySummary">Checking family selection…</p><a href="../#workspace">Open Family Administration</a></article>
+<article class="navcard"><h3>Account Connection</h3><p>Local profile only. Verified sign-in, cross-device synchronization and STOS storage are not active.</p><a href="../#family-account-readiness">View Connection Status</a></article>
+<article class="navcard"><h3>Family Records &amp; Backup</h3><p>Access the existing local family backup tools, educational documents and restoration safeguards.</p><a href="../#family-records-controls">Open Records Office</a></article>
+<article class="navcard"><h3>Adult Access &amp; Invitations</h3><p>Review connected family adults and invitation availability through the Parent Portal.</p><a href="../#family-records-controls">Open Parent Portal Controls</a></article>
 </div>
-<p class="notice">Profile appearance is saved only in this browser. This page does not verify account sign-in, change family permissions, transmit data, or synchronize records with STOS.</p>
+<p class="notice profile-privacy">Your profile appearance stays in this browser. This page does not independently verify sign-in, change permissions, deliver email or synchronize records.</p>
 </section></main>
 <footer>Khaemenes Academy · Verve N Veda · Family-owned learning</footer>
 <script src="../../assets/khaemenes-family-registry.js"></script>
-<script src="../../assets/khaemenes-family-parent-profile-hero.js?v=20261116-standalone-02"></script><script src="../../assets/khaemenes-learning-continuation.js"></script><script src="../../assets/khaemenes-family-parent-learning-panels-v1.js?v=20261116-profile-v1"></script>
+<script src="../../assets/khaemenes-family-parent-profile-hero.js?v=20261116-standalone-03"></script><script src="../../assets/khaemenes-learning-continuation.js"></script><script src="../../assets/khaemenes-family-parent-learning-panels-v1.js?v=20261116-profile-v2"></script>
 <script src="../../assets/khaemenes-universal-profile-look-editor.js?v=20261109-all-horizontal-v5"></script>
 <script src="../../assets/khaemenes-family-parent-look-adapter.js?v=20261107-universal-v1"></script>
 <script>
@@ -66,7 +89,7 @@ footer{background:#202724;color:var(--cream);text-align:center;padding:26px 16px
  const R=window.KhaemenesFamilyRegistry;let adult=null,family=null;
  try{const ids=R?.activeIds?.()||{};adult=R?.getAdult?.(ids.adultId)||null;family=R?.getFamily?.()||null;
  if(!adult||!family||!family.adultIds?.includes(adult.adultId))adult=null}catch{adult=null}
- message.textContent=adult?"This browser has a selected family adult. Appearance updates are local only; cloud sign-in is not verified.":"Select an existing family adult in the Parent Portal before using the appearance editor. Existing family and learner records have not been changed.";
+ message.textContent=adult?"Selected adult profile is available on this device. Account sign-in and cloud backup remain unverified.":"No authorized family adult is selected on this browser. Choose your existing family in the Parent Portal.";const summary=document.getElementById("profileFamilySummary");if(summary)summary.textContent=adult&&family?("Family: "+String(family.displayName||"Family")+". "+String(family.learners?.length||0)+" learner profile(s); "+String(family.adults?.length||0)+" adult profile(s). Browser-local information only."):"Family information is unavailable until an existing family adult is selected.";
 }window.addEventListener("khaemenes-family-changed",update);window.addEventListener("pageshow",update);update()})();
 </script>
 <script src="https://vervenveda.com/assets/vnv-333-ticker.js"></script>
