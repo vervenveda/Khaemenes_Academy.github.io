@@ -2,6 +2,7 @@
 
 | Date | Type | Entry | State |
 | --- | --- | --- | --- |
+| 2026-11-16 | UX topology · repair | [Minimal Parent Portal and twelve-feature directory](logs/2026/11/2026-11-16-parent-portal-minimal-front-desk.md) | Source edits committed; live-browser acceptance HOLD |
 | 2026-11-16 | design refinement | [Parent pages use gold accents only](logs/2026/11/2026-11-16-parent-gold-accent-restraint.md) | Neutral stone borders committed; browser review pending |
 | 2026-11-16 | design standard · compliance | [Parent pages aligned to canonical VNV/KA landing blueprint](logs/2026/11/2026-11-16-parent-canonical-landing-template-alignment.md) | Source checked; live browser acceptance HOLD |
 | 2026-11-16 | UX hierarchy · repair | [Parent Profile daily reports, family connectivity and Portal boundaries](logs/2026/11/2026-11-16-parent-profile-family-hierarchy-refinement.md) | Source edits committed; live browser acceptance HOLD |
