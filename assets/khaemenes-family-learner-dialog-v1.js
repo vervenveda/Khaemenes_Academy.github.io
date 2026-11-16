@@ -118,7 +118,7 @@
    let data=null;
    try{data=JSON.parse(g.localStorage.getItem("khaemenes-grade09-daily-parent-report-v1:"+encodeURIComponent(id))||"null")}catch{}
    const reportMap=data?.learnerId===id&&data.reports&&typeof data.reports==="object"&&!Array.isArray(data.reports)?data.reports:{};
-   const dates=Object.keys(reportMap).filter(day=>/^\\d{4}-\\d{2}-\\d{2}$/.test(day)).sort();
+   const dates=Object.keys(reportMap).filter(day=>/^\d{4}-\d{2}-\d{2}$/.test(day)).sort();
    const date=dates.length?dates[dates.length-1]:null,entry=date?reportMap[date]:null;
    if(!entry||entry.learnerId!==id)body.append(make("p","No dated daily family report is available for this learner in this browser."));
    else{
