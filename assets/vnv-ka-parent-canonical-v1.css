@@ -454,3 +454,50 @@ body.vka-parent-canonical #workspace .family-admin-details>summary strong{
   grid-template-columns:1fr;
  }
 }
+
+/* Parent Profile-only compact header and neutral translation insertion rail.
+ * Do not remove tickers, official menu, translator controls or the charcoal title hero.
+ * The formerly dark empty bar came from the shared #vnv-language-rail styling.
+ */
+body.vka-parent-profile #vnvHeaderAutoPopulate{
+ --vnv-header-height:52px;
+ min-height:52px;
+ padding:0;
+}
+body.vka-parent-profile #vnvHeaderAutoPopulate .vnv-header-inner{
+ min-height:52px;
+ padding:2px 12px;
+ gap:10px;
+}
+body.vka-parent-profile #vnvHeaderAutoPopulate .vnv-header-logo{
+ width:34px;height:34px;flex-basis:34px;
+}
+body.vka-parent-profile #vnvHeaderAutoPopulate .vnv-header-menu-button{
+ width:38px;height:38px;
+}
+body.vka-parent-profile #vnvHeaderAutoPopulate .vnv-header-actions a{
+ min-height:36px;padding:6px 9px;
+ font-size:16px;
+}
+body.vka-parent-profile #vnv-language-rail{
+ min-height:0;
+ padding:0;
+ margin:0;
+ background:var(--vka-parchment);
+ color:var(--vka-charcoal);
+ border:0;
+}
+body.vka-parent-profile #vnv-language-rail:empty{
+ display:none!important;
+}
+body.vka-parent-profile #vnv-language-rail:not(:empty){
+ padding:7px 14px;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ flex-wrap:wrap;
+}
+body.vka-parent-profile #vnv-language-rail :is(a,button,input,select,label,span){
+ color:var(--vka-charcoal);
+ font-size:max(16px,1em);
+}
