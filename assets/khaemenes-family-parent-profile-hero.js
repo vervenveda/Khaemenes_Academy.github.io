@@ -81,11 +81,11 @@ function styleOnce(){
 }
 const features=[
  ["Edit Display Name", "edit"],
- ["Schedules & Progress", "../#family-progress"],
+ ["Schedules & Progress", "#family-progress"],
  ["Family Records", "../#family-records-controls"],
  ["Manage Learners", "../enroll/#existing"],
- ["Parent Support", "../#family-involvement"],
- ["My Student Profiles", "../#workspace"],
+ ["Daily Family Reports", "#parent-daily-reports"],
+ ["My Student Profiles", "#parent-learner-panel"],
  ["Customize Background", "background"],
  ["Customize Picture", "picture"]
 ];
@@ -100,7 +100,7 @@ function mount(){
  for(const [label,dest] of features){
   const control=d.createElement(dest.startsWith("#")||dest.startsWith("../")||dest.startsWith("enroll/")?"a":"button");
   control.className="kph-tool";control.textContent=label;
-  if(control.tagName==="A"){control.href=dest;control.setAttribute("aria-label",label+" — open family workspace section")}
+  if(control.tagName==="A"){control.href=dest;control.setAttribute("aria-label",label+" — open family workspace section");if(dest.startsWith("#"))control.addEventListener("click",()=>{const panel=d.querySelector(dest);if(panel?.tagName==="DETAILS")panel.open=true})}
   else{control.type="button";control.dataset.editor=dest;control.addEventListener("click",()=>openEditor(dest))}
   grid.append(control);
  }
