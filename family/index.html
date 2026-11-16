@@ -270,6 +270,28 @@ body footer.footer .family-footer-links a:focus-visible{outline:3px solid #edcd9
 @media(max-width:800px){.family-hero-actions{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:440px){.family-hero-actions{grid-template-columns:1fr}}
 </style>
+
+<style id="family-portal-cream-card-surfaces-20261116">
+/* Brighten the portal's administrative cards only; preserve dark/charcoal section treatments. */
+#workspace .metric,#workspace #familyApp>.card,
+#workspace #familyApp .grid.cols2>.card,
+#workspace #familyApp .grid.cols2>section.card,
+#workspace #familyApp .card:not(.scholar),
+.family-hub-services .family-hub-cards article{
+ background:#fffdf8;
+ border-color:#d8c29a;
+ color:#202724;
+}
+#workspace #familyApp .grid.cols2>section.card h3{
+ font:400 24px/1.35 Cinzel,Georgia,serif;
+ color:#202724;
+}
+#workspace #familyApp .grid.cols2>section.card p{
+ color:#34463c;
+ font-size:16px;
+ line-height:1.55;
+}
+</style>
 </head>
 <body data-i18n-no-online>
 <a class="skip" href="#workspace">Skip to family workspace</a>
@@ -509,7 +531,7 @@ function renderFamily(f){
   $("#familyApp").innerHTML=`${pinReturnNotice}<div class="metric-grid"><div class="metric"><strong>${esc(f.displayName)}</strong><span>Family</span></div><div class="metric"><strong>${f.learners.length}</strong><span>Learners</span></div><div class="metric"><strong>${f.adults.length}</strong><span>Adults</span></div><div class="metric"><strong>${scholar?"Active":"Optional"}</strong><span>Adult Learning</span></div></div>
   <section class="card" style="margin:20px auto;max-width:940px;text-align:center;background:#fffdf8;border:1px solid #d8c29a;border-radius:7px;padding:24px"><h2 style="font-size:24px">My Parent Profile</h2><p>Manage your learners, schedules and reported progress, and daily family reports using the expandable panels on your dedicated profile page.</p><div class="actions" style="justify-content:center"><a class="btn dark" href="profile/#parent-learner-panel">Open My Learners</a><a class="btn dark" href="profile/#family-progress">Schedules &amp; Progress</a><a class="btn dark" href="profile/#parent-daily-reports">Daily Family Reports</a></div></section>
   <div class="grid cols2" style="margin-top:34px">
-    <section class="card"><h3>Adults & Family Access</h3><p>Parents, guardians, caregivers, educators, and other authorized adults can be connected to the family learning workspace.</p><div>${f.adults.map(a=>`<div class="adult"><strong>${esc(a.displayName)}</strong><small>${esc(a.role)} · ${a.adultId===ids.adultId?"active adult":"family adult"}</small></div>`).join("")}</div><div class="actions"><button class="btn" id="addAdult" type="button">Additional Adult Access · Pending Verification</button></div></section>
+    <section class="card" id="family-adult-access"><h3>Adults & Family Access</h3><p>Parents, guardians, caregivers, educators, and other authorized adults can be connected to the family learning workspace.</p><div>${f.adults.map(a=>`<div class="adult"><strong>${esc(a.displayName)}</strong><small>${esc(a.role)} · ${a.adultId===ids.adultId?"active adult":"family adult"}</small></div>`).join("")}</div><div class="actions"><button class="btn" id="addAdult" type="button">Additional Adult Access · Pending Verification</button></div></section>
     <section class="card scholar"><h3>Adult Learner Pathway</h3>${scholar?`<p><strong>${esc(scholar.nickname)}</strong> has a separate self-directed adult learner workspace. Parent/family responsibilities remain here; personal coursework remains in the Adult Learner Portal.</p><div class="actions"><a class="btn primary" href="../adult/">Open Adult Learner Portal</a><a class="btn" href="../adult/enroll/">Review Adult Profile</a></div>`:`<p>An adult family member can create a separate self-directed learning path without receiving a K–12 grade assignment.</p><div class="actions"><a class="btn primary" href="../adult/enroll/">Start Adult Learning</a><a class="btn" href="../adult/">Adult Learner Portal</a></div>`}</section>
   </div>
   <div class="grid cols2" style="margin-top:17px">
