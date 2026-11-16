@@ -2,6 +2,7 @@
 
 | Date | Type | Entry | State |
 | --- | --- | --- | --- |
+| 2026-11-16 | parent UI · header spacing | [Compact Parent Profile header; remove empty charcoal bar](logs/2026/11/2026-11-16-parent-profile-compact-header-no-extra-bar.md) | Source changes committed; live visual acceptance pending |
 | 2026-11-16 | learner UX · modal | [One Family Learning popup per student](logs/2026/11/2026-11-16-per-learner-family-learning-dialogs.md) | Source committed, browser permission acceptance HOLD |
 | 2026-11-16 | header topology · repair | [Parent Profile tickers and official header before hero](logs/2026/11/2026-11-16-parent-profile-header-ticker-topology.md) | Source order corrected; live browser verification pending |
 | 2026-11-16 | hero navigation · accessibility | [Five hero actions, 33/66px hierarchy and readable contrast](logs/2026/11/2026-11-16-parent-portal-hero-type-and-contrast.md) | Source checked; live browser visual verification HOLD |
