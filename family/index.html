@@ -524,7 +524,7 @@ function bind(f){
     // Selection changes the local learning context, never guardian authority.
     if(!chooseLocalLearner(f,link.dataset.learnerProfile)){event.preventDefault();return}
   }));
-  $("[data-active]").forEach(b=>b.onclick=()=>{if(chooseLocalLearner(f,b.dataset.active))requestFamilyRender()});
+  $$("[data-active]").forEach(b=>b.onclick=()=>{if(chooseLocalLearner(f,b.dataset.active))requestFamilyRender()});
   $$("[data-open-next]").forEach(b=>b.onclick=()=>{
     const learnerId=b.dataset.learnerId,href=b.dataset.openNext;
     if(!learnerId||!href||!chooseLocalLearner(f,learnerId,{requireProgress:true}))return;
