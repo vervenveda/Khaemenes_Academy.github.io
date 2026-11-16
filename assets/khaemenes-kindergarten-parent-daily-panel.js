@@ -60,6 +60,7 @@
    const family=r()?.getFamily?.(),adult=r()?.getAdult?.(active.adultId);
    const canSelect=!!(id&&adult&&family?.adultIds?.includes(adult.adultId)&&family?.learners?.some(l=>l.learnerId===id&&l.stage==="kindergarten"&&l.familyId===family.familyId));
    choose.hidden=matching||!canSelect;
+   choose.style.display=matching||!canSelect?"none":"inline-flex";
    choose.disabled=!canSelect;
    save.disabled=!permitted;
    save.style.opacity=permitted?"1":".5";
