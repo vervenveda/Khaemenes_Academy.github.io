@@ -130,3 +130,64 @@ body.vka-parent-canonical .vka-skip:focus{left:12px;top:12px}
  body.vka-parent-canonical,body.vka-parent-canonical main{background:white!important;color:black!important}
  body.vka-parent-canonical .navcard,body.vka-parent-canonical .parent-learning-card{break-inside:avoid}
 }
+
+/* Parent-specific restraint: gold is an accent, not the main card or button outline.
+   Neutral stone borders and cream surfaces take precedence across both parent pages.
+   Keep the gold keyboard focus indicator for accessibility. */
+body.vka-parent-canonical{
+ --vka-border:#D7D9D2;
+ --vka-gold:#B48B45;
+ --vka-muted-border:#D7D9D2;
+}
+body.vka-parent-canonical .navcard,
+body.vka-parent-canonical .parent-learning-card,
+body.vka-parent-canonical .parent-learning-panel,
+body.vka-parent-canonical .profile-connectivity,
+body.vka-parent-canonical .profile-privacy,
+body.vka-parent-canonical .family-hub-cards article,
+body.vka-parent-canonical #familyApp .card,
+body.vka-parent-canonical #familyApp .metric{
+ border-color:var(--vka-muted-border);
+ box-shadow:0 1px 5px rgba(32,39,36,.045);
+}
+body.vka-parent-canonical .mainnav,
+body.vka-parent-canonical #vnv-language-rail{
+ border-color:var(--vka-muted-border);
+}
+body.vka-parent-canonical #khaeFamilyParentProfileHero .kph-identity,
+body.vka-parent-canonical #khaeFamilyParentProfileHero .kph-rail,
+body.vka-parent-canonical #khaeFamilyParentProfileHero .kph-tool,
+body.vka-parent-canonical #khaeFamilyParentProfileHero .kph-avatar{
+ border-color:var(--vka-muted-border);
+}
+body.vka-parent-canonical .family-hero-actions a,
+body.vka-parent-canonical .navcard a,
+body.vka-parent-canonical .mainnav a{
+ border-color:var(--vka-charcoal);
+}
+body.vka-parent-canonical .family-hero-actions a[href="profile/"]{
+ border-color:#B5B9B1!important;
+}
+body.vka-parent-canonical .parent-learning-panel:first-child{
+ border-color:var(--vka-muted-border);
+ box-shadow:0 1px 6px rgba(32,39,36,.065);
+}
+body.vka-parent-canonical .parent-learning-panel[open]>summary{
+ border-color:var(--vka-muted-border);
+}
+body.vka-parent-canonical .profile-privacy{
+ background:var(--vka-cream);
+}
+/* Restrict visible gold to small institutional accents. */
+body.vka-parent-canonical .vka-profile-hero{
+ border-bottom:2px solid var(--vka-gold);
+}
+body.vka-parent-canonical .profile-panels>.section-eyebrow,
+body.vka-parent-canonical .profile-connectivity>.section-eyebrow{
+ color:var(--vka-charcoal);
+}
+/* All controls retain the canonical accessible gold focus ring. */
+body.vka-parent-canonical :focus-visible{
+ outline:3px solid var(--vka-gold);
+ outline-offset:3px;
+}
