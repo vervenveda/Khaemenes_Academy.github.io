@@ -33,16 +33,16 @@ function render(){
   return '<article class="parent-learning-card"><p class="parent-eyebrow">'+esc(stage)+(active?" · Active":"")+'</p><h3>'+esc(l.nickname||"Learner")+'</h3><p>'+esc(l.grade?"Grade "+String(l.grade):"Placement needs review")+'</p><div class="parent-learning-actions">'+
    (active?'<span class="active-chip">Active learner</span>':'<button type="button" data-select="'+esc(l.learnerId)+'">Make Active</button>')+
    (ready?'<a href="'+esc(profile(l))+'" data-open-learner="'+esc(l.learnerId)+'">Open Student Profile</a>':'<a href="../enroll/#existing">Complete Placement</a>')+
-   '<a href="../enroll/#existing">Change Placement</a></div></article>';
+   '<button type="button" data-family-dialog="'+esc(l.learnerId)+'">Family Learning</button><a href="../enroll/#existing">Change Placement</a></div></article>';
  }).join("");
  const progressCards=learners.map(l=>{
-  if(!permission(f,l))return '<article class="parent-learning-card"><h3>'+esc(l.nickname||"Learner")+'</h3><p>Progress access is not enabled for the selected adult.</p></article>';
+  if(!permission(f,l))return '<article class="parent-learning-card"><h3>'+esc(l.nickname||"Learner")+'</h3><p>Progress access is not enabled for the selected adult.</p><div class="parent-learning-actions"><button type="button" data-family-dialog="'+esc(l.learnerId)+'">Family Learning</button></div></article>';
   const snaps=C?.readLearner?.(l.learnerId)||[],summary=C?.summarize?.(l.learnerId)||null;
   const courses=snaps.slice(0,8).map(s=>{
    const percent=s?.progress?.percent,valid=!s.stale&&typeof percent==="number"&&Number.isFinite(percent)&&percent>=0&&percent<=100;
    return '<div class="parent-course-row"><strong>'+esc(s.courseTitle||s.courseId||"Course")+'</strong><span>'+esc(s.stale?"Refresh required":valid?Math.round(percent)+"% completion":"Not reported")+'</span></div>';
   }).join("");
-  return '<article class="parent-learning-card"><h3>'+esc(l.nickname||"Learner")+'</h3><p>'+(summary?.courses||snaps.length)+' reported course snapshot(s), not official grades.</p>'+(courses||'<p>No course continuation snapshots on this browser.</p>')+'<div class="parent-learning-actions"><a href="'+esc(profile(l))+'" data-open-learner="'+esc(l.learnerId)+'">Open Student Profile</a></div></article>';
+  return '<article class="parent-learning-card"><h3>'+esc(l.nickname||"Learner")+'</h3><p>'+(summary?.courses||snaps.length)+' reported course snapshot(s), not official grades.</p>'+(courses||'<p>No course continuation snapshots on this browser.</p>')+'<div class="parent-learning-actions"><button type="button" data-family-dialog="'+esc(l.learnerId)+'">Family Learning</button><a href="'+esc(profile(l))+'" data-open-learner="'+esc(l.learnerId)+'">Open Student Profile</a></div></article>';
  }).join("");
  const daily=learners.filter(l=>permission(f,l)).map(l=>{
   const key="khaemenes-grade09-daily-parent-report-v1:"+encodeURIComponent(l.learnerId),data=read(key);
@@ -58,6 +58,11 @@ function render(){
  '<details class="parent-learning-panel" id="family-progress"><summary><span class="parent-panel-eyebrow">Academic Overview</span>Schedules &amp; Progress <span class="parent-panel-caption">Read-only reported course progress; individual schedules remain in Student Profiles</span></summary><div class="panel-inner"><p>Reported continuation snapshots are learning indicators, not certified grades or invented class schedules.</p><div class="parent-learning-grid">'+(progressCards||'<p>No learner progress to display.</p>')+'</div></div></details>';
  for(const id of openPanels){const element=document.getElementById(id);if(element)element.open=true}
  if(location.hash==="#family-progress"||location.hash==="#parent-daily-reports"||location.hash==="#parent-learner-panel"){const p=document.querySelector(location.hash);if(p)p.open=true}
+ root.querySelectorAll("[data-family-dialog]").forEach(button=>button.addEventListener("click",()=>{
+  const learner=f.learners.find(l=>l.learnerId===button.dataset.familyDialog&&l.familyId===f.familyId);
+  if(!learner)return;
+  window.KhaemenesFamilyLearnerDialog?.open?.(learner.learnerId,button);
+ }));
  root.querySelectorAll("[data-select]").forEach(button=>button.addEventListener("click",()=>{
   const id=button.dataset.select,learner=f.learners.find(l=>l.learnerId===id&&l.familyId===f.familyId);
   if(!learner)return;
