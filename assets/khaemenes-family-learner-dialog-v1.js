@@ -114,6 +114,17 @@
     const outcome=make("span",item.stale?"Refresh required":ok?Math.round(value)+"% reported completion":"Not reported");
     row.append(name,outcome);body.append(row);
    }
+   body.append(make("h3","Daily Family Report"));
+   let data=null;
+   try{data=JSON.parse(g.localStorage.getItem("khaemenes-grade09-daily-parent-report-v1:"+encodeURIComponent(id))||"null")}catch{}
+   const reportMap=data?.learnerId===id&&data.reports&&typeof data.reports==="object"&&!Array.isArray(data.reports)?data.reports:{};
+   const dates=Object.keys(reportMap).filter(day=>/^\\d{4}-\\d{2}-\\d{2}$/.test(day)).sort();
+   const date=dates.length?dates[dates.length-1]:null,entry=date?reportMap[date]:null;
+   if(!entry||entry.learnerId!==id)body.append(make("p","No dated daily family report is available for this learner in this browser."));
+   else{
+    const habits=Array.isArray(entry.habits)?entry.habits:[],classes=Array.isArray(entry.classes)?entry.classes:[];
+    body.append(make("p",date+" · "+habits.filter(v=>v.checked===true).length+" / "+habits.length+" daily activities checked; "+classes.filter(v=>v.masteredToday===true).length+" / "+classes.length+" reported academic checkpoints."));
+   }
   }
   body.append(nav);
   body.append(make("p","Family data and activity choices remain on this browser unless separately exported. No records are emailed or synchronized by this dialog.","ka-modal-note"));
