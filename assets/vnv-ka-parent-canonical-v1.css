@@ -1,0 +1,132 @@
+/* VNV / KA Parent Pages · canonical landing-page presentation standard
+ * Source: VNV_KA_Canonical_Landing_Page_Template.html · 2026-11-16
+ * Presentation only; do not modify storage, registration or academic authority.
+ */
+:root{
+ --vka-charcoal:#202724;--vka-cream:#FFF8E9;--vka-parchment:#F7F1E5;
+ --vka-paper:#FFFDF8;--vka-gold:#B48B45;--vka-border:#C7BBA3;
+ --vka-head:Cinzel,"Palatino Linotype",Georgia,serif;
+ --vka-body:"Brandon Grotesque",Nunito,"Avenir Next",Arial,sans-serif;
+}
+html[data-brand="ka"]{scroll-behavior:smooth}
+body.vka-parent-canonical{background:var(--vka-parchment);color:var(--vka-charcoal);font:400 18px/1.65 var(--vka-body);overflow-wrap:break-word}
+body.vka-parent-canonical *,body.vka-parent-canonical *::before,body.vka-parent-canonical *::after{box-sizing:border-box}
+body.vka-parent-canonical :focus-visible{outline:3px solid var(--vka-gold);outline-offset:3px}
+body.vka-parent-canonical #vnv-language-rail{
+ min-height:54px;display:flex;align-items:center;justify-content:center;
+ padding:8px 16px;background:var(--vka-charcoal);color:var(--vka-cream);
+ border-bottom:1px solid var(--vka-gold)
+}
+body.vka-parent-canonical main{color:var(--vka-charcoal)}
+body.vka-parent-canonical main h1,
+body.vka-parent-canonical main h2,
+body.vka-parent-canonical main h3{
+ font-family:var(--vka-head);font-weight:400;line-height:1.25;color:var(--vka-charcoal)
+}
+body.vka-parent-canonical main h1{font-size:clamp(40px,6vw,66px)}
+body.vka-parent-canonical main h2{font-size:clamp(32px,4.8vw,44px)}
+body.vka-parent-canonical main h3{font-size:clamp(27px,3vw,33px)}
+body.vka-parent-canonical main p,
+body.vka-parent-canonical main li{font-size:max(18px,1em);line-height:1.65}
+body.vka-parent-canonical main a.btn,
+body.vka-parent-canonical main button.btn,
+body.vka-parent-canonical main .kph-tool,
+body.vka-parent-canonical main .parent-learning-actions a,
+body.vka-parent-canonical main .parent-learning-actions button,
+body.vka-parent-canonical main .panel-footer-link{
+ min-height:49px;font:400 16px/1.35 var(--vka-body);
+ border-radius:7px
+}
+body.vka-parent-canonical main a.btn.dark,
+body.vka-parent-canonical main a.btn.primary,
+body.vka-parent-canonical main .kph-tool,
+body.vka-parent-canonical main .parent-learning-actions a,
+body.vka-parent-canonical main .parent-learning-actions button{
+ background:var(--vka-charcoal);color:var(--vka-cream);-webkit-text-fill-color:var(--vka-cream)
+}
+body.vka-parent-canonical .navcard,
+body.vka-parent-canonical .parent-learning-card,
+body.vka-parent-canonical .parent-learning-panel,
+body.vka-parent-canonical .family-hub-cards article,
+body.vka-parent-canonical #familyApp .card,
+body.vka-parent-canonical #familyApp .metric{
+ background:var(--vka-paper);color:var(--vka-charcoal);
+ border:1px solid var(--vka-border);border-radius:7px
+}
+body.vka-parent-canonical .navcard p,
+body.vka-parent-canonical .parent-learning-card p,
+body.vka-parent-canonical .family-hub-cards article p,
+body.vka-parent-canonical .parent-learning-panel .panel-inner{
+ color:var(--vka-charcoal);font-size:18px;line-height:1.65
+}
+body.vka-parent-canonical .parent-learning-panel>summary{
+ background:var(--vka-paper);font:400 clamp(27px,3vw,33px)/1.3 var(--vka-head);
+ min-height:62px;color:var(--vka-charcoal)
+}
+body.vka-parent-canonical .parent-learning-panel[open]>summary{background:var(--vka-cream)}
+body.vka-parent-canonical .parent-panel-eyebrow,
+body.vka-parent-canonical .parent-panel-caption{font:400 16px/1.5 var(--vka-body)!important}
+body.vka-parent-canonical .profile-connectivity,
+body.vka-parent-canonical .profile-privacy{background:var(--vka-paper);border-color:var(--vka-border)}
+body.vka-parent-canonical .profile-connectivity .navcard{background:var(--vka-paper)}
+body.vka-parent-canonical .profile-panels,
+body.vka-parent-canonical .profile-connectivity{max-width:1120px}
+body.vka-parent-canonical .profile-panels>.section-eyebrow,
+body.vka-parent-canonical .profile-connectivity>.section-eyebrow{
+ font:400 24px/1.35 var(--vka-head);color:var(--vka-charcoal)
+}
+body.vka-parent-canonical .profile-panels>h2,
+body.vka-parent-canonical .profile-connectivity>h2{
+ font:400 clamp(32px,4.8vw,44px)/1.22 var(--vka-head)
+}
+body.vka-parent-canonical .mainnav{background:var(--vka-parchment)}
+body.vka-parent-canonical .mainnav a,
+body.vka-parent-canonical .navcard a{min-height:49px;font:400 16px/1.35 var(--vka-body)}
+body.vka-parent-canonical .family-hero{background:var(--vka-charcoal);color:var(--vka-cream)}
+body.vka-parent-canonical .family-hero h1{
+ color:var(--vka-cream);font:400 clamp(40px,6vw,66px)/1.13 var(--vka-head)
+}
+body.vka-parent-canonical .family-hero .kicker,
+body.vka-parent-canonical .family-hero-subtitle{color:var(--vka-cream)}
+body.vka-parent-canonical .family-hero .family-hero-copy{font-size:18px;line-height:1.7;color:var(--vka-cream)}
+body.vka-parent-canonical .family-hero-actions a{font:400 16px/1.35 var(--vka-body);min-height:49px}
+body.vka-parent-canonical .family-hub-services,
+body.vka-parent-canonical #workspace{background:var(--vka-parchment)}
+body.vka-parent-canonical .family-hub-services .heading h2,
+body.vka-parent-canonical #workspace .heading h2{font:400 clamp(32px,4.8vw,44px)/1.22 var(--vka-head)}
+body.vka-parent-canonical footer{background:var(--vka-charcoal);color:var(--vka-cream);text-align:center}
+body.vka-parent-canonical footer a{color:var(--vka-cream);font-size:16px}
+body.vka-parent-canonical footer p{font-size:18px}
+body.vka-parent-canonical .vka-profile-hero{
+ background:var(--vka-charcoal);color:var(--vka-cream);
+ text-align:center;padding:clamp(55px,7vw,88px) 20px
+}
+body.vka-parent-canonical .vka-profile-hero h1{
+ color:var(--vka-cream);margin:0 auto 20px;
+ font:400 clamp(40px,6vw,66px)/1.13 var(--vka-head)
+}
+body.vka-parent-canonical .vka-profile-hero .vka-eyebrow{
+ color:var(--vka-cream);font:400 clamp(24px,3vw,33px)/1.3 var(--vka-head)
+}
+body.vka-parent-canonical .vka-profile-hero .vka-hero-desc{
+ color:var(--vka-cream);font:400 18px/1.7 var(--vka-body);margin:0 auto;max-width:820px
+}
+body.vka-parent-canonical #khaeFamilyParentProfileHero .kph-rail{background:var(--vka-paper)}
+body.vka-parent-canonical #khaeFamilyParentProfileHero .kph-tools-title{
+ color:var(--vka-charcoal);font:400 33px/1.3 var(--vka-head)
+}
+body.vka-parent-canonical #khaeFamilyParentProfileHero .kph-note{font:400 16px/1.6 var(--vka-body)}
+body.vka-parent-canonical .vka-skip{position:absolute;left:-9999px;top:0;z-index:99999;background:var(--vka-cream);color:var(--vka-charcoal);padding:10px 16px;border-radius:7px}
+body.vka-parent-canonical .vka-skip:focus{left:12px;top:12px}
+@media(max-width:900px){body.vka-parent-canonical .cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){body.vka-parent-canonical .cards{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){html[data-brand="ka"]{scroll-behavior:auto}}
+@media print{
+ body.vka-parent-canonical #vnv333NetworkTicker,
+ body.vka-parent-canonical #vnvTickerAutoPopulate,
+ body.vka-parent-canonical #vnvHeaderAutoPopulate,
+ body.vka-parent-canonical #vnv-language-rail,
+ body.vka-parent-canonical #vnvEcosystemUtilityDock{display:none!important}
+ body.vka-parent-canonical,body.vka-parent-canonical main{background:white!important;color:black!important}
+ body.vka-parent-canonical .navcard,body.vka-parent-canonical .parent-learning-card{break-inside:avoid}
+}
