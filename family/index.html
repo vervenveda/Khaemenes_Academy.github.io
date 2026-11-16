@@ -636,12 +636,12 @@ render();
  const admin=document.getElementById("family-admin-details");
  const portal=document.getElementById("workspace");
  if(!admin||!portal)return;
- const needsAdmin=id=>id==="workspace"||id==="family-admin-details"||id==="family-records-controls"||id==="family-adult-access"||id==="familyStatus"||id==="familyApp"||id==="inviteBox";
+ const needsAdmin=id=>{const el=document.getElementById(id);return id==="workspace"||id==="family-admin-details"||id==="family-records-controls"||id==="family-adult-access"||id==="khaemenesParentActionCenter"||id==="khaemenesFamilySupportPlan"||!!(el&&admin.contains(el))};
  const reveal=()=>{
   const id=decodeURIComponent(location.hash.slice(1));
   if(needsAdmin(id)){
    admin.open=true;
-   if(id==="family-records-controls"||id==="family-adult-access")requestAnimationFrame(()=>document.getElementById(id)?.scrollIntoView({block:"start"}));
+   if(id!=="workspace"&&id!=="family-admin-details")requestAnimationFrame(()=>document.getElementById(id)?.scrollIntoView({block:"start"}));
   }
  };
  document.addEventListener("click",event=>{
