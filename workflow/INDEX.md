@@ -2,6 +2,7 @@
 
 | Date | Type | Entry | State |
 | --- | --- | --- | --- |
+| 2026-11-16 | design standard · compliance | [Parent pages aligned to canonical VNV/KA landing blueprint](logs/2026/11/2026-11-16-parent-canonical-landing-template-alignment.md) | Source checked; live browser acceptance HOLD |
 | 2026-11-16 | UX hierarchy · repair | [Parent Profile daily reports, family connectivity and Portal boundaries](logs/2026/11/2026-11-16-parent-profile-family-hierarchy-refinement.md) | Source edits committed; live browser acceptance HOLD |
 | 2026-11-16 | UX relocation · repair | [Learner, progress and daily reports move into Parent Profile](logs/2026/11/2026-11-16-parent-learning-panels-relocation.md) | Three expandable panels committed; browser acceptance HOLD |
 | 2026-11-16 | architecture · UX repair | [Parent Profile standalone landing migration](logs/2026/11/2026-11-16-parent-profile-standalone-migration.md) | New page and Portal link committed; browser acceptance HOLD |
