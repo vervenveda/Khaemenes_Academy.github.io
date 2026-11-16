@@ -348,10 +348,6 @@ body footer.footer .family-footer-links a:focus-visible{outline:3px solid #edcd9
        <li>Wait for independently verified account sign-in and T03 commissioning before trusting cross-device synchronization.</li>
       </ol>
       <p>Browser identifiers are not credentials or proof of guardianship. No passwords or student records are requested by this section.</p>
-    </div>
-  </details>
- </div>
-</section>
 <section class="section vka-portal-admin" id="workspace" aria-labelledby="familyWorkspaceTitle">
  <div class="shell">
   <details id="family-admin-details" class="family-admin-details">
@@ -362,6 +358,11 @@ body footer.footer .family-footer-links a:focus-visible{outline:3px solid #edcd9
   </details>
  </div>
 </section>
+    </div>
+  </details>
+ </div>
+</section>
+
 
 <section class="section family-hub-services" id="family-records" aria-labelledby="familyRecordsHubTitle">
  <div class="shell">
@@ -615,8 +616,7 @@ render();
 <script src="../assets/khaemenes-terminal03-readiness.js"></script>
 
 <!-- Parent photo hero moved to its dedicated family/profile/ landing page; no parent appearance keys or data were changed. -->
-<script src="../assets/khaemenes-kindergarten-family-daily-plan.js?v=20261109-six-adventures-v2"></script>
-<script src="../assets/khaemenes-kindergarten-parent-daily-panel.js?v=20261109-six-adventures-v2"></script>
+<!-- Kindergarten daily planner is rendered only in the separate parent profile when an eligible learner exists. -->
 <script src="../assets/khaemenes-universal-profile-look-editor.js?v=20261109-all-horizontal-v5"></script>
 
 <script src="../assets/khaemenes-account-connection-status.js"></script>
@@ -634,12 +634,14 @@ render();
 <script id="family-portal-navigation-contract-20261116">
 (()=>{"use strict";
  const admin=document.getElementById("family-admin-details");
+ const outer=document.getElementById("family-account-prepare");
  const portal=document.getElementById("workspace");
  if(!admin||!portal)return;
  const needsAdmin=id=>{const el=document.getElementById(id);return id==="workspace"||id==="family-admin-details"||id==="family-records-controls"||id==="family-adult-access"||id==="khaemenesParentActionCenter"||id==="khaemenesFamilySupportPlan"||!!(el&&admin.contains(el))};
  const reveal=()=>{
   const id=decodeURIComponent(location.hash.slice(1));
   if(needsAdmin(id)){
+   if(outer)outer.open=true;
    admin.open=true;
    if(id!=="workspace"&&id!=="family-admin-details")requestAnimationFrame(()=>document.getElementById(id)?.scrollIntoView({block:"start"}));
   }
@@ -648,11 +650,11 @@ render();
   const a=event.target.closest?.("a[href^='#']");
   if(!a)return;
   const id=a.getAttribute("href").slice(1);
-  if(needsAdmin(id))admin.open=true;
+  if(needsAdmin(id)){if(outer)outer.open=true;admin.open=true;}
  });
  window.addEventListener("hashchange",reveal);
  window.addEventListener("pageshow",reveal);
- if(!window.KhaemenesFamilyRegistry?.getFamily?.())admin.open=true;
+ if(!window.KhaemenesFamilyRegistry?.getFamily?.()){if(outer)outer.open=true;admin.open=true;}
  reveal();
 })();
 </script>
