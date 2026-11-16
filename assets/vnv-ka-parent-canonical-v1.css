@@ -191,3 +191,130 @@ body.vka-parent-canonical :focus-visible{
  outline:3px solid var(--vka-gold);
  outline-offset:3px;
 }
+
+
+/* Family Portal front-desk layout · 2026-11-16.
+   Compact 12-item directory, quiet accents, collapsed administration.
+   Does not hide or unmount record/permission/backup owners. */
+body.vka-parent-canonical .family-hero-actions{
+ display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+ max-width:850px;gap:11px
+}
+body.vka-parent-canonical .family-hub-quick-nav{
+ width:min(1120px,calc(100% - 36px));max-width:1120px;
+ display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+ gap:12px;align-items:stretch;margin:20px auto 24px
+}
+body.vka-parent-canonical .family-hub-quick-nav a{
+ display:flex;flex-direction:column;justify-content:center;align-items:center;
+ min-height:96px;padding:15px 12px;gap:4px;
+ background:var(--vka-paper);border:1px solid var(--vka-muted-border);
+ border-radius:7px;box-shadow:0 1px 5px rgba(32,39,36,.04);
+ color:var(--vka-charcoal);text-decoration:none
+}
+body.vka-parent-canonical .family-hub-quick-nav a:nth-child(n){
+ border-top:2px solid #9BA49D
+}
+body.vka-parent-canonical .family-hub-quick-nav a:hover,
+body.vka-parent-canonical .family-hub-quick-nav a:focus-visible{
+ background:var(--vka-cream)
+}
+body.vka-parent-canonical .family-hub-quick-nav a small,
+body.vka-parent-canonical .family-hub-quick-nav a span{
+ color:#46574D;font:400 16px/1.4 var(--vka-body)
+}
+body.vka-parent-canonical .family-hub-quick-nav a strong{
+ color:var(--vka-charcoal);font:400 24px/1.2 var(--vka-head)
+}
+body.vka-parent-canonical .vka-compact-account{
+ background:var(--vka-parchment);
+ padding:24px 18px 20px
+}
+body.vka-parent-canonical .vka-compact-account .family-compact-intro{
+ max-width:1120px;margin:auto;display:flex;align-items:center;
+ justify-content:space-between;flex-wrap:wrap;gap:20px
+}
+body.vka-parent-canonical .vka-compact-account .family-compact-intro h2{
+ margin:2px 0 6px;font:400 clamp(32px,4vw,44px)/1.25 var(--vka-head);
+ color:var(--vka-charcoal)
+}
+body.vka-parent-canonical .vka-compact-account .family-compact-intro p{
+ margin:0;max-width:760px;font:400 18px/1.6 var(--vka-body)
+}
+body.vka-parent-canonical .vka-compact-account .family-compact-intro .kicker{
+ font:400 16px/1.4 var(--vka-body);color:#45564E
+}
+body.vka-parent-canonical .vka-compact-account .family-compact-intro .btn{
+ min-height:49px;font:400 16px/1.3 var(--vka-body);
+ text-decoration:none;padding:12px 19px;border-radius:7px
+}
+body.vka-parent-canonical .vka-compact-account .family-account-local-status{
+ max-width:1120px;margin:14px auto;font:400 16px/1.5 var(--vka-body)
+}
+body.vka-parent-canonical .vka-compact-account .family-account-prepare{
+ max-width:1120px;margin:12px auto;background:var(--vka-paper);
+ border:1px solid var(--vka-muted-border);border-radius:7px
+}
+body.vka-parent-canonical .vka-compact-account .family-account-prepare summary{
+ min-height:52px;background:var(--vka-paper);color:var(--vka-charcoal);
+ font:400 18px/1.5 var(--vka-body);padding:13px 18px;cursor:pointer
+}
+body.vka-parent-canonical .vka-compact-account .family-account-prepare[open] summary{
+ background:var(--vka-cream);border-bottom:1px solid var(--vka-muted-border)
+}
+body.vka-parent-canonical .vka-portal-admin{
+ background:var(--vka-parchment);padding:14px 18px 42px
+}
+body.vka-parent-canonical .vka-portal-admin .family-admin-details{
+ max-width:1120px;margin:auto;background:var(--vka-paper);
+ border:1px solid var(--vka-muted-border);border-radius:7px;overflow:hidden
+}
+body.vka-parent-canonical .vka-portal-admin .family-admin-details>summary{
+ cursor:pointer;display:flex;flex-direction:column;align-items:center;
+ justify-content:center;text-align:center;gap:7px;list-style-position:inside;
+ padding:22px 18px;background:var(--vka-paper);color:var(--vka-charcoal)
+}
+body.vka-parent-canonical .vka-portal-admin .family-admin-details>summary:hover,
+body.vka-parent-canonical .vka-portal-admin .family-admin-details[open]>summary{
+ background:var(--vka-cream)
+}
+body.vka-parent-canonical .vka-portal-admin .family-admin-kicker{
+ color:#4D6256;font:400 16px/1.4 var(--vka-body)
+}
+body.vka-parent-canonical .vka-portal-admin .family-admin-details>summary strong{
+ font:400 clamp(27px,3vw,33px)/1.25 var(--vka-head)
+}
+body.vka-parent-canonical .vka-portal-admin .family-admin-details>summary span:last-child{
+ font:400 18px/1.55 var(--vka-body);max-width:780px
+}
+body.vka-parent-canonical .vka-portal-admin .family-admin-body{
+ padding:18px;background:var(--vka-parchment);border-top:1px solid var(--vka-muted-border)
+}
+body.vka-parent-canonical .vka-portal-admin .family-workspace-stack{
+ max-width:1080px;width:100%
+}
+body.vka-parent-canonical .vka-portal-admin #familyApp .actions :is(a,button){
+ font-size:16px;min-height:49px
+}
+@media(max-width:900px){
+ body.vka-parent-canonical .family-hub-quick-nav{
+  grid-template-columns:repeat(3,minmax(0,1fr))
+ }
+ body.vka-parent-canonical .family-hero-actions{
+  grid-template-columns:repeat(2,minmax(0,1fr))
+ }
+}
+@media(max-width:650px){
+ body.vka-parent-canonical .family-hub-quick-nav{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  width:min(100% - 28px,1120px);gap:9px
+ }
+ body.vka-parent-canonical .family-hub-quick-nav a{
+  padding:13px 9px;min-height:100px
+ }
+ body.vka-parent-canonical .family-hub-quick-nav a strong{font-size:20px}
+ body.vka-parent-canonical .family-hero-actions{grid-template-columns:1fr}
+}
+@media(max-width:380px){
+ body.vka-parent-canonical .family-hub-quick-nav{grid-template-columns:1fr}
+}
