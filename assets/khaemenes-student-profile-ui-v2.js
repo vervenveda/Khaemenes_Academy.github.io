@@ -146,7 +146,13 @@ function applyWorkspace(workspace){
   b.dataset.studentProfileDensity=workspace.density;
   b.dataset.studentProfileReducedMotion=String(workspace.reducedMotion);
 }
+let rendering=false;
 function render(){
+  // Evidence synchronization emits a profile-change event synchronously.
+  // Prevent a nested render from replacing the studio during initialization.
+  if(rendering)return;
+  rendering=true;
+  try{
   const l=learner();
   if(!l?.learnerId){host.innerHTML="";return}
   syncContinuationEvidence();
@@ -219,6 +225,7 @@ function render(){
   }
   set("pv2Collaboration",rec.learningMap.collaboration);set("pv2Theme",rec.workspace.theme);set("pv2Text",rec.workspace.textSize);set("pv2Line",rec.workspace.lineSpacing);set("pv2Width",rec.workspace.readingWidth);set("pv2Contrast",rec.workspace.contrast);set("pv2Density",rec.workspace.density);
   bind();
+  }finally{rendering=false}
 }
 function value(id){return document.getElementById(id)?.value||""}
 function status(id,text){const el=document.getElementById(id);if(el)el.textContent=text}
