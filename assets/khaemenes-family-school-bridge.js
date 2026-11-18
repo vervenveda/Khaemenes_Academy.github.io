@@ -239,6 +239,25 @@
       const mismatchHTML=mismatch?`<div style="margin-top:8px;padding:8px;border-radius:7px;background:#fff4d8;color:#6d5325"><strong>Different campus context.</strong><br>${escapeHTML(learner.nickname)} is registered for ${escapeHTML(placementLabel)}. This page remains available for parent/teacher preview, but learner work should normally continue from the registered path.${destination?.url?`<br><a href="${escapeHTML(destination.url)}" style="display:inline-block;margin-top:5px;color:#6d5325;font-weight:700">Go to registered path →</a>`:""}</div>`:"";
       box.innerHTML=`<strong>${escapeHTML(learner.nickname)}</strong><br><span>${escapeHTML(family?.displayName||"Khaemenes Family")} · ${escapeHTML(placementLabel)}</span>${mismatchHTML}<div style="margin-top:7px"><a href="${archaemenesPortal}" data-khaemenes-mentor style="color:#2f7140;font-weight:700">Archaemenes →</a> · <a href="${studentPortal}" style="color:#2f7140;font-weight:700">Student Portal →</a> · <a href="${familyPortal}" style="color:#2f7140;font-weight:700">Family Profile →</a></div>`;
     }
+    // Preschool presentation only: preserve the same registry-owned context and links,
+    // but keep the corner clear until a parent/teacher opens the details.
+    if(normalizedSurfaceStage(registry)==="preschool"){
+      const details=document.createElement("details");
+      details.style.cssText="width:100%;font:16px/1.45 Arial,sans-serif";
+      const summary=document.createElement("summary");
+      summary.textContent="Student Info";
+      summary.setAttribute("aria-label","Expand learner and campus information");
+      summary.style.cssText="cursor:pointer;list-style:inside;min-height:42px;display:flex;align-items:center;justify-content:center;padding:7px 12px;background:#243038;color:#fff8e9;border-radius:7px;font:400 16px/1.4 Arial,sans-serif";
+      const content=document.createElement("div");
+      content.style.cssText="padding:12px 4px 4px;overflow-wrap:anywhere";
+      while(box.firstChild)content.appendChild(box.firstChild);
+      details.append(summary,content);
+      box.appendChild(details);
+      box.style.width="min(240px,calc(100vw - 24px))";
+      box.style.maxWidth="240px";
+      box.style.padding="7px";
+      box.style.borderRadius="7px";
+    }
     document.body.appendChild(box);
     canonicalizeStageSurface(registry);
     global.dispatchEvent(new CustomEvent("khaemenes-school-bridge-ready",{detail:{version:VERSION,stage:surfaceStage,learnerId:learner?.learnerId||null,mismatch:placement.mismatch,previewAllowed:true,hardRedirect:false,mentorDestination:mentorDestination(registry)}}));
