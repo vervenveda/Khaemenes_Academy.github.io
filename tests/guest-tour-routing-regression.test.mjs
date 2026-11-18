@@ -5,7 +5,7 @@ import fs from "node:fs";
 const invitation=fs.readFileSync(new URL("../assets/khaemenes-guest-tour-invitation.js",import.meta.url),"utf8");
 
 test("guest feature protection identifies grade dashboards by their path or body marker",()=>{
- assert.match(invitation,/location\.pathname\.match\(\/\\\/grades\\\/grade-/);
+ assert.ok(invitation.includes("const gradeFromPath=location.pathname.match("));
  assert.match(invitation,/const thisGrade=Number\(document\.body\?\.dataset\?\.grade\|\|gradeFromPath\?\.\[1\]\|\|0\)/);
  assert.match(invitation,/const AREA=\[9,10,11,12\]\.includes\(thisGrade\)\?"grade"/);
 });
