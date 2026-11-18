@@ -1,0 +1,38 @@
+name: Academy Guest and Profile Interaction Guards
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'assets/khaemenes-guest-tour-invitation.js'
+      - 'assets/khaemenes-student-profile-ui-v2.js'
+      - 'student/profile.html'
+      - 'tests/guest-tour-routing-regression.test.mjs'
+      - 'tests/student-profile-ui-render-guard.test.mjs'
+      - '.github/workflows/academy-guest-profile-interactions.yml'
+  pull_request:
+    paths:
+      - 'assets/khaemenes-guest-tour-invitation.js'
+      - 'assets/khaemenes-student-profile-ui-v2.js'
+      - 'student/profile.html'
+      - 'tests/guest-tour-routing-regression.test.mjs'
+      - 'tests/student-profile-ui-render-guard.test.mjs'
+      - '.github/workflows/academy-guest-profile-interactions.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-guards:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Validate guest invitation and profile source syntax
+        run: |
+          node --check assets/khaemenes-guest-tour-invitation.js
+          node --check assets/khaemenes-student-profile-ui-v2.js
+          node --check assets/khaemenes-student-profile-v2.js
+      - name: Validate guest and profile UI regressions
+        run: node --test tests/guest-tour-routing-regression.test.mjs tests/student-profile-ui-render-guard.test.mjs
