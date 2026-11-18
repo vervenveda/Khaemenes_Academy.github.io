@@ -238,6 +238,7 @@
   function registerLearner({familyId,nickname,stage="preschool",grade=null,ageBand="",interests=[],mentorId=null,mentorIdentity=null,guardianRelease=null,existingLearnerId=null,linkedAdultId=null,selfDirectedAdult=false}={}){
     const registry=load();if(!registry.families[familyId])throw new Error("family-not-found");
     const learnerId=existingLearnerId||id("learner"),accountId=id("learneracct"),prior=registry.learners[learnerId]||{},placement=canonicalPlacement({stage,grade});
+    if(existingLearnerId&&prior.learnerId&&prior.familyId!==familyId)throw new Error("learner-family-mismatch");
     registry.learners[learnerId]={...prior,learnerId,accountId:prior.accountId||accountId,familyId,nickname:clean(nickname,40)||"Learner",stage:placement.stage,grade:placement.grade,ageBand:clean(ageBand,30),interests:arr(interests,30),mentorId:mentorId||prior.mentorId||ARCHAEMENES_ID,mentorIdentity:mentorIdentity?clone(mentorIdentity):(prior.mentorIdentity||null),guardianRelease:guardianRelease?clone(guardianRelease):(prior.guardianRelease||null),linkedAdultId:linkedAdultId||prior.linkedAdultId||null,selfDirectedAdult:Boolean(selfDirectedAdult||prior.selfDirectedAdult),accountState:prior.accountState||(selfDirectedAdult?"local-self-managed":"local-parent-managed"),createdAt:prior.createdAt||now(),updatedAt:now()};
     registry.families[familyId].learnerIds=[...new Set([...(registry.families[familyId].learnerIds||[]),learnerId])];
     save(registry);setActive({familyId,learnerId});audit("learner.registered",{familyId,learnerId,stage:placement.stage,grade:placement.grade,selfDirectedAdult:Boolean(selfDirectedAdult),mentorId:ARCHAEMENES_ID});return getLearner(learnerId);
@@ -258,6 +259,12 @@
 
   function grantAdultAccess({registry=null,familyId,adultId,learnerId,permissionPreset="co-guardian",permissions=null,saveAfter=true}={}){
     const r=registry||load();if(!r.families[familyId])throw new Error("family-not-found");if(!r.adults[adultId])throw new Error("adult-not-found");if(!r.learners[learnerId])throw new Error("learner-not-found");
+    // Local access grants may only connect a learner to an adult in the same active family.
+    // This is defense in depth, not server authentication or permission authority.
+    const fam=r.families[familyId], adult=r.adults[adultId], learner=r.learners[learnerId];
+    const membership=r.memberships[`${familyId}:${adultId}`];
+    if(learner.familyId!==familyId||!(fam.learnerIds||[]).includes(learnerId))throw new Error("learner-family-mismatch");
+    if(!(fam.adultIds||[]).includes(adultId)||!(adult.familyIds||[]).includes(familyId)||membership?.status!=="active")throw new Error("adult-family-membership-invalid");
     const preset=PERMISSION_PRESETS[permissionPreset]||PERMISSION_PRESETS["progress-viewer"];
     r.learnerAdultAccess[`${learnerId}:${adultId}`]={familyId,adultId,learnerId,permissionPreset:PERMISSION_PRESETS[permissionPreset]?permissionPreset:"custom",permissions:Array.isArray(permissions)?arr(permissions,30):[...preset.permissions],status:"active",grantedAt:now(),updatedAt:now()};
     if(saveAfter)save(r);audit("access.granted",{familyId,adultId,learnerId,permissionPreset});return clone(r.learnerAdultAccess[`${learnerId}:${adultId}`]);
