@@ -154,7 +154,11 @@ function render(){
   rendering=true;
   try{
   const l=learner();
-  if(!l?.learnerId){host.innerHTML="";return}
+  if(!l?.learnerId){
+    host.innerHTML='<section class="profile-v2-card" role="status"><h2>Select a learner profile</h2><p>No active learner is selected on this device. Open the Family Portal or Student Portal to choose an existing learner before entering the Portfolio Studio.</p><p><a class="profile-v2-btn secondary" href="./">Open Student Portal</a></p></section>';
+    host.dataset.profileUiStatus="learner-required";
+    return;
+  }
   syncContinuationEvidence();
   const rec=record(),lanes=P.classifyContinuations(continuations()),cfg=stagePresentation(l);
   applyWorkspace(rec.workspace);
@@ -225,6 +229,12 @@ function render(){
   }
   set("pv2Collaboration",rec.learningMap.collaboration);set("pv2Theme",rec.workspace.theme);set("pv2Text",rec.workspace.textSize);set("pv2Line",rec.workspace.lineSpacing);set("pv2Width",rec.workspace.readingWidth);set("pv2Contrast",rec.workspace.contrast);set("pv2Density",rec.workspace.density);
   bind();
+  host.dataset.profileUiStatus="ready";
+  }catch(error){
+    // Do not disclose student data or raw exception text in the interface.
+    host.dataset.profileUiStatus="error";
+    host.innerHTML='<section class="profile-v2-card" role="alert"><h2>Portfolio temporarily unavailable</h2><p>Your existing learner records have not been cleared. Return to the Student Portal and try opening the portfolio again.</p><p><a class="profile-v2-btn secondary" href="./">Open Student Portal</a></p></section>';
+    try{global.console?.error?.("Academy portfolio UI render failed",error?.name||"Error")}catch{}
   }finally{rendering=false}
 }
 function value(id){return document.getElementById(id)?.value||""}
