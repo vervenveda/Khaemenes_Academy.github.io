@@ -2,6 +2,7 @@
 
 | Date | Type | Entry | State |
 | --- | --- | --- | --- |
+| 2026-11-18 | repair · regression | [Guest popup and Student Portfolio recovery](logs/2026/11/2026-11-18-guest-popup-and-portfolio-recovery.md) | Guest route and render safeguards committed; browser QA pending |
 | 2026-11-18 | parity · UI repair | [Dual Home parity and Student Profile render re-entry guard](logs/2026/11/2026-11-18-front-desk-parity-and-student-profile-render.md) | Static buttons matched; guard committed; live browser acceptance pending |
 | 2026-11-18 | audit · decision | [Academy Home → Full Academy source handoff](logs/2026/11/2026-11-18-home-to-full-academy-source-handoff.md) | Source verified; browser, deployment and T03 commissioning HOLD |
 | 2026-11-16 | continuity · pre-intake | [Parent pages ↔ Account Cloud Mac intake contract](logs/2026/11/2026-11-16-parent-account-cloud-preintake.md) | Contract committed; T03/live learner import HOLD |
