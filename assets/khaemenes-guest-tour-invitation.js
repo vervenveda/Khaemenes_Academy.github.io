@@ -7,9 +7,10 @@
 if(window.KhaemenesGuestTourInvitation)return;
 const ROOT="https://vervenveda.com/Khaemenes_Academy.github.io/";
 const TOUR=ROOT+"tour/",FAMILY=ROOT+"family/enroll/";
-const AREA=document.body?.dataset?.grade?"grade":/\/family\//.test(location.pathname)?"family":/\/student\//.test(location.pathname)?"student":"academy";
-const thisGrade=Number(document.body?.dataset?.grade||0);
-const labels=new Set(["Edit Profile","Class Progress","Schedule","KlasaiPeer","Yearbook","Creative Tools","Student Portfolio","Customize Background"]);
+const gradeFromPath=location.pathname.match(/\/grades\/grade-(09|10|11|12)\/student-profile(?:\/|$)/);
+const thisGrade=Number(document.body?.dataset?.grade||gradeFromPath?.[1]||0);
+const AREA=[9,10,11,12].includes(thisGrade)?"grade":/\/family\//.test(location.pathname)?"family":/\/student\//.test(location.pathname)?"student":"academy";
+const labels=new Set(["Edit Profile","Student Progress","Class Progress","Schedule","KlasaiPeer","Yearbook","Creative Tools","Student Portfolio","Edit Background","Customize Background"]);
 const make=(tag,cls,txt)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(txt!=null)n.textContent=txt;return n};
 const style=make("style");style.id="khae-guest-tour-invitation-css";style.textContent=`
 #khaeGuestTourDialog{box-sizing:border-box;width:min(550px,calc(100vw - 26px));max-width:550px;max-height:calc(100dvh - 26px);margin:auto;padding:0;overflow:auto;border:2px solid #b48b45;border-radius:7px;background:#fffaf2;color:#243038;box-shadow:0 20px 70px #0008;font:400 16px/1.6 "Brandon Grotesque",Nunito,Arial,sans-serif}
@@ -38,13 +39,26 @@ body.append(make("p","","Our public tour introduces the campuses, sample profile
 const actions=make("div","khae-guest-actions");
 const tour=make("a","","Begin the Academy Tour");tour.href=TOUR;
 const enroll=make("a","khae-guest-secondary","Explore Family Enrollment");enroll.href=FAMILY;
+const selectExisting=make("a","khae-guest-secondary","Select an Existing Student");selectExisting.href=ROOT+"student/";
 const dismiss=make("button","khae-guest-dismiss","Continue Browsing");dismiss.type="button";dismiss.addEventListener("click",()=>dialog.close());
-actions.append(tour,enroll,dismiss);body.append(actions);dialog.append(banner,body);
+actions.append(tour,selectExisting,enroll,dismiss);body.append(actions);dialog.append(banner,body);
 document.body.append(dialog);
 let origin=null;
+let guestPromptShown=false;
 dialog.addEventListener("click",event=>{if(event.target===dialog)dialog.close()});
 dialog.addEventListener("close",()=>{if(origin?.isConnected)origin.focus()});
 function open(feature,trigger){
+ if(guestPromptShown){
+   // Block protected guest actions without reopening the modal on every click.
+   const rail=trigger?.closest?.("#khaeProfileToolRail");
+   if(rail){
+     let notice=rail.querySelector("[data-guest-tools-notice]");
+     if(!notice){notice=make("p","", "Choose an existing Academy learner from the Student Portal to use personal profile tools.");notice.dataset.guestToolsNotice="true";notice.setAttribute("role","status");notice.style.cssText="color:#fff8e9;font-size:16px;text-align:center;padding:10px";rail.append(notice)}
+     notice.focus?.();
+   }
+   return;
+ }
+ guestPromptShown=true;
  origin=trigger||document.activeElement;
  const name=String(feature||"this feature").slice(0,80);
  context.textContent=name+" is a personal learning feature. You can see how it works on the public Academy tour, without using another student's account.";
@@ -56,11 +70,13 @@ function registeredGrade(){
  try{
   const id=JSON.parse(localStorage.getItem("khaemenes_active_learner_v1")||"null");
   const registry=JSON.parse(localStorage.getItem("khaemenes_family_registry_v1")||"null");
+  const fromRegistry=window.KhaemenesFamilyRegistry?.getLearner?.()||null;
   const record=typeof id==="string"?registry?.learners?.[id]:null;
   const active=window.KhaemenesStudentProfileV2?.activeLearner?.();
-  if(!record||record.learnerId!==id||record.stage!=="high")return null;
+  const resolved=(record?.learnerId===id?record:null)||((fromRegistry?.learnerId===id)?fromRegistry:null);
+  if(!resolved||resolved.learnerId!==id||resolved.stage!=="high")return null;
   if(active?.learnerId&&active.learnerId!==id)return null;
-  const n=Number(record.grade);return [9,10,11,12].includes(n)?n:null;
+  const n=Number(resolved.grade);return [9,10,11,12].includes(n)?n:null;
  }catch{return null}
 }
 function hasStudent(){
