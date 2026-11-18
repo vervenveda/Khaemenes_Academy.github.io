@@ -275,7 +275,30 @@ body[data-academy-student-landing] .campus-door:focus-visible{outline:3px solid 
 @media(max-width:520px){body[data-academy-student-landing] .academy-campus-directory{padding:23px 14px}body[data-academy-student-landing] .campus-directory-grid{grid-template-columns:1fr}body[data-academy-student-landing] .campus-door{min-height:195px}}
 @media(prefers-reduced-motion:reduce){body[data-academy-student-landing] .campus-door:hover{transform:none}}
 </style>  <script src="/Khaemenes_Academy.github.io/assets/academy-core-global-standard-v1.js" defer data-academy-core-global-standard="16-33-66-chrome-semantics"></script>
-</head>
+<style id="student-visual-proof-20261118">
+body[data-academy-student-landing] .portal-intro{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;text-align:center!important;gap:20px!important;padding:33px 26px!important;max-width:920px!important}
+body[data-academy-student-landing] .portal-intro>div:first-child{width:100%;max-width:740px;display:flex;align-items:center;flex-direction:column}
+body[data-academy-student-landing] .portal-intro h1{font:400 clamp(33px,5vw,55px)/1.15 var(--formal)!important;text-align:center!important;margin:9px auto 0!important;color:#fff8e9!important}
+body[data-academy-student-landing] .portal-intro>div:first-child>p:not(.eyebrow){font-size:16px!important;line-height:1.65!important;max-width:680px!important;margin:14px auto 0!important;text-align:center!important}
+body[data-academy-student-landing] .portal-intro .eyebrow{text-align:center!important;font-weight:400!important;font-size:16px!important}
+body[data-academy-student-landing] .portal-intro .student-information-desk-actions{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;width:min(100%,580px)!important;max-width:580px!important;flex:0 1 auto!important;align-self:center!important;gap:14px!important;margin:2px auto 0!important}
+body[data-academy-student-landing] .portal-intro .student-information-desk-actions>a{min-height:48px!important;font-weight:400!important;font-size:16px!important}
+body[data-academy-student-landing] .portal-intro .student-tour-action{background:#b48b45!important;border-color:#d3ab5e!important;color:#fff8e9!important;-webkit-text-fill-color:#fff8e9!important;text-shadow:0 1px 1px rgba(0,0,0,.22)!important}
+body[data-academy-student-landing] .portal-intro .student-tour-action:hover{background:#9f7b3f!important;color:#fff8e9!important;-webkit-text-fill-color:#fff8e9!important}
+body[data-academy-student-landing] .portal-intro .student-classroom-action{color:#fff8e9!important;-webkit-text-fill-color:#fff8e9!important}
+body[data-academy-student-landing]>.student-translation-popover{position:relative;z-index:900;width:max-content;max-width:calc(100% - 28px);margin:15px auto 18px;font:400 16px/1.5 var(--body)}
+body[data-academy-student-landing]>.student-translation-popover>summary{list-style:none;display:flex;align-items:center;justify-content:center;gap:12px;min-height:44px;padding:9px 18px;border:1px solid #b9a98b;border-radius:7px;background:#fffdf8;color:#26362f;cursor:pointer}
+body[data-academy-student-landing]>.student-translation-popover>summary::-webkit-details-marker{display:none}
+body[data-academy-student-landing]>.student-translation-popover[open]>summary span{transform:rotate(180deg)}
+body[data-academy-student-landing] .student-translation-panel{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);width:min(700px,calc(100vw - 32px));max-height:65vh;overflow:auto;padding:18px;border:1px solid #c8b795;border-radius:7px;background:#fbf8f0;box-shadow:0 14px 35px rgba(21,35,29,.2);color:#25352f;text-align:center}
+body[data-academy-student-landing] .student-translation-panel h2{font:400 24px/1.3 var(--formal);margin:0 0 8px;color:#25352f}
+body[data-academy-student-landing] .student-translation-panel p{font:400 16px/1.5 var(--body);margin:0 0 10px}
+body[data-academy-student-landing] #studentTranslationControls #vnv-language-switch{display:flex!important;position:static!important;flex-wrap:wrap!important;justify-content:center!important;align-items:center!important;width:100%!important;max-width:100%!important;margin:0!important}
+body[data-academy-student-landing] #studentTranslationControls :is(label,button,select){font-size:16px!important;font-weight:400!important}
+body[data-academy-student-landing]>#vnv-language-switch{display:none!important}
+@media(max-width:580px){body[data-academy-student-landing] .portal-intro{padding:25px 18px!important}body[data-academy-student-landing] .portal-intro .student-information-desk-actions{grid-template-columns:1fr!important;width:min(100%,410px)!important}}
+@media print{body[data-academy-student-landing]>.student-translation-popover{display:none!important}}
+</style></head>
 <style id="student-information-desk-tour-20261107">
 body[data-academy-student-landing] .student-information-desk-actions{display:grid;grid-template-columns:1fr;gap:9px;flex:0 1 250px}
 body[data-academy-student-landing] .portal-intro .student-information-desk-actions>a{display:flex!important;align-items:center!important;justify-content:center!important;box-sizing:border-box!important;min-height:50px!important;width:100%!important;padding:12px 17px!important;border-radius:7px!important;text-align:center!important;text-decoration:none!important;font-size:16px!important;line-height:1.35!important}
@@ -300,6 +323,10 @@ body[data-academy-student-landing] .portal-intro .student-information-desk-actio
 </header>
 
 
+<details class="student-translation-popover" id="studentTranslationPopover">
+<summary>Language &amp; Translation <span aria-hidden="true">⌄</span></summary>
+<div class="student-translation-panel" aria-label="Language and translation settings"><h2>Language &amp; Translation</h2><p>Choose a language or use the Academy translation tools.</p><div id="studentTranslationControls" data-i18n-ignore></div></div>
+</details>
 <main class="section">
   <div class="shell">
     <section class="portal-intro" aria-labelledby="academyStudentTitle">
@@ -603,5 +630,16 @@ document.querySelector('[data-help-tools]')?.addEventListener('click',event=>{
 <script>VNV_HEADER.mount({title:"Student Portal",subtitle:"Khaemenes Academy",icon:"KA",home:"https://vervenveda.com/Khaemenes_Academy.github.io/",replaceLegacy:true,legacySelectors:["header[data-khae-header]"]});</script>
 <script src="https://vervenveda.com/assets/vnv-ecosystem-toolbar.js?v=20261106-profile-idempotent-104"></script>
 <script src="../assets/khaemenes-guest-tour-invitation.js?v=20261106-guest-tour-01"></script>
+<script id="student-translation-controls-rehome-20261118">
+(function(){
+"use strict";
+function moveExisting(){var host=document.getElementById("studentTranslationControls"),existing=document.getElementById("vnv-language-switch");if(host&&existing&&existing.parentElement!==host)host.appendChild(existing)}
+if(document.readyState==="complete")moveExisting();else window.addEventListener("load",moveExisting,{once:true});
+var pop=document.getElementById("studentTranslationPopover");
+if(!pop)return;
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&pop.open){pop.open=false;pop.querySelector("summary").focus()}});
+document.addEventListener("click",function(e){if(pop.open&&!pop.contains(e.target))pop.open=false});
+})();
+</script>
 </body>
 </html>
