@@ -11,6 +11,7 @@ on:
       - 'workflow/inventories/2026-11-20-academy-core-account-cloud-route-matrix.json'
       - 'tests/academy-account-cloud-interface-boundary.test.mjs'
       - 'tests/academy-account-client-session-routes.test.mjs'
+      - 'tests/academy-account-session-view-v2.test.mjs'
       - '.github/workflows/academy-account-cloud-interface-boundary.yml'
   pull_request:
     paths:
@@ -22,6 +23,7 @@ on:
       - 'workflow/inventories/2026-11-20-academy-core-account-cloud-route-matrix.json'
       - 'tests/academy-account-cloud-interface-boundary.test.mjs'
       - 'tests/academy-account-client-session-routes.test.mjs'
+      - 'tests/academy-account-session-view-v2.test.mjs'
       - '.github/workflows/academy-account-cloud-interface-boundary.yml'
   workflow_dispatch:
 permissions:
@@ -35,4 +37,4 @@ jobs:
         with:
           persist-credentials: false
       - name: Verify Academy account boundary and six synthetic session behavior checks
-        run: node --test tests/academy-account-cloud-interface-boundary.test.mjs tests/academy-account-client-session-routes.test.mjs
+        run: node --test tests/academy-account-cloud-interface-boundary.test.mjs tests/academy-account-client-session-routes.test.mjs tests/academy-account-session-view-v2.test.mjs
