@@ -21,12 +21,14 @@
 
   function identifiedStudentDestination({stage=null,grade=null}={}){
     if(stage!=="high")return null;
+    // Accept already registered grades in either numeric or zero-padded form.
+    // This changes routing only; it cannot alter learner placement.
+    const normalized=registry()?.normalizeGrade?.(grade)||
+      (/^(?:9|09|10|11|12)$/.test(String(grade))?String(Number(grade)).padStart(2,"0"):null);
     const base="https://vervenveda.com/Khaemenes_High.github.io";
-    if(grade==="09")return `${base}/grades/grade-09/student-profile/`;
-    if(grade==="10")return `${base}/grades/grade-10/student-profile/`;
-    if(grade==="11")return `${base}/grades/grade-11/student-profile/`;
-    if(grade==="12")return `${base}/grades/grade-12/student-profile/`;
-    return `${base}/`;
+    return ["09","10","11","12"].includes(normalized)
+      ? `${base}/grades/grade-${normalized}/student-profile/`
+      : `${base}/`;
   }
 
   function routeForLearner(learner=activeLearner()){
