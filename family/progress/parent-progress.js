@@ -59,6 +59,17 @@ function show(learner){
  detail.replaceChildren();
  const reports=(C?.readLearner?.(learner.learnerId)||[]).filter(x=>x.learnerId===learner.learnerId);
  const title=make("h2",(learner.nickname||"Learner")+" · Class Progress");detail.append(title);
+ const printControls=make("div");printControls.className="actions print-controls";
+ const printButton=make("button","Print Selected Learner Report");printButton.type="button";
+ printButton.addEventListener("click",()=>{
+   // Recheck permissions immediately before invoking the browser's print dialog.
+   if(!authorized().some(x=>x.learnerId===learner.learnerId)) {render();return}
+   if(selected!==learner.learnerId)return;
+   window.print();
+ });
+ printControls.append(printButton);detail.append(printControls);
+ const printNote=make("p","Locally reported academic summary · Not an official transcript or verified cloud record.");
+ printNote.className="small";detail.append(printNote);
  const note=make("p","Averages use total earned points divided by total possible points. Missing or stale quiz/test scores remain unreported.");
  note.className="small";detail.append(note);
  const grid=make("div");grid.className="grid";
