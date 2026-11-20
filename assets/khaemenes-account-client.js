@@ -1,7 +1,7 @@
 (function attachKhaemenesAccountClient(global){
   "use strict";
 
-  const VERSION="1.0.0";
+  const VERSION="1.0.1";
   const DEFAULT_TIMEOUT_MS=8000;
   const FORBIDDEN_KEYS=/password|passcode|secret|token|otp|verification.?code|recovery.?code|session.?id|cookie|hash|pepper|private.?key|refresh/i;
   let config=Object.freeze({enabled:false,baseUrl:null,timeoutMs:DEFAULT_TIMEOUT_MS});
@@ -70,9 +70,9 @@
       return data;
     }finally{global.clearTimeout(timer)}
   }
-  async function session(){return safeSession(await request("session"))}
+  async function session(){return safeSession(await request("v1/account/session"))}
   async function logout(){
-    await request("logout",{method:"POST",body:{action:"logout"}});
+    await request("v1/account/session",{method:"DELETE"});
     return Object.freeze({authenticated:false});
   }
   function status(){return Object.freeze({version:VERSION,enabled:config.enabled,configured:Boolean(config.baseUrl),transport:config.baseUrl?"https":"none",credentialStorage:"httpOnly-cookie-only",webStorageTokens:false})}
