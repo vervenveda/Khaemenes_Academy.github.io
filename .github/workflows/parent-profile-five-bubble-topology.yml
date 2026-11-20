@@ -1,0 +1,29 @@
+name: Parent Profile Five-Bubble Topology
+on:
+  pull_request:
+    paths:
+      - "family/profile/index.html"
+      - "family/progress/parent-progress.js"
+      - "assets/khaemenes-parent-profile*"
+      - "assets/khaemenes-family-parent-learning-panels-v1.js"
+      - "assets/khaemenes-family-parent-profile-hero.js"
+      - "assets/khaemenes-family-learner-dialog-v1.js"
+      - "tests/parent-profile-topology-five-bubbles.test.mjs"
+      - ".github/workflows/parent-profile-five-bubble-topology.yml"
+  push:
+    paths:
+      - "family/profile/index.html"
+      - "family/progress/parent-progress.js"
+      - "assets/khaemenes-parent-profile*"
+      - "assets/khaemenes-family-parent-learning-panels-v1.js"
+      - "assets/khaemenes-family-parent-profile-hero.js"
+      - "assets/khaemenes-family-learner-dialog-v1.js"
+      - "tests/parent-profile-topology-five-bubbles.test.mjs"
+      - ".github/workflows/parent-profile-five-bubble-topology.yml"
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify Parent Profile five-bubble topology
+        run: node tests/parent-profile-topology-five-bubbles.test.mjs
