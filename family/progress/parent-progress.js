@@ -52,7 +52,17 @@ function readGrades(report){
   const earned=list.reduce((n,x)=>n+x.earned,0),possible=list.reduce((n,x)=>n+x.possible,0);
   return {count:list.length,percent:possible>0?Math.round(1000*earned/possible)/10:null};
  };
- return {overall:summary(null),quizzes:summary("quiz"),tests:summary("test")};
+ const kindOf=item=>{
+  const title=String(item.title||"")+" "+String(item.id||"");
+  if(/\bmid[ -]?term\b/i.test(title))return "midterms";
+  if(/\bfinal(?:\s+exam|\s+assessment)?\b/i.test(title))return "finals";
+  return item.kind==="quiz"?"quizzes":"tests";
+ };
+ const group=kind=>{const part=items.filter(item=>kindOf(item)===kind);
+  const earned=part.reduce((n,item)=>n+item.earned,0),possible=part.reduce((n,item)=>n+item.possible,0);
+  return {count:part.length,percent:possible>0?Math.round(1000*earned/possible)/10:null};
+ };
+ return {overall:summary(null),quizzes:group("quizzes"),tests:group("tests"),midterms:group("midterms"),finals:group("finals")};
 }
 const gradeText=x=>x.percent===null?"Not reported":x.percent+"% ("+x.count+" graded)";
 let selected=null;
@@ -65,7 +75,8 @@ function reportCard(label,report){
  card.append(make("p","Course completion: "+(Number.isFinite(p)&&p>=0&&p<=100?Math.round(p)+"%":"Not reported")));
  const grades=readGrades(report?.stale?null:report);
  card.append(make("p","Quiz/test grade average: "+gradeText(grades.overall)));
- card.append(make("p","Quizzes: "+gradeText(grades.quizzes)+" · Tests: "+gradeText(grades.tests)));
+ card.append(make("p","Quizzes: "+gradeText(grades.quizzes)+" · Other tests: "+gradeText(grades.tests)));
+ card.append(make("p","Midterms: "+gradeText(grades.midterms)+" · Finals: "+gradeText(grades.finals)));
  if(report?.stale)card.append(make("p","The latest course summary is stale. Return to the course to refresh its report."));
  if(report?.nextTitle)card.append(make("p","Next step: "+report.nextTitle));
  if(report?.updatedAt){const date=new Date(report.updatedAt);if(Number.isFinite(date.getTime()))card.append(make("p","Last report: "+date.toLocaleString()));}
