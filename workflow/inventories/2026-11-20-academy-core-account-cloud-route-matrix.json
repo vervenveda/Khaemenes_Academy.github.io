@@ -1,0 +1,95 @@
+{
+  "schema": "academy-core-account-cloud-interface-review-v1",
+  "mode": "SOURCE_ONLY_NO_NETWORK",
+  "academyOnly": true,
+  "cloudReceiver": "KhaemenesAcademy/Account-Cloud.github.io",
+  "sourceProvenanceCallerIsAccountAuthority": false,
+  "parentStudentAuthentication": "HOLD",
+  "verifiedCloudMigration": "HOLD",
+  "stosT03Commissioning": "HOLD",
+  "interfaces": [
+    {
+      "surface": "family/enroll/",
+      "source": "family/enroll/index.html",
+      "currentAuthority": "browser-local-provisional",
+      "futureProtectedContract": "verified-adult-family-claim-and-learner-link",
+      "state": "HOLD",
+      "reason": "No authenticated intake or server identity reconciliation"
+    },
+    {
+      "surface": "family/profile/",
+      "source": "family/profile/index.html",
+      "currentAuthority": "browser-local-selection",
+      "futureProtectedContract": "Wend session plus guardian-scoped family view",
+      "state": "HOLD",
+      "reason": "Local adult selection is not authentication"
+    },
+    {
+      "surface": "family/progress/",
+      "source": "family/progress/parent-progress.js",
+      "currentAuthority": "local-course-evidence-preview",
+      "futureProtectedContract": "authorized provenance-preserving academic read",
+      "state": "HOLD",
+      "reason": "Local grades and attempts are not independently certified"
+    },
+    {
+      "surface": "student/",
+      "source": "student/index.html",
+      "currentAuthority": "browser-local-learner-selection",
+      "futureProtectedContract": "learner-scoped session view",
+      "state": "HOLD",
+      "reason": "No verified protected learner session"
+    },
+    {
+      "surface": "student/profile.html",
+      "source": "student/profile.html",
+      "currentAuthority": "browser-local-profile",
+      "futureProtectedContract": "authorized account profile view",
+      "state": "HOLD",
+      "reason": "Student privacy lock and cross-device auth inactive"
+    }
+  ],
+  "routeCompatibility": [
+    {
+      "operation": "session.read",
+      "academyClient": "GET session",
+      "accountCloudTarget": "GET /v1/account/session",
+      "status": "MAPPING_UNVERIFIED"
+    },
+    {
+      "operation": "session.end",
+      "academyClient": "POST logout",
+      "accountCloudTarget": "DELETE /v1/account/session",
+      "status": "METHOD_AND_PATH_MISMATCH"
+    },
+    {
+      "operation": "family.read",
+      "academyClient": "NOT_EXPOSED",
+      "accountCloudTarget": "GET /v1/account/families/:familyId",
+      "status": "NOT_CONNECTED"
+    },
+    {
+      "operation": "learner.read",
+      "academyClient": "NOT_EXPOSED",
+      "accountCloudTarget": "GET /v1/account/learners/:learnerId",
+      "status": "NOT_CONNECTED"
+    },
+    {
+      "operation": "progress.sync",
+      "academyClient": "NOT_EXPOSED",
+      "accountCloudTarget": "POST /v1/account/sync",
+      "status": "NOT_CONNECTED"
+    }
+  ],
+  "releaseConditions": [
+    "native T03 authority and storage commissioning",
+    "Wend/Klik/Avouch authenticated principal and authorization",
+    "atomic account and learner ID claim/reconciliation",
+    "per-record version and conflict handling",
+    "durable receipts, restart and recovery evidence",
+    "separate family-guardian and student device acceptance"
+  ],
+  "enabled": false,
+  "authorizedWrites": [],
+  "studentRecordsTouched": false
+}
