@@ -39,6 +39,45 @@ function readGrades(report){
 }
 const gradeText=x=>x.percent===null?"Not reported":x.percent+"% ("+x.count+" graded)";
 let selected=null;
+// Middle School homeschool evidence ledger; reported attempts are not certified transcript grades.
+function middleEvidence(record){
+ const section=make("section");section.className="middle-homeschool-ledger";
+ const heading=make("h4","Homeschool Academic Evidence · Middle School");section.append(heading);
+ const intro=make("p","36-week evidence ledger · Latest locally reported assessment attempt, not a certified transcript. A missing result does not mean a score of zero.");
+ intro.className="small";section.append(intro);
+ const assessments=record?.stale?[]:Array.isArray(record?.assessments)?record.assessments:[];
+ const valid=new Map();
+ for(const a of assessments){
+   if(!a||!["quiz","test"].includes(a.kind)||typeof a.id!=="string"||valid.has(a.id)||
+      !Number.isFinite(a.earned)||!Number.isFinite(a.possible)||a.earned<0||a.possible<=0||a.earned>a.possible)continue;
+   valid.set(a.id,a);
+ }
+ const table=make("table");table.className="middle-evidence-table";
+ const head=make("thead"),hr=make("tr");
+ for(const t of ["Assessment","Recorded attempt","Score","Date"]){const th=make("th",t);hr.append(th)}
+ head.append(hr);table.append(head);
+ const body=make("tbody");
+ const makeRow=(label,id,kind)=>{
+   const a=valid.get(id),verified=!!a&&a.kind===kind;
+   const score=verified?Math.round(1000*a.earned/a.possible)/10+"%":"Not reported";
+   const earned=verified?a.earned+" / "+a.possible:"—";
+   const date=verified&&a.gradedAt?String(a.gradedAt).slice(0,10):"—";
+   const tr=make("tr");tr.append(make("td",label),make("td",earned),make("td",score),make("td",date));body.append(tr);
+ };
+ for(let w=1;w<=36;w++){const pad=String(w).padStart(2,"0");makeRow("Week "+pad,"week-"+pad,"quiz")}
+ makeRow("Midterm","midterm","test");makeRow("Final","final","test");
+ table.append(body);section.append(table);
+ const review=record?.stale?{}:record?.evidence||{};
+ const format=value=>typeof value==="boolean"?(value?"Recorded complete":"Not yet recorded complete"):"Not reported";
+ section.append(make("p","Portfolio review: "+format(review.portfolioRecorded)));
+ if(record?.courseId==="middle-grade-08")section.append(make("p","Grade 8 high-school transition review: "+format(review.transitionRecorded)));
+ const complete=record?.progress?.completed,total=record?.progress?.total;
+ const weeks=Number.isInteger(complete)&&total===36?complete+" / 36":"Not reported";
+ section.append(make("p","Weeks meeting the recorded mastery threshold: "+weeks+". This count is separate from the displayed latest assessment attempts."));
+ if(record?.stale)section.append(make("p","Source record is stale; assessment and approval indicators are withheld until refreshed from the matching learner course."));
+ return section;
+}
+
 function reportCard(label,report){
  const card=make("article");card.className="subject";
  card.append(make("h3",label));
@@ -49,6 +88,7 @@ function reportCard(label,report){
  const grades=readGrades(report?.stale?null:report);
  card.append(make("p","Quiz/test grade average: "+gradeText(grades.overall)));
  card.append(make("p","Quizzes: "+gradeText(grades.quizzes)+" · Tests: "+gradeText(grades.tests)));
+ if(report&&/^middle-grade-0[678]$/.test(report.courseId||""))card.append(middleEvidence(report));
  if(report?.stale)card.append(make("p","The latest course summary is stale. Return to the course to refresh its report."));
  if(report?.nextTitle)card.append(make("p","Next step: "+report.nextTitle));
  if(report?.updatedAt){const date=new Date(report.updatedAt);if(Number.isFinite(date.getTime()))card.append(make("p","Last report: "+date.toLocaleString()));}
