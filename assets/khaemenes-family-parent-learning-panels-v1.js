@@ -17,9 +17,10 @@ const profile=l=>{
  return "../";
 };
 const read=k=>{try{return JSON.parse(localStorage.getItem(k)||"null")}catch{return null}};
-function permission(f,learner){
- const id=R.activeIds?.().adultId,adult=id?R.getAdult?.(id):null;
- return !!(adult&&f.adultIds?.includes(adult.adultId)&&R.canAdult?.(adult.adultId,learner.learnerId,"progress.view"));
+function permission(f,learner,scope="progress.view"){
+ const id=R.activeIds?.()?.adultId,adult=id?R.getAdult?.(id):null;
+ return !!(adult&&f?.adultIds?.includes(adult.adultId)&&learner?.familyId===f.familyId&&
+  R.canAdult?.(adult.adultId,learner.learnerId,scope)===true);
 }
 let refreshPending=false;
 function refreshLater(){if(refreshPending)return;refreshPending=true;setTimeout(()=>{refreshPending=false;render()},0)}
@@ -28,12 +29,13 @@ function render(){
  const openPanels=[...root.querySelectorAll("details[open]")].map(x=>x.id);
  if(!f){root.innerHTML='<p class="notice">No selected family is available on this browser. Return to the Parent Portal to choose an existing family; no student data has been changed.</p>';return}
  const learnerCards=learners.map(l=>{
-  const active=l.learnerId===ids.learnerId,ready=!!l.grade;
+  const active=l.learnerId===ids.learnerId,ready=!!l.grade,allowed=permission(f,l,"learner.view");
   const stage=stages[String(l.stage||"").toLowerCase()]||"Learner";
   return '<article class="parent-learning-card"><p class="parent-eyebrow">'+esc(stage)+(active?" · Active":"")+'</p><h3>'+esc(l.nickname||"Learner")+'</h3><p>'+esc(l.grade?"Grade "+String(l.grade):"Placement needs review")+'</p><div class="parent-learning-actions">'+
-   (active?'<span class="active-chip">Active learner</span>':'<button type="button" data-select="'+esc(l.learnerId)+'">Make Active</button>')+
-   (ready?'<a href="'+esc(profile(l))+'" data-open-learner="'+esc(l.learnerId)+'">Open Student Profile</a>':'<a href="../enroll/#existing">Complete Placement</a>')+
-   '<button type="button" data-family-dialog="'+esc(l.learnerId)+'">Family Learning</button><a href="../enroll/#existing">Change Placement</a></div></article>';
+   (allowed?(active?'<span class="active-chip">Active learner</span>':'<button type="button" data-select="'+esc(l.learnerId)+'">Make Active</button>'):'<span>Student profile access not granted</span>')+
+   (allowed?(ready?'<a href="'+esc(profile(l))+'" data-open-learner="'+esc(l.learnerId)+'">Open Student Profile</a>':'<a href="../enroll/#existing">Complete Placement</a>'):'')+
+   '<button type="button" data-family-dialog="'+esc(l.learnerId)+'">Family Learning</button>'+
+   (permission(f,l,"education.manage")?'<a href="../enroll/#existing">Change Placement</a>':'')+'</div></article>';
  }).join("");
  const progressCards=learners.map(l=>{
   if(!permission(f,l))return '<article class="parent-learning-card"><h3>'+esc(l.nickname||"Learner")+'</h3><p>Progress access is not enabled for the selected adult.</p><div class="parent-learning-actions"><button type="button" data-family-dialog="'+esc(l.learnerId)+'">Family Learning</button></div></article>';
@@ -42,9 +44,13 @@ function render(){
    const percent=s?.progress?.percent,valid=!s.stale&&typeof percent==="number"&&Number.isFinite(percent)&&percent>=0&&percent<=100;
    return '<div class="parent-course-row"><strong>'+esc(s.courseTitle||s.courseId||"Course")+'</strong><span>'+esc(s.stale?"Refresh required":valid?Math.round(percent)+"% completion":"Not reported")+'</span></div>';
   }).join("");
-  return '<article class="parent-learning-card"><h3>'+esc(l.nickname||"Learner")+'</h3><p>'+(summary?.courses||snaps.length)+' reported course snapshot(s), not official grades.</p>'+(courses||'<p>No course continuation snapshots on this browser.</p>')+'<div class="parent-learning-actions"><button type="button" data-family-dialog="'+esc(l.learnerId)+'">Family Learning</button><a href="'+esc(profile(l))+'" data-open-learner="'+esc(l.learnerId)+'">Open Student Profile</a></div></article>';
+  return '<article class="parent-learning-card"><h3>'+esc(l.nickname||"Learner")+'</h3><p>'+(summary?.courses||snaps.length)+' reported course snapshot(s), not official grades.</p>'+(courses||'<p>No course continuation snapshots on this browser.</p>')+'<div class="parent-learning-actions"><button type="button" data-family-dialog="'+esc(l.learnerId)+'">Family Learning</button>'+(permission(f,l,"learner.view")?'<a href="'+esc(profile(l))+'" data-open-learner="'+esc(l.learnerId)+'">Open Student Profile</a>':'')+'</div></article>';
  }).join("");
  const daily=learners.filter(l=>permission(f,l)).map(l=>{
+  // Only the Grade 09 daily-report schema is currently verified. Do not
+  // misrepresent it as the Grade 10–12 or elementary report authority.
+  if(String(l.stage)!=="high"||Number(l.grade)!==9)
+   return '<article class="parent-learning-card"><h3>'+esc(l.nickname||"Learner")+'</h3><p>Daily family reporting for this grade is not yet connected to a verified publisher. No daily outcomes are inferred.</p></article>';
   const key="khaemenes-grade09-daily-parent-report-v1:"+encodeURIComponent(l.learnerId),data=read(key);
   const reports=data?.learnerId===l.learnerId&&data.reports&&typeof data.reports==="object"?data.reports:{};
   const last=Object.keys(reports).filter(k=>/^\d{4}-\d{2}-\d{2}$/.test(k)).sort().at(-1),entry=last?reports[last]:null;
@@ -60,18 +66,20 @@ function render(){
  if(location.hash==="#family-progress"||location.hash==="#parent-daily-reports"||location.hash==="#parent-learner-panel"){const p=document.querySelector(location.hash);if(p)p.open=true}
  root.querySelectorAll("[data-family-dialog]").forEach(button=>button.addEventListener("click",()=>{
   const learner=f.learners.find(l=>l.learnerId===button.dataset.familyDialog&&l.familyId===f.familyId);
-  if(!learner)return;
+  if(!learner||!permission(R.getFamily?.(),learner,"learner.view"))return;
   window.KhaemenesFamilyLearnerDialog?.open?.(learner.learnerId,button);
  }));
  root.querySelectorAll("[data-select]").forEach(button=>button.addEventListener("click",()=>{
   const id=button.dataset.select,learner=f.learners.find(l=>l.learnerId===id&&l.familyId===f.familyId);
-  if(!learner)return;
-  try{R.setActive({familyId:f.familyId,adultId:ids.adultId||null,learnerId:id})}catch{button.textContent="Selection could not be saved"}
+  if(!learner||!permission(R.getFamily?.(),learner,"learner.view"))return;
+  const current=R.activeIds?.()||{};
+  try{R.setActive({familyId:f.familyId,adultId:current.adultId||null,learnerId:id})}catch{button.textContent="Selection could not be saved"}
  }));
  root.querySelectorAll("[data-open-learner]").forEach(a=>a.addEventListener("click",event=>{
   const id=a.dataset.openLearner,learner=f.learners.find(l=>l.learnerId===id&&l.familyId===f.familyId);
-  if(!learner){event.preventDefault();return}
-  try{R.setActive({familyId:f.familyId,adultId:ids.adultId||null,learnerId:id})}catch{event.preventDefault();a.textContent="Choose an existing learner in Parent Portal first."}
+  if(!learner||!permission(R.getFamily?.(),learner,"learner.view")){event.preventDefault();return}
+  const current=R.activeIds?.()||{};
+  try{R.setActive({familyId:f.familyId,adultId:current.adultId||null,learnerId:id})}catch{event.preventDefault();a.textContent="Choose an existing learner in Parent Portal first."}
  }));
 }
 window.addEventListener("khaemenes-family-changed",refreshLater);
