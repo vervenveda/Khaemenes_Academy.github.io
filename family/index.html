@@ -298,6 +298,27 @@ body footer.footer .family-footer-links a:focus-visible{outline:3px solid #edcd9
 #academyFamilyCredentialReadiness .family-credential-grid p{font:400 16px/1.55 "Brandon Grotesque",Nunito,Arial,sans-serif;margin:0;color:#243038}
 #academyFamilyCredentialReadiness a{text-decoration:underline;text-underline-offset:3px}
 @media(max-width:700px){#academyFamilyCredentialReadiness .family-credential-grid{grid-template-columns:1fr}#academyFamilyCredentialReadiness{padding:16px!important}}
+</style><style id="academy-family-purpose-accordion-v1">
+.family-hero-wayfinding{max-width:700px;margin:20px auto 0;color:#fff8e9;font-size:18px;line-height:1.6}
+.family-purpose-directory{margin:30px auto 55px;text-align:center;scroll-margin-top:115px}
+.family-purpose-eyebrow{font:400 16px/1.4 Cinzel,Georgia,serif;color:#86663d;margin:0}
+.family-purpose-directory>h2{font:400 clamp(33px,4vw,44px)/1.25 Cinzel,Georgia,serif;color:#202724;margin:8px 0}
+.family-purpose-intro{font:400 18px/1.6 "Brandon Grotesque",Nunito,Arial,sans-serif;color:#3b4d43;max-width:750px;margin:10px auto 22px}
+.family-purpose-stack{display:grid;gap:11px;max-width:1040px;margin:auto}
+.family-purpose-group{border:1px solid #b7a57f;border-radius:7px;overflow:hidden;background:#fffdf8;scroll-margin-top:115px}
+.family-purpose-group>summary{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:3px;min-height:76px;padding:14px 45px 14px 22px;cursor:pointer;position:relative;background:#243038;color:#fff8e9;list-style:none}
+.family-purpose-group>summary::-webkit-details-marker{display:none}
+.family-purpose-group>summary::after{content:"+";position:absolute;right:20px;top:50%;transform:translateY(-50%);font:400 28px/1 "Brandon Grotesque",Nunito,Arial,sans-serif}
+.family-purpose-group[open]>summary::after{content:"−"}
+.family-purpose-group>summary>span:first-child{font:400 clamp(23px,2.5vw,33px)/1.25 Cinzel,Georgia,serif;color:#fff8e9}
+.family-purpose-description{font:400 16px/1.5 "Brandon Grotesque",Nunito,Arial,sans-serif;color:#eee0c7}
+.family-purpose-group>summary:focus-visible{outline:3px solid #b48b45;outline-offset:-3px}
+.family-purpose-content{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;padding:18px;background:#f5f2e9}
+.family-purpose-content>a{display:flex;min-width:0;min-height:86px;flex-direction:column;justify-content:center;align-items:center;gap:5px;padding:14px;border:1px solid #c5b595;border-radius:7px;background:#fffdf8;color:#243038;text-align:center;text-decoration:none}
+.family-purpose-content>a:hover,.family-purpose-content>a:focus-visible{border-color:#b48b45;background:#fdf5e6}
+.family-purpose-content>a>strong{font:400 18px/1.35 Cinzel,Georgia,serif;color:#243038}
+.family-purpose-content>a>span{font:400 16px/1.5 "Brandon Grotesque",Nunito,Arial,sans-serif;color:#435348}
+@media(max-width:650px){.family-purpose-content{grid-template-columns:1fr;padding:12px}.family-purpose-group>summary{min-height:72px;padding:12px 40px 12px 12px}.family-purpose-directory{margin:22px auto 34px}}
 </style></head>
 <body data-i18n-no-online>
 <a class="skip" href="#workspace">Skip to family workspace</a>
@@ -318,23 +339,58 @@ body footer.footer .family-footer-links a:focus-visible{outline:3px solid #edcd9
  <p class="kicker">Khaemenes Academy</p><h1 id="family-hero-title">Family Learning Center</h1>
  <p class="family-hero-subtitle">Your Parent Information Hub</p>
  <p class="family-hero-copy">Find your learners, review available schedules and progress, manage family records, and discover ways to support their education.</p>
- <div class="family-hero-actions"><a href="profile/">My Parent Profile</a><a href="../student/">Student Portal</a><a href="enroll/">Enrollment</a><a href="../">Academy Home</a><a href="https://vervenveda.com/Khaemenes_Higher_Learning.github.io/">Higher Learning</a></div>
+ <p class="family-hero-wayfinding">Choose a section below to find your family tools. Each section opens independently.</p>
  </div>
 </section>
-<nav class="family-hub-quick-nav shell" aria-label="Parent Portal feature directory">
- <a href="profile/"><small>Personal Workspace</small><strong>My Parent Profile</strong><span>Photo, identity &amp; tools</span></a>
- <a href="profile/#parent-learner-panel"><small>Family Learning</small><strong>My Learners</strong><span>Profiles and placement</span></a>
- <a href="profile/#parent-daily-reports"><small>Daily Learning</small><strong>To Do Today</strong><span>Saved family reports</span></a>
- <a href="profile/#family-progress"><small>Academic Overview</small><strong>Course Progress</strong><span>Available course evidence</span></a>
- <a href="#family-records-controls"><small>Records Office</small><strong>Family Backups</strong><span>Save and verify records</span></a>
- <a href="profile/#parentProfileConnectivity"><small>Account Information</small><strong>Family Connectivity</strong><span>Current connection status</span></a>
- <a href="#family-adult-access"><small>Family Administration</small><strong>Adult Access</strong><span>Members and permissions</span></a>
- <a href="../Parent_resources/Transcript_generator_index.html"><small>Academic Documents</small><strong>Transcripts</strong><span>Evidence-based reports</span></a>
- <a href="#khaemenesParentActionCenter"><small>Family Guidance</small><strong>Parent Actions</strong><span>Learning attention</span></a>
- <a href="#khaemenesFamilySupportPlan"><small>Family Planning</small><strong>Support Plan</strong><span>Routines and encouragement</span></a>
- <a href="../Parent_resources/Homeschool_compass_index.html"><small>Learning Resources</small><strong>Homeschool Compass</strong><span>Organize learning</span></a>
- <a href="../adult/"><small>Continuing Education</small><strong>Adult Scholar</strong><span>Independent adult learning</span></a>
-</nav>
+<section class="family-purpose-directory shell" id="family-purpose-directory" aria-labelledby="familyPurposeTitle">
+ <p class="family-purpose-eyebrow">Family Portal · Organized by Purpose</p>
+ <h2 id="familyPurposeTitle">Your Family Workspace</h2>
+ <p class="family-purpose-intro">Four simple sections. Open the one you need; nothing in your family or student records is changed by this directory.</p>
+ <div class="family-purpose-stack">
+  <details class="family-purpose-group" id="family-profile-design">
+   <summary><span>Profile Design</span><span class="family-purpose-description">Personalize your family workspace and learner profiles</span></summary>
+   <div class="family-purpose-content">
+    <a href="profile/"><strong>My Parent Profile</strong><span>Photo, appearance and profile workspace</span></a>
+    <a href="profile/#parent-learner-panel"><strong>My Learners</strong><span>Open the correct learner's profile</span></a>
+    <a href="../adult/"><strong>Adult Scholar Profile</strong><span>Your independent learning workspace</span></a>
+   </div>
+  </details>
+  <details class="family-purpose-group" id="family-enrollment">
+   <summary><span>Enrollment</span><span class="family-purpose-description">Create accounts and choose educational pathways</span></summary>
+   <div class="family-purpose-content">
+    <a href="enroll/"><strong>Family &amp; Learner Enrollment</strong><span>Begin the provisional application or add learners</span></a>
+    <a href="enroll/#existing"><strong>Grade &amp; Placement</strong><span>Review or change a learner's placement</span></a>
+    <a href="../student/"><strong>Student Entry</strong><span>Continue to the selected student's learning portal</span></a>
+    <a href="https://vervenveda.com/Khaemenes_Higher_Learning.github.io/"><strong>Higher Learning</strong><span>Adult and continuing education</span></a>
+    <a href="../tour/"><strong>Academy Tour</strong><span>Explore the learning campuses</span></a>
+   </div>
+  </details>
+  <details class="family-purpose-group" id="family-personal-information">
+   <summary><span>Personal Information</span><span class="family-purpose-description">Account security, connection status, adult permissions</span></summary>
+   <div class="family-purpose-content">
+    <a href="profile/#parentProfileConnectivity"><strong>Family Connectivity</strong><span>Review your current account connection status</span></a>
+    <a href="#academyFamilyCredentialReadiness"><strong>Passcodes &amp; Account Security</strong><span>Read the planned credential and notification protections</span></a>
+    <a href="#family-adult-access"><strong>Adults &amp; Permissions</strong><span>Review family membership and access</span></a>
+    <a href="#family-admin-details"><strong>Manage Family &amp; Records</strong><span>Open the existing local administration tools</span></a>
+   </div>
+  </details>
+  <details class="family-purpose-group" id="family-student-records">
+   <summary><span>Student Records</span><span class="family-purpose-description">Progress, family backups, transcripts and study guidance</span></summary>
+   <div class="family-purpose-content">
+    <a href="profile/#parent-daily-reports"><strong>To Do Today</strong><span>Daily family learning reports</span></a>
+    <a href="profile/#family-progress"><strong>Course Progress</strong><span>Schedules and available course evidence</span></a>
+    <a href="progress/"><strong>Class Progress &amp; Grades</strong><span>Parent overview of current school records</span></a>
+    <a href="#family-records-controls"><strong>Family Backups</strong><span>Download, validate or restore local family identity</span></a>
+    <a href="../Parent_resources/Transcript_generator_index.html"><strong>Transcripts</strong><span>Create reviewed academic documents</span></a>
+    <a href="../Parent_resources/Diploma_generator_index.html"><strong>Diplomas</strong><span>Prepare completion documents from evidence</span></a>
+    <a href="../Parent_resources/Homeschool_compass_index.html"><strong>Homeschool Compass</strong><span>Plan learning at home</span></a>
+    <a href="#khaemenesParentActionCenter"><strong>Parent Action Center</strong><span>Review progress alerts and next steps</span></a>
+    <a href="#khaemenesFamilySupportPlan"><strong>Family Support Plan</strong><span>Study routines and encouragement</span></a>
+    <a href="../mentor/"><strong>Archaemenes</strong><span>Academic mentorship and guidance</span></a>
+   </div>
+  </details>
+ </div>
+</section>
 <section class="family-account-readiness vka-compact-account" id="family-account-readiness" aria-labelledby="familyAccountReadinessTitle">
  <div class="shell">
   <div class="family-compact-intro">
@@ -387,28 +443,6 @@ body footer.footer .family-footer-links a:focus-visible{outline:3px solid #edcd9
 </section>
 
 
-<section class="section family-hub-services" id="family-records" aria-labelledby="familyRecordsHubTitle">
- <div class="shell">
-  <div class="heading"><p class="kicker">Records · Documents · Planning</p><h2 id="familyRecordsHubTitle">Records &amp; Reports</h2><p>Access existing document and family-backup tools. Course grades remain with the school and course that issued them.</p></div>
-  <div class="family-hub-cards">
-   <article><h3>Family Records</h3><p>Back up or restore the family profile with the established verified controls.</p><a href="#family-records-controls">Open Family Backups</a></article>
-   <article><h3>Academic Transcripts</h3><p>Prepare documents from reviewed course records.</p><a href="../Parent_resources/Transcript_generator_index.html">Transcript Generator</a></article>
-   <article><h3>Diplomas</h3><p>Prepare completion documents when the required academic evidence is available.</p><a href="../Parent_resources/Diploma_generator_index.html">Diploma Generator</a></article>
-   <article><h3>Homeschool Compass</h3><p>Organize study plans and family learning resources.</p><a href="../Parent_resources/Homeschool_compass_index.html">Open Homeschool Compass</a></article>
-  </div>
- </div>
-</section>
-<section class="section family-hub-services family-hub-support" id="family-involvement" aria-labelledby="familyInvolvementHubTitle">
- <div class="shell">
-  <div class="heading"><p class="kicker">Support · Celebrate · Participate</p><h2 id="familyInvolvementHubTitle">Parent Involvement</h2><p>Helpful ways to stay engaged without changing grades, academic mastery, or another student's work.</p></div>
-  <div class="family-hub-cards">
-   <article><h3>Parent Action Center</h3><p>Review weekly learning attention and celebrate reported progress.</p><a href="#khaemenesParentActionCenter">Open Parent Actions</a></article>
-   <article><h3>Family Support Plan</h3><p>Plan encouragement, study routines, and family learning conversations.</p><a href="#khaemenesFamilySupportPlan">Open Support Planning</a></article>
-   <article><h3>Archaemenes</h3><p>Find educational mentoring, academic guidance, and study support.</p><a href="../mentor/">Meet Archaemenes</a></article>
-   <article><h3>Academy Tour</h3><p>Find your way through each campus and learning stage.</p><a href="../tour/">Take the Academy Tour</a></article>
-  </div>
- </div>
-</section>
 <section class="section alt" id="family-continuum">
   <div class="shell">
     <div class="heading"><p class="kicker">From early childhood through advanced study</p><h2>Academic Continuum</h2><p>Every learning stage has a direct path through the Academy.</p></div>
