@@ -81,10 +81,34 @@ body #profileStudio > .heading .profile-v2-stage-note{
 }
 body #profileStudio > .heading .profile-v2-stage-note span{font-size:16px!important}
 </style>  <!-- Portfolio uses one explicit VNV chrome initialization below. Do not also load global auto-mounter here. -->
-</head><body data-i18n-no-online>
+<style id="academy-student-privacy-lock-style">
+#academyStudentProfilePrivacyLock{margin:24px 0;padding:22px;background:#fffdf8;border:1px solid #c7b58d;border-radius:7px;color:#263630}
+#academyStudentProfilePrivacyLock .eyebrow{color:#79602e;font:400 16px/1.5 Cinzel,Georgia,serif;margin:0}
+#academyStudentProfilePrivacyLock h2{color:#263630;font:400 clamp(24px,3vw,33px)/1.3 Cinzel,Georgia,serif;margin:6px 0 10px}
+#academyStudentProfilePrivacyLock p,#academyStudentProfilePrivacyLock summary{font:400 16px/1.6 "Brandon Grotesque",Nunito,Arial,sans-serif;color:#263630}
+#academyStudentProfilePrivacyLock .student-privacy-actions{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0}
+#academyStudentProfilePrivacyLock button{flex:1 1 180px;min-height:48px;border:1px solid #9c977d;background:#243038;color:#fff8e9;border-radius:7px;font:400 16px/1.4 "Brandon Grotesque",Nunito,Arial,sans-serif;padding:10px}
+#academyStudentProfilePrivacyLock button:disabled{cursor:not-allowed;opacity:.7}
+#academyStudentProfilePrivacyLock .student-privacy-state{padding:12px 15px;background:#f7eedc;border-left:4px solid #b48b45;border-radius:7px}
+#academyStudentProfilePrivacyLock details{margin-top:14px;padding:12px;border:1px solid #c7b58d;border-radius:7px}
+#academyStudentProfilePrivacyLock summary{cursor:pointer}
+@media(max-width:560px){#academyStudentProfilePrivacyLock{padding:16px}#academyStudentProfilePrivacyLock button{flex-basis:100%}}
+</style></head><body data-i18n-no-online>
 <header data-khae-header><div class="shell nav" data-khae-header-inner><a class="brand" data-khae-brand href="../"><span class="mark" data-khae-brand-mark>KA</span><span data-khae-brand-name>Khaemenes Academy</span></a><nav class="navlinks" data-khae-nav aria-label="Student navigation"><a href="./">Student Portal</a><a href="../">Academy Home</a><a href="../family/">Family Hub</a></nav><div data-khae-actions><a data-khae-secondary href="../family/" data-academy-direct-profile>My Profile</a></div><div data-vnv-ecosystem-slot aria-label="Ecosystem menu"></div></div></header>
 <section class="mast"><div class="shell"><div class="eyebrow">Khaemenes Academy · Learning Portfolio</div><h1>Learning Reflections &amp; Portfolio</h1><p>A space for learning goals, reflections, and portfolio notes. Your personal Student Profile is available through the ecosystem Profile button.</p><nav class="toolbar" aria-label="Learning portfolio shortcuts"><a href="#profileStudio">Open Portfolio Studio</a><a href="./">Student Portal</a></nav></div></section>
-<main class="shell"><div id="profileStudio" data-portfolio-only="true" tabindex="-1" aria-label="Student portfolio and learning evidence studio"></div><section class="card"><h2>Find your next learning step</h2><p>Return to the Student Portal to open your classes, pinned subjects, and continuation links. Your profile preferences and evidence are separate from graded course records.</p><div class="profile-links"><a class="button" href="./">Open Student Portal →</a><a class="button" href="../">Explore Academy →</a></div></section></main>
+<main class="shell"><section id="academyStudentProfilePrivacyLock" class="student-profile-privacy-lock" aria-labelledby="academyStudentProfilePrivacyTitle">
+ <div class="student-privacy-head"><p class="eyebrow">Optional Student Privacy</p><h2 id="academyStudentProfilePrivacyTitle">Personal Profile Lock</h2><p>Choose whether your personal student profile requires an extra unlock step after protected account sign-in becomes available. Lessons and free public learning remain accessible independently of this optional profile setting.</p></div>
+ <div class="student-privacy-actions" role="group" aria-label="Profile lock availability">
+  <button type="button" disabled aria-disabled="true" title="Requires verified secure account sign-in">Enable Profile Lock</button>
+  <button type="button" disabled aria-disabled="true" title="Requires verified secure account sign-in">Unlock My Profile</button>
+  <button type="button" disabled aria-disabled="true" title="Requires verified secure account sign-in">Turn Off Profile Lock</button>
+ </div>
+ <p class="student-privacy-state" role="status"><strong>Not activated:</strong> Secure passcode verification is not yet connected. These options are inactive until the approved credential service is commissioned. No passcode is requested or stored in this browser.</p>
+ <details><summary>How the optional lock will work</summary>
+  <p>After secure sign-in is active, choose Enable Profile Lock, confirm the current verified student credential and save the preference through the protected account authority. Lock your personal workspace whenever you choose; unlock with protected verification. Turn the lock off after re-authentication. A parent cannot gain administrator access through a student credential. Reset and security notices follow the Academy's protected account policy.</p>
+  <p>Private information must remain protected by server authorization even when this optional screen lock is disabled. Public lessons and student-owned course progression should not depend on a visual overlay.</p>
+ </details>
+</section><div id="profileStudio" data-portfolio-only="true" tabindex="-1" aria-label="Student portfolio and learning evidence studio"></div><section class="card"><h2>Find your next learning step</h2><p>Return to the Student Portal to open your classes, pinned subjects, and continuation links. Your profile preferences and evidence are separate from graded course records.</p><div class="profile-links"><a class="button" href="./">Open Student Portal →</a><a class="button" href="../">Explore Academy →</a></div></section></main>
 <footer>Khaemenes Academy · Verve N Veda · Learning Portfolio</footer>
 <script src="../assets/khaemenes-family-registry.js"></script><script src="../assets/khaemenes-learner-context.js"></script><script src="../assets/khaemenes-learning-continuation.js"></script><script src="../assets/khaemenes-front-door-router.js"></script><script src="../assets/khaemenes-student-profile-v2.js"></script><script src="../assets/khaemenes-student-quick-pins-v1.js"></script>
 <script src="../assets/khaemenes-student-profile-ui-v2.js"></script><script src="../assets/vnv-language.js" defer></script>
