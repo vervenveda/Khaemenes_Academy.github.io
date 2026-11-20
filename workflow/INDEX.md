@@ -2,6 +2,7 @@
 
 | Date | Type | Entry | State |
 | --- | --- | --- | --- |
+| 2026-11-20 | security UX · follow-up | [Optional Student Profile privacy lock](logs/2026/11/2026-11-20-optional-student-profile-privacy-lock.md) | Disabled controls committed; protected lock/unlock and live QA HOLD |
 | 2026-11-20 | audit · UI refactor | [Family Portal purpose-based charcoal accordions](logs/2026/11/2026-11-20-family-portal-purpose-accordion-navigation.md) | Source committed and static checks PASS; live browser QA HOLD |
 | 2026-11-20 | audit · decision · follow-up | [Student passcodes and cross-device account access](logs/2026/11/2026-11-20-student-passcodes-and-cross-device-account-access.md) | Historical lengths provisional; protected credential/T03 integration HOLD |
 | 2026-11-18 | repair · regression | [Guest popup and Student Portfolio recovery](logs/2026/11/2026-11-18-guest-popup-and-portfolio-recovery.md) | Guest route and render safeguards committed; browser QA pending |
