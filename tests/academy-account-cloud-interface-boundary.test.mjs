@@ -13,17 +13,17 @@ test('Academy-only Account Cloud matrix does not authorize runtime operation',()
  assert.equal(m.interfaces.length,5);
  assert.ok(m.interfaces.every(x=>x.state==='HOLD'));
 });
-test('current browser account client remains disabled and cookie based',()=>{
+test('browser client session routes are source-aligned while client remains disabled and cookie based',()=>{
  const s=read('assets/khaemenes-account-client.js');
  assert.match(s,/enabled:false,baseUrl:null/);
  assert.match(s,/credentials:"include"/);
  assert.match(s,/async function session\(\)/);
- assert.match(s,/request\("session"\)/);
- assert.match(s,/request\("logout",\{method:"POST"/);
+ assert.match(s,/request\("v1\/account\/session"\)/);
+ assert.match(s,/request\("v1\/account\/session",\{method:"DELETE"\}/);
  const session=m.routeCompatibility.find(x=>x.operation==='session.read');
  const logout=m.routeCompatibility.find(x=>x.operation==='session.end');
- assert.equal(session.status,'MAPPING_UNVERIFIED');
- assert.equal(logout.status,'METHOD_AND_PATH_MISMATCH');
+ assert.equal(session.status,'SOURCE_ALIGNED_RUNTIME_UNVERIFIED');
+ assert.equal(logout.status,'SOURCE_ALIGNED_RUNTIME_UNVERIFIED');
 });
 test('local family identity explicitly cannot be represented as protected authority',()=>{
  const registry=read('assets/khaemenes-family-registry.js');
