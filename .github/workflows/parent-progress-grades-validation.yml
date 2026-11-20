@@ -1,7 +1,7 @@
 name: Parent Progress and Grades Validation
 on:
   push:
-    branches: [main]
+    branches: [main, repair/parent-progress-print-learner-isolation-20261120]
     paths:
       - "family/progress/**"
       - "family/index.html"
