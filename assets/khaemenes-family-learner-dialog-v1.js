@@ -42,7 +42,7 @@
   const registry=R(),family=registry?.getFamily?.(),active=registry?.activeIds?.()||{},adult=registry?.getAdult?.(active.adultId);
   const learner=family?.learners?.find(l=>l?.learnerId===id&&l.familyId===family.familyId&&!l.selfDirectedAdult);
   const member=!!(family&&adult&&family.adultIds?.includes(adult.adultId)&&learner);
-  return {registry,family,active,adult,learner,member,view:member&&registry.canAdult?.(adult.adultId,id,"progress.view")===true,
+  return {registry,family,active,adult,learner,member,learnerView:member&&registry.canAdult?.(adult.adultId,id,"learner.view")===true,view:member&&registry.canAdult?.(adult.adultId,id,"progress.view")===true,
    manage:member&&registry.canAdult?.(adult.adultId,id,"education.manage")===true};
  }
  const make=(tag,text,className)=>{const el=d.createElement(tag);if(text!==undefined)el.textContent=text;if(className)el.className=className;return el};
@@ -65,13 +65,15 @@
   const meta=make("p",(x.learner.stage||"Learner")+" · "+(x.learner.grade?"Grade "+x.learner.grade:"Placement not recorded"));
   body.append(meta);
   const nav=make("div",undefined,"ka-modal-actions");
-  const student=action(nav,"Open Student Profile",studentUrl(x.learner));
-  student.addEventListener("click",event=>{
-   const curr=context(id);if(!curr.member){event.preventDefault();return}
+  if(x.learnerView){
+   const student=action(nav,"Open Student Profile",studentUrl(x.learner));
+   student.addEventListener("click",event=>{
+   const curr=context(id);if(!curr.learnerView){event.preventDefault();return}
    // Existing local selection only; this is not proof of authentication.
    try{curr.registry.setActive({familyId:curr.family.familyId,adultId:curr.adult.adultId,learnerId:id})}
    catch{event.preventDefault()}
-  });
+   });
+  }
   action(nav,"Family Records & Backup","../#family-records-controls");
   if(x.learner.stage==="kindergarten"){
    const intro=make("p","Kindergarten · Family Daily Plan. Choose up to six playful activities. This supports participation, not formal lesson mastery.");body.append(intro);
