@@ -2,6 +2,7 @@
 
 | Date | Type | Entry | State |
 | --- | --- | --- | --- |
+| 2026-11-20 | repair · CI | [Account Client session and logout v2 route alignment](logs/2026/11/2026-11-20-account-client-v2-session-route-alignment.md) | 11 source/mock tests PASS, CI 44833914667; client disabled, STOS T03 HOLD |
 | 2026-11-20 | forensic account-boundary audit · test | [Academy Core parent–student Account Cloud interface audit](logs/2026/11/2026-11-20-academy-core-parent-student-account-cloud-audit.md) / [route compatibility matrix](../workflow/inventories/2026-11-20-academy-core-account-cloud-route-matrix.json) | Five release gates HOLD, session route/method mismatch confirmed; five source boundary tests PASS (CI 44833383273); protected integration HOLD |
 | 2026-11-20 | audit · registration inventory | [Three-month family, adult and student census](logs/2026/11/2026-11-20-three-month-registration-census.md) | Read-only source committed; browser scan NOT RUN, system-wide count unknown |
 | 2026-11-20 | setup · testing | [Repository-owned local tests and Mac preflight](logs/2026/11/2026-11-20-repository-local-test-folder-setup.md) | Test-folder source committed; Mac execution and product tests NOT RUN |
