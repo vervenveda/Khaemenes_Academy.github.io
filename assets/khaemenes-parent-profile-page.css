@@ -2,8 +2,7 @@
 :root{--ink:#202724;--gold:#b48b45;--paper:#f4efe6;--cream:#fff8e9;font-family:Nunito,"Avenir Next",Arial,sans-serif;font-size:18px;color:var(--ink);background:var(--paper)}
 *{box-sizing:border-box}body{margin:0;min-width:300px;overflow-x:hidden}a{color:inherit}a:focus-visible,button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
 .skip{position:absolute;left:-9999px}.skip:focus{left:12px;top:12px;z-index:100;background:white;padding:12px}
-header{background:#202724;color:var(--cream);border-bottom:3px solid var(--gold);padding:28px 16px;text-align:center}
-header p{margin:6px auto;max-width:740px}h1,h2,h3{font-family:Cinzel,Georgia,serif;font-weight:400}
+/* Official VNV header is solely owned by the universal header module. */h1,h2,h3{font-family:Cinzel,Georgia,serif;font-weight:400}
 h1{font-size:clamp(33px,5vw,55px);margin:8px 0}h2{font-size:24px}
 .mainnav{display:flex;flex-wrap:wrap;justify-content:center;gap:9px;padding:18px;background:#fffaf0;border-bottom:1px solid var(--gold)}
 .mainnav a,.navcard a{display:inline-flex;align-items:center;justify-content:center;min-height:48px;text-align:center;padding:10px 17px;border:1px solid #202724;border-radius:7px;background:#202724;color:var(--cream);text-decoration:none;font-size:16px}
