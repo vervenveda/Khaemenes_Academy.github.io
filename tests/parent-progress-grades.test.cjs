@@ -48,6 +48,22 @@ assert.equal(api.readLearner("fixture-two").length,0);
 api.publish({learnerId:"fixture-one",courseId:"science-9"});
 rows=api.readLearner("fixture-one");
 assert.equal(rows.find(x=>x.courseId==="science-9").assessments.length,0);
+
+api.publish({learnerId:"fixture-one",courseId:"middle-grade-08",stage:"middle",grade:"Eighth Grade",
+ progress:{completed:22,total:36,percent:61},
+ assessments:[{id:"week-01",kind:"quiz",earned:17,possible:20,gradedAt:"2026-11-20T18:00:00Z"},
+ {id:"midterm",kind:"test",earned:32,possible:40}],
+ evidence:{portfolioRecorded:true,transitionRecorded:false}});
+const middle=api.readCourse("fixture-one","middle-grade-08");
+assert.equal(middle.evidence.portfolioRecorded,true);
+assert.equal(middle.evidence.transitionRecorded,false);
+assert.equal(middle.assessments.length,2);
+assert.equal(api.readCourse("fixture-two","middle-grade-08"),null);
+api.publish({learnerId:"fixture-two",courseId:"middle-grade-07",evidence:{portfolioRecorded:"true",transitionRecorded:1}});
+const unknown=api.readCourse("fixture-two","middle-grade-07");
+assert.equal(unknown.evidence.portfolioRecorded,null,"String approvals may not become verified booleans");
+assert.equal(unknown.evidence.transitionRecorded,null,"Numeric approvals must be rejected");
+
 console.log("PASS parent progress permission source guards + explicit grade-item normalization with isolated synthetic records");
 
 
@@ -76,7 +92,12 @@ const family={adults:[{adultId:"adult-1"}],learners:[
 const uiWindow={
  KhaemenesFamilyRegistry:{getFamily:()=>family,getAdult:()=>adultId?{adultId}:null,
   canAdult:(a,l,p)=>a===adultId&&p==="progress.view"&&allowed.has(l)},
- KhaemenesLearningContinuation:{readLearner:id=>{readIds.push(id);return [{learnerId:id,courseId:"middle-grade-07",courseTitle:"Middle School",progress:{percent:12},assessments:[]}]}},
+ KhaemenesLearningContinuation:{readLearner:id=>{readIds.push(id);return [{
+  learnerId:id,courseId:id==="child-b"?"middle-grade-08":"middle-grade-07",
+  courseTitle:"Middle School",progress:{completed:12,total:36,percent:33},
+  assessments:id==="child-b"?[{id:"week-01",kind:"quiz",earned:18,possible:20,gradedAt:"2026-11-20T18:00:00Z"},{id:"midterm",kind:"test",earned:32,possible:40}]:[],
+  evidence:id==="child-b"?{portfolioRecorded:true,transitionRecorded:false}:{portfolioRecorded:false,transitionRecorded:null}
+ }]}},
  addEventListener:()=>{},print:()=>printed++};
 vm.runInNewContext(parent,{window:uiWindow,document,Date,console});
 const controls=nodes.parentProgressLearners,detail=nodes.parentProgressDetail;
@@ -85,8 +106,19 @@ assert.equal(nodes.parentProgressWorkspace.hidden,false);
 assert.equal(readIds.at(-1),"child-a");
 let btn=detail.children.find(x=>x.className==="actions print-controls").children[0];
 btn.click();assert.equal(printed,1);
+
 controls.children[1].click();
 assert.equal(readIds.at(-1),"child-b");
+const walk=node=>[node,...(node.children||[]).flatMap(walk)];
+const texts=walk(detail).map(node=>node.textContent).filter(Boolean);
+assert(texts.includes("Week 01"),"Homeschool ledger must have 36 weekly lines");
+assert(texts.includes("Week 36"),"Homeschool ledger must include the final week");
+assert(texts.includes("Midterm")&&texts.includes("Final"),"Ledger must include both cumulative exams");
+assert(texts.includes("18 / 20")&&texts.includes("32 / 40"),"Ledger must print exact recorded points");
+assert(texts.includes("Grade 8 high-school transition review: Not yet recorded complete"),"Pending Grade 8 transition must be explicit");
+assert(texts.includes("Portfolio review: Recorded complete"),"Adult review flag must be shown as local status");
+assert(texts.includes("Not reported"),"Missing results must never become zeros");
+
 btn=detail.children.find(x=>x.className==="actions print-controls").children[0];
 btn.click();assert.equal(printed,2);
 allowed=new Set(["child-a"]);btn.click();assert.equal(printed,2,"Revoked access must not open print");
