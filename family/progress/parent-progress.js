@@ -8,16 +8,33 @@ const workspace=document.getElementById("parentProgressWorkspace");
 const controls=document.getElementById("parentProgressLearners");
 const detail=document.getElementById("parentProgressDetail");
 const make=(tag,content)=>{const node=document.createElement(tag);if(content!==undefined)node.textContent=content;return node};
-const SUBJECTS=[
- ["Mathematics",/^pre-algebra$|^algebra-1$/],
- ["Language Arts",/^english-9$/],
- ["Science",/^integrated-science-9$/],
- ["Social Studies",/^global-studies-9$/],
- ["PE / Health",/^physical-education-9$/],
- ["Psychology / Life Skills",/^psychology-101$/],
- ["Foreign Language",/^world-language-9-/],
- ["Elective",/^elective-9$/]
-];
+// All High School grades share the eight-subject model. Keep this
+// parent presentation read-only; course placement and credit are external.
+function subjectGroups(grade){
+ const g=Number(grade);
+ if(!Number.isInteger(g)||g<9||g>12)return null;
+ const ids=g===9?{
+  math:/^(?:pre-algebra|algebra-1)$/,english:/^english-9$/,
+  science:/^integrated-science-9$/,social:/^global-studies-9$/,
+  pe:/^physical-education-9$/,psych:/^psychology-101$/,
+  language:/^world-language-9-/,elective:/^elective-9$/
+ }:{
+  math:g===10?/^(?:algebra-1|geometry)$/:g===11?/^geometry$/:/^algebra-2$/,
+  english:new RegExp("^english-"+g+"$"),
+  science:new RegExp("^"+({10:"biology-10",11:"chemistry-11",12:"physics-engineering-12"}[g])+"$"),
+  social:new RegExp("^social-studies-"+g+"$"),
+  pe:new RegExp("^physical-education-"+g+"$"),
+  psych:new RegExp("^life-skills-"+g+"$"),
+  language:new RegExp("^world-language-"+g+"(?:-|$)"),
+  elective:new RegExp("^elective-"+g+"$")
+ };
+ return [
+  ["Mathematics",ids.math],["Language Arts",ids.english],
+  ["Science",ids.science],["Social Studies",ids.social],
+  ["PE / Health",ids.pe],["Psychology / Life Skills",ids.psych],
+  ["Foreign Language",ids.language],["Elective",ids.elective]
+ ];
+}
 function authorized(){
  const family=R?.getFamily?.(),adult=R?.getAdult?.();
  if(!family||!adult||!Array.isArray(family.learners)||!family.adults?.some(a=>a.adultId===adult.adultId))return [];
@@ -62,11 +79,19 @@ function show(learner){
  const note=make("p","Averages use total earned points divided by total possible points. Missing or stale quiz/test scores remain unreported.");
  note.className="small";detail.append(note);
  const grid=make("div");grid.className="grid";
- const grade=String(learner.grade||"").replace(/^0/,"");
- if(grade==="9"){
-  for(const [label,pattern] of SUBJECTS){
-   const report=reports.filter(x=>pattern.test(x.courseId)).sort((a,b)=>String(b.updatedAt||"").localeCompare(String(a.updatedAt||"")))[0]||null;
+ const groups=subjectGroups(learner.grade);
+ if(groups){
+  const matched=new Set();
+  for(const [label,pattern] of groups){
+   const choices=reports.filter(x=>pattern.test(x.courseId));
+   const report=choices.sort((a,b)=>String(b.updatedAt||"").localeCompare(String(a.updatedAt||"")))[0]||null;
+   choices.forEach(x=>matched.add(x.courseId));
    grid.append(reportCard(label,report));
+  }
+  // Surface verified extra grade-tagged course evidence rather than hiding it.
+  for(const report of reports){
+   if(matched.has(report.courseId)||String(Number(report.grade))!==String(Number(learner.grade)))continue;
+   grid.append(reportCard(report.subject||report.courseTitle||"Additional course",report));
   }
  }else{
   if(!reports.length)grid.append(make("p","No course reports have reached this browser for this learner."));
