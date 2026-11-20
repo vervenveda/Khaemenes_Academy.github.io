@@ -19,6 +19,22 @@ button,.action{display:inline-flex;justify-content:center;align-items:center;min
 button[aria-pressed="true"]{background:#e7d7b6;color:var(--charcoal)}.actions{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin:18px auto}
 .small{color:#45554c;font-size:16px}a:focus-visible,button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
 [hidden]{display:none!important}
+@media print{
+  @page{margin:14mm}
+  body{background:#fff;color:#243038;font-size:11pt;text-align:left}
+  header,footer,nav,.actions,#parentProgressStatus,#parentProgressLearners,.print-controls{display:none!important}
+  main{max-width:none;padding:0;margin:0}
+  .card{background:#fff;border:0;padding:0;margin:0 0 14px}
+  .note{border-left:2px solid #a78a58;padding:8px 12px}
+  #parentProgressWorkspace{display:block!important}
+  #parentProgressWorkspace>h2{display:none}
+  #parentProgressDetail h2{font-size:20pt;margin:0 0 8px}
+  .grid{display:block}
+  .subject{background:#fff;border:1px solid #bbb;border-radius:0;padding:12px;margin:0 0 10px;break-inside:avoid;page-break-inside:avoid}
+  .subject h3{font-size:14pt}
+  .subject p{font-size:10pt}
+  .small{font-size:9pt}
+}
 </style>
 </head>
 <body>
