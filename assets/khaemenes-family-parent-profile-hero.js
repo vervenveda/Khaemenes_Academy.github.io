@@ -28,57 +28,9 @@ function appearance(id){
 function nameFor(a,look){return look.displayName||a?.displayName||"Parent / Guardian"}
 function initials(name){return name.trim().split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join("").toUpperCase()||"P"}
 function validPhoto(id){const x=id?read(photoKey(id)):null;return typeof x==="string"&&/^data:image\/jpeg;base64,/.test(x)&&x.length<400000?x:null}
-function styleOnce(){
- if(byId("khaeFamilyParentHeroStyle"))return;
- const s=d.createElement("style");s.id="khaeFamilyParentHeroStyle";
- s.textContent=`
-#${ID}{--kph-ink:#202724;--kph-cream:#fff8e9;--kph-paper:#fffaf0;--kph-gold:#b48b45;box-sizing:border-box;padding:32px 16px 24px;background:#f4efe6;color:#202724;scroll-margin-top:105px}
-#${ID} *,#${ID} *::before,#${ID} *::after{box-sizing:border-box}
-#${ID} .kph-shell{width:min(100%,940px);margin:0 auto}
-#${ID} .kph-intro{text-align:center;margin:0 auto 18px;max-width:800px}
-#${ID} .kph-intro p{margin:0;font:400 18px/1.55 Nunito,Arial,sans-serif}
-#${ID} .kph-instructions{margin:8px auto 0!important;max-width:690px;color:#46534a;font-size:16px!important}
-#${ID} .kph-identity{display:grid;grid-template-columns:126px minmax(0,1fr);align-items:center;gap:19px;min-height:160px;padding:19px 23px;border:1px solid #b48b45;border-radius:7px 7px 0 0;background:#315c49;color:#fff8e9}
-#${ID} .kph-identity[data-background=charcoal]{background:#202724}
-#${ID} .kph-identity[data-background=navy]{background:#263858}
-#${ID} .kph-identity[data-background=burgundy]{background:#643044}
-#${ID} .kph-identity[data-background=gold]{background:#a47f2f;color:#202724}
-#${ID} .kph-identity[data-background=gold] .kph-detail{color:#202724}
-#${ID} .kph-avatar{width:116px;height:116px;display:grid;place-items:center;overflow:hidden;background:#f5e0ad;color:#202724;border:2px solid #b48b45;border-radius:50%;font:400 40px/1 Cinzel,Georgia,serif}
-#${ID} .kph-avatar img{width:100%;height:100%;object-fit:cover}
-#${ID} .kph-avatar[data-shape=oval]{height:124px;width:102px;border-radius:50%}
-#${ID} .kph-avatar[data-shape=square]{border-radius:7px}
-#${ID} .kph-avatar[data-shape=rectangle]{border-radius:7px;width:170px;height:113px}
-#${ID} .kph-avatar[data-shape=semicircle]{border-radius:0;clip-path:polygon(0 100%,0 50%,4% 31%,15% 15%,31% 4%,50% 0,69% 4%,85% 15%,96% 31%,100% 50%,100% 100%)}
-#${ID} .kph-avatar[data-shape=rhombus]{border-radius:0;clip-path:polygon(50% 0%,100% 50%,50% 100%,0 50%)}
-#${ID} .kph-avatar[data-shape=kite]{border-radius:0;clip-path:polygon(50% 0%,100% 32%,50% 100%,0 32%)}
-#${ID} .kph-avatar[data-shape=heart]{border-radius:0;clip-path:polygon(50% 94%,10% 57%,4% 28%,20% 7%,50% 26%,80% 7%,96% 28%,90% 57%)}
-#${ID} .kph-avatar[data-shape=star]{border-radius:0;clip-path:polygon(50% 0%,63% 34%,98% 36%,71% 58%,80% 94%,50% 75%,20% 94%,29% 58%,2% 36%,37% 34%)}
-#${ID} .kph-avatar[data-shape=octagon]{border-radius:0;clip-path:polygon(30% 0%,70% 0%,100% 30%,100% 70%,70% 100%,30% 100%,0% 70%,0% 30%)}
-#${ID} .kph-name{margin:0 0 6px;font:400 clamp(25px,3vw,33px)/1.25 Cinzel,Georgia,serif;overflow-wrap:anywhere}
-#${ID} .kph-detail{font:400 18px/1.5 Nunito,Arial,sans-serif;color:#fff8e9;margin:0}
-#${ID} .kph-rail{padding:17px;background:#f9f5eb;border:1px solid #b48b45;border-top:0;border-radius:0 0 7px 7px}
-#${ID} .kph-tools-title{margin:0 0 12px;text-align:center;font:400 24px/1.35 Cinzel,Georgia,serif;color:#202724}
-#${ID} .kph-tools{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-#${ID} .kph-tool{display:flex;align-items:center;justify-content:center;min-height:56px;min-width:0;padding:10px 9px;border:1px solid #b48b45;border-radius:7px;background:#202724;color:#fff8e9;-webkit-text-fill-color:#fff8e9;text-decoration:none;text-align:center;font:400 16px/1.35 Nunito,Arial,sans-serif;cursor:pointer}
-#${ID} .kph-tool:hover{background:#35433c}
-#${ID} .kph-tool:focus-visible{outline:3px solid #b48b45;outline-offset:2px}
-#${ID} .kph-note{text-align:center;margin:13px 0 0;font:400 16px/1.5 Nunito,Arial,sans-serif;color:#34473c}
-#kphParentDialog{width:min(94vw,600px);max-height:85vh;overflow:auto;margin:auto;padding:25px;border:1px solid #b48b45;border-radius:7px;background:#fffaf0;color:#202724}
-#kphParentDialog::backdrop{background:#111c19b3}
-#kphParentDialog h2{margin:0 0 14px;font:400 33px/1.3 Cinzel,Georgia,serif}
-#kphParentDialog p,#kphParentDialog label,#kphParentDialog .kph-status{font:400 18px/1.5 Nunito,Arial,sans-serif}
-#kphParentDialog .kph-field{display:grid;gap:7px;margin:13px 0}
-#kphParentDialog input:not([type=file]),#kphParentDialog select{width:100%;min-height:48px;border:1px solid #8b918c;border-radius:7px;padding:9px;background:#fff;color:#202724;font:400 18px Nunito,Arial,sans-serif}
-#kphParentDialog input[type=file]{width:100%;font:400 18px Nunito,Arial,sans-serif}
-#kphParentDialog .kph-buttons{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
-#kphParentDialog button{min-height:48px;padding:9px 16px;border:1px solid #202724;border-radius:7px;background:#202724;color:#fff8e9;font:400 16px/1.4 Nunito,Arial,sans-serif;cursor:pointer}
-#kphParentDialog button.kph-secondary{background:#fffaf0;color:#202724}
-#kphParentDialog button:focus-visible{outline:3px solid #b48b45;outline-offset:2px}
-@media(max-width:650px){#${ID} .kph-tools{grid-template-columns:repeat(2,minmax(0,1fr))}#${ID} .kph-identity{grid-template-columns:1fr;justify-items:center;text-align:center}#${ID} .kph-intro p{font-size:18px}}
-`;
- d.head.append(s)
-}
+// The parent hero's presentation is owned by khaemenes-parent-profile-page.css.
+function styleOnce(){return}
+
 const features=[
  ["Edit Display Name", "edit"],
  ["Schedules & Progress", "#family-progress"],
