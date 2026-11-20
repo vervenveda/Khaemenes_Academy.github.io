@@ -74,3 +74,10 @@ This is a planning and evidence log, **not** a declaration that passcode-based s
 - Private source contract: `KhaemenesAcademy/Account-Cloud.github.io/contracts/CREDENTIAL_CHANGE_AND_NOTICE_V1.md`, commit `e34b3ba3ee0a32ac210d626f274fb6e52af7ec30`.
 - Family-page informational section: `family/index.html`, commit `6466eee90dc0e97d905e3cd0e23595239ca312b5`. No passcode inputs, endpoint or live email delivery activated.
 - Tests: Source-level confirmation pending; synthetic auth, email queue, Mac/tablet, privilege isolation, lockout, notification failures and T03 commissioning all NOT RUN / HOLD.
+
+## Founder clarification — credential purpose and confirmed digit lengths (2026-11-20)
+- **Parent/guardian 10-digit security passcode:** additional step-up confirmation for sensitive account actions. This is **not** the everyday adult sign-in password or a substitute for verified authorization. Examples: changes to security/recovery, private account information, and learner/adult permissions.
+- **Student-chosen 5-digit passcode:** student-facing sense of personal security; optional lock/unlock for their personal profile; intended sign-in convenience when returning to the **same** protected learner identity from another device. Secure credential/session verification, rate limiting, anti-enumeration and age-appropriate recovery still required; a five-digit code alone is inadequate as unconstrained internet authentication.
+- The parent 10-digit and student 5-digit lengths are **now explicit product-design decisions**, superseding this log's earlier note that both were provisional. The earlier 4-digit recovery reference remains **provisional** and must not independently reset or unlock an account.
+- Parent and learner passcodes must never be conflated or grant each other's privileges. An administrator retains separate privileged credentials and step-up verification.
+- Source display updated: `family/index.html` commit `3accf677f1ce8435eb1e0c36abfe97b51fce302f`. Implementation remains HOLD; this is a requirement clarification, not confirmation of working cross-device authentication or PIN-based profile locking.
