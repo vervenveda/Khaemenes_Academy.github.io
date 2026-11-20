@@ -101,6 +101,7 @@ test("Parent Information Hub keeps Grade 09 as the reference without inventing o
     assert.ok(family.includes(section),"Missing Family Hub section "+section);
   }
   assert.match(family,/function familyGradeNineBars\(snapshots\)/);
+  assert.match(family,/cat\.slots\(9,/,"Grade 9 eight-subject reference must still be used");
   assert.match(family,/function familyPublishedProgressBars\(records\)/);
   assert.match(family,/This does not mean zero progress/);
   assert.match(family,/R\?\.canAdult\?\.\(adult\.adultId,l\.learnerId,"progress\.view"\)/);
