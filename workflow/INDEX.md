@@ -2,6 +2,7 @@
 
 | Date | Type | Entry | State |
 | --- | --- | --- | --- |
+| 2026-11-20 | audit · UI refactor | [Family Portal purpose-based charcoal accordions](logs/2026/11/2026-11-20-family-portal-purpose-accordion-navigation.md) | Source committed and static checks PASS; live browser QA HOLD |
 | 2026-11-20 | audit · decision · follow-up | [Student passcodes and cross-device account access](logs/2026/11/2026-11-20-student-passcodes-and-cross-device-account-access.md) | Historical lengths provisional; protected credential/T03 integration HOLD |
 | 2026-11-18 | repair · regression | [Guest popup and Student Portfolio recovery](logs/2026/11/2026-11-18-guest-popup-and-portfolio-recovery.md) | Guest route and render safeguards committed; browser QA pending |
 | 2026-11-18 | parity · UI repair | [Dual Home parity and Student Profile render re-entry guard](logs/2026/11/2026-11-18-front-desk-parity-and-student-profile-render.md) | Static buttons matched; guard committed; live browser acceptance pending |
