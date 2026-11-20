@@ -14,6 +14,12 @@ on:
       - 'assets/vnv-ecosystem-toolbar.js'
       - 'shared-integration/academy-repository-topology.json'
       - '.github/workflows/academy-topology-validation.yml'
+  pull_request:
+    paths:
+      - 'scripts/audit-ecosystem-toolbar.mjs'
+      - 'academy/testing/families/index.html'
+      - 'family/mini-cloud/index.html'
+      - '.github/workflows/academy-topology-validation.yml'
   workflow_dispatch:
 
 permissions:

@@ -52,6 +52,8 @@ for(const local of [
 assert.match(read("index.html"),/id=["']help["']/,"Academy Help ticker destination #help is missing from Home");
 
 let htmlCount=0,toolbarCount=0;
+const isolatedPages=new Set(["academy/testing/families/index.html","family/mini-cloud/index.html"]);
+let isolatedCount=0;
 function walk(dir){
   for(const entry of fs.readdirSync(dir,{withFileTypes:true})){
     if([".git","node_modules","vendor","archive","archives","backup","backups","private"].includes(entry.name))continue;
@@ -60,11 +62,20 @@ function walk(dir){
     else if(entry.isFile()&&entry.name.toLowerCase().endsWith(".html")){
       htmlCount++;
       const html=fs.readFileSync(full,"utf8");
+      const rel=path.relative(ROOT,full).replaceAll(path.sep,"/");
+      if(isolatedPages.has(rel)){
+        assert.match(html,/Content-Security-Policy/,"isolated laboratory must retain CSP: "+rel);
+        assert.match(html,/default-src\s+'none'/,"isolated laboratory must retain default-deny CSP: "+rel);
+        assert.doesNotMatch(html,/<script\b[^>]*src=["']https?:\/\//i,"isolated laboratory must not load external scripts: "+rel);
+        isolatedCount++;
+        continue;
+      }
       if(/https:\/\/vervenveda\.com\/assets\/vnv-ecosystem-toolbar\.js/i.test(html))toolbarCount++;
     }
   }
 }
 walk(ROOT);
-assert.equal(toolbarCount,htmlCount,"every Academy HTML page must remain attached to the official toolbar, which mounts the Academy ticker");
+assert.equal(isolatedCount,isolatedPages.size,"every declared CSP lab must be present");
+assert.equal(toolbarCount,htmlCount-isolatedCount,"every non-isolated Academy HTML page must remain attached to the official toolbar");
 
-console.log("PASS Academy ticker topology: "+required.length+" important links, "+toolbarCount+"/"+htmlCount+" toolbar-coupled HTML pages, canonical ticker single-source.");
+console.log("PASS Academy ticker topology: "+required.length+" important links, "+toolbarCount+"/"+(htmlCount-isolatedCount)+" toolbar-coupled public HTML pages, "+isolatedCount+" isolated CSP labs, canonical ticker single-source.");
