@@ -92,7 +92,12 @@
   "enabled": false,
   "authorizedWrites": [],
   "studentRecordsTouched": false,
-  "clientVersion": "1.0.1",
+  "clientVersion": "1.0.2",
   "clientEnabled": false,
-  "routeSourceAlignmentOnly": true
+  "routeSourceAlignmentOnly": true,
+  "sessionViewContract": "SESSION_VIEW_CONTRACT_V2",
+  "sessionViewSourceStatus": "DISPLAY_PROJECTION_SOURCE_ALIGNED_RUNTIME_UNVERIFIED",
+  "protectedServerHandlers": "NOT_VERIFIED",
+  "identityChain": "WEND_BUNYA_KLIK_AVOUCH_STOS_HOLD",
+  "runtimeObservations": "Sovereign Server source does not expose Account Cloud v2 session routes and upstream member-auth seam is missing in checked root server entrypoint"
 }
