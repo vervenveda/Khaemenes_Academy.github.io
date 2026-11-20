@@ -65,3 +65,12 @@ This is a planning and evidence log, **not** a declaration that passcode-based s
 - Commit: `1c7916f0260a0d090dc3843c5d323280eca50d2c`.
 - Scope: presentation and explanatory text only; no PIN fields, no credential creation, no family registry or academic state modifications.
 - Verification: source commit completed; interactive browser and production authentication tests NOT RUN. T03 commissioning and cross-device sign-in remain HOLD.
+
+## Credential change and email notice requirement — 2026-11-20
+- Founder requirement: Parent/guardian, administrator and student can request a passcode change whenever eligible by supplying their current passcode and verified registered account email, then entering/confirming a new passcode; after successful rotation send a security-notice email to previously verified registered contact(s). No credential should appear in the notice.
+- For a student with no verified individual email, route notification through an authorized verified guardian where appropriate. Independent-minor pathways require a separate privacy-preserving contact policy; never invent guardianship.
+- Require authenticated secure session and server-side current-code check, verified email match, role-scoped Klik authorization, additional admin step-up security, rate limiting, session revocation and independent recovery. An email address alone does not prove ownership.
+- Keep credential verification/rotation within OHMIC or commissioned credential authority. Account Cloud stores only non-secret continuity/audit/notice metadata, never PINs or reset tokens. Outbound email uses protected server queue and retries; do not claim delivery before it is confirmed.
+- Private source contract: `KhaemenesAcademy/Account-Cloud.github.io/contracts/CREDENTIAL_CHANGE_AND_NOTICE_V1.md`, commit `e34b3ba3ee0a32ac210d626f274fb6e52af7ec30`.
+- Family-page informational section: `family/index.html`, commit `6466eee90dc0e97d905e3cd0e23595239ca312b5`. No passcode inputs, endpoint or live email delivery activated.
+- Tests: Source-level confirmation pending; synthetic auth, email queue, Mac/tablet, privilege isolation, lockout, notification failures and T03 commissioning all NOT RUN / HOLD.
