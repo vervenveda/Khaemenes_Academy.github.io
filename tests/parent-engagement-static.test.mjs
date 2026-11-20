@@ -100,7 +100,6 @@ test("Parent Information Hub keeps Grade 09 as the reference without inventing o
   for(const section of ["family-purpose-directory","family-profile-design","family-enrollment","family-personal-information","family-student-records","family-records-controls"]) {
     assert.ok(family.includes(section),"Missing Family Hub section "+section);
   }
-  assert.match(family,/function familyGradeNineBars\\(snapshots\\)/);
   assert.match(family,/function familyGradeNineBars\(snapshots\)/);
   assert.match(family,/function familyPublishedProgressBars\(records\)/);
   assert.match(family,/This does not mean zero progress/);
