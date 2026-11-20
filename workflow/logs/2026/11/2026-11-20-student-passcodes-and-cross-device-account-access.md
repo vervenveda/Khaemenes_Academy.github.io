@@ -1,0 +1,61 @@
+# 2026-11-20 · Student passcodes and cross-device account access
+- Repository: vervenveda/Khaemenes_Academy.github.io
+- Date/timezone: 2026-11-20 · America/New_York
+- Type: audit · decision · follow-up
+- Branch: main
+- State: DOCUMENTED PLAN / IMPLEMENTATION HOLD
+
+## Conversation summary and decisions
+The Academy founder asked to recover and document the previously planned student-selected passcode for Student Profile creation, allowing learners to resume the **same account across authorized devices**. Earlier planning recorded a five-digit student PIN, a ten-digit parent/guardian code, and a four-digit recovery code. The founder noted that digit counts might differ; therefore **all lengths are provisional, not confirmed product requirements**. Do not silently impose or activate them.
+
+The selected passcode should be created as part of student profile onboarding, but must **not** be collected by a local-only browser enrollment form. Verified, credential-backed sign-in belongs to the protected credential authority, with authorized sessions and Account Cloud continuity independent of a particular device. Siblings retain separate learner identities and credentials. A student PIN does not confer guardian permissions.
+
+## Evidence and audit findings
+| ID | Affected paths / source | Observed evidence | Priority | Status |
+| --- | --- | --- | --- | --- |
+| PASS-01 | Prior Academy credential design discussion (reported 2026-11-09) | Student-selected 5-digit code; parent/guardian 10-digit code; recovery 4-digit code documented in discussion, subject to re-verification | High | HISTORICAL PLAN |
+| PASS-02 | Founder follow-up 2026-11-20 | Number of digits might be different; final lengths not approved | High | OPEN |
+| PASS-03 | `assets/khaemenes-family-registry.js` | Current family/adult/learner continuity is browser-local; local active selection is expressly not authentication | Critical | SOURCE VERIFIED |
+| PASS-04 | `assets/khaemenes-terminal03-readiness.js` | T03 readiness adapter declares `LIVE=false`; no production cross-device account sync established by this adapter | Critical | SOURCE VERIFIED / HOLD |
+| PASS-05 | `KhaemenesAcademy/Account-Cloud.github.io/contracts/ACCOUNT_CLOUD_PROTOCOL_V2.md` | Account Cloud preserves learner identity but must not store credentials, password hashes or recovery secrets; protected authentication is separate | Critical | SOURCE VERIFIED |
+| PASS-06 | `KhaemenesAcademy/Account-Cloud.github.io/docs/CROSS_DEVICE_ACCEPTANCE_GATE.md` | Requires Mac/tablet identity continuity, protection against stale writes, session safety, and reset/unlock tests before production admission | Critical | CHECKLIST PRESENT; LIVE PASS UNVERIFIED |
+| PASS-07 | `family/enroll/index.html` | Provisional enrollment and privacy acknowledgments exist, with modal UI committed 2026-11-20 in commit `f0bbf36f9e8fcb947101bcc5ec0966aae615a903`; this does not create protected credentials | High | SOURCE COMMITTED / BROWSER QA UNVERIFIED |
+
+## Intended account credential flow
+1. Create or locate a distinct learner identity using the authorized enrollment pathway.
+2. When protected sign-in is commissioned, allow learner to choose a PIN/passcode via the credential authority's secured interface (length and eligibility to be finalized).
+3. Never write passcodes, password hashes, recovery codes, or equivalent secrets into `localStorage`, `sessionStorage`, GitHub, family backups, student exports, or general Account Cloud record fields.
+4. On another device, use protected credential verification plus any necessary guardian/age-appropriate safeguards to establish an opaque server-authorized session.
+5. Resolve the **existing** canonical `learnerId` and family associations; never create a new learner simply because a new device is used.
+6. Enforce per-learner and per-device permissions server-side; student credentials cannot unlock adult administration.
+7. Implement rate limiting, lockout/recovery safeguards, secure credential reset, revocation, and auditable events without logging secrets.
+8. Support authorized guardian-assisted reset without treating a short recovery PIN alone as proof of identity.
+
+## Tests
+| Command or scenario | Environment | Result | Evidence |
+| --- | --- | --- | --- |
+| Inspect Academy family registry and T03 readiness | GitHub main source | REVIEWED | Local-only identity, live transport not commissioned |
+| Inspect private Account Cloud contracts | GitHub main source | REVIEWED | Credential/session/storage authority split documented |
+| Cross-device PIN sign-in on Mac and tablet | Production | NOT RUN | No verified live credential service in this audit |
+| Five/ten/four-digit policy enforcement | Credential authority | NOT RUN | Exact code lengths still provisional |
+| Guardian reset and student isolation | Protected integration | NOT RUN | Pending synthetic acceptance |
+| Browser UI for student passcode creation | Academy enrollment | NOT RUN | Not implemented by this log |
+
+## Repairs, upgrades, Codex changes
+| Change | Files | Commit or PR | Verification |
+| --- | --- | --- | --- |
+| Record credential and cross-device plan; preserve HOLD | This workflow log and workflow index | See repository history | Documentation only |
+| Credential form or native authority | None | None | NO PRODUCTION CHANGE |
+
+## Open items
+- [ ] Locate the authoritative credential specifications and any previous synthetic PIN tests; reconcile whether student code has 5 digits or another length.
+- [ ] Confirm rules for parent/guardian credentials and recovery; a 4-digit recovery code must not be a standalone account takeover factor.
+- [ ] Design Student Profile PIN selection and confirmation **only after** the approved protected credential interface exists.
+- [ ] Define independent-minor and facilitator/group access without falsely granting guardian privileges.
+- [ ] Verify cross-device identity continuity using synthetic families and learners on Mac and tablet.
+- [ ] Check rate-limiting, lockout, stolen-device revocation, password/PIN reset, recovery, no secret leakage, and permissions.
+- [ ] Complete STOS T03 commissioning and Account Cloud acceptance gates before real learner synchronization.
+- [ ] Perform browser and workflow regression tests before activating an account-creation interface.
+
+## Safety and closure
+This is a planning and evidence log, **not** a declaration that passcode-based sign-in has been implemented or passed workload tests. Do not use short PINs as the sole internet-facing authentication factor without a specifically approved hardened model. Protect minors' personal information, enrollment authorization, existing assessment evidence, course-owned mastery, and the current Academy registry. No real credentials or learner records were included.
