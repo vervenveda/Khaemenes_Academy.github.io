@@ -30,3 +30,7 @@ Direct source files inspected on the connected VNV GitHub account, not a live br
 
 ## Next recommended non-destructive verification
 Establish a strict **route compatibility matrix** between Academy Core's disabled client and Account Cloud's v2 contract, with synthetic negative tests. Do not enable network requests or migrate family records until the independently commissioned native adapter exists.
+
+## Automated source boundary acceptance
+- [GitHub Actions run 44833383273](https://github.com/vervenveda/Khaemenes_Academy.github.io/actions/runs/44833383273) completed **success** on exact implementation commit `1d412b6028c38b584ebc23df1c17eeba601a1b24`.
+- Five static/source-only tests passed against Academy family enrollment, local registry, account client and progress; this is **not** a live parent/learner account test, Mac/tablet test or STOS T03 commissioning.
