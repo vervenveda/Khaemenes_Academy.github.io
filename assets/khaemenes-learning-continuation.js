@@ -77,6 +77,16 @@
     }
     return rows;
   }
+  // Academic evidence indicators are local, read-only snapshots, not certification.
+  // Explicit booleans only: absence must remain "not reported".
+  function normalizeEvidence(value){
+    const v=value&&typeof value==="object"?value:{};
+    const flag=x=>typeof x==="boolean"?x:null;
+    return {
+      portfolioRecorded:flag(v.portfolioRecorded),
+      transitionRecorded:flag(v.transitionRecorded)
+    };
+  }
   function normalizeSnapshot(input){
     const learnerId=clean(input?.learnerId,120);
     const courseId=clean(input?.courseId,140);
@@ -100,6 +110,7 @@
       progress:normalizeProgress(input.progress),
       mastery:normalizeMastery(input.mastery),
       assessments:normalizeAssessments(input.assessments),
+      evidence:normalizeEvidence(input.evidence),
       family:{
         needsAction:input.family?.needsAction===true,
         label:clean(input.family?.label||"",90),
@@ -172,6 +183,7 @@
       progress:{...snapshot.progress},
       mastery:{...snapshot.mastery},
       assessments:Array.isArray(snapshot.assessments)?snapshot.assessments.map(x=>({...x})):[],
+      evidence:{...normalizeEvidence(snapshot.evidence)},
       family:{...snapshot.family}
     });
   }
