@@ -1,0 +1,36 @@
+name: Academy Account Cloud Interface Boundary
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'assets/khaemenes-account-client.js'
+      - 'assets/khaemenes-family-registry.js'
+      - 'assets/khaemenes-account-connection-status.js'
+      - 'family/enroll/index.html'
+      - 'family/progress/parent-progress.js'
+      - 'workflow/inventories/2026-11-20-academy-core-account-cloud-route-matrix.json'
+      - 'tests/academy-account-cloud-interface-boundary.test.mjs'
+      - '.github/workflows/academy-account-cloud-interface-boundary.yml'
+  pull_request:
+    paths:
+      - 'assets/khaemenes-account-client.js'
+      - 'assets/khaemenes-family-registry.js'
+      - 'assets/khaemenes-account-connection-status.js'
+      - 'family/enroll/index.html'
+      - 'family/progress/parent-progress.js'
+      - 'workflow/inventories/2026-11-20-academy-core-account-cloud-route-matrix.json'
+      - 'tests/academy-account-cloud-interface-boundary.test.mjs'
+      - '.github/workflows/academy-account-cloud-interface-boundary.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  no-runtime-authority:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify five Academy Account Cloud interface boundary checks
+        run: node --test tests/academy-account-cloud-interface-boundary.test.mjs
