@@ -24,3 +24,7 @@
 5. Require T03 durable namespace/transaction/recovery and two-device evidence before enabling protected parent/student reads.
 
 **Status:** source client shape improvement committed. CI result to be added only after the exact SHA runner finishes. No browser or production acceptance claimed.
+
+## CI result
+- [GitHub Actions run 44838014477](https://github.com/vervenveda/Khaemenes_Academy.github.io/actions/runs/44838014477) completed **success** at exact head SHA `b3f470fee85cda9a19096e6b942d41931b65e48a`.
+- Source-only suite: 5 original boundary + 6 route-behavior + 5 session-view tests, **16 synthetic checks passing**. No real authenticated service, cookie issuer or native runtime was exercised.
