@@ -52,15 +52,15 @@
   "routeCompatibility": [
     {
       "operation": "session.read",
-      "academyClient": "GET session",
+      "academyClient": "GET /v1/account/session",
       "accountCloudTarget": "GET /v1/account/session",
-      "status": "MAPPING_UNVERIFIED"
+      "status": "SOURCE_ALIGNED_RUNTIME_UNVERIFIED"
     },
     {
       "operation": "session.end",
-      "academyClient": "POST logout",
+      "academyClient": "DELETE /v1/account/session",
       "accountCloudTarget": "DELETE /v1/account/session",
-      "status": "METHOD_AND_PATH_MISMATCH"
+      "status": "SOURCE_ALIGNED_RUNTIME_UNVERIFIED"
     },
     {
       "operation": "family.read",
@@ -91,5 +91,8 @@
   ],
   "enabled": false,
   "authorizedWrites": [],
-  "studentRecordsTouched": false
+  "studentRecordsTouched": false,
+  "clientVersion": "1.0.1",
+  "clientEnabled": false,
+  "routeSourceAlignmentOnly": true
 }
