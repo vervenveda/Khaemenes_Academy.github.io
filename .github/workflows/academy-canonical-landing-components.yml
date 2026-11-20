@@ -1,0 +1,29 @@
+name: Academy Canonical Landing Components
+on:
+  pull_request:
+    paths:
+      - 'family/progress/index.html'
+      - 'family-cloud/index.html'
+      - 'tests/academy-canonical-landing-static.mjs'
+      - '.github/workflows/academy-canonical-landing-components.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'family/progress/index.html'
+      - 'family-cloud/index.html'
+      - 'tests/academy-canonical-landing-static.mjs'
+      - '.github/workflows/academy-canonical-landing-components.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  canonical-pages:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node tests/academy-canonical-landing-static.mjs
+      - run: node tests/parent-progress-grades.test.cjs
