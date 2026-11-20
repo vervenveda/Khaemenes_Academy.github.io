@@ -23,7 +23,7 @@ test("family workspace keeps parent and adult-self-learning roles separate",()=>
   assert.match(family,/Start Adult Learning/);
   assert.match(family,/Open Adult Learner Portal/);
   assert.match(family,/Parent\/family responsibilities remain here; personal coursework remains in the Adult Learner Portal/);
-  assert.match(family,/familyLearners=f\\.learners\\.filter\\(l=>l&&!l\\.selfDirectedAdult&&l\\.familyId===f\\.familyId\\)/);
+  assert.ok(family.includes("familyLearners=f.learners.filter(l=>l&&!l.selfDirectedAdult&&l.familyId===f.familyId)"),"Family learner list must exclude adult scholars and other-family learners");
 });
 
 test("family enrollment routes adult scholars through the Adult Learner Portal",()=>{
