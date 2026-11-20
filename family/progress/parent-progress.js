@@ -88,7 +88,7 @@ function reportCard(label,report){
  const grades=readGrades(report?.stale?null:report);
  card.append(make("p","Quiz/test grade average: "+gradeText(grades.overall)));
  card.append(make("p","Quizzes: "+gradeText(grades.quizzes)+" · Tests: "+gradeText(grades.tests)));
- if(report&&/^middle-grade-0[678]$/.test(report.courseId||""))card.append(middleEvidence(report));
+ if(report&&/^middle-grade-0[678]$/.test(report.courseId||"")){card.className="subject middle-homeschool-card";card.append(middleEvidence(report));}
  if(report?.stale)card.append(make("p","The latest course summary is stale. Return to the course to refresh its report."));
  if(report?.nextTitle)card.append(make("p","Next step: "+report.nextTitle));
  if(report?.updatedAt){const date=new Date(report.updatedAt);if(Number.isFinite(date.getTime()))card.append(make("p","Last report: "+date.toLocaleString()));}
