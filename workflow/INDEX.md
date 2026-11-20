@@ -2,6 +2,7 @@
 
 | Date | Type | Entry | State |
 | --- | --- | --- | --- |
+| 2026-11-20 | audit · registration inventory | [Three-month family, adult and student census](logs/2026/11/2026-11-20-three-month-registration-census.md) | Read-only source committed; browser scan NOT RUN, system-wide count unknown |
 | 2026-11-20 | setup · testing | [Repository-owned local tests and Mac preflight](logs/2026/11/2026-11-20-repository-local-test-folder-setup.md) | Test-folder source committed; Mac execution and product tests NOT RUN |
 | 2026-11-20 | security UX · follow-up | [Optional Student Profile privacy lock](logs/2026/11/2026-11-20-optional-student-profile-privacy-lock.md) | Disabled controls committed; protected lock/unlock and live QA HOLD |
 | 2026-11-20 | audit · UI refactor | [Family Portal purpose-based charcoal accordions](logs/2026/11/2026-11-20-family-portal-purpose-accordion-navigation.md) | Source committed and static checks PASS; live browser QA HOLD |
