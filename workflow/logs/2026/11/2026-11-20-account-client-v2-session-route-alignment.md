@@ -21,3 +21,7 @@
 
 ## Acceptance
 Synthetic CI run outcome is recorded in a later append-only addendum after verifying the exact commit SHA.
+
+## Verified source-only CI acceptance
+- [GitHub Actions run 44833914667](https://github.com/vervenveda/Khaemenes_Academy.github.io/actions/runs/44833914667) returned `completed/success` at exact source/test/workflow SHA `a271a0b2aec9606c73f90ab1c7615877fb15f345`.
+- CI scope: 5 static boundary cases + 6 mocked Account Client behavior cases (11 tests total). No live Account Cloud service, browser acceptance, records, or STOS runtime verified.
