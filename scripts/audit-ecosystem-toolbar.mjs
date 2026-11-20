@@ -17,7 +17,7 @@ function check(file){
   htmlCount++;
   const rel=path.relative(ROOT,file).replaceAll(path.sep,"/");
   const html=fs.readFileSync(file,"utf8");
-  const official=[...html.matchAll(/<script\b[^>]*src=["']https:\/\/vervenveda\.com\/assets\/vnv-ecosystem-toolbar\.js["'][^>]*>\s*<\/script>/gi)];
+  const official=[...html.matchAll(/<script\b[^>]*src=["']https:\/\/vervenveda\.com\/assets\/vnv-ecosystem-toolbar\.js(?:\?[^"']*)?["'][^>]*>\s*<\/script>/gi)];
   const legacy=[...html.matchAll(/<script\b[^>]*src=["'][^"']*(?:vnv-beta-link|khaemenes-landing-toolbar)\.js[^"']*["'][^>]*>\s*<\/script>/gi)];
   if(official.length!==1)failures.push(rel+": expected exactly one official ecosystem toolbar script, found "+official.length);
   else officialCount++;
