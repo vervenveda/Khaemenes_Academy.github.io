@@ -413,8 +413,8 @@ const HIGH_PIN_META=Object.freeze({
   "world-language-9-german":{title:"German I",subtitle:"World Language · Grade 09",href:"https://vervenveda.com/Khaemenes_Linguistics.github.io/Halls/index.html?language=german&course=hs1&source=khaemenes-high-grade09"},
   "world-language-9-mandarin":{title:"Mandarin Chinese I",subtitle:"World Language · Grade 09",href:"https://vervenveda.com/Khaemenes_Linguistics.github.io/Halls/index.html?language=mandarin&course=hs1&source=khaemenes-high-grade09"},
   "world-language-9-japanese":{title:"Japanese I",subtitle:"World Language · Grade 09",href:"https://vervenveda.com/Khaemenes_Linguistics.github.io/Halls/index.html?language=japanese&course=hs1&source=khaemenes-high-grade09"},
-  "world-language-9-arabic":{title:"Arabic · Exploration",subtitle:"World Language · exploration pathway",href:"https://vervenveda.com/Khaemenes_Linguistics.github.io/Halls/index.html?language=arabic&mode=atlas&source=khaemenes-high-grade09"},
-  "world-language-9-russian":{title:"Russian · Exploration",subtitle:"World Language · exploration pathway",href:"https://vervenveda.com/Khaemenes_Linguistics.github.io/Halls/index.html?language=russian&mode=atlas&source=khaemenes-high-grade09"}
+  "world-language-9-arabic":{title:"Arabic I · 32-week course",subtitle:"World Language · Year I instructional drafts",href:"https://vervenveda.com/Khaemenes_Linguistics.github.io/Halls/courses/arabic-1/"},
+  "world-language-9-russian":{title:"Russian I · 32-week course",subtitle:"World Language · Year I instructional drafts",href:"https://vervenveda.com/Khaemenes_Linguistics.github.io/Halls/courses/russian-1/"}
 });
 const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
@@ -483,10 +483,33 @@ function learnerContinuation(learner){
 function bestContinuation(learner){
   return (C?.readLearner?.(learner?.learnerId)||[]).find(s=>s.status!=="complete"&&s.nextHref)||null;
 }
+// Student pin links follow authenticated continuation evidence or the
+// canonical Grade 09 Schedule resolver, never a minimal public landing page.
+function highPinDestination(pin,learner){
+ const grade=String(Number(learner?.grade));
+ if(learner?.stage!=="high"||grade!=="9")return pin.href||"#";
+ const id=String(pin.id||pin.courseId||"");
+ if(!Object.prototype.hasOwnProperty.call(HIGH_PIN_META,id))return pin.href||"#";
+ const schedule="https://vervenveda.com/Khaemenes_High.github.io/grades/grade-09/student-profile/schedule/";
+ // Placement-based math must go through the course-owned readiness resolver.
+ if(id==="pre-algebra"||id==="algebra-1")return schedule;
+ const records=C?.readLearner?.(learner.learnerId)||[];
+ const record=records.find(x=>x?.learnerId===learner.learnerId&&x.courseId===id&&!x.stale);
+ if(record?.nextHref){
+  try{
+   const url=new URL(record.nextHref);
+   if(url.protocol==="https:"&&url.hostname==="vervenveda.com"&&
+    (url.pathname.startsWith("/Khaemenes_High.github.io/")||
+     url.pathname.startsWith("/Khaemenes_Linguistics.github.io/"))&&
+    !url.pathname.endsWith("/courses/"))return url.href;
+  }catch{}
+ }
+ return schedule;
+}
 function renderPins(learner){
   const pins=learnerPins(learner.learnerId);
   if(!pins.length)return '<div class="empty">No courses are pinned yet. Open a course and choose “Pin to Profile” to place it here.</div>';
-  return `<div class="pin-list">${pins.map(p=>`<div class="pin-row"><a href="${esc(p.href||"#")}" class="pin-course-link"><strong>${esc(p.title||"Course")}</strong><small>${esc(p.subtitle||"Return to course")}</small></a><button class="btn secondary" type="button" data-course-unpin="${esc(p.id||p.courseId||"")}" aria-label="Unpin ${esc(p.title||"course")}">Unpin</button></div>`).join("")}</div>`;
+  return `<div class="pin-list">${pins.map(p=>`<div class="pin-row"><a href="${esc(highPinDestination(p,learner))}" class="pin-course-link"><strong>${esc(p.title||"Course")}</strong><small>${esc(p.subtitle||"Return to course")}</small></a><button class="btn secondary" type="button" data-course-unpin="${esc(p.id||p.courseId||"")}" aria-label="Unpin ${esc(p.title||"course")}">Unpin</button></div>`).join("")}</div>`;
 }
 /* Removing a pin changes shortcuts only. Progress, enrollment, and assessments are never touched. */
 function unpinCourse(learner,id){
