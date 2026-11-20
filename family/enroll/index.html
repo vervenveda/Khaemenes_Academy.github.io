@@ -397,5 +397,42 @@ render();
 <script src="https://vervenveda.com/assets/vnv-ticker-autopopulate.js" data-vnv-ticker-autopopulate></script>
 <script>VNV_TICKER.autoPopulate({label:"Enrollment Quick Links",max:14});</script>
 <script src="https://vervenveda.com/assets/vnv-ecosystem-toolbar.js"></script>
+
+<style id="academy-family-modal-styles">
+#academyFamilyApplicationDialog{width:min(950px,calc(100vw - 20px));max-height:calc(100dvh - 20px);padding:0;border:1px solid #b48b45;border-radius:7px;background:#f5f2e9;color:#243038;overflow:auto;box-shadow:0 24px 80px #0006}
+#academyFamilyApplicationDialog::backdrop{background:#08151cbb}
+#academyFamilyApplicationDialog .modal-head{position:sticky;top:0;z-index:3;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:15px;background:#243038;color:#fff8e9}
+#academyFamilyApplicationDialog .modal-head h2{margin:0;color:#fff8e9;font:400 clamp(23px,3vw,33px)/1.3 Cinzel,Georgia,serif}
+#academyFamilyApplicationDialog .modal-head button{min-height:44px;padding:8px 14px;border-radius:7px;border:1px solid #b48b45;background:#fff8e9;color:#243038;font-size:16px}
+#academyFamilyApplicationDialog .modal-intro{padding:16px 20px;font-size:16px;line-height:1.6}
+#academyFamilyApplicationDialog .modal-intro details{padding:12px;border:1px solid #c4b694;border-radius:7px;background:#fffdf8}
+#academyFamilyApplicationDialog .modal-intro summary{cursor:pointer}
+#academyFamilyApplicationDialog .modal-panels{display:grid;gap:14px;padding:0 16px 20px}
+#academyFamilyApplicationDialog .modal-panels>.card{margin:0;width:100%;min-width:0}
+#academyFamilyApplicationLauncher{max-width:700px;margin:18px auto 30px;padding:20px;background:#fffdf8;border:1px solid #bba980;border-radius:7px;text-align:center}
+#academyFamilyApplicationLauncher p,#academyFamilyApplicationLauncher button{font-size:16px;line-height:1.5}
+@media(max-width:600px){#academyFamilyApplicationDialog{width:calc(100vw - 10px);max-height:calc(100dvh - 10px)}#academyFamilyApplicationDialog .modal-panels{padding:0 8px 12px}}
+</style>
+<script id="academy-family-modal-controller">
+(function(){"use strict";
+function mount(){
+const R=window.KhaemenesFamilyRegistry,fp=document.getElementById("familyPane"),lp=document.getElementById("learnerPane"),main=document.querySelector("main.grid");
+if(!R||!fp||!lp||!main||R.getFamily?.()||document.getElementById("academyFamilyApplicationDialog"))return;
+const fc=fp.closest("section.card"),lc=lp.closest("section.card");if(!fc||!lc)return;
+const dialog=document.createElement("dialog");dialog.id="academyFamilyApplicationDialog";dialog.setAttribute("aria-labelledby","academyFamilyApplicationTitle");
+dialog.innerHTML='<div class="modal-head"><h2 id="academyFamilyApplicationTitle">Family &amp; Learner Application</h2><button type="button" id="academyCloseFamilyApplication">Close ×</button></div><div class="modal-intro"><p>Complete the four-step provisional application, privacy acknowledgment, and first learner enrollment in one window.</p><details><summary>Parent or guardian authority and responsibility</summary><p>The registering adult represents that they are authorized to make educational decisions for the child. Selecting a relationship and accepting this statement do not verify guardianship, waive child privacy protections, or release the Academy from its legal obligations. Private verified enrollment requires a separate authorized process.</p></details><p>This is local-only enrollment. Do not enter passwords, PINs, addresses, telephone numbers, or email addresses until secure verification becomes available. Independent children can still access free public learning resources without claiming a guardian.</p></div><div class="modal-panels" id="academyFamilyApplicationPanels"></div>';
+const launch=document.createElement("section");launch.id="academyFamilyApplicationLauncher";
+launch.innerHTML='<h2>Family &amp; Learner Registration</h2><p>The full provisional application and disclosures open together, without crowding the enrollment page.</p><button class="btn" type="button" id="academyOpenFamilyApplication">Open Family Application</button>';
+main.parentNode.insertBefore(launch,main);
+dialog.querySelector(".modal-panels").append(fc,lc);document.body.append(dialog);
+launch.querySelector("button").addEventListener("click",()=>dialog.showModal());
+dialog.querySelector("#academyCloseFamilyApplication").addEventListener("click",()=>dialog.close());
+dialog.addEventListener("click",e=>{if(e.target===dialog)dialog.close()});
+if(new URLSearchParams(location.search).get("application")==="open")dialog.showModal();
+window.KhaemenesFamilyApplicationModal=Object.freeze({open:()=>{if(!dialog.open)dialog.showModal()},close:()=>dialog.close(),version:"1.0.0"});
+}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",mount,{once:true});else mount();
+})();
+</script>
 </body>
 </html>
