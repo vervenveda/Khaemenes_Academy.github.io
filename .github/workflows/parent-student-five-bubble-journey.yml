@@ -1,0 +1,25 @@
+name: Parent to Student Five-Bubble Journey
+on:
+  pull_request:
+    paths:
+      - "assets/khaemenes-front-door-router.js"
+      - "assets/khaemenes-family-parent-learning-panels-v1.js"
+      - "family/progress/parent-progress.js"
+      - "student/index.html"
+      - "tests/parent-student-five-bubble-journey.test.mjs"
+      - ".github/workflows/parent-student-five-bubble-journey.yml"
+  push:
+    paths:
+      - "assets/khaemenes-front-door-router.js"
+      - "assets/khaemenes-family-parent-learning-panels-v1.js"
+      - "family/progress/parent-progress.js"
+      - "student/index.html"
+      - "tests/parent-student-five-bubble-journey.test.mjs"
+      - ".github/workflows/parent-student-five-bubble-journey.yml"
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify parent learner handoffs and course evidence
+        run: node tests/parent-student-five-bubble-journey.test.mjs
