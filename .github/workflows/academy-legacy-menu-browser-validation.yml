@@ -1,0 +1,32 @@
+name: Academy Canonical Header Legacy Menu Browser Regression
+on:
+  pull_request:
+    paths:
+      - 'Health_learning/workout_builder_index.html'
+      - 'Parent_resources/Diploma_generator_index.html'
+      - 'Parent_resources/Homeschool_compass_index.html'
+      - 'Parent_resources/Transcript_generator_index.html'
+      - 'adult/enroll/index.html'
+      - '.github/workflows/academy-legacy-menu-browser-validation.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'Health_learning/workout_builder_index.html'
+      - 'Parent_resources/Diploma_generator_index.html'
+      - 'Parent_resources/Homeschool_compass_index.html'
+      - 'Parent_resources/Transcript_generator_index.html'
+      - 'adult/enroll/index.html'
+      - '.github/workflows/academy-legacy-menu-browser-validation.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  five-page-browser-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify canonical menu, both tickers, and accessible placement
+        env:
+          ACADEMY_SMOKE_PAGES: Health_learning/workout_builder_index.html,Parent_resources/Diploma_generator_index.html,Parent_resources/Homeschool_compass_index.html,Parent_resources/Transcript_generator_index.html,adult/enroll/index.html
+        run: node scripts/browser-ticker-smoke.mjs
