@@ -6,16 +6,23 @@
 <style>
 :root{--charcoal:#243038;--paper:#f4f0e7;--cream:#fff8e9;--gold:#b48b45}
 *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--charcoal);font:400 18px/1.6 "Brandon Grotesque",Nunito,Arial,sans-serif;text-align:center}
-header,footer{background:var(--charcoal);color:var(--cream);padding:22px 16px}
+.academy-page-hero,footer{background:var(--charcoal);color:var(--cream);padding:22px 16px}
 h1,h2,h3{font-family:Cinzel,Georgia,serif;font-weight:400;line-height:1.3}
 h1{font-size:clamp(33px,6vw,55px);margin:12px auto}h2{font-size:33px}h3{font-size:24px}
 main{max-width:1120px;padding:24px 20px 66px;margin:auto}nav{display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
-nav a{color:inherit}header nav a{color:var(--cream)}
+nav a{color:inherit}.academy-page-hero nav a{color:var(--cream)}
 .card{background:#fffdf8;border:1px solid #cbbfaa;border-radius:7px;padding:22px;margin:20px auto}
-.note{border-left:4px solid var(--gold)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:14px;text-align:left}
+.academy-page-hero{margin:0;padding:42px 18px 52px;text-align:center;background:linear-gradient(128deg,#283c3a 0%,#253858 28%,#713845 59%,#89632d 82%,#243b34 100%);border-bottom:3px solid #b48b45}
+.academy-page-hero .academy-kicker{font:400 33px/1.3 Cinzel,Georgia,serif;margin:0;color:#fff8e9}
+.academy-page-hero h1{font:400 clamp(38px,7vw,77px)/1.15 Cinzel,Georgia,serif;margin:20px auto 22px;color:#fff8e9;max-width:1100px;text-wrap:balance}
+.academy-page-hero .academy-descriptors{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;max-width:1080px;margin:0 auto 24px}
+.academy-page-hero .academy-descriptors p{display:grid;place-items:center;font:400 24px/1.35 Nunito,Arial,sans-serif;margin:0;padding:11px;color:#fff8e9;border:1px solid rgba(255,248,233,.42);border-radius:7px}
+.academy-page-hero .academy-breadcrumb{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;font-size:16px}
+@media(max-width:720px){.academy-page-hero .academy-descriptors{grid-template-columns:1fr}.academy-page-hero .academy-descriptors p{font-size:24px}.academy-page-hero{padding:32px 14px}}
+.note{border-left:4px solid var(--gold)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;text-align:left}@media(max-width:680px){.grid{grid-template-columns:1fr}}
 .subject{padding:18px;background:#f6f1e6;border:1px solid #cbbfaa;border-radius:7px}
 .subject h3{margin:0 0 10px;font-size:22px}.subject p{margin:6px 0}
-button,.action{display:inline-flex;justify-content:center;align-items:center;min-height:48px;background:var(--charcoal);color:var(--cream);border:1px solid var(--gold);border-radius:7px;padding:10px 18px;text-decoration:none;font:400 17px/1.4 inherit;cursor:pointer}
+button,.action{display:inline-flex;justify-content:center;align-items:center;min-height:48px;background:var(--charcoal);color:var(--cream);border:1px solid var(--gold);border-radius:7px;padding:10px 18px;text-decoration:none;font:400 17px/1.4 Nunito,Arial,sans-serif;cursor:pointer}
 button[aria-pressed="true"]{background:#e7d7b6;color:var(--charcoal)}.actions{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin:18px auto}
 .middle-homeschool-ledger{margin:18px 0 4px;border-top:1px solid #cbbfaa;padding-top:16px}
 .middle-homeschool-ledger h4{font:400 20px/1.4 Cinzel,Georgia,serif;margin:0 0 10px}
@@ -28,7 +35,7 @@ button[aria-pressed="true"]{background:#e7d7b6;color:var(--charcoal)}.actions{di
 @media print{
   @page{margin:14mm}
   body{background:#fff;color:#243038;font-size:11pt;text-align:left}
-  header,footer,nav,.actions,#parentProgressStatus,#parentProgressLearners,.print-controls{display:none!important}
+  #vnvHeaderAutoPopulate,.academy-page-hero,footer,nav,.actions,#parentProgressStatus,#parentProgressLearners,.print-controls,#vnvClassToolsToolbar,#vnvEcosystemUtilityDock,#vnv-language-switch,#vnv-language-rail,#vnvTickerAutoPopulate{display:none!important}
   main{max-width:none;padding:0;margin:0}
   .card{background:#fff;border:0;padding:0;margin:0 0 14px}
   .note{border-left:2px solid #a78a58;padding:8px 12px}
@@ -51,7 +58,14 @@ button[aria-pressed="true"]{background:#e7d7b6;color:var(--charcoal)}.actions{di
 </style>
 </head>
 <body>
-<header><nav aria-label="Breadcrumb"><a href="../">Parent Portal</a><span aria-hidden="true">/</span><span aria-current="page">Class Progress & Grades</span></nav><h1>Class Progress & Grades</h1><p>A read-only family view of locally reported coursework and quiz/test scores.</p></header>
+<section class="academy-page-hero" aria-labelledby="parentProgressHeroTitle">
+ <p class="academy-kicker">Khaemenes Academy</p>
+ <h1 id="parentProgressHeroTitle">Class Progress &amp; Grades</h1>
+ <div class="academy-descriptors" aria-label="Academic record features">
+  <p>Authorized learner records</p><p>Weekly, midterm &amp; final evidence</p><p>Printable family summaries</p>
+ </div>
+ <nav class="academy-breadcrumb" aria-label="Breadcrumb"><a href="../">Parent Portal</a><span aria-hidden="true">/</span><span aria-current="page">Class Progress &amp; Grades</span></nav>
+</section>
 <main>
 <section class="card note"><h2>Academic record distinction</h2><p>Class completion is not a grade. A quiz/test average appears only if a course has published graded scores with earned and possible points. This browser-based view is not an official transcript, nor a verified cloud sync.</p></section>
 <div id="parentProgressStatus" class="card" role="status" aria-live="polite">Checking authorized family access on this browser.</div>
@@ -64,4 +78,22 @@ button[aria-pressed="true"]{background:#e7d7b6;color:var(--charcoal)}.actions{di
 <script src="../../assets/khaemenes-family-registry.js"></script>
 <script src="../../assets/khaemenes-learning-continuation.js"></script>
 <script src="parent-progress.js"></script>
+
+<!-- Canonical VNV ecosystem services: one AutoPopulate ticker, one header/hamburger, no replacement chrome. -->
+<script src="https://vervenveda.com/assets/vnv-ticker-autopopulate.js" data-vnv-ticker-autopopulate></script>
+<script>VNV_TICKER.autoPopulate({label:"Academy Family Records",max:12});</script>
+<script src="https://vervenveda.com/assets/vnv-header-autopopulate.js"></script>
+<script>VNV_HEADER.mount({title:"Khaemenes Academy",subtitle:"Family Academic Records",icon:"K",home:"https://vervenveda.com/Khaemenes_Academy.github.io/",actions:[]});</script>
+<!-- Canonical Khaemenes Linguistics resource, VNV language fallback. -->
+<script src="https://vervenveda.com/Khaemenes_Linguistics.github.io/assets/khaemenes-translator-loader.js?v=1.1.1" defer></script>
+<script src="https://vervenveda.com/assets/vnv-language.js?v=20261108-cream-buttons" defer></script>
+<script>document.addEventListener("DOMContentLoaded",()=>{window.KhaemenesTranslatorLoader?.ensure?.({full:true,upgradeLegacyCore:true}).catch(()=>{});},{once:true});</script>
+<script>window.KhaemenesClassToolsConfigV1=Object.freeze({id:"academy-parent-progress",toggleLabel:"Tools",ariaLabel:"Family academic resources",tools:[
+{type:"link",label:"Parent Portal",href:"../"},
+{type:"link",label:"Student Portal",href:"../../student/"},
+{type:"link",label:"Academy Home",href:"../../"},
+{type:"link",label:"Homeschool Compass",href:"../../Parent_resources/Homeschool_compass_index.html"},
+{type:"help",label:"Instructions"}],help:{title:"Parent Academic Records",paragraphs:["This view is read-only and browser-local.","Missing or stale grades are not certified academic evidence."]}});</script>
+<script src="https://vervenveda.com/assets/vnv-class-tools-toolbar.js?v=1.6.1"></script>
+<script src="https://vervenveda.com/assets/vnv-ecosystem-toolbar.js"></script>
 </body></html>
