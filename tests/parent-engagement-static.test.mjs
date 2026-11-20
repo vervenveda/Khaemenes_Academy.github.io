@@ -105,7 +105,7 @@ test("Parent Information Hub keeps Grade 09 as the reference without inventing o
   assert.match(family,/function familyPublishedProgressBars\(records\)/);
   assert.match(family,/This does not mean zero progress/);
   assert.match(family,/R\?\.canAdult\?\.\(adult\.adultId,l\.learnerId,"progress\.view"\)/);
-  assert.match(family,/grade-"\+grade\+"\/student-profile\//);
+  assert.ok(family.includes('Khaemenes_High.github.io/grades/grade-"+String(n).padStart(2,"0")+"/student-profile/'),"High School profile routing must keep grade-specific destinations");
   assert.match(family,/data-learner-profile/);
   for(const key of ["Download Verified Backup","Verify / Restore Backup","Undo Last Restore"]) {
     assert.ok(family.includes(key),"Existing family backup authority changed: "+key);
