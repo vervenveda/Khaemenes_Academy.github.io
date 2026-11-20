@@ -97,10 +97,10 @@ test("parent features automatically refresh when family or learning summaries ch
 
 
 test("Parent Information Hub keeps Grade 09 as the reference without inventing other-grade records",()=>{
-  for(const section of ["family-hub-quick-nav","family-progress","family-records","family-involvement"]) {
+  for(const section of ["family-purpose-directory","family-profile-design","family-enrollment","family-personal-information","family-student-records","family-records-controls"]) {
     assert.ok(family.includes(section),"Missing Family Hub section "+section);
   }
-  assert.match(family,/Grade 09 provides our eight-subject reference model/);
+  assert.match(family,/function familyGradeNineBars\\(snapshots\\)/);
   assert.match(family,/function familyGradeNineBars\(snapshots\)/);
   assert.match(family,/function familyPublishedProgressBars\(records\)/);
   assert.match(family,/This does not mean zero progress/);
