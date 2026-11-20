@@ -97,15 +97,15 @@ test("parent features automatically refresh when family or learning summaries ch
 
 
 test("Parent Information Hub keeps Grade 09 as the reference without inventing other-grade records",()=>{
-  for(const section of ["family-hub-quick-nav","family-progress","family-records","family-involvement"]) {
+  for(const section of ["family-purpose-directory","family-profile-design","family-enrollment","family-personal-information","family-student-records","family-records-controls"]) {
     assert.ok(family.includes(section),"Missing Family Hub section "+section);
   }
-  assert.match(family,/Grade 09 provides our eight-subject reference model/);
   assert.match(family,/function familyGradeNineBars\(snapshots\)/);
+  assert.match(family,/cat\.slots\(9,/,"Grade 9 eight-subject reference must still be used");
   assert.match(family,/function familyPublishedProgressBars\(records\)/);
   assert.match(family,/This does not mean zero progress/);
   assert.match(family,/R\?\.canAdult\?\.\(adult\.adultId,l\.learnerId,"progress\.view"\)/);
-  assert.match(family,/grade-"\+grade\+"\/student-profile\//);
+  assert.ok(family.includes('Khaemenes_High.github.io/grades/grade-"+String(n).padStart(2,"0")+"/student-profile/'),"High School profile routing must keep grade-specific destinations");
   assert.match(family,/data-learner-profile/);
   for(const key of ["Download Verified Backup","Verify / Restore Backup","Undo Last Restore"]) {
     assert.ok(family.includes(key),"Existing family backup authority changed: "+key);
