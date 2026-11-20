@@ -1,7 +1,7 @@
 (function attachKhaemenesAccountClient(global){
   "use strict";
 
-  const VERSION="1.0.1";
+  const VERSION="1.0.2";
   const DEFAULT_TIMEOUT_MS=8000;
   const FORBIDDEN_KEYS=/password|passcode|secret|token|otp|verification.?code|recovery.?code|session.?id|cookie|hash|pepper|private.?key|refresh/i;
   let config=Object.freeze({enabled:false,baseUrl:null,timeoutMs:DEFAULT_TIMEOUT_MS});
@@ -22,21 +22,32 @@
     }
   }
   function safeSession(raw){
-    if(!raw||typeof raw!=="object")return Object.freeze({authenticated:false});
+    // Account Cloud v2 exposes a display-only session projection, not a browser
+    // authorization decision. Wend/Klik must recheck every protected request.
+    const empty=()=>Object.freeze({authenticated:false,sessionBoundary:"wend-v0.1",authorizationAuthority:false,
+      actorType:null,adultId:null,learnerId:null,familyIds:Object.freeze([]),
+      learnerIds:Object.freeze([]),institutionalId:null,displayPermissions:Object.freeze([]),
+      placement:null,expiresAt:null});
+    if(!raw||typeof raw!=="object"||Array.isArray(raw))return empty();
     assertSafeObject(raw,"session");
-    const placement=raw.placement&&typeof raw.placement==="object"?Object.freeze({
+    const refs=(value,max=160)=>Object.freeze(Array.isArray(value)?value.slice(0,100).map(v=>clean(v,max)).filter(Boolean):[]);
+    const placement=raw.placement&&typeof raw.placement==="object"&&!Array.isArray(raw.placement)?Object.freeze({
       stage:clean(raw.placement.stage,40)||null,
-      grade:clean(raw.placement.grade,20)||null
+      grade:raw.placement.grade===null?null:(clean(raw.placement.grade,20)||null)
     }):null;
     return Object.freeze({
-      authenticated:raw.authenticated===true,
-      accountType:clean(raw.accountType,30)||null,
-      adultVerified:raw.adultVerified===true,
-      familyId:clean(raw.familyId,120)||null,
+      authenticated:raw.authenticated===true && raw.sessionBoundary==="wend-v0.1" &&
+        raw.authorizationAuthority===false,
+      sessionBoundary:"wend-v0.1",
+      authorizationAuthority:false,
+      actorType:clean(raw.actorType,30)||null,
+      adultId:clean(raw.adultId,160)||null,
       learnerId:clean(raw.learnerId,160)||null,
-      institutionalId:clean(raw.institutionalId,64)||null,
-      permissions:Object.freeze(Array.isArray(raw.permissions)?raw.permissions.slice(0,100).map(v=>clean(v,80)).filter(Boolean):[]),
-      placement
+      familyIds:refs(raw.familyIds),
+      learnerIds:refs(raw.learnerIds),
+      institutionalId:clean(raw.institutionalId,80)||null,
+      displayPermissions:refs(raw.displayPermissions,80),
+      placement,expiresAt:raw.expiresAt?clean(raw.expiresAt,50):null
     });
   }
   function configure(options={}){
