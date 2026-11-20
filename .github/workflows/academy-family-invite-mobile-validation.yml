@@ -1,0 +1,25 @@
+name: Academy Family Invitation Mobile Chrome Validation
+on:
+  pull_request:
+    paths:
+      - 'family/accept/index.html'
+      - 'scripts/browser-ticker-smoke.mjs'
+      - '.github/workflows/academy-family-invite-mobile-validation.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'family/accept/index.html'
+      - '.github/workflows/academy-family-invite-mobile-validation.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  mobile-invitation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify canonical tickers at 1280 and 390px
+        run: ACADEMY_SMOKE_PAGES=family/accept/index.html node scripts/browser-ticker-smoke.mjs
+      - name: Validate family invitation client syntax
+        run: node --check assets/khaemenes-family-invite-client.js
