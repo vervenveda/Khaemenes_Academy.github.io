@@ -97,6 +97,15 @@ for(const pathName of chrome.retiredLocalPresentationAssets||[]){
 }
 // Public-shell ownership is explicitly enumerated in topology.surfaces.
 // Standalone sandbox/utility pages must not acquire remote scripts to appease this audit.
+// These two reviewed public landing pages explicitly specify ONE AutoPopulate ticker.
+// All other public chrome pages keep the existing dual-ticker requirement.
+const singleAutoTickerPages=new Set([
+  "family/progress/index.html",
+  "family-cloud/index.html"
+]);
+for(const rel of singleAutoTickerPages){
+  if(!files.includes(rel))fail("Declared single-AutoPopulate landing missing: "+rel);
+}
 const publicPages=new Set(Object.values(topology.surfaces));
 const htmlFiles=files.filter(rel=>/\.html$/i.test(rel));
 const isolated=[],standalone=[],extraChrome=[];
@@ -107,8 +116,17 @@ for(const rel of htmlFiles){
     && /default-src\s+'none'/i.test(html);
   if(canonical||imported.length){
     for(const [role,url] of Object.entries(shared)){
+      // Never silently weaken the 333 requirement on other Academy pages.
+      const expected=role==="ticker333"&&singleAutoTickerPages.has(rel)?0:1;
       const references=html.split(url).length-1;
-      if(references!==1)fail("Public page shared UI "+role+" reference count="+references+" in "+rel);
+      if(references!==expected)fail("Public page shared UI "+role+" reference count="+references+" (expected "+expected+") in "+rel);
+    }
+    if(singleAutoTickerPages.has(rel)){
+      if(!/VNV_TICKER\.autoPopulate\(/.test(html))fail("Single-ticker landing has no AutoPopulate invocation: "+rel);
+      if(!html.includes("https://vervenveda.com/assets/vnv-class-tools-toolbar.js"))
+        fail("Single-ticker landing has no canonical lower-left class tools: "+rel);
+      if(!html.includes("khaemenes-translator-loader.js"))
+        fail("Single-ticker landing has no canonical Linguistics translator: "+rel);
     }
     if(/<script[^>]+src=["'][^"']*(?:khaemenes-global-header|khaemenes-academy-ticker)\.js/i.test(html)){
       fail("Retired local header/ticker script is still loaded by "+rel);
@@ -123,6 +141,7 @@ for(const rel of htmlFiles){
   }
 }
 console.log("  declared public shell contracts:",publicPages.size);
+console.log("  single-AutoPopulate landings checked:",singleAutoTickerPages.size);
 console.log("  additional full-chrome HTML pages:",extraChrome.length);
 console.log("  isolated CSP HTML pages excluded from remote UI requirement:",isolated.length);
 console.log("  standalone HTML pages without shared UI (NOT chrome-certified):",standalone.length);
