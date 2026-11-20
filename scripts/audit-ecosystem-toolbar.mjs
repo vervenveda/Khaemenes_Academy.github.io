@@ -23,8 +23,8 @@ function check(file){
   // remote toolbars merely to satisfy public-page chrome coverage.
   if(isolatedPages.has(rel)){
     if(!/<meta[^>]+http-equiv=["']Content-Security-Policy["'][^>]*>/i.test(html)||
-       !/default-src\\s+'none'/i.test(html))failures.push(rel+": isolated lab lost its default-deny CSP");
-    if(/<script\\b[^>]*src=["']https?:\\/\\//i.test(html))
+       !/default-src\s+'none'/i.test(html))failures.push(rel+": isolated lab lost its default-deny CSP");
+    if(/<script\b[^>]*src=["']https?:\/\//i.test(html))
       failures.push(rel+": isolated lab unexpectedly loads an external script");
     if(html.includes("vnv-ecosystem-toolbar.js"))
       failures.push(rel+": isolated lab unexpectedly loads canonical remote toolbar");
