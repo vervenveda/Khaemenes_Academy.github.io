@@ -32,7 +32,8 @@ match(page,'vnv-ka-parent-canonical-v1.css',"shared parent canonical base preser
 match(hero,'function styleOnce(){return}',"hero does not inject competing presentation styles");
 assert.equal((profileCss.match(/#khaeFamilyParentProfileHero/g)||[]).length>5,true,"existing hero styling retained in local stylesheet");
 assert.ok(profileCss.length>10000&&baseCss.length>10000,"shared and local styles intact");
-const nav=page.match(/<nav class="mainnav"[\\s\\S]*?<\\/nav>/)?.[0]||"";
+const navStart=page.indexOf('<nav class="mainnav"');
+const nav=navStart<0?"":page.slice(navStart,page.indexOf("</nav>",navStart)+6);
 assert.equal((nav.match(/<a /g)||[]).length,1,"single breadcrumb; actions remain in 2x4 profile toolbar");
 const features=[...hero.matchAll(/^ \["([^"]+)", "(?:[^"]+)"\],?$/gm)].map(x=>x[1]);
 assert.deepEqual(features,["Edit Display Name","Schedules & Progress","Family Records","Manage Learners","Daily Family Reports","My Student Profiles","Customize Background","Customize Picture"],"exactly 8 profile tools");
