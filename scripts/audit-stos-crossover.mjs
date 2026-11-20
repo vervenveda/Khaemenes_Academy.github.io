@@ -95,20 +95,38 @@ if(chrome.stosNativeSharedServiceCertified===true&&!chrome.stosCertificationRece
 for(const pathName of chrome.retiredLocalPresentationAssets||[]){
   if(!files.includes(pathName))fail("Legacy source inventory drift: "+pathName);
 }
-const publicPages=files.filter(rel=>/\.html$/i.test(rel));
-for(const rel of publicPages){
-  const html=read(rel);
-  for(const [role,url] of Object.entries(shared)){
-    // Exact string presence and singularity guard against forgotten migrations
-    // and duplicate imports. Browser tests separately prove runtime mounting.
-    const references=html.split(url).length-1;
-    if(references!==1)fail("Public page shared UI "+role+" reference count="+references+" in "+rel);
-  }
-  if(/<script[^>]+src=["'][^"']*(?:khaemenes-global-header|khaemenes-academy-ticker)\.js/i.test(html)){
-    fail("Retired local header/ticker script is still loaded by "+rel);
+// Public-shell ownership is explicitly enumerated in topology.surfaces.
+// Standalone sandbox/utility pages must not acquire remote scripts to appease this audit.
+const publicPages=new Set(Object.values(topology.surfaces));
+const htmlFiles=files.filter(rel=>/\.html$/i.test(rel));
+const isolated=[],standalone=[],extraChrome=[];
+for(const rel of htmlFiles){
+  const html=read(rel),canonical=publicPages.has(rel);
+  const imported=Object.entries(shared).filter(([,url])=>html.includes(url));
+  const cspIsolated=/<meta[^>]+http-equiv=["']Content-Security-Policy["'][^>]*>/i.test(html)
+    && /default-src\s+'none'/i.test(html);
+  if(canonical||imported.length){
+    for(const [role,url] of Object.entries(shared)){
+      const references=html.split(url).length-1;
+      if(references!==1)fail("Public page shared UI "+role+" reference count="+references+" in "+rel);
+    }
+    if(/<script[^>]+src=["'][^"']*(?:khaemenes-global-header|khaemenes-academy-ticker)\.js/i.test(html)){
+      fail("Retired local header/ticker script is still loaded by "+rel);
+    }
+    if(!canonical)extraChrome.push(rel);
+  }else if(cspIsolated){
+    // Inert testing/previews prohibit remote shared scripts by design.
+    isolated.push(rel);
+  }else{
+    // Standalone utilities are reported explicitly, never claimed certified as public chrome.
+    standalone.push(rel);
   }
 }
-console.log("  public HTML shared UI contracts:",publicPages.length);
+console.log("  declared public shell contracts:",publicPages.size);
+console.log("  additional full-chrome HTML pages:",extraChrome.length);
+console.log("  isolated CSP HTML pages excluded from remote UI requirement:",isolated.length);
+console.log("  standalone HTML pages without shared UI (NOT chrome-certified):",standalone.length);
+if(standalone.length)console.log("  standalone UI inventory:",standalone.join(", "));
 console.log("  canonical shared service: VNV (STOS mapping pending)");
 
 console.log("Khaemenes Academy STOS crossover validation: PASS");
