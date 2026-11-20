@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Family Storage OS · Retention Laboratory</title>
+<style>
+:root{--charcoal:#262724;--cream:#fff8e8;--gold:#9b7525;--line:#262724}*{box-sizing:border-box}
+body{margin:0;font:16px/1.6 "Nunito",system-ui,sans-serif;color:var(--charcoal);background:var(--cream)}
+header,footer{background:var(--charcoal);color:var(--cream);text-align:center;padding:24px}
+h1,h2{font-family:"Cinzel",Georgia,serif;font-weight:400;margin:.25em 0}
+h1{font-size:33px}h2{font-size:24px}main{max-width:960px;margin:auto;padding:24px 16px 66px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.card{border:3px solid var(--line);border-radius:7px;padding:18px;background:white}
+.card h2{margin:0 0 8px}.wide{grid-column:1/-1}
+label{display:block;margin-bottom:7px}input{width:100%;accent-color:var(--charcoal)}
+button{font:inherit;background:var(--charcoal);color:var(--cream);border:3px solid var(--charcoal);border-radius:7px;padding:9px 15px;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.status{font-weight:600}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f6f0e3;padding:14px;border-radius:7px;font-size:16px}
+small{font-size:16px}footer{margin-top:22px}
+@media(max-width:640px){.grid{grid-template-columns:1fr}.wide{grid-column:auto}}
+</style>
+</head>
+<body>
+<header><p>KHAEMENES ACADEMY</p><h1>Family Storage OS</h1><p>Phase 1 · Synthetic retention laboratory · No account access</p></header>
+<main>
+<div class="grid">
+<section class="card"><h2>Temporary state</h2><p>Reproducible, expired cache can be considered for cleanup only after explicit safety checks.</p></section>
+<section class="card"><h2>Protected continuity</h2><p>Family identities, game saves, bookmarks, unsynced lessons, assessment work, transcripts and portfolios are never cache.</p></section>
+<section class="card wide"><h2>Storage-pressure simulation</h2><p>This laboratory uses imaginary records. It never reads browser storage, deletes data, or contacts STOS.</p><label for="usage">Synthetic temporary capacity used: <output id="percent">80%</output></label><input id="usage" type="range" min="0" max="110" step="5" value="80"><p><button id="run" type="button">Run safe simulation</button></p><div id="status" class="status" role="status" aria-live="polite"></div><pre id="result">Select Run safe simulation.</pre></section>
+<section class="card wide"><h2>Protected account policy</h2><p>One Account Cloud identity authority, encrypted STOS records, learner-scoped access, durable preservation receipts and verified recovery are required before live synchronization. No live cloud service is connected by this laboratory.</p></section>
+</div>
+</main>
+<footer>VNV · Khaemenes Academy · Read-only prototype</footer>
+<script type="module">
+import {planTemporaryCleanup} from "./core/retention-policy.mjs";
+const usage=document.getElementById("usage"),percent=document.getElementById("percent");
+usage.addEventListener("input",()=>percent.textContent=usage.value+"%");
+document.getElementById("run").addEventListener("click",()=>{
+ const records=[
+ {id:"expired-resource-preview",kind:"resource-preview",disposable:true,reconstructible:true,authoritative:false,pending:false,synced:true,bytes:22,expiresAt:10},
+ {id:"completed-temporary-transfer",kind:"completed-transfer-buffer",disposable:true,reconstructible:true,authoritative:false,pending:false,synced:true,bytes:14,expiresAt:10},
+ {id:"unfinished-lesson",kind:"lesson-draft",disposable:false,reconstructible:false,authoritative:false,pending:true,synced:false,bytes:35,expiresAt:10},
+ {id:"family-portfolio",kind:"portfolio",disposable:false,reconstructible:false,authoritative:true,pending:false,synced:true,bytes:20,expiresAt:10},
+ {id:"student-game-save",kind:"game-progress",disposable:false,reconstructible:false,authoritative:true,pending:false,synced:true,bytes:9,expiresAt:10}
+ ];
+ const plan=planTemporaryCleanup(records,Number(usage.value),100,20);
+ document.getElementById("status").textContent="Simulated policy: "+plan.action+" · Automatic deletion: DISABLED";
+ document.getElementById("result").textContent=JSON.stringify({pressurePercent:plan.pressurePercent,eligibleCacheCandidates:plan.evictionCandidates,protectedRecordsExcluded:["unfinished-lesson","family-portfolio","student-game-save"],projectedUsage:plan.projectedUsageBytes},null,2);
+});
+</script>
+</body></html>
