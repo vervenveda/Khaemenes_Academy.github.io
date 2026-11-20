@@ -29,10 +29,11 @@ function render(){
  if(!f){root.innerHTML='<p class="notice">No selected family is available on this browser. Return to the Parent Portal to choose an existing family; no student data has been changed.</p>';return}
  const learnerCards=learners.map(l=>{
   const active=l.learnerId===ids.learnerId,ready=!!l.grade;
+  const allowed=permission(f,l)&&R.canAdult?.(ids.adultId,l.learnerId,"learner.view")===true;
   const stage=stages[String(l.stage||"").toLowerCase()]||"Learner";
   return '<article class="parent-learning-card"><p class="parent-eyebrow">'+esc(stage)+(active?" · Active":"")+'</p><h3>'+esc(l.nickname||"Learner")+'</h3><p>'+esc(l.grade?"Grade "+String(l.grade):"Placement needs review")+'</p><div class="parent-learning-actions">'+
-   (active?'<span class="active-chip">Active learner</span>':'<button type="button" data-select="'+esc(l.learnerId)+'">Make Active</button>')+
-   (ready?'<a href="'+esc(profile(l))+'" data-open-learner="'+esc(l.learnerId)+'">Open Student Profile</a>':'<a href="../enroll/#existing">Complete Placement</a>')+
+   (allowed?(active?'<span class="active-chip">Active learner</span>':'<button type="button" data-select="'+esc(l.learnerId)+'">Make Active</button>'):'<span>Student access not granted</span>')+
+   (allowed?(ready?'<a href="'+esc(profile(l))+'" data-open-learner="'+esc(l.learnerId)+'">Open Student Profile</a>':'<a href="../enroll/#existing">Complete Placement</a>'):'')+
    '<button type="button" data-family-dialog="'+esc(l.learnerId)+'">Family Learning</button><a href="../enroll/#existing">Change Placement</a></div></article>';
  }).join("");
  const progressCards=learners.map(l=>{
@@ -65,12 +66,12 @@ function render(){
  }));
  root.querySelectorAll("[data-select]").forEach(button=>button.addEventListener("click",()=>{
   const id=button.dataset.select,learner=f.learners.find(l=>l.learnerId===id&&l.familyId===f.familyId);
-  if(!learner)return;
+  if(!learner||!permission(f,learner)||R.canAdult?.(ids.adultId,id,"learner.view")!==true)return;
   try{R.setActive({familyId:f.familyId,adultId:ids.adultId||null,learnerId:id})}catch{button.textContent="Selection could not be saved"}
  }));
  root.querySelectorAll("[data-open-learner]").forEach(a=>a.addEventListener("click",event=>{
   const id=a.dataset.openLearner,learner=f.learners.find(l=>l.learnerId===id&&l.familyId===f.familyId);
-  if(!learner){event.preventDefault();return}
+  if(!learner||!permission(f,learner)||R.canAdult?.(ids.adultId,id,"learner.view")!==true){event.preventDefault();return}
   try{R.setActive({familyId:f.familyId,adultId:ids.adultId||null,learnerId:id})}catch{event.preventDefault();a.textContent="Choose an existing learner in Parent Portal first."}
  }));
 }
