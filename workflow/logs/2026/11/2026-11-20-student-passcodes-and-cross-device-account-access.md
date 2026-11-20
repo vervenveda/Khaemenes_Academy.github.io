@@ -59,3 +59,9 @@ The selected passcode should be created as part of student profile onboarding, b
 
 ## Safety and closure
 This is a planning and evidence log, **not** a declaration that passcode-based sign-in has been implemented or passed workload tests. Do not use short PINs as the sole internet-facing authentication factor without a specifically approved hardened model. Protect minors' personal information, enrollment authorization, existing assessment evidence, course-owned mastery, and the current Academy registry. No real credentials or learner records were included.
+
+## Family Learning Center source update — 2026-11-20
+- `family/index.html` now contains a single `academyFamilyCredentialReadiness` information section in the Account Connection area, with the provisional 10/5/4-digit plan, learner-specific security separation, and an explicit NOT ACTIVE notice.
+- Commit: `1c7916f0260a0d090dc3843c5d323280eca50d2c`.
+- Scope: presentation and explanatory text only; no PIN fields, no credential creation, no family registry or academic state modifications.
+- Verification: source commit completed; interactive browser and production authentication tests NOT RUN. T03 commissioning and cross-device sign-in remain HOLD.
