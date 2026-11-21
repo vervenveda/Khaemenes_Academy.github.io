@@ -2,6 +2,7 @@
 
 | Date | Type | Entry | State |
 | --- | --- | --- | --- |
+| 2026-11-20 | Family Account Center · five-bubble audit | [Existing account continuity, learner routes and safe course handoffs](logs/2026/11/2026-11-20-family-account-center-five-bubble-forensic-audit.md) | Five new tests PASS (44863403938); Family Connection Preparation PASS (44863376691); cloud/T03 HOLD |
 | 2026-11-20 | account discovery · correction | [Founder Account ID and laptop-to-Mac discovery](logs/2026/11/2026-11-20-founder-account-id-cross-device-discovery.md) | Existing Account ID reported; actual ID withheld from GitHub; cross-device discovery observed; cloud persistence and T03 HOLD |
 | 2026-11-20 | authority audit · client repair · CI | [Protected session authority and Account Client v2 projection](logs/2026/11/2026-11-20-academy-account-cloud-protected-session-authority-audit.md) | 16 synthetic CI tests PASS (44838014477); upstream member-auth/session handler unverified; T03 HOLD |
 | 2026-11-20 | repair · CI | [Account Client session and logout v2 route alignment](logs/2026/11/2026-11-20-account-client-v2-session-route-alignment.md) | 11 source/mock tests PASS, CI 44833914667; client disabled, STOS T03 HOLD |
