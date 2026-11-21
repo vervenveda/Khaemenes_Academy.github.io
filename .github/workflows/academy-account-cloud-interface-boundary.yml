@@ -12,6 +12,9 @@ on:
       - 'tests/academy-account-cloud-interface-boundary.test.mjs'
       - 'tests/academy-account-client-session-routes.test.mjs'
       - 'tests/academy-account-session-view-v2.test.mjs'
+      - 'tests/academy-cloud-home-five-bubble-boundary.test.mjs'
+      - 'workflow/inventories/2026-11-20-account-cloud-academy-home-five-bubble-topology.json'
+      - 'assets/khaemenes-front-door-router.js'
       - '.github/workflows/academy-account-cloud-interface-boundary.yml'
   pull_request:
     paths:
@@ -24,6 +27,9 @@ on:
       - 'tests/academy-account-cloud-interface-boundary.test.mjs'
       - 'tests/academy-account-client-session-routes.test.mjs'
       - 'tests/academy-account-session-view-v2.test.mjs'
+      - 'tests/academy-cloud-home-five-bubble-boundary.test.mjs'
+      - 'workflow/inventories/2026-11-20-account-cloud-academy-home-five-bubble-topology.json'
+      - 'assets/khaemenes-front-door-router.js'
       - '.github/workflows/academy-account-cloud-interface-boundary.yml'
   workflow_dispatch:
 permissions:
@@ -37,4 +43,4 @@ jobs:
         with:
           persist-credentials: false
       - name: Verify Academy account boundary and six synthetic session behavior checks
-        run: node --test tests/academy-account-cloud-interface-boundary.test.mjs tests/academy-account-client-session-routes.test.mjs tests/academy-account-session-view-v2.test.mjs
+        run: node --test tests/academy-account-cloud-interface-boundary.test.mjs tests/academy-account-client-session-routes.test.mjs tests/academy-account-session-view-v2.test.mjs tests/academy-cloud-home-five-bubble-boundary.test.mjs
