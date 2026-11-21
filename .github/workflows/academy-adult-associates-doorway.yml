@@ -1,0 +1,24 @@
+name: Academy Adult to Associates-Level Doorway
+on:
+  push:
+    paths:
+      - 'adult/index.html'
+      - 'tests/academy-adult-associates-doorway.test.mjs'
+      - '.github/workflows/academy-adult-associates-doorway.yml'
+  pull_request:
+    paths:
+      - 'adult/index.html'
+      - 'tests/academy-adult-associates-doorway.test.mjs'
+      - '.github/workflows/academy-adult-associates-doorway.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  adult-associates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify Academy Adult and Associates-Level route continuity
+        run: node --test tests/academy-adult-associates-doorway.test.mjs
