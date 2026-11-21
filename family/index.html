@@ -587,6 +587,19 @@ function renderFamily(f){
   </div>`;
   bind(f);
 }
+// Course continuation URLs are data, not a navigation authority.
+// A course owns its actual lesson; the Family Portal only opens approved
+// Academy-hosted destinations after checking local learner selection.
+function verifiedLearningDestination(value){
+  try{
+    const url=new URL(String(value||""),location.href);
+    if(url.protocol!=="https:"||url.hostname!=="vervenveda.com"||
+       url.username||url.password||url.port)return null;
+    const root=url.pathname;
+    if(!/^\/(?:Khaemenes_[A-Za-z0-9_-]+\.github\.io|Klasaipeer\.github\.io)\//.test(root))return null;
+    return url.href;
+  }catch{return null}
+}
 function bind(f){
   const activeAdult=localAdultForFamily(f);
   document.querySelectorAll("[data-learner-profile]").forEach(link=>link.addEventListener("click",event=>{
@@ -596,8 +609,9 @@ function bind(f){
   $$("[data-active]").forEach(b=>b.onclick=()=>{if(chooseLocalLearner(f,b.dataset.active))requestFamilyRender()});
   $$("[data-open-next]").forEach(b=>b.onclick=()=>{
     const learnerId=b.dataset.learnerId,href=b.dataset.openNext;
-    if(!learnerId||!href||!chooseLocalLearner(f,learnerId,{requireProgress:true}))return;
-    try{location.assign(href)}catch{location.href=href}
+    const approved=verifiedLearningDestination(href);
+    if(!learnerId||!approved||!chooseLocalLearner(f,learnerId,{requireProgress:true}))return;
+    location.assign(approved)
   });
   $("#addAdult")?.addEventListener("click",()=>{
     alert("Additional adult access requires verified invitations and guardian authorization. No permissions were changed.");
