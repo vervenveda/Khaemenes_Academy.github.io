@@ -25,3 +25,7 @@
 No live family profile was accessed, no Mac/tablet account IDs were compared, no student assessments were uploaded, and no Account Cloud authenticated session or native T03 readback was available. Source guards cannot certify cross-device continuity.
 
 **Next checks:** parent-family selection on the original device; Grade 09 student profile navigation and latest course snapshot; independent authenticated guardian/learner session and off-controller Account Cloud readback when commissioned. Preserve original learner/Account IDs and all grade evidence.
+
+## Final exact-commit CI
+- [Family Account Center Five-Bubble Forensic Audit #44863403938](https://github.com/vervenveda/Khaemenes_Academy.github.io/actions/runs/44863403938) **completed/success** at tested SHA `f892d1c2ec39ab99c71dd8fd7a8b81f02bcde4d8`. All five new source/behavior tests passed, including normal Academy HTTPS links and rejection of unsafe course-provided URLs.
+- The current Family Connection Preparation suite also passed at run `44863376691` after updating stale copy expectations. This work did not validate a deployed browser session or a protected server.
