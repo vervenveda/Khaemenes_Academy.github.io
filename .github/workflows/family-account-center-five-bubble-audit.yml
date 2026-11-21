@@ -1,0 +1,37 @@
+name: Family Account Center Five-Bubble Forensic Audit
+on:
+  push:
+    paths:
+      - 'family/index.html'
+      - 'family/profile/index.html'
+      - 'family/progress/parent-progress.js'
+      - 'assets/khaemenes-family-parent-learning-panels-v1.js'
+      - 'assets/khaemenes-family-registry.js'
+      - 'assets/khaemenes-account-client.js'
+      - 'assets/khaemenes-account-connection-status.js'
+      - 'tests/family-account-center-five-bubble-audit.test.mjs'
+      - '.github/workflows/family-account-center-five-bubble-audit.yml'
+  pull_request:
+    paths:
+      - 'family/index.html'
+      - 'family/profile/index.html'
+      - 'family/progress/parent-progress.js'
+      - 'assets/khaemenes-family-parent-learning-panels-v1.js'
+      - 'assets/khaemenes-family-registry.js'
+      - 'assets/khaemenes-account-client.js'
+      - 'assets/khaemenes-account-connection-status.js'
+      - 'tests/family-account-center-five-bubble-audit.test.mjs'
+      - '.github/workflows/family-account-center-five-bubble-audit.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-and-navigation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Run five Academy Family Portal account continuity and safe navigation tests
+        run: node --test tests/family-account-center-five-bubble-audit.test.mjs
