@@ -1,0 +1,43 @@
+{
+  "schema": "khaemenes-academy-cloud-to-home-boundary-audit-v1",
+  "date": "2026-11-20",
+  "scope": "Academy Account Cloud -> Academy Core -> Academy Home",
+  "academyOnly": true,
+  "status": "SOURCE_TOPOLOGY_REVIEW_ONLY",
+  "productionEnabled": false,
+  "accountCloudSynchronized": false,
+  "nativeT03Commissioned": false,
+  "visitorHome": {
+    "repository": "vervenveda/KhaemenesAcademy_Home.github.io",
+    "role": "PUBLIC_DIRECTORY_ONLY",
+    "accountOwner": false,
+    "authorizationAuthority": false
+  },
+  "academyCore": {
+    "repository": "vervenveda/Khaemenes_Academy.github.io",
+    "role": "EXISTING_FAMILY_STUDENT_PROFILE_AND_ROUTE_OWNER",
+    "identityMode": "BROWSER_LOCAL_NOT_AUTHENTICATED",
+    "clientVersion": "1.0.2",
+    "clientEnabled": false
+  },
+  "protectedCloud": {
+    "repository": "KhaemenesAcademy/Account-Cloud.github.io",
+    "role": "SYNTHETIC_PRE_INTAKE_ONLY",
+    "productionDataAllowed": false,
+    "requiresIndependentServerAuthority": true
+  },
+  "fiveBubbles": [
+    {"id": 1, "title": "Canonical front-door route integrity", "status": "SOURCE_GUARD", "mustNot": "Create second Academy Home registration authority"},
+    {"id": 2, "title": "Existing Account ID and family continuity preservation", "status": "SOURCE_GUARD_WITH_RUNTIME_HOLD", "mustNot": "Reissue Account IDs or silently migrate records"},
+    {"id": 3, "title": "No account or cloud session authority in public Home", "status": "SOURCE_GUARD", "mustNot": "Read browser identity or create unauthorized cloud sessions"},
+    {"id": 4, "title": "Protected server and STOS commissioning gate", "status": "HOLD", "mustNot": "Represent synthetic source contracts as commissioned storage"},
+    {"id": 5, "title": "Honest cross-device and evidence state", "status": "SOURCE_GUARD_WITH_RUNTIME_HOLD", "mustNot": "Claim Grade 9 record migration without protected receipt and second-device readback"}
+  ],
+  "forbiddenImports": [
+    "333-network-member-authority",
+    "unverified-browser-family-id-as-credential",
+    "learner-assessment-automatic-attribution",
+    "github-pages-as-cloud-database"
+  ],
+  "authorizedWrites": []
+}
