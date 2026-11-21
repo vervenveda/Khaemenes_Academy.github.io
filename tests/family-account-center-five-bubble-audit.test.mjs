@@ -32,7 +32,7 @@ test('bubble 2: Grade09 student card resolves the canonical learner Profile with
 test('bubble 3: dynamic Parent Profile accordion destinations are present and have one owner',()=>{
  assert.match(parent,/id="parentProfileLearningPanels"/);
  for(const fragment of ['parent-daily-reports','parent-learner-panel','family-progress']){
-  assert.ok(panels.includes('id=\\"'+fragment+'\\"'),fragment);
+  assert.ok(panels.includes('id="'+fragment+'"'),fragment);
   assert.ok(family.includes('profile/#'+fragment),fragment);
  }
  assert.doesNotMatch(family,/khaemenes-family-account-center-v1\.js/);
